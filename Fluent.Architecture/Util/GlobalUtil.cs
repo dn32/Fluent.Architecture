@@ -1,0 +1,167 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using Fluent.Architecture.Attributes;
+using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Exception;
+using Fluent.Architecture.Model;
+using Fluent.Architecture.Repository;
+using Fluent.Architecture.Service;
+using Fluent.Architecture.Validation;
+
+namespace Fluent.Architecture.Util
+{
+    /// <summary>
+    /// Utilitários de uso global.
+    /// </summary>
+    internal class GlobalUtil
+    {
+        /// <summary>
+        /// Obtem o tipo da entidade de um objeto baseado em um tipo esperado de Fluent. Ex <see cref="FluentService{T}"/>, <see cref="FluentRepository{T}"/>, etc. O retorno será o tipo de T.
+        /// </summary>
+        /// <param name="objectTypeToCheck">
+        /// Objeto a ser avaliado.
+        /// </param>
+        /// <param name="spectedType">
+        /// Tipo esperado. Exemplo:  <see cref="FluentService{T}"/>, <see cref="FluentRepository{T}"/>
+        /// </param>
+        /// <returns>
+        /// O tipo.
+        /// </returns>
+        internal static Tuple<string, Type> GetFluentEntityType(Type objectTypeToCheck, Type spectedType)
+        {
+            return new Tuple<string, Type>(GetBase(objectTypeToCheck.BaseType), objectTypeToCheck);
+
+            string GetBase(Type type)
+            {
+                if (type == null)
+                {
+                    return null;
+                }
+
+                if (type == typeof(object))
+                {
+                    return null;
+                }
+
+                if (type.Name == spectedType.Name)
+                {
+                    var args = type.GetGenericArguments();
+                    return args.Length == 0 ? type.Name : type.GetGenericArguments()[0].Name;
+                }
+
+                return GetBase(type.BaseType);
+            }
+        }
+
+        /// <summary>
+        /// Obtem o tipo da entidade de um tipo Fluent. Ex <see cref="FluentService{T}"/>. O tipo a ser encontrado é o tipo de T.
+        /// </summary>
+        /// <param name="currentType">
+        /// Objeto a ser avaliado.
+        /// </param>
+        /// <returns>
+        /// O tipo.
+        /// </returns>
+        internal static Type GetFluentEntityType(Type currentType)
+        {
+            return GetBase(currentType);
+
+            Type GetBase(Type type)
+            {
+                if (type == null)
+                {
+                    return null;
+                }
+
+                if (type == typeof(object))
+                {
+                    return null;
+                }
+
+                if (
+                    type.Name == typeof(FluentController<FluentEntity>).Name ||
+                    type.Name == typeof(FluentService<FluentEntity>).Name ||
+                    type.Name == typeof(FluentRepository<FluentEntity>).Name ||
+                    type.Name == typeof(FluentValidation<FluentEntity>).Name)
+                {
+                    return type.GetGenericArguments()[0];
+                }
+
+                return GetBase(type.BaseType);
+            }
+        }
+
+        /// <summary>
+        /// Obtem o nome do método chamador do método atual baseado no tipo do chamador. Para uso no conteito de propagação.
+        /// </summary>
+        /// <param name="callerType">
+        /// Tipo do chamador.
+        /// </param>
+        /// <returns>
+        /// O nome do método solicitado.
+        /// </returns>
+        internal static string GetMethodNameByCallerType(Type callerType)
+        {
+            bool ComparePropagateMethod(StackFrame frame)
+            {
+                var method = frame.GetMethod();
+                var type = method.ReflectedType;
+                return type == callerType && method.GetCustomAttribute<NotPropagateAttribute>() == null;
+            }
+
+            return new StackTrace().GetFrames().LastOrDefault(ComparePropagateMethod)?.GetMethod().Name;
+        }
+
+        // Todo Documentar quando o conceito de propagação for revisado e testado.
+        [NotPropagate]
+        internal static object GetPropagationMethod<T, T2>(string methodName, object target, Type callerType, object[] parameters, bool ignoreMethodNotFound = false)
+        {
+            if (string.IsNullOrEmpty(methodName))
+            {
+                methodName = GetMethodNameByCallerType(callerType);
+            }
+
+            var methods = target.GetType().GetMethods().Where(x => x.IsPublic && x.Name.Equals(methodName, StringComparison.InvariantCultureIgnoreCase) && x.GetCustomAttribute<PropagateAttribute>() != null).ToList();
+            if (methods.Count > 1)
+            {
+                //Todo criar validação na inicialização de duplicidade de método de propagação, atributo em método não público tb
+                throw new IncorrectDevelopmentException($"There is more than one named propagation method {target.GetType()}.{methodName}. This is not allowed. Remove the propagation attribute from one of them, set it to private, or change its name.");
+            }
+
+            var method = methods.FirstOrDefault();
+            if (method == null)
+            {
+                if (ignoreMethodNotFound)
+                {
+                    return null;
+                }
+
+                throw new IncorrectDevelopmentException($"Propagation method not found {target.GetType()}.{methodName}.\nCheck the method name, make sure it has the propagation attribute, and make sure it is public.");
+            }
+
+            if (method.ContainsGenericParameters)
+            {
+                method = method.GetGenericArguments().Length == 2 ? method.MakeGenericMethod(typeof(T), typeof(T2)) : method.MakeGenericMethod(typeof(T2));
+            }
+
+            parameters = CompleteWithNulls(parameters, method);
+
+            object[] CompleteWithNulls(IReadOnlyCollection<object> _parameters, MethodInfo _method)
+            {
+                var pararAdd = _method.GetParameters().Length - _parameters.Count;
+                var parametersList = _parameters.ToList();
+                for (var i = 0; i < pararAdd; i++)
+                {
+                    parametersList.Add(null);
+                }
+
+                return parametersList.ToArray();
+            }
+
+            return method.Invoke(target, parameters);
+        }
+    }
+}

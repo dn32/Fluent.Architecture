@@ -1,0 +1,31 @@
+version: 1.0.0-beta{build}
+image: Visual Studio 2017
+skip_tags: true
+configuration: Release
+platform: Any CPU
+environment:
+  APPVEYOR_BLOCK_DOTNETCORE_TESTS_AUTORUN: false
+
+init:
+  - ps: $env:customBuildVersion = if ($env:APPVEYOR_REPO_TAG -eq $True) { "$env:APPVEYOR_BUILD_VERSION-$env:APPVEYOR_BUILD_NUMBER" } else { "$env:APPVEYOR_BUILD_VERSION-$env:APPVEYOR_BUILD_NUMBER-$env:APPVEYOR_REPO_BRANCH" }
+  - ps: $env:customNugetVersion = if ($env:APPVEYOR_REPO_TAG -eq $True) { "$env:APPVEYOR_BUILD_VERSION" } else { "$env:APPVEYOR_BUILD_VERSION" }
+  - ps: Update-AppveyorBuild -Version $env:customBuildVersion
+  - ps: echo $env:customNugetVersion
+  
+before_build:
+  - ps: dotnet restore
+
+after_build: 
+  - ps dotnet pack .\Fluent.Architecture\Fluent.Architecture.csproj /p:PackageVersion=$env:customNugetVersion
+  - ps: echo $env:customNugetVersion
+  
+#---------------------------------#
+#      artifacts configuration    #
+#---------------------------------#
+
+artifacts:
+  # pushing all *.nupkg files in build directory recursively
+  - path: '**\*.nupkg'
+
+on_success:
+  - nuget push -Source https://www.nuget.org/packages/Fluent.Architecture/ -ApiKey oy2ikrv7gzkk3jmcplnqyu27eg4vzhwebbmqzbuuo3dwj4 Fluent.Architecture\bin\Release\Fluent.Architecture.1.0.0-beta46.nupkg
