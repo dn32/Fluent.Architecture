@@ -181,6 +181,60 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
 
         private void AllFluentKeysMustBeInformed(T entity, bool ignoreForThisElement)
         {
+
+            if (!NullParameterOk)
+            {
+                KeyValuesOk = false;
+                return;
+            }
+
+            KeyValuesOk = true;
+
+            var keyValues = entityType.GetFluentUnicKeyProperties();
+            foreach (var key in keyValues)
+            {
+                if (key.Value.IsFluentNull())
+                {
+                    AddInconsistency(new PropertyRequiredFluentValidationException(key.Key));
+                    KeyValuesOk = false;
+                }
+            }
+
+            //if (!NullParameterOk || !KeyValuesOk)
+            //{
+            //    return;
+            //}
+
+            //var entityType = typeof(T);
+            //var properties = entityType.GetFluentUnicKeyProperties();
+            //foreach (var property in properties)
+            //{
+            //    var value = property.GetValue(entity);
+            //    if (value == null)
+            //    {
+            //        continue;
+            //    }
+
+            //    var sql = $"select * from {entityType.GetTableName()} where {property.GetColumnName()} = '{value}'";
+
+            //    if (ignoreForThisElement)
+            //    {
+            //        var keyValues = entity.GetKeyValues().Select(x => $"{x.Key} != '{x.Value.GetDbValue()}'").ToArray();
+            //        if (keyValues.Length > 0)
+            //        {
+            //            sql += " and " + string.Join(" and ", keyValues);
+            //        }
+            //    }
+
+            //    if (Repository.ExistsSql(sql))
+            //    {
+            //        AddInconsistency(new UniqueKeyFluentValidationException(property.Name, value.ToString()));
+            //    }
+            //}
+        }
+
+        private void AllKeysShouldBeInformedWhenThereAreMoreThanOne(T entity)
+        {
             if (!NullParameterOk || !KeyValuesOk)
             {
                 return;
@@ -188,28 +242,16 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
 
             var entityType = typeof(T);
             var properties = entityType.GetFluentUnicKeyProperties();
-            foreach (var property in properties)
+            if (properties.Count > 1)
             {
-                var value = property.GetValue(entity);
-                if (value == null)
+                AllFluentKeysMustBeInformed(entity);
+            }
+            else
+            {
+                var property = properties.First();
+                if (property.GetValue(entity).IsFluentNull())
                 {
-                    continue;
-                }
 
-                var sql = $"select * from {entityType.GetTableName()} where {property.GetColumnName()} = '{value}'";
-
-                if (ignoreForThisElement)
-                {
-                    var keyValues = entity.GetKeyValues().Select(x => $"{x.Key} != '{x.Value.GetDbValue()}'").ToArray();
-                    if (keyValues.Length > 0)
-                    {
-                        sql += " and " + string.Join(" and ", keyValues);
-                    }
-                }
-
-                if (Repository.ExistsSql(sql))
-                {
-                    AddInconsistency(new UniqueKeyFluentValidationException(property.Name, value.ToString()));
                 }
             }
         }
