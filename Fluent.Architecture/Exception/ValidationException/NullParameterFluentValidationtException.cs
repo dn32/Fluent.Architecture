@@ -1,7 +1,7 @@
 ﻿namespace Fluent.Architecture.Exception.ValidationException
 {
-    public class NullParameterFluentValidationtException : FluentValidationtException
+    public class NullParameterFluentValidationException : FluentValidationException
     {
-        public NullParameterFluentValidationtException(string parameter) : base($"The parameter {parameter} can not be null.") { }
+        public NullParameterFluentValidationException(string parameter) : base($"The parameter {parameter} can not be null.") { }
     }
 }

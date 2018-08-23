@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Service;
 using Fluent.Architecture.Test.Mock;
 #if NET461
@@ -19,7 +20,7 @@ namespace Fluent.Architecture.Test
         {
             return ControllerMockFactory.Create(controllerType);
         }
-
+        
 #if NET461
         public static TR Execute<TR>(Type controllerType, string methodName, params object[] parameters) where TR : class
         {
@@ -27,7 +28,7 @@ namespace Fluent.Architecture.Test
             MethodInfo method;
             if (parameters == null)
             {
-                parameters = new object[] {null};
+                parameters = new object[] { null };
                 method = controllerType.GetMethod(methodName);
             }
             else
@@ -47,7 +48,7 @@ namespace Fluent.Architecture.Test
             var fluentOnActionExecuting = controllerType.GetMethod(nameof(FluentServiceController<TransactionalService>.FluentOnActionExecuting));
             if (fluentOnActionExecuting != null)
             {
-                fluentOnActionExecuting.Invoke(controller,null);
+                fluentOnActionExecuting.Invoke(controller, null);
             }
 
             try
@@ -63,7 +64,17 @@ namespace Fluent.Architecture.Test
             }
             catch (TargetInvocationException ex)
             {
-                return ex.InnerException as TR;
+                if (ex.InnerException == null)
+                {
+                    return ex as TR;
+                }
+
+                if (ex.InnerException is FluentValidationException validationError)
+                {
+                    return validationError as TR;
+                }
+
+                throw ex.InnerException;
             }
         }
 #endif

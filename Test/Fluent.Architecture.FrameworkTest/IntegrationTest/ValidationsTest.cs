@@ -13,41 +13,55 @@ namespace Fluent.Architecture.FrameworkTest.IntegrationTest
 {
     public class ValidationsTest
     {
+        #region SETUP
+
         public ValidationsTest()
         {
             var connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             Setup.Initialize(connectionString);
         }
 
-        // Objeto nulo
+        #endregion
+        
+        #region FAIL
+
+        // Null parameter
         [Theory]
         [InlineData(nameof(UserController.Add))]
         [InlineData(nameof(UserController.Update))]
         public void NullParameterTestFail(string method)
         {
-            var error = TestUtil.Execute<ContextValidation>(typeof(UserController), method, null);
+            var error = TestUtil.Execute<ContextFluentValidation>(typeof(UserController), method, null);
 
             Assert.NotNull(error);
             Assert.Single(error.Inconsistencies);
-            Assert.IsAssignableFrom<NullParameterFluentValidationtException>(error.Inconsistencies.First());
+            Assert.IsAssignableFrom<NullParameterFluentValidationException>(error.Inconsistencies.First());
         }
 
-        // Required erro
-        [Fact]
-        public void RequiredAddTestFail()
+        // Required required null  error
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void RequiredAddTestFail(string name)
         {
-            var user = new User();
-            var error = TestUtil.Execute<ContextValidation>(typeof(UserController), nameof(UserController.Add), user);
+            var user = new User()
+            {
+                Name = name
+            };
+
+            var error = TestUtil.Execute<ContextFluentValidation>(typeof(UserController), nameof(UserController.Add), user);
 
             Assert.NotNull(error);
             Assert.Equal(2, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<PropertyRequiredFluentValidationtException>(error.Inconsistencies.First());
-            Assert.IsAssignableFrom<PropertyRequiredFluentValidationtException>(error.Inconsistencies.Last());
-        }      
-        
-        // Required erro
-        [Fact]
-        public void RequiredUpdateTestFail()
+            Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(error.Inconsistencies.First());
+            Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(error.Inconsistencies.Last());
+        }
+
+        // Required required null error
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void RequiredUpdateTestFail(string name)
         {
             var user = new User
             {
@@ -58,19 +72,19 @@ namespace Fluent.Architecture.FrameworkTest.IntegrationTest
             };
 
             TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Add), user);
-            user.Name = null;
+            user.Name = name;
 
-            var error = TestUtil.Execute<ContextValidation>(typeof(UserController), nameof(UserController.Update), user);
+            var error = TestUtil.Execute<ContextFluentValidation>(typeof(UserController), nameof(UserController.Update), user);
 
             Assert.NotNull(error);
             Assert.Single(error.Inconsistencies);
-            Assert.IsAssignableFrom<PropertyRequiredFluentValidationtException>(error.Inconsistencies.First());
+            Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(error.Inconsistencies.First());
 
             TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Remove), user);
         }
 
         [Fact]
-        public void AddErrorFluentUnicKey()
+        public void AddErrorFluentUniqueKey()
         {
             var user = new User
             {
@@ -82,17 +96,19 @@ namespace Fluent.Architecture.FrameworkTest.IntegrationTest
 
             TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Add), user);
 
-            user.Id = 0;
+            user.Id = new Random().Next(1, int.MaxValue);
 
-            var objectReturn = TestUtil.Execute<ContextValidation>(typeof(UserController), nameof(UserController.Add), user);
+            var objectReturn = TestUtil.Execute<ContextFluentValidation>(typeof(UserController), nameof(UserController.Add), user);
             Assert.NotNull(objectReturn);
             Assert.Single(objectReturn.Inconsistencies);
-            Assert.IsAssignableFrom<UnicKeyFluentValidationtException>(objectReturn.Inconsistencies.First());
+            Assert.IsAssignableFrom<UniqueKeyFluentValidationException>(objectReturn.Inconsistencies.First());
         }
 
-        // Add ok
-        [Fact]
-        public void AddTestOk()
+        // Update and remove not found fail
+        [Theory]
+        [InlineData(nameof(UserController.Update))]
+        [InlineData(nameof(UserController.Remove))]
+        public void UpdateAndRemoveNotFoundFail(string method)
         {
             var user = new User
             {
@@ -101,11 +117,68 @@ namespace Fluent.Architecture.FrameworkTest.IntegrationTest
                 Id = new Random().Next(1, int.MaxValue)
             };
 
-            var userAdded = TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Add), user);
-
-            Assert.NotNull(userAdded);
-
-            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Remove), user);
+            var objectReturn = TestUtil.Execute<ContextFluentValidation>(typeof(UserController), method, user);
+            Assert.NotNull(objectReturn);
+            Assert.Single(objectReturn.Inconsistencies);
+            Assert.IsAssignableFrom<EntityNotFoundFluentValidationException>(objectReturn.Inconsistencies.First());
         }
+
+        // Update and remove not key
+        [Theory]
+        [InlineData(nameof(UserController.Update))]
+        [InlineData(nameof(UserController.Remove))]
+        public void UpdateAndRemoveNotKeyValueFail(string method)
+        {
+            var user = new User
+            {
+                Name = $"test{Guid.NewGuid()}@mail.com",
+                PersonType = ePersonType.User,
+            };
+
+            var objectReturn = TestUtil.Execute<ContextFluentValidation>(typeof(UserController), method, user);
+            Assert.NotNull(objectReturn);
+            Assert.Single(objectReturn.Inconsistencies);
+            Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(objectReturn.Inconsistencies.First());
+
+            objectReturn.Inconsistencies.Clear();
+        }
+
+        #endregion
+
+
+        #region SUCCESS
+
+
+        // Add and remove success
+        [Fact]
+        public void AddAndRemoveSuccess()
+        {
+            var user = new User
+            {
+                Name = $"test{Guid.NewGuid()}@mail.com",
+                PersonType = ePersonType.User,
+                Id = new Random().Next(1, int.MaxValue)
+            };
+
+            //Add
+            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Add), user);
+            user = TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Find), user);
+            Assert.NotNull(user);
+
+            //Update
+            user.Name = "New name";
+            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Update), user);
+            user = TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Find), user);
+            Assert.NotNull(user);
+            Assert.Equal("New name", user.Name);
+
+            //Remove
+            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Remove), user);
+            user = TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Find), user);
+            Assert.Null(user);
+        }
+
+        #endregion
+
     }
 }

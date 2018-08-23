@@ -9,9 +9,9 @@ namespace Fluent.Architecture.Validation
     /// <summary>
     /// Retorno de validação padrão do sistema.
     /// </summary>
-    public class ContextValidation: ValidationException
+    public class ContextFluentValidation: Extensions.FluentValidationException
     {
-        public List<FluentValidationtException> Inconsistencies { get; set; }
+        public List<Exception.ValidationException.FluentValidationException> Inconsistencies { get; set; }
 
         /// <summary>
         /// Se a validação retornou sucesso.
@@ -35,7 +35,7 @@ namespace Fluent.Architecture.Validation
         /// <param name="exception">
         /// A inconsistência que deseja adicionar.
         /// </param>
-        public void AddInconsistency(FluentValidationtException exception)
+        public void AddInconsistency(Exception.ValidationException.FluentValidationException exception)
         {
             Inconsistencies.Add(exception);
         }
@@ -43,9 +43,9 @@ namespace Fluent.Architecture.Validation
         /// <summary>
         /// Inicializa o contexto de validação.
         /// </summary>
-        public ContextValidation():base("")
+        public ContextFluentValidation():base("")
         {
-            Inconsistencies = new List<FluentValidationtException>();
+            Inconsistencies = new List<Exception.ValidationException.FluentValidationException>();
         }
 
         /// <summary>

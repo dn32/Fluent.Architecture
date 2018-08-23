@@ -56,17 +56,15 @@ namespace Fluent.Architecture.Extensions
         }
 
         //Todo documentar
-        public static List<KeyValuePair<string, int>> GetKeyValues(this object entity)
+        public static List<KeyValuePair<string, object>> GetKeyValues(this object entity)
         {
-            var returnList = new List<KeyValuePair<string, int>>();
+            var returnList = new List<KeyValuePair<string, object>>();
             var properties = entity.GetType().GetKeyProperties();
             foreach (var property in properties)
             {
-                if (property.GetValue(entity) is int valueInt)
-                {
-                    var key = property.GetColumnName();
-                    returnList.Add(new KeyValuePair<string, int>(key, valueInt));
-                }
+                //Todo resolver problema com enumeradores aqui
+                var key = property.GetColumnName();
+                returnList.Add(new KeyValuePair<string, object>(key, property.GetValue(entity).GetDbValue()));
             }
 
             return returnList;

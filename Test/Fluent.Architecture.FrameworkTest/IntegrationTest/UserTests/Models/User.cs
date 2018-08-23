@@ -13,7 +13,7 @@ namespace Fluent.Architecture.FrameworkTest.IntegrationTest.UserTests.Models
         public int Id { get; set; }
 
         [Key, Column(Order = 1)]
-        public ePersonType? PersonType {get; set;}
+        public ePersonType? PersonType { get; set; }
 
         [Required]
         public string Name { get; set; }

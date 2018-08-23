@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Fluent.Architecture.Exception.ValidationException;
 using Fluent.Architecture.Model;
@@ -32,9 +33,9 @@ namespace Fluent.Architecture.Validation
         /// <param name="ex">
         /// A inconsitência.
         /// </param>
-        protected void AddInconsistency(FluentValidationtException ex)
+        protected void AddInconsistency(Exception.ValidationException.FluentValidationException ex)
         {
-            Service.SessionRequest.ContextValidation.AddInconsistency(ex);
+            Service.SessionRequest.ContextFluentValidation.AddInconsistency(ex);
         }
 
         /// <summary>
@@ -54,8 +55,11 @@ namespace Fluent.Architecture.Validation
 
         private void RunTheContextValidation()
         {
-            Service.SessionRequest.ContextValidation.Validate();
+            Service.SessionRequest.ContextFluentValidation.Validate();
         }
+
+        public bool NullParameterOk { get; set; } = true;
+        public bool KeyValuesOk { get; set; } = true;
 
         #endregion
 
@@ -67,12 +71,11 @@ namespace Fluent.Architecture.Validation
         /// </param>
         public void Add(T entity)
         {
-            ValidateNullParameter(entity);
-            ValidateRequiredProperty(entity);
-            ValidateKeylessEntity();
-            //ValidIfTheKeyPropertyHasValue(entity); chaves compostas dever ter valor informado. Melhorar esse tratamento
-            ValidadeFluentUnicKey(entity, false);
-            ValidatetEntityExists(entity);
+            ParameterMustBeInformed(entity);
+            RequiredPropertyMustBeInformed(entity);
+            AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
+            AllFluentKeysMustBeInformed(entity, false);
+            EntityShouldNotExistInDatabase(entity);
 
             RunTheContextValidation();
         }
@@ -83,12 +86,11 @@ namespace Fluent.Architecture.Validation
         /// <param name="entity"></param>
         public void Update(T entity)
         {
-            ValidateNullParameter(entity);
-            ValidateRequiredProperty(entity);
-            ValidateKeylessEntity();
-            ValidIfTheKeyPropertyHasNoValue(entity);
-            ValidadeFluentUnicKey(entity, true);
-            ValidateNotEntityExists(entity);
+            ParameterMustBeInformed(entity);
+            RequiredPropertyMustBeInformed(entity);
+            AllKeysMustBeInformed(entity);
+            AllFluentKeysMustBeInformed(entity, true);
+            EntityMustExistInDatabase(entity);
 
             RunTheContextValidation();
         }
@@ -99,10 +101,9 @@ namespace Fluent.Architecture.Validation
         /// <param name="entity"></param>
         public void Remove(T entity)
         {
-            ValidateNullParameter(entity);
-            ValidateKeylessEntity();
-            ValidIfTheKeyPropertyHasNoValue(entity);
-            ValidateNotEntityExists(entity);
+            ParameterMustBeInformed(entity);
+            AllKeysMustBeInformed(entity);
+            EntityMustExistInDatabase(entity);
 
             RunTheContextValidation();
         }
@@ -110,89 +111,77 @@ namespace Fluent.Architecture.Validation
         //Todo Documentar
         public void Find(T entity)
         {
-            ValidateNullParameter(entity);
-            ValidateKeylessEntity();
-            ValidIfTheKeyPropertyHasNoValue(entity);
+            ParameterMustBeInformed(entity);
+            AllKeysMustBeInformed(entity);
 
             RunTheContextValidation();
         }
 
+        /*
+=== PADRÃO DE NOMECLATURA ===
+O que deve ser verdadeiro
+ParameterMustBeInformed 
+(O parâmetro deve ser informado. Se não for informado, teremos uma inconsistência)
+Evite escrever negação, mas quando não for possível evitar, escreva assim: EntityShouldNotExistInDatabase.
+A entida não pode existir. Se existir, teremos uma inconsistência.
+=============================         
+         */
+
         #region VALIDATIONS
 
-        private void ValidateRequiredProperty(T entity)
+        private void ParameterMustBeInformed(T entity)
         {
             if (entity == null)
+            {
+                AddInconsistency(new NullParameterFluentValidationException(nameof(entity)));
+                NullParameterOk = false;
+                return;
+            }
+
+            NullParameterOk = true;
+        }
+
+        private void RequiredPropertyMustBeInformed(T entity)
+        {
+            if (!NullParameterOk)
             {
                 return;
             }
 
-            var properties1 = typeof(T).GetKeyProperties();
-            var properties2 = typeof(T).GetPropertiesByAttribute<RequiredAttribute>();
-            properties1.AddRange(properties2);
-            foreach (var property in properties1)
+            var properties = typeof(T).GetPropertiesByAttribute<RequiredAttribute>();
+            foreach (var property in properties)
             {
-                if (property.GetValue(entity) == null)
+                if (property.GetValue(entity).IsFluentNull())
                 {
-                    AddInconsistency(new PropertyRequiredFluentValidationtException(property.Name));
+                    AddInconsistency(new PropertyRequiredFluentValidationException(property.Name));
                 }
             }
         }
 
-        private void ValidateNullParameter(T entity)
+        private void AllKeysMustBeInformed(T entity)
         {
-            if (entity == null)
+            if (!NullParameterOk)
             {
-                AddInconsistency(new NullParameterFluentValidationtException(nameof(entity)));
-            }
-        }
-
-        private void ValidateKeylessEntity()
-        {
-            if (typeof(T).GetKeyProperties().Count == 0)
-            {
-                AddInconsistency(new KeylessEntityFluentValidationtException(typeof(T)));
-            }
-        }
-
-        //For add chave deve ser 0
-        private void ValidIfTheKeyPropertyHasValue(T entity)
-        {
-            if (entity == null)
-            {
+                KeyValuesOk = false;
                 return;
             }
+
+            KeyValuesOk = true;
 
             var keyValues = entity.GetKeyValues();
             foreach (var key in keyValues)
             {
-                if (key.Value != 0)
+                if (key.Value.IsFluentNull())
                 {
-                    AddInconsistency(new PropertyNotNullFluentValidationtException(key.Key));
+                    AddInconsistency(new PropertyRequiredFluentValidationException(key.Key));
+                    KeyValuesOk = false;
                 }
             }
         }
 
-        //For Update chave não pode ser 0
-        private void ValidIfTheKeyPropertyHasNoValue(T entity)
+        private void AllFluentKeysMustBeInformed(T entity, bool ignoreForThisElement)
         {
-            if (entity == null)
-            {
-                return;
-            }
-
-            var keyValues = entity.GetKeyValues();
-            foreach (var key in keyValues)
-            {
-                if (key.Value == 0)
-                {
-                    AddInconsistency(new PropertyNullFluentValidationtException(key.Key));
-                }
-            }
-        }
-
-        private void ValidadeFluentUnicKey(T entity, bool ignoreForThisElement)
-        {
-            if (entity == null)
+            if (!NullParameterOk || !KeyValuesOk)
             {
                 return;
             }
@@ -211,7 +200,7 @@ namespace Fluent.Architecture.Validation
 
                 if (ignoreForThisElement)
                 {
-                    var keyValues = entity.GetKeyValues().Select(x => $"{x.Key} != {x.Value}").ToArray();
+                    var keyValues = entity.GetKeyValues().Select(x => $"{x.Key} != '{x.Value.GetDbValue()}'").ToArray();
                     if (keyValues.Length > 0)
                     {
                         sql += " and " + string.Join(" and ", keyValues);
@@ -220,15 +209,14 @@ namespace Fluent.Architecture.Validation
 
                 if (Repository.ExistsSql(sql))
                 {
-                    AddInconsistency(new UnicKeyFluentValidationtException(property.Name, value.ToString()));
+                    AddInconsistency(new UniqueKeyFluentValidationException(property.Name, value.ToString()));
                 }
             }
         }
 
-        //No update deve existir, se não existir, da erro
-        private void ValidateNotEntityExists(T entity)
+        private void EntityMustExistInDatabase(T entity)
         {
-            if (entity == null)
+            if (!NullParameterOk || !KeyValuesOk)
             {
                 return;
             }
@@ -237,15 +225,13 @@ namespace Fluent.Architecture.Validation
             {
                 var keys = entity.GetKeyValues().Select(x => $"{{{x.Key}:{x.Value}}}").ToArray();
                 var keyValues = string.Join(", ", keys);
-                AddInconsistency(new EntityNotFoundFluentValidationtException(keyValues));
+                AddInconsistency(new EntityNotFoundFluentValidationException(keyValues));
             }
         }
 
-        //Todo  - Documentar
-        //No insert não deve existir. Se existir, da erro
-        private void ValidatetEntityExists(T entity)
+        private void EntityShouldNotExistInDatabase(T entity)
         {
-            if (entity == null)
+            if (!NullParameterOk || !KeyValuesOk)
             {
                 return;
             }
@@ -254,7 +240,7 @@ namespace Fluent.Architecture.Validation
             {
                 var keys = entity.GetKeyValues().Select(x => $"{{{x.Key}:{x.Value}}}").ToArray();
                 var keyValues = string.Join(", ", keys);
-                AddInconsistency(new EntityExistsFluentValidationtException(keyValues));
+                AddInconsistency(new EntityExistsFluentValidationException(keyValues));
             }
         }
 

@@ -28,7 +28,7 @@ namespace Fluent.Architecture.Filters
 
         public override void OnException(ExceptionContext filterContext)
         {
-            if (filterContext.Exception is ContextValidation exception)
+            if (filterContext.Exception is ContextFluentValidation exception)
             {
                 filterContext.Result = new JsonResult
                 {

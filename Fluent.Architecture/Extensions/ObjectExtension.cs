@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -12,6 +13,98 @@ namespace Fluent.Architecture.Extensions
     /// </summary>
     public static class ObjectExtension
     {
+        public static object GetDbValue(this object value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            var type = value.GetType();
+
+            if (type == typeof(string))
+            {
+                return $"'{value}'";
+            }
+            else if (type == typeof(int))
+            {
+                return value;
+
+            }
+            else if (type == typeof(Guid))
+            {
+                return $"'{value}'";
+            }
+
+            try
+            {
+                var valorInt = (int)value; // Enum
+                return valorInt;
+            }
+            catch (System.Exception)
+            {
+                // ignored
+            }
+
+            return value;
+        }
+
+        /// <summary>
+        /// Verifica se um objeto é nulo ou vazio
+        /// </summary>
+        /// <param name="value">
+        /// Objeto a ser verificado.
+        /// </param>
+        /// <returns>
+        /// Se o objeto é nulo ou vazio.
+        /// </returns>
+        public static bool IsFluentNull(this object value)
+        {
+            if (value == null)
+            {
+                return true;
+            }
+
+            var type = value.GetType();
+
+            if (type == typeof(string))
+            {
+                if (string.IsNullOrEmpty(value.ToString()))
+                {
+                    return true;
+                }
+            }
+            else if (type == typeof(int))
+            {
+                if ((int)value == 0)
+                {
+                    return true;
+                }
+            }
+            else if (type == typeof(Guid))
+            {
+                if ((Guid)value == Guid.Empty)
+                {
+                    return true;
+                }
+            }
+
+            try
+            {
+                var valorInt = (int)value; // Enum
+                if (valorInt == 0)
+                {
+                    return true;
+                }
+            }
+            catch (System.Exception)
+            {
+                // ignored
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Obtem todos os dados de um objeto, incluindo de campos e propriedades privadas.
         /// </summary>
@@ -38,7 +131,7 @@ namespace Fluent.Architecture.Extensions
 
             var propertyInformations = new List<NameAndValue>();
 
-           
+
             if (obj is ICollection colection)
             {
                 foreach (var el in colection)
