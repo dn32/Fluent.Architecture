@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Fluent.Architecture.interceptors
+namespace Fluent.Architecture.Test.Mock
 {
     public class FluentInvocation
     {

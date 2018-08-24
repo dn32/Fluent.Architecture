@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Fluent.Architecture.Exception.ValidationException;
 
 namespace Fluent.Architecture.Validation
 {
@@ -7,7 +8,7 @@ namespace Fluent.Architecture.Validation
     /// <summary>
     /// Retorno de validação padrão do sistema.
     /// </summary>
-    public class ContextFluentValidation: Extensions.FluentValidationException
+    public class ContextFluentValidation: FluentValidationException
     {
         public List<Exception.ValidationException.FluentValidationException> Inconsistencies { get; set; }
 

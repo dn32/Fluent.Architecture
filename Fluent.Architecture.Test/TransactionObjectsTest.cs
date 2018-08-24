@@ -12,7 +12,14 @@ namespace Fluent.Architecture.Test
 
         protected override IQueryable<TX> GetObjectQueryInternal<TX>() 
         {
-            return FluentMockUtil.GetObjectQueryForMock<TX>();
+            var list = FluentMockUtil.GetObjectQueryForMock<TX>();
+
+            if (list == null)
+            {
+                return base.GetObjectQueryInternal<TX>();
+            }
+
+            return list;
         }
     }
 }

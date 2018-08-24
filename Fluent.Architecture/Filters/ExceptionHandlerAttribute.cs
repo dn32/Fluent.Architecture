@@ -11,6 +11,7 @@ using Fluent.Architecture.Exception;
 using Fluent.Architecture.Validation;
 
 #else
+using System;
 using Microsoft.AspNetCore.Mvc.Filters;
 #endif
 
@@ -51,6 +52,14 @@ namespace Fluent.Architecture.Filters
                 filterContext.HttpContext.Response.StatusCode = 500;
                 filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
             }
+        }
+    }
+#else
+    public class ExceptionHandlerAttribute 
+    {
+        public void OnException(ExceptionContext filterContext)
+        {
+            throw new NotImplementedException();
         }
     }
 #endif

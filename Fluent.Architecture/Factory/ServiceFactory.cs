@@ -19,7 +19,7 @@ namespace Fluent.Architecture.Factory
     /// Classe interna.
     /// Fábrica de serviços.
     /// </summary>
-    internal class ServiceFactory
+    public class ServiceFactory
     {
         /// <summary>
         /// Cria um serviço que terá controle de transação.
@@ -34,7 +34,7 @@ namespace Fluent.Architecture.Factory
         /// <returns>
         /// O serviço criado.
         /// </returns>
-        internal static TS Create<TS>(object httpContext) where TS : TransactionalService, new()
+        public static TS Create<TS>(object httpContext) where TS : TransactionalService, new()
         {
             var sessionId = Guid.NewGuid();
             var service = InternalCreate<TS>(sessionId);

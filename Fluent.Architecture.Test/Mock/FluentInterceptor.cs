@@ -1,4 +1,4 @@
-﻿namespace Fluent.Architecture.interceptors
+﻿namespace Fluent.Architecture.Test.Mock
 {
     public abstract class FluentInterceptor
     {

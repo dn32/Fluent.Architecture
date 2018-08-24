@@ -16,7 +16,7 @@ namespace Fluent.Architecture.Util
     /// <summary>
     /// Utilitários de uso global.
     /// </summary>
-    internal class GlobalUtil
+    public class GlobalUtil
     {
         /// <summary>
         /// Obtem o tipo da entidade de um objeto baseado em um tipo esperado de Fluent. Ex <see cref="FluentService{T}"/>, <see cref="FluentRepository{T}"/>, etc. O retorno será o tipo de T.
@@ -65,7 +65,7 @@ namespace Fluent.Architecture.Util
         /// <returns>
         /// O tipo.
         /// </returns>
-        internal static Type GetFluentEntityType(Type currentType)
+        public static Type GetFluentEntityType(Type currentType)
         {
             return GetBase(currentType);
 

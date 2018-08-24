@@ -47,7 +47,7 @@ namespace Fluent.Architecture.Service
         // Todo Documenta após a organização desses itens.
 
         [NotPropagate]
-        public virtual object PropagateService(SpecificationBase spec)
+        public virtual object PropagateService(BaseSpecification spec)
         {
             return PropagateService(string.Empty, spec);
         }
@@ -116,7 +116,7 @@ namespace Fluent.Architecture.Service
         /// A lista paginada de resultados.
         /// </returns>
         [Propagate]
-        public virtual List<TO> Spec<TO>(SpecificationSelectIQueryableSpec<T, TO> spec, FluentPagination pagination = null)
+        public virtual List<TO> Spec<TO>(FluentSelectSpecification<T, TO> spec, FluentPagination pagination = null)
         {
             return Repository.Spec(spec, pagination);
         }
@@ -134,7 +134,7 @@ namespace Fluent.Architecture.Service
         /// A lista paginada de resultados.
         /// </returns>
         [Propagate]
-        public virtual List<T> Spec(SpecificationIQueryableSpec<T> spec, FluentPagination pagination = null)
+        public virtual List<T> Spec(FluentSpecification<T> spec, FluentPagination pagination = null)
         {
             return Repository.Spec(spec, pagination);
         }
@@ -152,7 +152,7 @@ namespace Fluent.Architecture.Service
         /// O item referente à consulta ou nulo.
         /// </returns>
         [Propagate]
-        public virtual TO SpecOne<TO>(SpecificationSelectIQueryableSpec<T, TO> spec)
+        public virtual TO SpecOne<TO>(FluentSelectSpecification<T, TO> spec)
         {
             return Repository.SpecOne(spec);
         }
@@ -167,7 +167,7 @@ namespace Fluent.Architecture.Service
         /// O item referente à consulta ou nulo.
         /// </returns>
         [Propagate]
-        public virtual T SpecOne(SpecificationIQueryableSpec<T> spec)
+        public virtual T SpecOne(FluentSpecification<T> spec)
         {
             return Repository.SpecOne(spec);
         }
@@ -185,7 +185,7 @@ namespace Fluent.Architecture.Service
         /// A quantidade de itens.
         /// </returns>
         [Propagate]
-        public virtual int Count<TO>(SpecificationSelectIQueryableSpec<T, TO> spec)
+        public virtual int Count<TO>(FluentSelectSpecification<T, TO> spec)
         {
             return Repository.Count(spec);
         }
@@ -200,32 +200,21 @@ namespace Fluent.Architecture.Service
         /// A quantidade de itens.
         /// </returns>
         [Propagate]
-        public virtual int Count(SpecificationIQueryableSpec<T> spec)
+        public virtual int Count(FluentSpecification<T> spec)
         {
             return Repository.Count(spec);
         }
 
-        /// <summary>
-        /// Avalia se um item existe no banco de dados, baseado em uma especificação.
-        /// </summary>
-        /// <param name="spec">
-        /// A especificação de requisição.
-        /// </param>
-        /// <returns>
-        /// Se o item existe ou não.
-        /// </returns>
+        //Todo documentar
         [Propagate]
-        public virtual bool Exists(SpecificationIQueryableSpec<T> spec)
+        public virtual void RemoveRange(FluentSpecification<T> spec)
         {
-            return Repository.Exists(spec);
+             Repository.RemoveRange(spec);
         }
 
         /// <summary>
         /// Avalia se um item existe no banco de dados, baseado em uma especificação.
         /// </summary>
-        /// <typeparam name="TO">
-        /// O tipo de saida desejada. Deve ser o mesmo definido na saida da especificação.
-        /// </typeparam>
         /// <param name="spec">
         /// A especificação de requisição.
         /// </param>
@@ -233,10 +222,28 @@ namespace Fluent.Architecture.Service
         /// Se o item existe ou não.
         /// </returns>
         [Propagate]
-        public virtual bool Exists<TO>(SpecificationSelectIQueryableSpec<T, TO> spec)
+        public virtual bool Exists(FluentSpecification<T> spec)
         {
             return Repository.Exists(spec);
         }
+
+        ///// <summary>
+        ///// Avalia se um item existe no banco de dados, baseado em uma especificação.
+        ///// </summary>
+        ///// <typeparam name="TO">
+        ///// O tipo de saida desejada. Deve ser o mesmo definido na saida da especificação.
+        ///// </typeparam>
+        ///// <param name="spec">
+        ///// A especificação de requisição.
+        ///// </param>
+        ///// <returns>
+        ///// Se o item existe ou não.
+        ///// </returns>
+        //[Propagate]
+        //public virtual bool Exists<TO>(FluentSelectSpecification<T, TO> spec)
+        //{
+        //    return Repository.Exists(spec);
+        //}
 
         /// <summary>
         /// Adiciona vários itens de um mesmo tipo ao banco de dados.
@@ -297,7 +304,18 @@ namespace Fluent.Architecture.Service
              Validation.Remove(entity);
            return Repository.Remove(entity);
         }
+        
+        //Todo documentar
+        [Propagate]
+        public virtual void RemoveRange(params T[] entities)
+        {
+            foreach (var entity in entities)
+            {
+                Validation.Remove(entity);
+            }
 
+            Repository.RemoveRange(entities);
+        }
         #endregion
 
         #region PRIVATE

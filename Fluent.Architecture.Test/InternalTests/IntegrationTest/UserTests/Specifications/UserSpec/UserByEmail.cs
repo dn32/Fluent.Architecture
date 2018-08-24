@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using Fluent.Architecture.SampleFrameworkWeb.Models;
 using Fluent.Architecture.Service;
 using Fluent.Architecture.Specifications;
+using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Models;
 
-namespace Fluent.Architecture.SampleFrameworkWeb.Specifications.UserSpec
+namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Specifications.UserSpec
 {
     public class UserByEmail : FluentSpecification<User>
     {

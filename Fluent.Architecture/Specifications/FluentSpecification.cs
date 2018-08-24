@@ -5,12 +5,10 @@ namespace Fluent.Architecture.Specifications
 {
     /// <inheritdoc />
     /// <summary>
-    /// Especificação base para todas as especificações do sistema que tiverem a saida diferente da entrada.
-    /// Geralmente o Spec possui em Select nesse caso.
+    /// Especificação base para todas as especificações do sistema.
     /// </summary>
     /// <typeparam name="TE">Tipo de entidade da especificação.</typeparam>
-    /// <typeparam name="TO">Tipo de objeto de saida da especificação.</typeparam>
-    public abstract class SpecificationSelectIQueryableSpec<TE, TO> : SpecificationBase
+    public abstract class FluentSpecification<TE> : BaseSpecification
     {
         /// <summary>
         /// A especificação.
@@ -21,10 +19,10 @@ namespace Fluent.Architecture.Specifications
         /// <returns>
         /// A especificação criada.
         /// </returns>
-        public abstract IQueryable<TO> Spec(IQueryable<TE> query);
+        public abstract IQueryable<TE> Spec(IQueryable<TE> query);
 
         /// <inheritdoc />
-        protected SpecificationSelectIQueryableSpec(TransactionalService service) : base(service)
+        protected FluentSpecification(TransactionalService service) : base(service)
         {
         }
     }

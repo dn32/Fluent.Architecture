@@ -2,14 +2,12 @@
 using System.Linq;
 using System.Text;
 using Fluent.Architecture.Extensions;
-using Fluent.Architecture.interceptors;
 using Fluent.Architecture.Model;
 
 namespace Fluent.Architecture.Test.Mock
 {
     public class FluentMockUtil
     {
-
         internal static IQueryable<TX> GetObjectQueryForMock<TX>() where TX : BaseEntity
         {
             var type = typeof(TX);

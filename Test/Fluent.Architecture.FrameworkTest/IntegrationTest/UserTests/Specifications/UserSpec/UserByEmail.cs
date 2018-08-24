@@ -5,7 +5,7 @@ using Fluent.Architecture.Specifications;
 
 namespace Fluent.Architecture.FrameworkTest.IntegrationTest.UserTests.Specifications.UserSpec
 {
-    public class UserByEmail : SpecificationIQueryableSpec<User>
+    public class UserByEmail : FluentSpecification<User>
     {
         private readonly string _email;
 

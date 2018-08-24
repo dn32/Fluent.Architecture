@@ -8,7 +8,7 @@ namespace Fluent.Architecture.Specifications
     /// <summary>
     /// Especificação base para todas as especificações do sistema.
     /// </summary>
-    public abstract class SpecificationBase
+    public abstract class BaseSpecification
     {
         private TransactionObjects TransactionObjects { get; }
 
@@ -18,7 +18,7 @@ namespace Fluent.Architecture.Specifications
         /// <param name="service">
         /// Quanquer serviço para obtenção dos objetos de transação,
         /// </param>
-        protected SpecificationBase(TransactionalService service)
+        protected BaseSpecification(TransactionalService service)
         {
             TransactionObjects = service.TransactionObjects;
         }

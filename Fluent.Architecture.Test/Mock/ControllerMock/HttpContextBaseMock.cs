@@ -9,7 +9,7 @@ namespace Fluent.Architecture.Test.Mock.ControllerMock
 
         public override HttpRequestBase Request { get; }
 
-        public bool SetIsCustomErrorEnabled { get; set; }
+        private bool SetIsCustomErrorEnabled { get; set; }
 
         public override bool IsCustomErrorEnabled => SetIsCustomErrorEnabled;
 
@@ -23,6 +23,13 @@ namespace Fluent.Architecture.Test.Mock.ControllerMock
         {
             Request = new HttpRequestBaseMock();
             Response = new HttpResponseBaseMock();
+        }
+
+        public HttpContextBaseMock(bool isCustomErrorEnabled)
+        {
+            Request = new HttpRequestBaseMock();
+            Response = new HttpResponseBaseMock();
+            SetIsCustomErrorEnabled = isCustomErrorEnabled;
         }
     }
 }

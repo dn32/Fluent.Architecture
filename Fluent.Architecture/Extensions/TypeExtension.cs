@@ -26,11 +26,18 @@ namespace Fluent.Architecture.Extensions
             return type.IsValueType ? TypeDefaults.GetOrAdd(type, Activator.CreateInstance) : null;
         }
 
+        // Todo - Documentar
+        public static object[] GetConstructorParameters(this Type classType)
+        {
+            var parameters = classType.GetConstructors().First().GetParameters();
+            return parameters.Select(x => x.ParameterType.GetDefaultValue()).ToArray();
+        }
+
         /// <summary>
-        /// Obtem o nome amigável de um tipo. Exemplo: SpecificationSelectIQueryableSpec<FluentEntity>
+        /// Obtem o nome amigável de um tipo. Exemplo: FluentSelectSpecification<FluentEntity>
         /// </summary>
         /// <param name="type">O tipo a ser tratado.</param>
-        /// <param name="useGenericT">Se deve indicar os tipos genéricos como T. Exemplo com true: SpecificationSelectIQueryableSpec<T, T>. Exemplo com false: SpecificationSelectIQueryableSpec<FluentEntity, TO></param>
+        /// <param name="useGenericT">Se deve indicar os tipos genéricos como T. Exemplo com true: FluentSelectSpecification<T, T>. Exemplo com false: FluentSelectSpecification<FluentEntity, TO></param>
         /// <returns>O nome amigável do tipo.</returns>
         public static string GetFriendlyName(this Type type, bool useGenericT = true)
         {

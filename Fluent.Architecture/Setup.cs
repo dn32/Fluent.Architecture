@@ -76,13 +76,13 @@ namespace Fluent.Architecture
             Validations.Add("base", typeof(FluentValidation<FluentEntity>));
 
             var assemblies = AppDomain.CurrentDomain.GetAssemblies().OrderBy(x => x.FullName).ToList();
-            foreach (var assemblie in assemblies)
+            foreach (var assembly in assemblies)
             {
                 Type[] types;
 
                 try
                 {
-                    types = assemblie.GetTypes();
+                    types = assembly.GetTypes();
                 }
                 catch (System.Exception)
                 {
@@ -93,11 +93,11 @@ namespace Fluent.Architecture
                     .Where(x => !string.IsNullOrWhiteSpace(x.Item1)).ToList()
                     .ForEach(service => Services.Add(service.Item1, service.Item2));
 
-                var servicosTransacionais = types.Where(x => x.IsSubclassOf(typeof(TransactionalService))).ToList();
-                ValidateIfAllServicePropertiesNotHaveTheSetMethod(servicosTransacionais);
-                ValidateIfAllServicePropertiesAreVirtual(servicosTransacionais);
-                ValidateIfAllServicePropertiesNotHavePublic(servicosTransacionais);
-                ValidateIfAllServicePropertiesHaveDefaultConstructor(servicosTransacionais);
+                var transactionalServices = types.Where(x => x.IsSubclassOf(typeof(TransactionalService))).ToList();
+                ValidateIfAllServicePropertiesNotHaveTheSetMethod(transactionalServices);
+                ValidateIfAllServicePropertiesAreVirtual(transactionalServices);
+                ValidateIfAllServicePropertiesNotHavePublic(transactionalServices);
+                ValidateIfAllServicePropertiesHaveDefaultConstructor(transactionalServices);
 
                 types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentRepository<BaseEntity>)))
                    .Where(x => !string.IsNullOrWhiteSpace(x.Item1)).ToList()

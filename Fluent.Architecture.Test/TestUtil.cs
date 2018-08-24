@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Exception.ValidationException;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Service;
 using Fluent.Architecture.Test.Mock;
@@ -22,7 +23,7 @@ namespace Fluent.Architecture.Test
         }
         
 #if NET461
-        public static TR Execute<TR>(Type controllerType, string methodName, params object[] parameters) where TR : class
+        public static TR Execute<TR>(Type controllerType, string methodName, params object[] parameters)
         {
             var controller = TestUtil.GetController(controllerType);
             MethodInfo method;
@@ -60,22 +61,27 @@ namespace Fluent.Architecture.Test
                     fluentOnActionExecuted.Invoke(controller, null);
                 }
 
-                return returnObj?.Data as TR;
+                return returnObj?.Data as dynamic;
             }
             catch (TargetInvocationException ex)
             {
                 if (ex.InnerException == null)
                 {
-                    return ex as TR;
+                    return ex as dynamic;
                 }
 
                 if (ex.InnerException is FluentValidationException validationError)
                 {
-                    return validationError as TR;
+                    return validationError as dynamic;
                 }
 
                 throw ex.InnerException;
             }
+        }
+#else
+        public static TR Execute<TR>(Type controllerType, string methodName, params object[] parameters) where TR : class
+        {
+            throw new NotImplementedException();
         }
 #endif
     }
