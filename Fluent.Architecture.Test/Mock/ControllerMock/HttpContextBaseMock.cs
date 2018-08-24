@@ -6,7 +6,12 @@ namespace Fluent.Architecture.Test.Mock.ControllerMock
     public class HttpContextBaseMock : HttpContextBase
     {
         public override HttpResponseBase Response { get; }
+
         public override HttpRequestBase Request { get; }
+
+        public bool SetIsCustomErrorEnabled { get; set; }
+
+        public override bool IsCustomErrorEnabled => SetIsCustomErrorEnabled;
 
         public HttpContextBaseMock(HttpRequestBase request, HttpResponseBase response)
         {

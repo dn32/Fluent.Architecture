@@ -177,18 +177,13 @@ namespace Fluent.Architecture.FrameworkTest.IntegrationTest
             var exception = new ContextFluentValidation();
             exception.AddInconsistency(new EntityExistsFluentValidationException("Id"));
 
-            var conteollerContext = new ControllerContext(controller.HttpContext,new RouteData(), controller);
-            var context = new ExceptionContext(conteollerContext, exception);
+            var controllerContext = new ControllerContext(controller.HttpContext,new RouteData(), controller);
+            var context = new ExceptionContext(controllerContext, exception);
             var filter = new ExceptionHandlerAttribute();
-
-            var jsonResult = new JsonResult
-            {
-                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                Data = exception
-            };
+            ((HttpContextBaseMock)controller.HttpContext).SetIsCustomErrorEnabled = true;
 
             filter.OnException(context);
-            Assert.Equal(jsonResult.GetAllDataOfObject(), context.Result.GetAllDataOfObject());
+            Assert.Equal(exception, ((JsonResult)context.Result).Data);
         }
     }
 }
