@@ -13,10 +13,15 @@ namespace Fluent.Architecture.Extensions
     /// </summary>
     public static class ObjectExtension
     {
-        public static object GetDbValue(this object value)
+        public static object GetDbValue(this object value, PropertyInfo property = null)
         {
             if (value == null)
             {
+                if (property != null)
+                {
+                    return $"'{property.PropertyType.GetDefaultValue()}'";
+                }
+
                 return null;
             }
 
@@ -69,7 +74,7 @@ namespace Fluent.Architecture.Extensions
 
             if (type == typeof(string))
             {
-                if (string.IsNullOrEmpty(value.ToString()))
+                if (string.IsNullOrWhiteSpace(value.ToString()))
                 {
                     return true;
                 }

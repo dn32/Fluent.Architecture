@@ -62,9 +62,9 @@ namespace Fluent.Architecture.Repository
 
         //Todo - Codumentar
         [Propagate]
-        internal TE FindSql(string sql)
+        internal TE FindSingleOrDefaultSql(string sql)
         {
-            return Input.SqlQuery(sql).FirstOrDefault();
+            return Input.SqlQuery(sql).SingleOrDefault();
         }
 #else
         [Propagate]
@@ -74,7 +74,7 @@ namespace Fluent.Architecture.Repository
         }
 
         [Propagate]
-        internal TE FindSql(string sql)
+        internal TE FindSingleOrDefaultSql(string sql)
         {
             throw new NotImplementedException();
         }
@@ -235,13 +235,13 @@ namespace Fluent.Architecture.Repository
 
         public TE Find(TE entity)
         {
-            var sql = CreateSqlFromKeys(entity);
-            return FindSql(sql);
+            var sql = CreateSqlFromKeyAndFluentUniqueKeys(entity);
+            return FindSingleOrDefaultSql(sql);
         }
 
         public bool Exists(TE entity)
         {
-            var sql = CreateSqlFromKeys(entity);
+            var sql = CreateSqlFromKeyAndFluentUniqueKeys(entity);
             return ExistsSql(sql);
         }
 
@@ -317,12 +317,29 @@ namespace Fluent.Architecture.Repository
 
         #region INTERNAL
 
-        private static string CreateSqlFromKeys(TE entity)
+        //private static string CreateSqlFromKeys(TE entity)
+        //{
+        //    var tableName = entity.GetTableName();
+        //    var keyValues = entity.GetKeyValues().Select(x => $"({x.Key} = {x.Value} and {x.Key} != 0)").ToArray();
+        //    var sql = $"select * from {tableName} where ";
+        //    sql += string.Join(" and ", keyValues);
+        //    return sql;
+        //}
+
+        private static string CreateSqlFromKeyAndFluentUniqueKeys(TE entity)
         {
             var tableName = entity.GetTableName();
-            var keyValues = entity.GetKeyValues().Select(x => $"({x.Key} = {x.Value} and {x.Key} != 0)").ToArray();
-            var sql = $"select * from {tableName} where ";
-            sql += string.Join(" and ", keyValues);
+            var keyValues = entity.GetKeyValues().Select(x => $"{x.ColumnName} = {x.Value}").ToArray();
+            var fluentUniqueKeyValues = entity.GetFluentUniqueKeyValues().Select(x => $"{x.ColumnName} = {x.Value}").ToArray();
+
+
+            var sql = $"select * from {tableName} where ({string.Join(" and ", keyValues)})";
+
+            if (fluentUniqueKeyValues.Length > 0)
+            {
+                sql += $" or ({string.Join(" or ", fluentUniqueKeyValues)})";
+            }
+
             return sql;
         }
 

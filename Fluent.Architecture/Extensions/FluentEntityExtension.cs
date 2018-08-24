@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
+using Fluent.Architecture.Model;
 
 namespace Fluent.Architecture.Extensions
 {
@@ -45,9 +46,14 @@ namespace Fluent.Architecture.Extensions
             return entityType.GetProperties().Where(x => x.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || x.GetCustomAttribute<KeyAttribute>(true) != null).ToList();
         }
 
-        public static List<PropertyInfo> GetFluentUnicKeyProperties(this Type entityType)
+        public static List<PropertyInfo> GetFluentUniqueKeyProperties(this Type entityType)
         {
             return entityType.GetProperties().Where(x => x.GetCustomAttribute<FluentUnicKeyAttribute>(true) != null).ToList();
+        }
+
+        public static List<PropertyInfo> GetKeyAndFluentUniqueKeyProperties(this Type entityType)
+        {
+            return entityType.GetProperties().Where(x => x.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || x.GetCustomAttribute<KeyAttribute>(true) != null || x.GetCustomAttribute<FluentUnicKeyAttribute>(true) != null).ToList();
         }
 
         public static List<PropertyInfo> GetPropertiesByAttribute<TA>(this Type entityType) where TA : Attribute
@@ -56,15 +62,26 @@ namespace Fluent.Architecture.Extensions
         }
 
         //Todo documentar
-        public static List<KeyValuePair<string, object>> GetKeyValues(this object entity)
+        public static List<KeyValue> GetFluentUniqueKeyValues(this object entity)
         {
-            var returnList = new List<KeyValuePair<string, object>>();
-            var properties = entity.GetType().GetKeyProperties();
+            var returnList = new List<KeyValue>();
+            var properties = entity.GetType().GetFluentUniqueKeyProperties();
             foreach (var property in properties)
             {
-                //Todo resolver problema com enumeradores aqui
-                var key = property.GetColumnName();
-                returnList.Add(new KeyValuePair<string, object>(key, property.GetValue(entity).GetDbValue()));
+                returnList.Add(new KeyValue { Property = property, ColumnName = property.GetColumnName(), Value = property.GetValue(entity).GetDbValue(property) });
+            }
+
+            return returnList;
+        }
+
+        //Todo documentar
+        public static List<KeyValue> GetKeyValues(this object entity)
+        {
+            var returnList = new List<KeyValue>();
+            var properties = entity.GetType().GetKeyAndFluentUniqueKeyProperties();
+            foreach (var property in properties)
+            {
+                returnList.Add(new KeyValue { Property = property, ColumnName = property.GetColumnName(), Value = property.GetValue(entity).GetDbValue(property) });
             }
 
             return returnList;

@@ -25,7 +25,6 @@ namespace Fluent.Architecture.FrameworkTest.IntegrationTest
         
         #region FAIL
 
-        // Null parameter
         [Theory]
         [InlineData(nameof(UserController.Add))]
         [InlineData(nameof(UserController.Update))]
@@ -38,43 +37,25 @@ namespace Fluent.Architecture.FrameworkTest.IntegrationTest
             Assert.IsAssignableFrom<NullParameterFluentValidationException>(error.Inconsistencies.First());
         }
 
-        // Required required null  error
         [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        public void RequiredAddTestFail(string name)
+        [InlineData(nameof(UserController.Update), "")]
+        [InlineData(nameof(UserController.Add), "")]
+        [InlineData(nameof(UserController.Update), " ")]
+        [InlineData(nameof(UserController.Add), " ")]
+        [InlineData(nameof(UserController.Update), null)]
+        [InlineData(nameof(UserController.Add), null)]
+        public void RequiredAddAndUpdateTestFail(string method, string name)
         {
-            var user = new User()
+            var user = GetNewUser();
+
+            if (method == nameof(UserController.Update))
             {
-                Name = name
-            };
+                user = TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Add), user);
+            }
 
-            var error = TestUtil.Execute<ContextFluentValidation>(typeof(UserController), nameof(UserController.Add), user);
-
-            Assert.NotNull(error);
-            Assert.Equal(2, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(error.Inconsistencies.First());
-            Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(error.Inconsistencies.Last());
-        }
-
-        // Required required null error
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        public void RequiredUpdateTestFail(string name)
-        {
-            var user = new User
-            {
-                Name = "Maria",
-                Email = $"maria{Guid.NewGuid()}@mail.com",
-                PersonType = ePersonType.User,
-                Id = new Random().Next(1, int.MaxValue)
-            };
-
-            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Add), user);
             user.Name = name;
 
-            var error = TestUtil.Execute<ContextFluentValidation>(typeof(UserController), nameof(UserController.Update), user);
+            var error = TestUtil.Execute<ContextFluentValidation>(typeof(UserController), method, user);
 
             Assert.NotNull(error);
             Assert.Single(error.Inconsistencies);
@@ -83,28 +64,6 @@ namespace Fluent.Architecture.FrameworkTest.IntegrationTest
             TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Remove), user);
         }
 
-        [Fact]
-        public void AddErrorFluentUniqueKey()
-        {
-            var user = new User
-            {
-                Name = "Maria",
-                Email = $"maria{Guid.NewGuid()}@mail.com",
-                PersonType = ePersonType.User,
-                Id = new Random().Next(1, int.MaxValue)
-            };
-
-            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Add), user);
-
-            user.Id = new Random().Next(1, int.MaxValue);
-
-            var objectReturn = TestUtil.Execute<ContextFluentValidation>(typeof(UserController), nameof(UserController.Add), user);
-            Assert.NotNull(objectReturn);
-            Assert.Single(objectReturn.Inconsistencies);
-            Assert.IsAssignableFrom<UniqueKeyFluentValidationException>(objectReturn.Inconsistencies.First());
-        }
-
-        // Update and remove not found fail
         [Theory]
         [InlineData(nameof(UserController.Update))]
         [InlineData(nameof(UserController.Remove))]
@@ -148,17 +107,26 @@ namespace Fluent.Architecture.FrameworkTest.IntegrationTest
 
         #region SUCCESS
 
+        private User GetNewUser()
+        {
+            var rand = new Random().Next(1, int.MaxValue);
+            return new User
+            {
+                PersonType = ePersonType.User,
+                Id = rand,
+                UserName = $"maria {rand}",
+                Name = $"maria {rand}",
+                Email = $"test{rand}@mail.com",
+                Password = $"test{rand}@mail.com",
+                Tel = $"test{rand}@mail.com",
+            };
+        }
 
         // Add and remove success
         [Fact]
         public void AddAndRemoveSuccess()
         {
-            var user = new User
-            {
-                Name = $"test{Guid.NewGuid()}@mail.com",
-                PersonType = ePersonType.User,
-                Id = new Random().Next(1, int.MaxValue)
-            };
+            var user = GetNewUser();
 
             //Add
             TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Add), user);

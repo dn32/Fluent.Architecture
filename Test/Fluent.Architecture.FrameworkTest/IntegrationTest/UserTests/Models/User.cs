@@ -19,7 +19,7 @@ namespace Fluent.Architecture.FrameworkTest.IntegrationTest.UserTests.Models
         public string Name { get; set; }
 
         [FluentUnicKey]
-        public string Username { get; set; }
+        public string UserName { get; set; }
 
         [FluentUnicKey]
         public string Email { get; set; }

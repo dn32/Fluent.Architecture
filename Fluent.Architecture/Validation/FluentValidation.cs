@@ -74,8 +74,8 @@ namespace Fluent.Architecture.Validation
             ParameterMustBeInformed(entity);
             RequiredPropertyMustBeInformed(entity);
             AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
-            AllFluentKeysMustBeInformed(entity, false);
-            EntityShouldNotExistInDatabase(entity);
+//            AllFluentKeysMustBeInformed(entity, false);
+            EntityShouldNotExistInDatabaseBasedOnKeys(entity);
 
             RunTheContextValidation();
         }
@@ -89,7 +89,7 @@ namespace Fluent.Architecture.Validation
             ParameterMustBeInformed(entity);
             RequiredPropertyMustBeInformed(entity);
             AllKeysMustBeInformed(entity);
-            AllFluentKeysMustBeInformed(entity, true);
+          //  AllFluentKeysMustBeInformed(entity, true);
             EntityMustExistInDatabase(entity);
 
             RunTheContextValidation();
@@ -173,13 +173,13 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
             {
                 if (key.Value.IsFluentNull())
                 {
-                    AddInconsistency(new PropertyRequiredFluentValidationException(key.Key));
+                    AddInconsistency(new PropertyRequiredFluentValidationException(key.Property.Name));
                     KeyValuesOk = false;
                 }
             }
         }
 
-        private void AllFluentKeysMustBeInformed(T entity, bool ignoreForThisElement)
+        private void AllFluentKeysMustBeInformed(T entity)
         {
 
             if (!NullParameterOk)
@@ -190,48 +190,51 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
 
             KeyValuesOk = true;
 
-            var keyValues = entityType.GetFluentUnicKeyProperties();
-            foreach (var key in keyValues)
+            var properties = entity.GetType().GetFluentUniqueKeyProperties();
+            foreach (var property in properties)
             {
-                if (key.Value.IsFluentNull())
+                if (property.GetValue(entity).IsFluentNull())
                 {
-                    AddInconsistency(new PropertyRequiredFluentValidationException(key.Key));
+                    AddInconsistency(new PropertyRequiredFluentValidationException(property.Name));
                     KeyValuesOk = false;
                 }
             }
-
-            //if (!NullParameterOk || !KeyValuesOk)
-            //{
-            //    return;
-            //}
-
-            //var entityType = typeof(T);
-            //var properties = entityType.GetFluentUnicKeyProperties();
-            //foreach (var property in properties)
-            //{
-            //    var value = property.GetValue(entity);
-            //    if (value == null)
-            //    {
-            //        continue;
-            //    }
-
-            //    var sql = $"select * from {entityType.GetTableName()} where {property.GetColumnName()} = '{value}'";
-
-            //    if (ignoreForThisElement)
-            //    {
-            //        var keyValues = entity.GetKeyValues().Select(x => $"{x.Key} != '{x.Value.GetDbValue()}'").ToArray();
-            //        if (keyValues.Length > 0)
-            //        {
-            //            sql += " and " + string.Join(" and ", keyValues);
-            //        }
-            //    }
-
-            //    if (Repository.ExistsSql(sql))
-            //    {
-            //        AddInconsistency(new UniqueKeyFluentValidationException(property.Name, value.ToString()));
-            //    }
-            //}
         }
+        //private void EntityShouldNotExistInDatabaseBasedOnFLuentKeys(T entity)
+        //{
+
+        //    //if (!NullParameterOk || !KeyValuesOk)
+        //    //{
+        //    //    return;
+        //    //}
+
+        //    //var entityType = typeof(T);
+        //    //var properties = entityType.GetFluentUniqueKeyProperties();
+        //    //foreach (var property in properties)
+        //    //{
+        //    //    var value = property.GetValue(entity);
+        //    //    if (value == null)
+        //    //    {
+        //    //        continue;
+        //    //    }
+
+        //    //    var sql = $"select * from {entityType.GetTableName()} where {property.GetColumnName()} = '{value}'";
+
+        //    //    if (ignoreForThisElement)
+        //    //    {
+        //    //        var keyValues = entity.GetKeyValues().Select(x => $"{x.Key} != '{x.Value.GetDbValue()}'").ToArray();
+        //    //        if (keyValues.Length > 0)
+        //    //        {
+        //    //            sql += " and " + string.Join(" and ", keyValues);
+        //    //        }
+        //    //    }
+
+        //    //    if (Repository.ExistsSql(sql))
+        //    //    {
+        //    //        AddInconsistency(new UniqueKeyFluentValidationException(property.Name, value.ToString()));
+        //    //    }
+        //    //}
+        //}
 
         private void AllKeysShouldBeInformedWhenThereAreMoreThanOne(T entity)
         {
@@ -241,7 +244,7 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
             }
 
             var entityType = typeof(T);
-            var properties = entityType.GetFluentUnicKeyProperties();
+            var properties = entityType.GetFluentUniqueKeyProperties();
             if (properties.Count > 1)
             {
                 AllFluentKeysMustBeInformed(entity);
@@ -265,13 +268,13 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
 
             if (!Repository.Exists(entity))
             {
-                var keys = entity.GetKeyValues().Select(x => $"{{{x.Key}:{x.Value}}}").ToArray();
+                var keys = entity.GetKeyValues().Select(x => $"{{{x.Property.Name}:{x.Value}}}").ToArray();
                 var keyValues = string.Join(", ", keys);
                 AddInconsistency(new EntityNotFoundFluentValidationException(keyValues));
             }
         }
 
-        private void EntityShouldNotExistInDatabase(T entity)
+        private void EntityShouldNotExistInDatabaseBasedOnKeys(T entity)
         {
             if (!NullParameterOk || !KeyValuesOk)
             {
@@ -280,7 +283,7 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
 
             if (Repository.Exists(entity))
             {
-                var keys = entity.GetKeyValues().Select(x => $"{{{x.Key}:{x.Value}}}").ToArray();
+                var keys = entity.GetKeyValues().Select(x => $"{{{x.Property.Name}:{x.Value}}}").ToArray();
                 var keyValues = string.Join(", ", keys);
                 AddInconsistency(new EntityExistsFluentValidationException(keyValues));
             }
