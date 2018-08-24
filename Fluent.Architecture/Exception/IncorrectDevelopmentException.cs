@@ -5,7 +5,7 @@
     /// Exceção interna.
     /// Util para validar desenvilvimento incorreto.
     /// </summary>
-    internal class IncorrectDevelopmentException : System.Exception
+    public class IncorrectDevelopmentException : System.Exception
     {
         public IncorrectDevelopmentException(string message) : base(message) { }
     }

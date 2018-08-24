@@ -1,11 +1,19 @@
 ﻿using System;
 using System.Configuration;
 using System.Linq;
+using System.Web.Mvc;
+using System.Web.Routing;
+using Fluent.Architecture.Exception;
 using Fluent.Architecture.Exception.ValidationException;
+using Fluent.Architecture.Extensions;
+using Fluent.Architecture.Filters;
 using Fluent.Architecture.FrameworkTest.IntegrationTest.UserTests.Controllers;
 using Fluent.Architecture.FrameworkTest.IntegrationTest.UserTests.Enum;
 using Fluent.Architecture.FrameworkTest.IntegrationTest.UserTests.Models;
+using Fluent.Architecture.FrameworkTest.IntegrationTest.UserTests.Services;
 using Fluent.Architecture.Test;
+using Fluent.Architecture.Test.Mock;
+using Fluent.Architecture.Test.Mock.ControllerMock;
 using Fluent.Architecture.Validation;
 using Xunit;
 
@@ -22,7 +30,7 @@ namespace Fluent.Architecture.FrameworkTest.IntegrationTest
         }
 
         #endregion
-        
+
         #region FAIL
 
         [Theory]
@@ -82,7 +90,6 @@ namespace Fluent.Architecture.FrameworkTest.IntegrationTest
             Assert.IsAssignableFrom<EntityNotFoundFluentValidationException>(objectReturn.Inconsistencies.First());
         }
 
-        // Update and remove not key
         [Theory]
         [InlineData(nameof(UserController.Update))]
         [InlineData(nameof(UserController.Remove))]
@@ -104,27 +111,10 @@ namespace Fluent.Architecture.FrameworkTest.IntegrationTest
 
         #endregion
 
-
         #region SUCCESS
 
-        private User GetNewUser()
-        {
-            var rand = new Random().Next(1, int.MaxValue);
-            return new User
-            {
-                PersonType = ePersonType.User,
-                Id = rand,
-                UserName = $"maria {rand}",
-                Name = $"maria {rand}",
-                Email = $"test{rand}@mail.com",
-                Password = $"test{rand}@mail.com",
-                Tel = $"test{rand}@mail.com",
-            };
-        }
-
-        // Add and remove success
         [Fact]
-        public void AddAndRemoveSuccess()
+        public void AddUpdateAndRemoveSuccess()
         {
             var user = GetNewUser();
 
@@ -148,5 +138,57 @@ namespace Fluent.Architecture.FrameworkTest.IntegrationTest
 
         #endregion
 
+        #region INTERNAL UTILS
+
+        private User GetNewUser()
+        {
+            var rand = new Random().Next(1, int.MaxValue);
+            return new User
+            {
+                PersonType = ePersonType.User,
+                Id = rand,
+                UserName = $"maria {rand}",
+                Name = $"maria {rand}",
+                Email = $"test{rand}@mail.com",
+                Password = $"test{rand}@mail.com",
+                Tel = $"test{rand}@mail.com",
+            };
+        }
+
+        #endregion
+    }
+
+    public class ExceptionTest
+    {
+        [Fact]
+        public void IncorrectDevelopmentExceptionTest()
+        {
+            var message = "test message";
+            var incorrect = new IncorrectDevelopmentException(message);
+            Assert.Equal(message, incorrect.Message);
+        }
+
+        [Fact]
+        public void ExceptionFilterTest()
+        {
+            var controller = TestUtil.GetController(typeof(UserController));
+            controller.SetLocalHttpContext(new HttpContextBaseMock());
+
+            var exception = new ContextFluentValidation();
+            exception.AddInconsistency(new EntityExistsFluentValidationException("Id"));
+
+            var conteollerContext = new ControllerContext(controller.HttpContext,new RouteData(), controller);
+            var context = new ExceptionContext(conteollerContext, exception);
+            var filter = new ExceptionHandlerAttribute();
+
+            var jsonResult = new JsonResult
+            {
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                Data = exception
+            };
+
+            filter.OnException(context);
+            Assert.Equal(jsonResult.GetAllDataOfObject(), context.Result.GetAllDataOfObject());
+        }
     }
 }

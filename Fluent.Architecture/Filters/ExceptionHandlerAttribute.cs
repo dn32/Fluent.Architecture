@@ -19,13 +19,6 @@ namespace Fluent.Architecture.Filters
 #if NET461
     public class ExceptionHandlerAttribute : HandleErrorAttribute
     {
-        //private readonly ILog _logger;
-
-        //public CustomHandleErrorAttribute()
-        //{
-        //    _logger = LogManager.GetLogger("MyLogger");
-        //}
-
         public override void OnException(ExceptionContext filterContext)
         {
             if (filterContext.Exception is ContextFluentValidation exception)

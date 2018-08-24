@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
@@ -83,7 +84,7 @@ namespace Fluent.Architecture.Service
             SessionRequest = sessionRequest;
         }
 
-        public void Dispose(bool primaryServie)
+        public void Dispose(bool primaryService)
         {
             if (Disposed)
             {
@@ -91,7 +92,7 @@ namespace Fluent.Architecture.Service
             }
 
             Disposed = true;
-            SessionRequest.Dispose(primaryServie);
+            SessionRequest.Dispose(primaryService);
         }
     }
 }
