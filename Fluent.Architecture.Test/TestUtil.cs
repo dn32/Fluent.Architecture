@@ -6,6 +6,7 @@ using Fluent.Architecture.Exception.ValidationException;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Service;
 using Fluent.Architecture.Test.Mock;
+using Xunit;
 #if NET461
 using System.Web.Mvc;
 using Fluent.Architecture.Test.Mock.ControllerMock;
@@ -60,6 +61,13 @@ namespace Fluent.Architecture.Test
                 {
                     fluentOnActionExecuted.Invoke(controller, null);
                 }
+
+                if (returnObj?.Data == null)
+                {
+                    return default(TR);
+                }
+
+                Assert.IsAssignableFrom<TR>(returnObj.Data);
 
                 return returnObj?.Data as dynamic;
             }

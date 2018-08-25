@@ -19,6 +19,7 @@ namespace Fluent.Architecture
     {
         #region PROPERTIES
 
+        private static readonly object LockInitialization = new object();
         internal static Type TransactionObjectsType { get; set; }
         internal static Dictionary<string, Type> Services { get; set; }
         internal static Dictionary<string, Type> Repositories { get; set; }
@@ -35,7 +36,7 @@ namespace Fluent.Architecture
         #endregion
 
         #region PUBLIC METHODS
-        
+
         //public static void SetRepositoryMock()
         //{
         //    RepositoryMock = true;
@@ -53,79 +54,82 @@ namespace Fluent.Architecture
 
         public static void Initialize(string connectionString, bool createDatabaseIfNotExists = true)
         {
-            if (Initialized)
+            lock (LockInitialization)
             {
-                return;
-            }
-
-            CreateDatabaseIfNotExists = createDatabaseIfNotExists;
-            TransactionObjects.DataBaseConnectionString = connectionString;
-
-            Initialized = true;
-
-            //Mocks = new Dictionary<string, object>();
-            Services = new Dictionary<string, Type>();
-            Repositories = new Dictionary<string, Type>();
-            Validations = new Dictionary<string, Type>();
-            Model = new Dictionary<string, Type>();
-            Propagators = new Dictionary<Tuple<ePropagateTypes, string>, MethodInfo>();
-            UserSessionList = new Dictionary<Guid, UserSessionRequest>();
-            TransactionObjectsType = typeof(TransactionObjects);
-
-            Services.Add("base", typeof(FluentService<FluentEntity>));
-            Repositories.Add("base", typeof(FluentRepository<FluentEntity>));
-            Validations.Add("base", typeof(FluentValidation<FluentEntity>));
-
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies().OrderBy(x => x.FullName).ToList();
-            foreach (var assembly in assemblies)
-            {
-                Type[] types;
-
-                try
+                if (Initialized)
                 {
-                    types = assembly.GetTypes();
-                }
-                catch (System.Exception)
-                {
-                    continue;
+                    return;
                 }
 
-                types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentService<BaseEntity>)))
-                    .Where(x => !string.IsNullOrWhiteSpace(x.Item1)).ToList()
-                    .ForEach(service => Services.Add(service.Item1, service.Item2));
+                CreateDatabaseIfNotExists = createDatabaseIfNotExists;
+                TransactionObjects.DataBaseConnectionString = connectionString;
 
-                var transactionalServices = types.Where(x => x.IsSubclassOf(typeof(TransactionalService))).ToList();
-                ValidateIfAllServicePropertiesNotHaveTheSetMethod(transactionalServices);
-                ValidateIfAllServicePropertiesAreVirtual(transactionalServices);
-                ValidateIfAllServicePropertiesNotHavePublic(transactionalServices);
-                ValidateIfAllServicePropertiesHaveDefaultConstructor(transactionalServices);
+                Initialized = true;
 
-                types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentRepository<BaseEntity>)))
-                   .Where(x => !string.IsNullOrWhiteSpace(x.Item1)).ToList()
-                   .ForEach(service => Repositories.Add(service.Item1, service.Item2));
+                //Mocks = new Dictionary<string, object>();
+                Services = new Dictionary<string, Type>();
+                Repositories = new Dictionary<string, Type>();
+                Validations = new Dictionary<string, Type>();
+                Model = new Dictionary<string, Type>();
+                Propagators = new Dictionary<Tuple<ePropagateTypes, string>, MethodInfo>();
+                UserSessionList = new Dictionary<Guid, UserSessionRequest>();
+                TransactionObjectsType = typeof(TransactionObjects);
 
-                types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentValidation<BaseEntity>)))
-                   .Where(x => !string.IsNullOrWhiteSpace(x.Item1)).ToList()
-                   .ForEach(service => Validations.Add(service.Item1, service.Item2));
+                Services.Add("base", typeof(FluentService<FluentEntity>));
+                Repositories.Add("base", typeof(FluentRepository<FluentEntity>));
+                Validations.Add("base", typeof(FluentValidation<FluentEntity>));
 
-                types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(BaseEntity)))
-                 .Where(x => !string.IsNullOrWhiteSpace(x.Item1) && x.Item2 != typeof(BaseEntity)).ToList()
-                 .ForEach(AddModel);
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies().OrderBy(x => x.FullName).ToList();
+                foreach (var assembly in assemblies)
+                {
+                    Type[] types;
+
+                    try
+                    {
+                        types = assembly.GetTypes();
+                    }
+                    catch (System.Exception)
+                    {
+                        continue;
+                    }
+
+                    types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentService<BaseEntity>)))
+                        .Where(x => !string.IsNullOrWhiteSpace(x.Item1)).ToList()
+                        .ForEach(service => Services.Add(service.Item1, service.Item2));
+
+                    var transactionalServices = types.Where(x => x.IsSubclassOf(typeof(TransactionalService))).ToList();
+                    ValidateIfAllServicePropertiesNotHaveTheSetMethod(transactionalServices);
+                    ValidateIfAllServicePropertiesAreVirtual(transactionalServices);
+                    ValidateIfAllServicePropertiesNotHavePublic(transactionalServices);
+                    ValidateIfAllServicePropertiesHaveDefaultConstructor(transactionalServices);
+
+                    types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentRepository<BaseEntity>)))
+                       .Where(x => !string.IsNullOrWhiteSpace(x.Item1)).ToList()
+                       .ForEach(service => Repositories.Add(service.Item1, service.Item2));
+
+                    types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentValidation<BaseEntity>)))
+                       .Where(x => !string.IsNullOrWhiteSpace(x.Item1)).ToList()
+                       .ForEach(service => Validations.Add(service.Item1, service.Item2));
+
+                    types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(BaseEntity)))
+                     .Where(x => !string.IsNullOrWhiteSpace(x.Item1) && x.Item2 != typeof(BaseEntity)).ToList()
+                     .ForEach(AddModel);
+                }
+
+                //ValidateIfAllMethodsAreVirtual(Services.Values.ToList()); // To intercept
+                //ValidateIfAllMethodsAreVirtual(Repositories.Values.ToList()); // To intercept
+                //ValidateIfAllMethodsAreVirtual(Validations.Values.ToList()); //It is not necessary
+
+                CheckErrorInTheRepository(Repositories.Values.ToList());
+
+                FindPropagators(Repositories, ePropagateTypes.Repository);
+                FindPropagators(Services, ePropagateTypes.Service);
+                FindPropagators(Validations, ePropagateTypes.Validation);
             }
-
-            //ValidateIfAllMethodsAreVirtual(Services.Values.ToList()); // To intercept
-            //ValidateIfAllMethodsAreVirtual(Repositories.Values.ToList()); // To intercept
-            //ValidateIfAllMethodsAreVirtual(Validations.Values.ToList()); //It is not necessary
-
-            CheckErrorInTheRepository(Repositories.Values.ToList());
-
-            FindPropagators(Repositories, ePropagateTypes.Repository);
-            FindPropagators(Services, ePropagateTypes.Service);
-            FindPropagators(Validations, ePropagateTypes.Validation);
         }
-     
+
         #endregion
-        
+
         #region INTERNAL METHODS
 
         internal static UserSessionRequest GetUserRequestSession(Guid sessionIdGuid)
@@ -140,14 +144,20 @@ namespace Fluent.Architecture
 
         internal static void AddSession(UserSessionRequest userSessionRequest)
         {
-            UserSessionList.Add(userSessionRequest.SessionRequestId, userSessionRequest);
+            lock (UserSessionList)
+            {
+                UserSessionList.Add(userSessionRequest.SessionRequestId, userSessionRequest);
+            }
         }
 
         internal static void RemoveSession(Guid sessionId)
         {
-            UserSessionList.Remove(sessionId);
+            lock (UserSessionList)
+            {
+                UserSessionList.Remove(sessionId);
+            }
         }
-       
+
         #endregion
 
         #region PRIVATE

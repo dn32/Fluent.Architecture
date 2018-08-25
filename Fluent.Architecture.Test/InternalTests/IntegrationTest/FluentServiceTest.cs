@@ -23,12 +23,12 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest
 
         public TransactionalService Service { get; set; }
         public BaseController Controller { get; set; }
-        public HttpContextBaseMock HttpContext { get; set; }
 
         public FluentServiceTest()
         {
             var connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             Setup.Initialize(connectionString);
+
             Controller = MockUtil.GetMockController(typeof(UserController));
             Service = ServiceFactory.Create<UserService>(MockUtil.GetHttpContext());
         }
@@ -75,14 +75,14 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest
 
             number += UserTestUtil.NextRandom();
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 var user = UserTestUtil.GetNewUser();
                 user.Tel = number + UserTestUtil.NextRandom();
                 users.Add(user);
             }
 
-            var usersParam = new[] { users.ToArray() };
+            object[] usersParam = { users.ToArray() };
             var spec = new UserTelContainsNumber(Service, number);
 
             //Add

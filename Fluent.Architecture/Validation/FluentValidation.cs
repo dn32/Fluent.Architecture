@@ -17,6 +17,12 @@ namespace Fluent.Architecture.Validation
     {
         #region INTERNAL
 
+        //Todo documentar
+        public bool NullParameterOk { get; set; } = true;
+
+        //Todo documentar
+        public bool KeyValuesOk { get; set; } = true;
+
         /// <summary>
         /// O repositório referente a entidade em validação.
         /// </summary>
@@ -58,9 +64,6 @@ namespace Fluent.Architecture.Validation
             Service.SessionRequest.ContextFluentValidation.Validate();
         }
 
-        public bool NullParameterOk { get; set; } = true;
-        public bool KeyValuesOk { get; set; } = true;
-
         #endregion
 
         /// <summary>
@@ -69,7 +72,7 @@ namespace Fluent.Architecture.Validation
         /// <param name="entity">
         /// A entidade a ser validada.
         /// </param>
-        public void Add(T entity)
+        public virtual void Add(T entity)
         {
             ParameterMustBeInformed(entity);
             RequiredPropertyMustBeInformed(entity);
@@ -84,7 +87,7 @@ namespace Fluent.Architecture.Validation
         /// Validate add operation.
         /// </summary>
         /// <param name="entity"></param>
-        public void Update(T entity)
+        public virtual void Update(T entity)
         {
             ParameterMustBeInformed(entity);
             RequiredPropertyMustBeInformed(entity);
@@ -99,7 +102,7 @@ namespace Fluent.Architecture.Validation
         /// Validate add operation.
         /// </summary>
         /// <param name="entity"></param>
-        public void Remove(T entity)
+        public virtual void Remove(T entity)
         {
             ParameterMustBeInformed(entity);
             AllKeysMustBeInformed(entity);
@@ -109,7 +112,7 @@ namespace Fluent.Architecture.Validation
         }
 
         //Todo Documentar
-        public void Find(T entity)
+        public virtual void Find(T entity)
         {
             ParameterMustBeInformed(entity);
             AllKeysMustBeInformed(entity);

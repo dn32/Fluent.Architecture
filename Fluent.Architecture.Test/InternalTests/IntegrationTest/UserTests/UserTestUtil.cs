@@ -7,9 +7,9 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
 {
     public static class UserTestUtil
     {
-        public static int Count { get; set; }
+        private static readonly Random Random = new Random();
 
-        public static object ObjectLock = new object();
+        private static readonly object SyncLock = new object();
 
         public static User GetNewUser()
         {
@@ -26,11 +26,12 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
             };
         }
 
+
         public static int NextRandom()
         {
-            lock (ObjectLock)
+            lock (SyncLock)
             {
-                return new Random().Next(Count, 65000) + Count++;
+                return Random.Next(1, 65000);
             }
         }
     }

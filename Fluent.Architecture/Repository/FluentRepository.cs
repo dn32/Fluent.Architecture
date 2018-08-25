@@ -309,7 +309,7 @@ namespace Fluent.Architecture.Repository
             RunTheContextValidation();
 
 #if NET461
-            return Input.Remove(Find(entity));
+          return Input.Remove(Find(entity));
 #else
             throw new NotImplementedException();
 #endif

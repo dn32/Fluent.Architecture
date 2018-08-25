@@ -10,11 +10,11 @@ using Xunit;
 
 namespace Fluent.Architecture.Test.InternalTests.IntegrationTest
 {
-    public class ValidationsTest
+    public class BaseValidationsTest
     {
         #region SETUP
 
-        public ValidationsTest()
+        public BaseValidationsTest()
         {
             Setup.Initialize();
         }
