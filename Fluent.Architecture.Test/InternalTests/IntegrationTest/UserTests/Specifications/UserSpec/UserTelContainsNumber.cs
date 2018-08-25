@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
 using Fluent.Architecture.Service;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Models;
@@ -18,17 +20,10 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Speci
         {
             return query.Where(x => x.Tel.Contains(_number));
         }
-    }
 
-    public class UserAll : FluentSpecification<User>
-    {
-        public UserAll(TransactionalService service) : base(service)
+        public override Expression<Func<User, object>> Order()
         {
-        }
-
-        public override IQueryable<User> Spec(IQueryable<User> query)
-        {
-            return query.Where(x => true);
+            return x => x.Name;
         }
     }
 }

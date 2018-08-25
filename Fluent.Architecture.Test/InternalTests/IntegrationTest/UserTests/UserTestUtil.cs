@@ -31,7 +31,7 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
         {
             lock (SyncLock)
             {
-                return Random.Next(1, 65000);
+                return Random.Next(1, int.MaxValue);
             }
         }
     }

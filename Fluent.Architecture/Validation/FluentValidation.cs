@@ -184,7 +184,6 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
 
         private void AllFluentKeysMustBeInformed(T entity)
         {
-
             if (!NullParameterOk)
             {
                 KeyValuesOk = false;
@@ -203,41 +202,6 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
                 }
             }
         }
-        //private void EntityShouldNotExistInDatabaseBasedOnFLuentKeys(T entity)
-        //{
-
-        //    //if (!NullParameterOk || !KeyValuesOk)
-        //    //{
-        //    //    return;
-        //    //}
-
-        //    //var entityType = typeof(T);
-        //    //var properties = entityType.GetFluentUniqueKeyProperties();
-        //    //foreach (var property in properties)
-        //    //{
-        //    //    var value = property.GetValue(entity);
-        //    //    if (value == null)
-        //    //    {
-        //    //        continue;
-        //    //    }
-
-        //    //    var sql = $"select * from {entityType.GetTableName()} where {property.GetColumnName()} = '{value}'";
-
-        //    //    if (ignoreForThisElement)
-        //    //    {
-        //    //        var keyValues = entity.GetKeyValues().Select(x => $"{x.Key} != '{x.Value.GetDbValue()}'").ToArray();
-        //    //        if (keyValues.Length > 0)
-        //    //        {
-        //    //            sql += " and " + string.Join(" and ", keyValues);
-        //    //        }
-        //    //    }
-
-        //    //    if (Repository.ExistsSql(sql))
-        //    //    {
-        //    //        AddInconsistency(new UniqueKeyFluentValidationException(property.Name, value.ToString()));
-        //    //    }
-        //    //}
-        //}
 
         private void AllKeysShouldBeInformedWhenThereAreMoreThanOne(T entity)
         {
@@ -255,9 +219,9 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
             else
             {
                 var property = properties.First();
-                if (property.GetValue(entity).IsFluentNull())
+                if (!property.GetValue(entity).IsFluentNull())
                 {
-
+                    throw new FluentPropertyValidationException(property.Name, "The key must not be entered for this operation.");
                 }
             }
         }

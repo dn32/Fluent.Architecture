@@ -17,7 +17,6 @@ namespace Fluent.Architecture.Model
     public class UserSessionRequest
     {
         internal Dictionary<Type, BaseService> Services { get; set; }
-        internal BaseService PrimaryService { get; set; }
         internal TransactionObjects TransactionObjects { get; set; }
         internal Guid SessionRequestId { get; set; }
         public ContextFluentValidation ContextFluentValidation { get; set; }
@@ -39,7 +38,7 @@ namespace Fluent.Architecture.Model
         /// </summary>
         public HttpContext LocalHttpContext => HttpContext as HttpContext;
 #endif
-        public void Dispose(bool primaryServie)
+        public void Dispose(bool primaryService)
         {
             Setup.RemoveSession(SessionRequestId);
             TransactionObjects.Dispose();
@@ -49,7 +48,7 @@ namespace Fluent.Architecture.Model
                 service.Dispose(false);
             }
 
-            if (primaryServie)
+            if (primaryService)
             {
                 Services.Clear();
             }

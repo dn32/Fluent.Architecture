@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Factory;
+using Fluent.Architecture.Model;
 using Fluent.Architecture.Service;
 using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests;
 using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Controllers;
@@ -12,7 +14,6 @@ using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Models;
 using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Services;
 using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Specifications.UserSpec;
 using Fluent.Architecture.Test.Mock;
-using Fluent.Architecture.Test.Mock.ControllerMock;
 using Xunit;
 
 namespace Fluent.Architecture.Test.InternalTests.IntegrationTest
@@ -96,6 +97,78 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest
             var usersReturn = TestUtil.Execute<List<User>>(typeof(UserController), nameof(UserController.Spec), spec);
             Assert.NotNull(usersReturn);
             Assert.Equal(count, usersReturn.Count);
+
+            //Remove
+            TestUtil.Execute<User[]>(typeof(UserController), nameof(UserController.RemoveRange), usersParam);
+        }
+
+        [Theory]
+        [InlineData(1, 10)]
+        [InlineData(0, 10)]
+        [InlineData(5, 7)]
+        [InlineData(11, 10)]
+        [InlineData(15, 10)]
+        public void PaginationTest(int currentPage, int itemsPerPage)
+        {
+            var users = new List<User>();
+            var telNumber = $"{UserTestUtil.NextRandom()}{UserTestUtil.NextRandom()}{UserTestUtil.NextRandom()}";
+            for (var i = 1; i <= 103; i++)
+            {
+                var user = UserTestUtil.GetNewUser();
+                user.Tel = telNumber;
+                user.Name = i.ToString("D5") + user.Name;
+                user.Password = i.ToString("D5");
+                users.Add(user);
+            }
+
+            currentPage = currentPage == 0 ? 1 : currentPage;
+
+            var pages = users.Count / itemsPerPage;
+            var expectedCount = itemsPerPage;
+
+            if (users.Count % itemsPerPage > 0)
+            {
+                pages++;
+            }
+
+            if (currentPage == pages)
+            {
+                expectedCount = users.Count % itemsPerPage;
+            }
+
+            if (currentPage > pages)
+            {
+                expectedCount = 0;
+            }
+
+
+            object[] usersParam = { users.ToArray() };
+            var spec = new UserTelContainsNumber(Service, telNumber);
+
+            //Add
+            TestUtil.Execute<User[]>(typeof(UserController), nameof(UserController.AddRange), usersParam);
+
+            //Test Count
+            var countFound = TestUtil.Execute<int>(typeof(UserController), nameof(UserController.Count), spec);
+            Assert.Equal(users.Count, countFound);
+
+            var pagination = new FluentPagination(currentPage, itemsPerPage);
+
+            //Spec
+            var fount = TestUtil.Execute<List<User>>(typeof(UserController), nameof(UserController.Spec), spec, pagination);
+            Assert.NotNull(fount);
+            Assert.Equal(expectedCount, fount.Count);
+            Assert.Equal(users.Count, pagination.TotalQuantityOfItems);
+
+            if (expectedCount > 0)
+            {
+                var indexFirst = (currentPage - 1) * itemsPerPage;
+                var firstItem = users[indexFirst];
+                var lastItem = users[indexFirst + expectedCount - 1];
+
+                Assert.Equal(firstItem.Password, fount.First().Password);
+                Assert.Equal(lastItem.Password, fount.Last().Password);
+            }
 
             //Remove
             TestUtil.Execute<User[]>(typeof(UserController), nameof(UserController.RemoveRange), usersParam);

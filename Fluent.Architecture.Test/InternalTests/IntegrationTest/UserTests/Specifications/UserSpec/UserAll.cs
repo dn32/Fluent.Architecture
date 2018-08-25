@@ -7,19 +7,17 @@ using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Models;
 
 namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Specifications.UserSpec
 {
-    public class UserByEmail : FluentSpecification<User>
+    public class UserAll : FluentSpecification<User>
     {
-        private readonly string _email;
-
-        public UserByEmail(TransactionalService service, string email) : base(service)
+        public UserAll(TransactionalService service) : base(service)
         {
-            _email = email;
         }
 
         public override IQueryable<User> Spec(IQueryable<User> query)
         {
-            return query.Where(x => x.Email == _email);
+            return query.Where(x => true);
         }
+
 
         public override Expression<Func<User, object>> Order()
         {

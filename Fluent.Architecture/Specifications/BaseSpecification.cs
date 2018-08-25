@@ -36,5 +36,6 @@ namespace Fluent.Architecture.Specifications
         {
             return TransactionObjects.GetObjectQueryInternal<TX>();
         }
+
     }
 }

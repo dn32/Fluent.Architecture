@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Model;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Models;
 using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Specifications.UserSpec;
@@ -77,6 +78,12 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Contr
         public JsonResult Spec(FluentSpecification<User> spec)
         {
             var user = Service.Spec(spec);
+            return Json(user);
+        }
+
+        public JsonResult Spec(FluentSpecification<User> spec, FluentPagination pagination)
+        {
+            var user = Service.Spec(spec, pagination);
             return Json(user);
         }
 

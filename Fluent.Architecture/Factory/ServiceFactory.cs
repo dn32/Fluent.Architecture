@@ -117,7 +117,6 @@ namespace Fluent.Architecture.Factory
             var userSession = new UserSessionRequest
             {
                 TransactionObjects = transactionObjects,
-                PrimaryService = service,
                 SessionRequestId = sessionId,
                 Services = new Dictionary<Type, BaseService>(),
                 HttpContext = httpContext

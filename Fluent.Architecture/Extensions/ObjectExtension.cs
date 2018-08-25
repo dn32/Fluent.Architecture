@@ -72,35 +72,24 @@ namespace Fluent.Architecture.Extensions
 
             var type = value.GetType();
 
-            if (type == typeof(string))
+            if (type == typeof(string) ||type == typeof(String))
             {
-                if (string.IsNullOrWhiteSpace(value.ToString()))
-                {
-                    return true;
-                }
+                return string.IsNullOrWhiteSpace(value.ToString());
             }
-            else if (type == typeof(int))
+
+            if (type == typeof(int))
             {
-                if ((int)value == 0)
-                {
-                    return true;
-                }
+                return (int)value == 0;
             }
-            else if (type == typeof(Guid))
+
+            if (type == typeof(Guid))
             {
-                if ((Guid)value == Guid.Empty)
-                {
-                    return true;
-                }
+                return  (Guid)value == Guid.Empty;
             }
 
             try
             {
-                var valorInt = (int)value; // Enum
-                if (valorInt == 0)
-                {
-                    return true;
-                }
+                return (int)value == 0; // Enum
             }
             catch (System.Exception)
             {

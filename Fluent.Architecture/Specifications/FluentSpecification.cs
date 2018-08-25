@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
 using Fluent.Architecture.Service;
 
 namespace Fluent.Architecture.Specifications
@@ -21,9 +23,17 @@ namespace Fluent.Architecture.Specifications
         /// </returns>
         public abstract IQueryable<TE> Spec(IQueryable<TE> query);
 
+        //Todo documentar
+        public abstract Expression<Func<TE, object>>  Order();
+
         /// <inheritdoc />
         protected FluentSpecification(TransactionalService service) : base(service)
         {
+        }
+
+        internal IQueryable<TE> ToIQueryable(IQueryable<TE> query)
+        {
+            return Spec(query).OrderBy(Order());
         }
     }
 }

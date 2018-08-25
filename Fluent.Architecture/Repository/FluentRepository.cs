@@ -98,8 +98,10 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual List<TO> Spec<TO>(FluentSelectSpecification<TE, TO> spec, FluentPagination pagination = null)
         {
-            return FluentPaginate(spec.Spec(Query), pagination).ToList();
+            return FluentPaginate(spec.ToIQueryable(Query), pagination).ToList();
         }
+
+       
 
         /// <summary>
         /// Executa uma solicitação baseada em uma especificação e retorna uma lista paginada de resultados.
@@ -116,7 +118,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual List<TE> Spec(FluentSpecification<TE> spec, FluentPagination pagination = null)
         {
-            return FluentPaginate(spec.Spec(Query), pagination).ToList();
+            return FluentPaginate(spec.ToIQueryable(Query), pagination).ToList();
         }
 
         /// <summary>
@@ -134,7 +136,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual TO SpecOne<TO>(FluentSelectSpecification<TE, TO> spec)
         {
-            return spec.Spec(Query).FirstOrDefault();
+            return spec.ToIQueryable(Query).FirstOrDefault();
         }
 
         /// <summary>
@@ -149,7 +151,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual TE SpecOne(FluentSpecification<TE> spec)
         {
-            return spec.Spec(Query).FirstOrDefault();
+            return spec.ToIQueryable(Query).FirstOrDefault();
         }
 
         /// <summary>
@@ -164,7 +166,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual bool Exists(FluentSpecification<TE> spec)
         {
-            return spec.Spec(Query).Any();
+            return spec.ToIQueryable(Query).Any();
         }
 
         /// <summary>
@@ -182,7 +184,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual bool Exists<TO>(FluentSelectSpecification<TE, TO> spec)
         {
-            return spec.Spec(Query).Any();
+            return spec.ToIQueryable(Query).Any();
         }
 
         /// <summary>
@@ -200,7 +202,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual int Count<TO>(FluentSelectSpecification<TE, TO> spec)
         {
-            return spec.Spec(Query).Count();
+            return spec.ToIQueryable(Query).Count();
         }
 
         /// <summary>
@@ -215,7 +217,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual int Count(FluentSpecification<TE> spec)
         {
-            return spec.Spec(Query).Count();
+            return spec.ToIQueryable(Query).Count();
         }
 
         ///// <summary>
@@ -317,7 +319,7 @@ namespace Fluent.Architecture.Repository
 
         public virtual void RemoveRange(FluentSpecification<TE> spec)
         {
-            var list = spec.Spec(Query);
+            var list = spec.ToIQueryable(Query);
             Input.RemoveRange(list);
         }
 
