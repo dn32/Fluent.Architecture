@@ -1,20 +1,21 @@
-﻿using System.Collections.Generic;
+﻿#if NET461
+using System.Web.Mvc;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Specifications;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Models;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Specifications.UserSpec;
-
+using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Specifications;
 #if NET461
-using System.Web.Mvc;
+
 #else
 using Microsoft.AspNetCore.Mvc;
 #endif
 
-namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Controllers
+namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
 {
-    public class UserController : FluentController<User>
+    internal class UserController : FluentController<User>
     {
+        public new UserService Service => base.Service as UserService;
+
         public JsonResult UserByEmail(string email)
         {
             var user = Service.SpecOne(new UserByEmail(Service, email));
@@ -29,7 +30,7 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Contr
 
         public JsonResult AddRange(User[] users)
         {
-             Service.AddRange(users);
+            Service.AddRange(users);
             return Json(users);
         }
 
@@ -92,5 +93,12 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Contr
             Service.RemoveRange(spec);
         }
 
+        public JsonResult GetUserByEmail(string email)
+        {
+            var userStudent = Service.GetUserByEmail(email);
+            return Json(userStudent);
+        }
     }
 }
+
+#endif

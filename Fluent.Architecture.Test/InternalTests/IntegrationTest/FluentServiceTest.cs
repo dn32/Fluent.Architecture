@@ -9,10 +9,7 @@ using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Service;
 using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Controllers;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Models;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Services;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Specifications.UserSpec;
+using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Specifications;
 using Fluent.Architecture.Test.Mock;
 using Xunit;
 
@@ -41,7 +38,7 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest
         [InlineData(false)]
         public void FindOneTest(bool success)
         {
-            var user = UserTestUtil.GetNewUser();
+            var user = UserTestUtil.GetNew();
             var spec = new UserByEmail(Service, success ? user.Email : user.Email + "xxy");
 
             //Add
@@ -69,17 +66,17 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest
         [InlineData("64", 0)]
         public void CountTest(string number, int count)
         {
-            var user1 = UserTestUtil.GetNewUser();
+            var user1 = UserTestUtil.GetNew();
             user1.Tel = "00000000000000";
 
             var users = new List<User> { user1 };
 
-            number += UserTestUtil.NextRandom();
+            number += TestUtil.NextRandom();
 
             for (var i = 0; i < count; i++)
             {
-                var user = UserTestUtil.GetNewUser();
-                user.Tel = number + UserTestUtil.NextRandom();
+                var user = UserTestUtil.GetNew();
+                user.Tel = number + TestUtil.NextRandom();
                 users.Add(user);
             }
 
@@ -111,10 +108,10 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest
         public void PaginationTest(int currentPage, int itemsPerPage)
         {
             var users = new List<User>();
-            var telNumber = $"{UserTestUtil.NextRandom()}{UserTestUtil.NextRandom()}{UserTestUtil.NextRandom()}";
+            var telNumber = $"{TestUtil.NextRandom()}{TestUtil.NextRandom()}{TestUtil.NextRandom()}";
             for (var i = 1; i <= 103; i++)
             {
-                var user = UserTestUtil.GetNewUser();
+                var user = UserTestUtil.GetNew();
                 user.Tel = telNumber;
                 user.Name = i.ToString("D5") + user.Name;
                 user.Password = i.ToString("D5");

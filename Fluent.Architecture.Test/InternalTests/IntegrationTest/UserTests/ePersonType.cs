@@ -1,5 +1,5 @@
 ﻿
-namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Enum
+namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
 {
     public enum ePersonType
     {

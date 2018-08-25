@@ -1,4 +1,5 @@
-﻿using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Controllers;
+﻿#if NET461
+using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests;
 using Fluent.Architecture.Test.Mock;
 using Xunit;
 
@@ -24,3 +25,4 @@ namespace Fluent.Architecture.Test.InternalTests
 #endif
     }
 }
+#endif

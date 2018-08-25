@@ -1,11 +1,11 @@
 ﻿using System;
 using Fluent.Architecture.Controllers;
-
+using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests;
 #if NET461
 using Fluent.Architecture.Test.Mock.ControllerMock;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Controllers;
+
 #endif
 
 namespace Fluent.Architecture.Test.Mock

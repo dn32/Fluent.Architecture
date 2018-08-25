@@ -20,73 +20,96 @@ namespace Fluent.Architecture.Controllers
     public abstract class FluentController<T> : FluentServiceController<FluentService<T>> where T : BaseEntity
     {
 #if PROPAGATION
-       /// <summary>
-        /// Invoca um método no repositório, passando por serviço e validação quando houverem. 
-        /// </summary>
-        /// <param name="methodName">Método a ser invocado no repositório.</param>
-        /// <param name="parameters">Parametros opcionais a serem enviados.</param>
-        /// <returns>O resultado da operação solocitada quando houver.</returns>
+        ///// <summary>
+        // /// Invoca um método no repositório, passando por serviço e validação quando houverem. 
+        // /// </summary>
+        // /// <param name="methodName">Método a ser invocado no repositório.</param>
+        // /// <param name="parameters">Parametros opcionais a serem enviados.</param>
+        // /// <returns>O resultado da operação solocitada quando houver.</returns>
+        // [NotPropagate]
+        // protected object Propagate(string methodName, params object[] parameters)
+        // {
+        //     return PropagateInternal<T>(methodName, parameters);
+        // }
+
+        // /// <summary>
+        // /// Invoca um método no repositório com o mesmo nome do método onde a invocação do <see cref="Propagate(string,object[])">Propagate</see> está sendo feita, passando por serviço e validação quando houverem. 
+        // /// </summary>
+        // /// <param name="parameters">Parametros opcionais a serem enviados.</param>
+        // /// <returns>O resultado da operação solocitada quando houver.</returns>
+        // [NotPropagate]
+        // protected object Propagate(params object[] parameters)
+        // {
+        //     return PropagateInternal<T>(string.Empty, parameters);
+        // }
+
+        // /// <summary>
+        // /// Invoca um método no repositório, passando por serviço e validação quando houverem. 
+        // /// </summary>
+        // /// <typeparam name="T2">O tipo de entidade para o qual o repositório se refere.</typeparam>
+        // /// <param name="methodName">Método a ser invocado no repositório.</param>
+        // /// <param name="parameters">Parametros opcionais a serem enviados.</param>
+        // /// <returns>O resultado da operação solocitada quando houver.</returns>
+        // [NotPropagate]
+        // protected object Propagate<T2>(string methodName, params object[] parameters) where T2 : BaseEntity
+        // {
+        //     return PropagateInternal<T2>(methodName, parameters);
+        // }
+
+        // /// <summary>
+        // /// Invoca um método no repositório com o mesmo nome do método onde a invocação do <see cref="Propagate(string,object[])">Propagate</see> está sendo feita, passando por serviço e validação quando houverem. 
+        // /// </summary>
+        // /// <typeparam name="T2">O tipo de entidade para o qual o repositório se refere.</typeparam>
+        // /// <param name="parameters">Parametros opcionais a serem enviados.</param>
+        // /// <returns>O resultado da operação solocitada quando houver.</returns>
+        // [NotPropagate]
+        // protected object Propagate<T2>(params object[] parameters) where T2 : BaseEntity
+        // {
+        //     return PropagateInternal<T2>(string.Empty, parameters);
+        // }
+
         [NotPropagate]
-        protected object Propagate(string methodName, params object[] parameters)
+        protected T Propagate(params object[] parameters)
         {
-            return PropagateInternal<T>(methodName, parameters);
+            return PropagateInternal<T>(string.Empty, parameters) as T;
         }
 
-        /// <summary>
-        /// Invoca um método no repositório com o mesmo nome do método onde a invocação do <see cref="Propagate(string,object[])">Propagate</see> está sendo feita, passando por serviço e validação quando houverem. 
-        /// </summary>
-        /// <param name="parameters">Parametros opcionais a serem enviados.</param>
-        /// <returns>O resultado da operação solocitada quando houver.</returns>
         [NotPropagate]
-        protected object Propagate(params object[] parameters)
+        protected T Propagate(string methodName, params object[] parameters)
         {
-            return PropagateInternal<T>(string.Empty, parameters);
+            return PropagateInternal<T>(methodName, parameters) as T;
         }
 
-        /// <summary>
-        /// Invoca um método no repositório, passando por serviço e validação quando houverem. 
-        /// </summary>
-        /// <typeparam name="T2">O tipo de entidade para o qual o repositório se refere.</typeparam>
-        /// <param name="methodName">Método a ser invocado no repositório.</param>
-        /// <param name="parameters">Parametros opcionais a serem enviados.</param>
-        /// <returns>O resultado da operação solocitada quando houver.</returns>
-        [NotPropagate]
-        protected object Propagate<T2>(string methodName, params object[] parameters) where T2 : BaseEntity
-        {
-            return PropagateInternal<T2>(methodName, parameters);
-        }
-
-        /// <summary>
-        /// Invoca um método no repositório com o mesmo nome do método onde a invocação do <see cref="Propagate(string,object[])">Propagate</see> está sendo feita, passando por serviço e validação quando houverem. 
-        /// </summary>
-        /// <typeparam name="T2">O tipo de entidade para o qual o repositório se refere.</typeparam>
-        /// <param name="parameters">Parametros opcionais a serem enviados.</param>
-        /// <returns>O resultado da operação solocitada quando houver.</returns>
-        [NotPropagate]
-        protected object Propagate<T2>(params object[] parameters) where T2 : BaseEntity
-        {
-            return PropagateInternal<T2>(string.Empty, parameters);
-        }
-
-        /// <summary>
-        /// Método interno.
-        /// Invoca um método no repositório, passando por serviço e validação quando houverem. 
-        /// </summary>
-        /// <typeparam name="T2">O tipo de entidade para o qual o repositório se refere.</typeparam>
-        /// <param name="methodName">Método a ser invocado no repositório.</param>
-        /// <param name="parameters">Parametros opcionais a serem enviados.</param>
-        /// <returns>O resultado da operação solocitada quando houver.</returns>
         [NotPropagate]
         private object PropagateInternal<T2>(string methodName, object[] parameters) where T2 : BaseEntity
         {
-            if (string.IsNullOrEmpty(methodName))
+            if (string.IsNullOrWhiteSpace(methodName))
             {
-                methodName = GlobalUtil.GetMethodNameByCallerType(GetType());
+                methodName = GlobalUtil.GetMethodByCallerType(GetType())?.Name;
             }
 
-            var ret = GlobalUtil.GetPropagationMethod<T, T>(methodName, Service, GetType(), parameters, true);
-            return ret ?? Service.PropagateService<T2>(methodName, this, parameters);
+            return Service.PropagateService<T2>(methodName, parameters);
         }
+
+        ///// <summary>
+        ///// Método interno.
+        ///// Invoca um método no repositório, passando por serviço e validação quando houverem. 
+        ///// </summary>
+        ///// <typeparam name="T2">O tipo de entidade para o qual o repositório se refere.</typeparam>
+        ///// <param name="methodName">Método a ser invocado no repositório.</param>
+        ///// <param name="parameters">Parametros opcionais a serem enviados.</param>
+        ///// <returns>O resultado da operação solocitada quando houver.</returns>
+        //[NotPropagate]
+        //private object PropagateInternal<T2>(string methodName, object[] parameters) where T2 : BaseEntity
+        //{
+        //    if (string.IsNullOrEmpty(methodName))
+        //    {
+        //        methodName = GlobalUtil.GetMethodNameByCallerType(GetType());
+        //    }
+
+        //    var ret = GlobalUtil.GetPropagationMethod<T, T>(methodName, Service, GetType(), parameters, true);
+        //    return ret ?? Service.PropagateService<T2>(methodName, this, parameters);
+        //}
 #endif
 
 #if NET461
@@ -95,6 +118,7 @@ namespace Fluent.Architecture.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 #else
+
 #endif
     }
 }

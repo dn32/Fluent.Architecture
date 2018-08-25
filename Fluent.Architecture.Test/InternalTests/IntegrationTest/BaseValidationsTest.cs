@@ -1,10 +1,9 @@
-﻿using System;
+﻿#if NET461
+
+using System;
 using System.Linq;
 using Fluent.Architecture.Exception.ValidationException;
 using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Controllers;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Enum;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Models;
 using Fluent.Architecture.Validation;
 using Xunit;
 
@@ -12,16 +11,16 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest
 {
     public class BaseValidationsTest
     {
-        #region SETUP
+#region SETUP
 
         public BaseValidationsTest()
         {
             Setup.Initialize();
         }
 
-        #endregion
+#endregion
 
-        #region FAIL
+#region FAIL
 
         [Theory]
         [InlineData(nameof(UserController.Add))]
@@ -44,7 +43,7 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest
         [InlineData(nameof(UserController.Add), null)]
         public void RequiredAddAndUpdateTestFail(string method, string name)
         {
-            var user = UserTestUtil.GetNewUser();
+            var user = UserTestUtil.GetNew();
 
             if (method == nameof(UserController.Update))
             {
@@ -102,14 +101,14 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest
             objectReturn.Inconsistencies.Clear();
         }
 
-        #endregion
+#endregion
 
-        #region SUCCESS
+#region SUCCESS
 
         [Fact]
         public void AddUpdateAndRemoveSuccess()
         {
-            var user = UserTestUtil.GetNewUser();
+            var user = UserTestUtil.GetNew();
 
             //Add
             TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Add), user);
@@ -129,6 +128,7 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest
             Assert.Null(user);
         }
 
-        #endregion
+#endregion
     }
 }
+#endif

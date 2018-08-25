@@ -1,14 +1,11 @@
-﻿using System;
+﻿#if NET461
+using System;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Service;
 using Fluent.Architecture.Specifications;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Controllers;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Models;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Repository;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Services;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Specifications.UserSpec;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Validations;
+using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests;
+using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Specifications;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
 using Xunit;
@@ -35,15 +32,16 @@ namespace Fluent.Architecture.Test.InternalTests
         [InlineData(typeof(object), null)]
         public void GetFluentEntityTypeTest(Type currentType, Type fluentType)
         {
-            var fluentTypeFound = GlobalUtil.GetFluentEntityType(currentType);
+            var fluentTypeFound = currentType.GetFluentEntityType();
             Assert.Equal(fluentType, fluentTypeFound);
         }
 
-        [Fact]
-        public void GetMethodNameByCallerTypeTest()
-        {
-            var name = GlobalUtil.GetMethodNameByCallerType(typeof(UtilTest));
-            Assert.Equal(nameof(GetMethodNameByCallerTypeTest), name); 
-        }
+        //[Fact]
+        //public void GetMethodNameByCallerTypeTest()
+        //{
+        //    var name = GlobalUtil.GetMethodNameByCallerType(typeof(UtilTest));
+        //    Assert.Equal(nameof(GetMethodNameByCallerTypeTest), name); 
+        //}
     }
 }
+#endif

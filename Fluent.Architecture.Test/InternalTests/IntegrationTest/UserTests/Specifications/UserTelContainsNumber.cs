@@ -3,9 +3,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using Fluent.Architecture.Service;
 using Fluent.Architecture.Specifications;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Models;
 
-namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Specifications.UserSpec
+namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Specifications
 {
     public class UserTelContainsNumber : FluentSpecification<User>
     {

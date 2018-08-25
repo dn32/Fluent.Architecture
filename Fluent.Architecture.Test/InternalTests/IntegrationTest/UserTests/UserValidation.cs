@@ -1,8 +1,7 @@
 ﻿using Fluent.Architecture.Exception.ValidationException;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Models;
 using Fluent.Architecture.Validation;
 
-namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Validations
+namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
 {
     public class UserValidation : FluentValidation<User>
     {

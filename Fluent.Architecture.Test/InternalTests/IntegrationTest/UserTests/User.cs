@@ -2,9 +2,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Model;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Enum;
 
-namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Models
+namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
 {
     [Table("users")]
     public class User : FluentEntity

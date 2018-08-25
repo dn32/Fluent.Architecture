@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Exception;
+using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
@@ -47,55 +50,87 @@ namespace Fluent.Architecture.Service
 #if PROPAGATION
         // Todo Documenta após a organização desses itens.
 
-        [NotPropagate]
-        public virtual object PropagateService(BaseSpecification spec)
-        {
-            return PropagateService(string.Empty, spec);
-        }
+        //[NotPropagate]
+        //public virtual object PropagateService(BaseSpecification spec)
+        //{
+        //    return PropagateService(string.Empty, spec);
+        //}
 
-        [NotPropagate]
-        public virtual object PropagateService(params object[] parameters)
-        {
-            return PropagateService(string.Empty, parameters);
-        }
+        //[NotPropagate]
+        //public virtual object PropagateService(params object[] parameters)
+        //{
+        //    return PropagateService(string.Empty, parameters);
+        //}
 
-        [NotPropagate]
-        public virtual object PropagateService(string methodName, params object[] parameters)
-        {
-            CallValidationPerPropagation<T>(methodName, this, parameters);
-            return GlobalUtil.GetPropagationMethod<T, T>(methodName, Repository, GetType(), parameters);
-        }
+        //[NotPropagate]
+        //public virtual object PropagateService(string methodName, params object[] parameters)
+        //{
+        //    CallValidationPerPropagation<T>(methodName, this, parameters);
+        //    return GlobalUtil.GetPropagationMethod<T, T>(methodName, Repository, GetType(), parameters);
+        //}
 
-        [NotPropagate]
-        public virtual object PropagateService<T2>(string methodName, FluentServiceController<TransactionalService> _this, params object[] parameters) where T2 : BaseEntity
-        {
-            // Todo - Note que nesse ponto, T agora é TS. Essas operações abaixo devem ser ajustadas para atender a TS que não tem entidade
-            //CallValidationPerPropagation<T>(methodName, _this, parameters);
-            //return GlobalUtil.GetPropagationMethod<T, T>(methodName, Repository, GetType(), parameters);
-            return null;
-        }
+        //[NotPropagate]
+        //public virtual object PropagateService<T2>(string methodName, FluentServiceController<TransactionalService> _this, params object[] parameters) where T2 : BaseEntity
+        //{
+        //    // Todo - Note que nesse ponto, T agora é TS. Essas operações abaixo devem ser ajustadas para atender a TS que não tem entidade
+        //    //CallValidationPerPropagation<T>(methodName, _this, parameters);
+        //    //return GlobalUtil.GetPropagationMethod<T, T>(methodName, Repository, GetType(), parameters);
+        //    return null;
+        //}
 
-        // If this method is internal the interceptor does not pick up and a number of problems will be noticed with sessionRequest control.
-        [NotPropagate]
-        public virtual object PropagateService<T2>(FluentController<T> _this, params object[] parameters) where T2 : BaseEntity
-        {
-            CallValidationPerPropagation<T>(string.Empty, _this, parameters);
-            return GlobalUtil.GetPropagationMethod<T, T2>(string.Empty, Repository, _this.GetType(), parameters);
-        }
+        //// If this method is internal the interceptor does not pick up and a number of problems will be noticed with sessionRequest control.
+        //[NotPropagate]
+        //public virtual object PropagateService<T2>(FluentController<T> _this, params object[] parameters) where T2 : BaseEntity
+        //{
+        //    CallValidationPerPropagation<T>(string.Empty, _this, parameters);
+        //    return GlobalUtil.GetPropagationMethod<T, T2>(string.Empty, Repository, _this.GetType(), parameters);
+        //}
 
-        [NotPropagate]
-        public virtual object PropagateService<T2>(params object[] parameters)
-        {
-            CallValidationPerPropagation<T>(string.Empty, this, parameters);
-            return GlobalUtil.GetPropagationMethod<T, T2>(string.Empty, Repository, GetType(), parameters);
-        }
+        //[NotPropagate]
+        //public virtual object PropagateService<T2>(params object[] parameters)
+        //{
+        //    CallValidationPerPropagation<T>(string.Empty, this, parameters);
+        //    return GlobalUtil.GetPropagationMethod<T, T2>(string.Empty, Repository, GetType(), parameters);
+        //}
+
+        //[NotPropagate]
+        //public virtual object PropagateService<T2>(string methodName, params object[] parameters)
+        //{
+        //    CallValidationPerPropagation<T>(methodName, this, parameters);
+        //    return GlobalUtil.GetPropagationMethod<T, T2>(methodName, Repository, GetType(), parameters);
+        //}
+
 
         [NotPropagate]
         public virtual object PropagateService<T2>(string methodName, params object[] parameters)
         {
-            CallValidationPerPropagation<T>(methodName, this, parameters);
-            return GlobalUtil.GetPropagationMethod<T, T2>(methodName, Repository, GetType(), parameters);
+            Validation.PropagateService<T2>(methodName, parameters);
+
+            var type = GetType();
+            var parameterTypes = parameters.Select(x => x.GetType()).ToArray();
+            var serviceMethod = type.GetMethod(methodName, parameterTypes);
+            if (serviceMethod != null)
+            {
+                return serviceMethod.Invoke(this, parameters);
+            }
+
+            var validationMethod = Validation.GetType().GetMethod(methodName, parameterTypes);
+            if (validationMethod != null)
+            {
+                validationMethod.Invoke(Validation, parameters);
+            }
+
+            var repositoryMethod = Repository.GetType().GetMethod(methodName, parameterTypes);
+            if (repositoryMethod != null)
+            {
+                return repositoryMethod.Invoke(Repository, parameters);
+            }
+
+            var serviceName = type.GetFluentEntityType();
+            var repositoryName = Repository.GetType().GetFluentEntityType();
+            throw new IncorrectDevelopmentException($"The {methodName} method was not found in the service {serviceName} and repository {repositoryName}");
         }
+
 #endif
         #endregion
 
@@ -321,13 +356,13 @@ namespace Fluent.Architecture.Service
 
         #region PRIVATE
 
-#if PROPAGATION
-    [NotPropagate]
-        private void CallValidationPerPropagation<T2>(string methodName, object _this, params object[] parameters)
-        {
-            GlobalUtil.GetPropagationMethod<T, T2>(methodName, Validation, _this.GetType(), parameters, true);
-        }
-#endif
+        //#if PROPAGATION
+        //    [NotPropagate]
+        //        private void CallValidationPerPropagation<T2>(string methodName, object _this, params object[] parameters)
+        //        {
+        //            GlobalUtil.GetPropagationMethod<T, T2>(methodName, Validation, _this.GetType(), parameters, true);
+        //        }
+        //#endif
         /// <summary>
         /// Valida a tentativa de instância de um serviço.
         /// </summary>

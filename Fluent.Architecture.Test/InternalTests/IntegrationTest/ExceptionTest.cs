@@ -1,9 +1,10 @@
-﻿using System;
+﻿#if NET461
+using System;
 using Fluent.Architecture.Exception;
 using Fluent.Architecture.Exception.ValidationException;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Filters;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Controllers;
+using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests;
 using Fluent.Architecture.Test.Mock;
 using Fluent.Architecture.Validation;
 using Xunit;
@@ -66,3 +67,4 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest
 
     }
 }
+#endif

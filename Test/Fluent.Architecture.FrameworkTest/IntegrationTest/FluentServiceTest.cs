@@ -23,7 +23,7 @@
 //        public void IncorrectDevelopmentExceptionTest()
 //        {
 //            var userService = ServiceFactory.Create<UserService>()
-//            var user = UserTestUtil.GetNewUser();
+//            var user = UserTestUtil.GetNew();
 //            var spec = new UserByEmail(user.Email);
 //        }
 //    }

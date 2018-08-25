@@ -3,9 +3,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using Fluent.Architecture.Service;
 using Fluent.Architecture.Specifications;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Models;
 
-namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Specifications.UserSpec
+namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Specifications
 {
     public class UserByEmail : FluentSpecification<User>
     {
@@ -18,7 +17,7 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Speci
 
         public override IQueryable<User> Spec(IQueryable<User> query)
         {
-            return query.Where(x => x.Email == _email);
+            return query.Where(x => x.Email.Equals(_email, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public override Expression<Func<User, object>> Order()

@@ -1,8 +1,7 @@
-﻿using System.Linq;
+﻿#if NET461
+using System.Linq;
 using Fluent.Architecture.Exception.ValidationException;
 using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Controllers;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Models;
 using Fluent.Architecture.Validation;
 using Xunit;
 
@@ -17,12 +16,14 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest
             Setup.Initialize();
         }
 
+        #endregion
+
         #region FAIL
 
         [Fact]
         public void FullNameAddValidationFail()
         {
-            var user = UserTestUtil.GetNewUser();
+            var user = UserTestUtil.GetNew();
             user.Name = "Maria";
 
             var error = TestUtil.Execute<ContextFluentValidation>(typeof(UserController), nameof(UserController.Add), user);
@@ -35,7 +36,7 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest
         [Fact]
         public void FullNameUpdateValidationFail()
         {
-            var user = UserTestUtil.GetNewUser();
+            var user = UserTestUtil.GetNew();
             user.Name = "Maria Santos";
 
             TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Add), user);
@@ -56,14 +57,14 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest
             Assert.Null(user);
         }
 
-        #endregion
+#endregion
 
-        #region SUCCESS
+#region SUCCESS
 
         [Fact]
         public void FullNameAddAndUpdateValidationSuccess()
         {
-            var user = UserTestUtil.GetNewUser();
+            var user = UserTestUtil.GetNew();
             user.Name = "Maria Santos";
 
             //Add
@@ -83,10 +84,9 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest
             user = TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Find), user);
             Assert.Null(user);
         }
-
-        #endregion
-
-        #endregion
+        
+#endregion
 
     }
 }
+#endif

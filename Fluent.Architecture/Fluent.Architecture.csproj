@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>net461</TargetFrameworks>
+    <!--<TargetFrameworks>net461;netcoreapp2.1</TargetFrameworks>-->
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Fluent.Architecture.snk</AssemblyOriginatorKeyFile>
     <Version>1.0.0-beta85</Version>
@@ -11,6 +12,10 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|AnyCPU'">
     <DefineConstants>TRACE;NO_PROPAGATION</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net461|AnyCPU'">
+    <DefineConstants>TRACE;PROPAGATION</DefineConstants>
   </PropertyGroup>
 
 

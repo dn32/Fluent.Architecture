@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Threading;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Enum;
-using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Models;
 
 namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
 {
     public static class UserTestUtil
     {
-        private static readonly Random Random = new Random();
-
-        private static readonly object SyncLock = new object();
-
-        public static User GetNewUser()
+        public static User GetNew()
         {
-            var rand = NextRandom();
+            var rand = TestUtil.NextRandom();
             return new User
             {
                 PersonType = ePersonType.User,
@@ -24,15 +18,6 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
                 Password = $"test{rand}@mail.com",
                 Tel = $"test{rand}@mail.com",
             };
-        }
-
-
-        public static int NextRandom()
-        {
-            lock (SyncLock)
-            {
-                return Random.Next(1, int.MaxValue);
-            }
         }
     }
 }

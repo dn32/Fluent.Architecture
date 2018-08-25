@@ -6,6 +6,7 @@ using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Service;
 using Fluent.Architecture.Extensions;
+using System.Reflection;
 
 namespace Fluent.Architecture.Validation
 {
@@ -39,7 +40,7 @@ namespace Fluent.Architecture.Validation
         /// <param name="ex">
         /// A inconsitência.
         /// </param>
-        protected void AddInconsistency(Exception.ValidationException.FluentValidationException ex)
+        protected void AddInconsistency(FluentValidationException ex)
         {
             Service.SessionRequest.ContextFluentValidation.AddInconsistency(ex);
         }
@@ -77,7 +78,6 @@ namespace Fluent.Architecture.Validation
             ParameterMustBeInformed(entity);
             RequiredPropertyMustBeInformed(entity);
             AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
-//            AllFluentKeysMustBeInformed(entity, false);
             EntityShouldNotExistInDatabaseBasedOnKeys(entity);
 
             RunTheContextValidation();
@@ -92,7 +92,7 @@ namespace Fluent.Architecture.Validation
             ParameterMustBeInformed(entity);
             RequiredPropertyMustBeInformed(entity);
             AllKeysMustBeInformed(entity);
-          //  AllFluentKeysMustBeInformed(entity, true);
+            //  AllFluentKeysMustBeInformed(entity, true);
             EntityMustExistInDatabase(entity);
 
             RunTheContextValidation();
@@ -120,6 +120,29 @@ namespace Fluent.Architecture.Validation
             RunTheContextValidation();
         }
 
+        public virtual void PropagateService<T2>(string methodName, object[] parameters)
+        {
+            ParameterMustBeInformed(parameters);
+
+            if (string.IsNullOrEmpty(methodName))
+            {
+                AddInconsistency(new NullParameterFluentValidationException(nameof(methodName)));
+            }
+
+            if (NullParameterOk)
+            {
+                foreach (var parameter in parameters)
+                {
+                    if (parameter == null)
+                    {
+                        AddInconsistency(new FluentParameterValidationException(nameof(parameters), "No propagation parameter can be null."));
+                    }
+                }
+            }
+
+            RunTheContextValidation();
+        }
+
         /*
 === PADRÃO DE NOMECLATURA ===
 O que deve ser verdadeiro
@@ -132,7 +155,7 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
 
         #region VALIDATIONS
 
-        private void ParameterMustBeInformed(T entity)
+        private void ParameterMustBeInformed(object entity)
         {
             if (entity == null)
             {
@@ -184,12 +207,6 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
 
         private void AllFluentKeysMustBeInformed(T entity)
         {
-            if (!NullParameterOk)
-            {
-                KeyValuesOk = false;
-                return;
-            }
-
             KeyValuesOk = true;
 
             var properties = entity.GetType().GetFluentUniqueKeyProperties();
@@ -211,7 +228,7 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
             }
 
             var entityType = typeof(T);
-            var properties = entityType.GetFluentUniqueKeyProperties();
+            var properties = entityType.GetKeyProperties();
             if (properties.Count > 1)
             {
                 AllFluentKeysMustBeInformed(entity);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Controllers;
@@ -22,10 +23,24 @@ namespace Fluent.Architecture.Test
         {
             return ControllerMockFactory.Create(controllerType);
         }
-        
+
+        private static readonly Random Random = new Random();
+
+        private static readonly object SyncLock = new object();
+
+        public static int NextRandom()
+        {
+            lock (SyncLock)
+            {
+                return Random.Next(1, int.MaxValue);
+            }
+        }
+
 #if NET461
         public static TR Execute<TR>(Type controllerType, string methodName, params object[] parameters)
         {
+
+
             var controller = TestUtil.GetController(controllerType);
             MethodInfo method;
             if (parameters == null)
@@ -35,10 +50,9 @@ namespace Fluent.Architecture.Test
             }
             else
             {
-                var paramTypes = parameters.Select(x => x.GetType()).ToArray();
-                method = controllerType.GetMethod(methodName, paramTypes);
+                var parameterTypes = (from parameter in parameters select parameter == null ? typeof(object) : parameter.GetType()).ToList();
+                method = controllerType.GetMethod(methodName, parameterTypes.ToArray());
             }
-
 
             if (method == null)
             {

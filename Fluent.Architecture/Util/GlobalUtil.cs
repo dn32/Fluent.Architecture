@@ -17,7 +17,7 @@ namespace Fluent.Architecture.Util
     /// <summary>
     /// Utilitários de uso global.
     /// </summary>
-    public class GlobalUtil
+    public static class GlobalUtil
     {
         /// <summary>
         /// Obtem o tipo da entidade de um objeto baseado em um tipo esperado de Fluent. Ex <see cref="FluentService{T}"/>, <see cref="FluentRepository{T}"/>, etc. O retorno será o tipo de T.
@@ -66,7 +66,7 @@ namespace Fluent.Architecture.Util
         /// <returns>
         /// O tipo.
         /// </returns>
-        public static Type GetFluentEntityType(Type currentType)
+        public static Type GetFluentEntityType(this Type currentType)
         {
             return GetBase(currentType);
 
@@ -97,16 +97,8 @@ namespace Fluent.Architecture.Util
             }
         }
 
-        /// <summary>
-        /// Obtem o nome do método chamador do método atual baseado no tipo do chamador. Para uso no conteito de propagação.
-        /// </summary>
-        /// <param name="callerType">
-        /// Tipo do chamador.
-        /// </param>
-        /// <returns>
-        /// O nome do método solicitado.
-        /// </returns>
-        public static string GetMethodNameByCallerType(Type callerType)
+        //Todo doc
+        public static MethodBase GetMethodByCallerType(Type callerType)
         {
             bool ComparePropagateMethod(StackFrame frame)
             {
@@ -115,7 +107,7 @@ namespace Fluent.Architecture.Util
                 return type == callerType && method.GetCustomAttribute<NotPropagateAttribute>() == null;
             }
 
-            return new StackTrace().GetFrames().LastOrDefault(ComparePropagateMethod)?.GetMethod().Name;
+            return new StackTrace().GetFrames()?.LastOrDefault(ComparePropagateMethod)?.GetMethod();
         }
 
 #if PROPAGATION
@@ -125,7 +117,7 @@ namespace Fluent.Architecture.Util
         {
             if (string.IsNullOrEmpty(methodName))
             {
-                methodName = GetMethodNameByCallerType(callerType);
+                methodName = GetMethodByCallerType(callerType)?.Name;
             }
 
             var methods = target.GetType().GetMethods().Where(x => x.IsPublic && x.Name.Equals(methodName, StringComparison.InvariantCultureIgnoreCase) && x.GetCustomAttribute<PropagateAttribute>() != null).ToList();
