@@ -9,6 +9,7 @@ using Fluent.Architecture.Exception;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Service;
+using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Validation;
 
 namespace Fluent.Architecture.Util
@@ -24,13 +25,13 @@ namespace Fluent.Architecture.Util
         /// <param name="objectTypeToCheck">
         /// Objeto a ser avaliado.
         /// </param>
-        /// <param name="spectedType">
+        /// <param name="expectedType">
         /// Tipo esperado. Exemplo:  <see cref="FluentService{T}"/>, <see cref="FluentRepository{T}"/>
         /// </param>
         /// <returns>
         /// O tipo.
         /// </returns>
-        internal static Tuple<string, Type> GetFluentEntityType(Type objectTypeToCheck, Type spectedType)
+        internal static Tuple<string, Type> GetFluentEntityType(Type objectTypeToCheck, Type expectedType)
         {
             return new Tuple<string, Type>(GetBase(objectTypeToCheck.BaseType), objectTypeToCheck);
 
@@ -46,7 +47,7 @@ namespace Fluent.Architecture.Util
                     return null;
                 }
 
-                if (type.Name == spectedType.Name)
+                if (type.Name == expectedType.Name)
                 {
                     var args = type.GetGenericArguments();
                     return args.Length == 0 ? type.Name : type.GetGenericArguments()[0].Name;
@@ -85,7 +86,9 @@ namespace Fluent.Architecture.Util
                     type.Name == typeof(FluentController<FluentEntity>).Name ||
                     type.Name == typeof(FluentService<FluentEntity>).Name ||
                     type.Name == typeof(FluentRepository<FluentEntity>).Name ||
-                    type.Name == typeof(FluentValidation<FluentEntity>).Name)
+                    type.Name == typeof(FluentValidation<FluentEntity>).Name ||
+                    type.Name == typeof(FluentController<FluentEntity>).Name ||
+                    type.Name == typeof(FluentSpecification<FluentEntity>).Name)
                 {
                     return type.GetGenericArguments()[0];
                 }
@@ -103,7 +106,7 @@ namespace Fluent.Architecture.Util
         /// <returns>
         /// O nome do método solicitado.
         /// </returns>
-        internal static string GetMethodNameByCallerType(Type callerType)
+        public static string GetMethodNameByCallerType(Type callerType)
         {
             bool ComparePropagateMethod(StackFrame frame)
             {
@@ -115,6 +118,7 @@ namespace Fluent.Architecture.Util
             return new StackTrace().GetFrames().LastOrDefault(ComparePropagateMethod)?.GetMethod().Name;
         }
 
+#if PROPAGATION
         // Todo Documentar quando o conceito de propagação for revisado e testado.
         [NotPropagate]
         internal static object GetPropagationMethod<T, T2>(string methodName, object target, Type callerType, object[] parameters, bool ignoreMethodNotFound = false)
@@ -163,5 +167,6 @@ namespace Fluent.Architecture.Util
 
             return method.Invoke(target, parameters);
         }
+#endif
     }
 }

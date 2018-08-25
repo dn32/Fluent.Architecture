@@ -9,6 +9,11 @@
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|AnyCPU'">
+    <DefineConstants>TRACE;NO_PROPAGATION</DefineConstants>
+  </PropertyGroup>
+
+
   <ItemGroup>
     <Compile Remove="Repository\FluentRepositoryRavenDB.cs" />
   </ItemGroup>

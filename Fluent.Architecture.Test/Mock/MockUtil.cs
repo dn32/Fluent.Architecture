@@ -14,7 +14,7 @@ namespace Fluent.Architecture.Test.Mock
     {
 #if NET461
 
-        public static HttpContextBaseMock GetHttpContext(Type controllerType)
+        public static HttpContextBaseMock GetHttpContext()
         {
             return new HttpContextBaseMock();
         }

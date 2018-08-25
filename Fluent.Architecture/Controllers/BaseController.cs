@@ -12,7 +12,7 @@ namespace Fluent.Architecture.Controllers
     /// <summary>
     /// O controlador base de referência para todos os controladores do sistema.
     /// </summary>
-    public class BaseController : Controller
+    public abstract class BaseController : Controller
     {
 
 #if NET461

@@ -30,8 +30,7 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest
             var connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             Setup.Initialize(connectionString);
             Controller = MockUtil.GetMockController(typeof(UserController));
-            HttpContext = MockUtil.GetHttpContext(Controller.GetType());
-            Service = ServiceFactory.Create<UserService>(HttpContext);
+            Service = ServiceFactory.Create<UserService>(MockUtil.GetHttpContext());
         }
 
         #endregion
@@ -70,34 +69,36 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest
         public void CountTest(string number, int count)
         {
             var user1 = UserTestUtil.GetNewUser();
-            var user2 = UserTestUtil.GetNewUser();
-            var user3 = UserTestUtil.GetNewUser();
+            user1.Tel = "00000000000000";
 
-            user1.Tel = "6212345678";
-            user2.Tel = "6358454589";
-            user3.Tel = "6397166858";
-            
-            var users = new[] { new[] { user1, user2, user3 } };
+            var users = new List<User> { user1 };
+
+            number += UserTestUtil.NextRandom();
+
+            for (int i = 0; i < count; i++)
+            {
+                var user = UserTestUtil.GetNewUser();
+                user.Tel = number + UserTestUtil.NextRandom();
+                users.Add(user);
+            }
+
+            var usersParam = new[] { users.ToArray() };
             var spec = new UserTelContainsNumber(Service, number);
-            var specAll = new UserAll(Service);
-
-            //Clear all user
-            TestUtil.Execute<User[]>(typeof(UserController), nameof(UserController.RemoveRange), specAll);
 
             //Add
-            TestUtil.Execute<User[]>(typeof(UserController), nameof(UserController.AddRange), users);
+            TestUtil.Execute<User[]>(typeof(UserController), nameof(UserController.AddRange), usersParam);
 
             //Test Count
             var countFound = TestUtil.Execute<int>(typeof(UserController), nameof(UserController.Count), spec);
             Assert.Equal(count, countFound);
-            
+
             //Test Spec
             var usersReturn = TestUtil.Execute<List<User>>(typeof(UserController), nameof(UserController.Spec), spec);
             Assert.NotNull(usersReturn);
             Assert.Equal(count, usersReturn.Count);
-            
+
             //Remove
-            TestUtil.Execute<User[]>(typeof(UserController), nameof(UserController.RemoveRange), users);
+            TestUtil.Execute<User[]>(typeof(UserController), nameof(UserController.RemoveRange), usersParam);
         }
     }
 }

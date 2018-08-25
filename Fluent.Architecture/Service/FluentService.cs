@@ -43,7 +43,8 @@ namespace Fluent.Architecture.Service
             Validation.Init(this, Repository);
         }
 
-        #region PROPAGACAO
+        #region PROPAGATION
+#if PROPAGATION
         // Todo Documenta após a organização desses itens.
 
         [NotPropagate]
@@ -95,7 +96,7 @@ namespace Fluent.Architecture.Service
             CallValidationPerPropagation<T>(methodName, this, parameters);
             return GlobalUtil.GetPropagationMethod<T, T2>(methodName, Repository, GetType(), parameters);
         }
-
+#endif
         #endregion
 
         #region PASSAGEM DIRETA PARA O REPOSITÓRIO
@@ -209,7 +210,7 @@ namespace Fluent.Architecture.Service
         [Propagate]
         public virtual void RemoveRange(FluentSpecification<T> spec)
         {
-             Repository.RemoveRange(spec);
+            Repository.RemoveRange(spec);
         }
 
         /// <summary>
@@ -301,10 +302,10 @@ namespace Fluent.Architecture.Service
         [Propagate]
         public virtual T Remove(T entity)
         {
-             Validation.Remove(entity);
-           return Repository.Remove(entity);
+            Validation.Remove(entity);
+            return Repository.Remove(entity);
         }
-        
+
         //Todo documentar
         [Propagate]
         public virtual void RemoveRange(params T[] entities)
@@ -320,12 +321,13 @@ namespace Fluent.Architecture.Service
 
         #region PRIVATE
 
-        [NotPropagate]
+#if PROPAGATION
+    [NotPropagate]
         private void CallValidationPerPropagation<T2>(string methodName, object _this, params object[] parameters)
         {
             GlobalUtil.GetPropagationMethod<T, T2>(methodName, Validation, _this.GetType(), parameters, true);
         }
-
+#endif
         /// <summary>
         /// Valida a tentativa de instância de um serviço.
         /// </summary>

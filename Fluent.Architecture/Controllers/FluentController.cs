@@ -10,7 +10,6 @@ using System.Web.Mvc;
 using Microsoft.AspNetCore.Mvc;
 #endif
 
-
 namespace Fluent.Architecture.Controllers
 {
     /// <inheritdoc />
@@ -20,7 +19,8 @@ namespace Fluent.Architecture.Controllers
     /// <typeparam name="T">O tipo da entidade do controller.</typeparam>
     public abstract class FluentController<T> : FluentServiceController<FluentService<T>> where T : BaseEntity
     {
-        /// <summary>
+#if PROPAGATION
+       /// <summary>
         /// Invoca um método no repositório, passando por serviço e validação quando houverem. 
         /// </summary>
         /// <param name="methodName">Método a ser invocado no repositório.</param>
@@ -29,7 +29,7 @@ namespace Fluent.Architecture.Controllers
         [NotPropagate]
         protected object Propagate(string methodName, params object[] parameters)
         {
-            return PropagateInteral<T>(methodName, parameters);
+            return PropagateInternal<T>(methodName, parameters);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Fluent.Architecture.Controllers
         [NotPropagate]
         protected object Propagate(params object[] parameters)
         {
-            return PropagateInteral<T>(string.Empty, parameters);
+            return PropagateInternal<T>(string.Empty, parameters);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Fluent.Architecture.Controllers
         [NotPropagate]
         protected object Propagate<T2>(string methodName, params object[] parameters) where T2 : BaseEntity
         {
-            return PropagateInteral<T2>(methodName, parameters);
+            return PropagateInternal<T2>(methodName, parameters);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Fluent.Architecture.Controllers
         [NotPropagate]
         protected object Propagate<T2>(params object[] parameters) where T2 : BaseEntity
         {
-            return PropagateInteral<T2>(string.Empty, parameters);
+            return PropagateInternal<T2>(string.Empty, parameters);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Fluent.Architecture.Controllers
         /// <param name="parameters">Parametros opcionais a serem enviados.</param>
         /// <returns>O resultado da operação solocitada quando houver.</returns>
         [NotPropagate]
-        private object PropagateInteral<T2>(string methodName, object[] parameters) where T2 : BaseEntity
+        private object PropagateInternal<T2>(string methodName, object[] parameters) where T2 : BaseEntity
         {
             if (string.IsNullOrEmpty(methodName))
             {
@@ -87,6 +87,7 @@ namespace Fluent.Architecture.Controllers
             var ret = GlobalUtil.GetPropagationMethod<T, T>(methodName, Service, GetType(), parameters, true);
             return ret ?? Service.PropagateService<T2>(methodName, this, parameters);
         }
+#endif
 
 #if NET461
         protected internal new JsonResult Json(object data)

@@ -12,6 +12,7 @@ using Fluent.Architecture.Service;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
 
+
 namespace Fluent.Architecture
 {
     public class Setup

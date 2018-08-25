@@ -9,10 +9,11 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
     {
         public static int Count { get; set; }
 
+        public static object ObjectLock = new object();
+
         public static User GetNewUser()
         {
-            Count++;
-            var rand = new Random().Next(Count, 65000) + Count;
+            var rand = NextRandom();
             return new User
             {
                 PersonType = ePersonType.User,
@@ -25,5 +26,12 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
             };
         }
 
+        public static int NextRandom()
+        {
+            lock (ObjectLock)
+            {
+                return new Random().Next(Count, 65000) + Count++;
+            }
+        }
     }
 }
