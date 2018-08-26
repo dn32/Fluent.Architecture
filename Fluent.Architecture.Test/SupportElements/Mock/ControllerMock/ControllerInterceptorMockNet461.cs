@@ -7,13 +7,13 @@
 
 //namespace Fluent.Architecture.Test.Mock.ControllerMock
 //{
-//    internal class ControllerInterceptorMockNet461 : interceptors.FluentInterceptor
+//    public class ControllerInterceptorMockNet461 : interceptors.FluentInterceptor
 //    {
-//        private BaseController Controller { get; set; }
+//        private BaseController UserControllerInstance { get; set; }
 
 //        public void SetMethods(BaseController controller)
 //        {
-//            Controller = controller;
+//            UserControllerInstance = controller;
 //        }
 
 //        public ControllerInterceptorMockNet461(Guid sessionId) //: base(sessionId)
@@ -38,9 +38,9 @@
 //        {
 //            var requestContext = CreateRequestContext(invocation, out ActionExecutingContext contextExecuting);
 
-//            //Controller.InitializeControllerForMock(requestContext);
+//            //UserControllerInstance.InitializeControllerForMock(requestContext);
 
-//            //Controller.OnActionExecutingForTest(contextExecuting);
+//            //UserControllerInstance.OnActionExecutingForTest(contextExecuting);
 //        }
 
 
@@ -49,8 +49,8 @@
 //            var actionName = invocation.Method.Name;
 //            var controllerType = invocation.TargetType;
 //            var actionDescriptor = new MockActionDescriptor(actionName, controllerType);
-//            Controller.ControllerContext = new ActionExecutedContext { ActionDescriptor = actionDescriptor };
-//            contextExecuting = new ActionExecutingContext(Controller.ControllerContext, actionDescriptor, new ConcurrentDictionary<string, object>());
+//            UserControllerInstance.ControllerContext = new ActionExecutedContext { ActionDescriptor = actionDescriptor };
+//            contextExecuting = new ActionExecutingContext(UserControllerInstance.ControllerContext, actionDescriptor, new ConcurrentDictionary<string, object>());
 
 //            var response = new HttpResponseBaseMock();
 //            var request = new HttpRequestBaseMock();

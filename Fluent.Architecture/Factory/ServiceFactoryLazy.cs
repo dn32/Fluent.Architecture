@@ -2,7 +2,7 @@
 using System;
 using Fluent.Architecture.Factory.Interface;
 using Fluent.Architecture.Factory.Proxy;
-using Fluent.Architecture.Service;
+using Fluent.Architecture.Services;
 
 namespace Fluent.Architecture.Factory
 {

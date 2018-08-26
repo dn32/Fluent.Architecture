@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using Fluent.Architecture.Service;
+using Fluent.Architecture.Services;
 
 namespace Fluent.Architecture.Factory.Proxy
 {

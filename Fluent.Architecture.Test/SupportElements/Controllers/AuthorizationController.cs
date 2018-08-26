@@ -1,14 +1,20 @@
 ﻿#if NET461
 using System.Web.Mvc;
 using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Service;
+using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Test.SupportElements.Model;
 
 namespace Fluent.Architecture.Test.SupportElements.Controllers
 {
-    internal class StudentController : FluentController<Student>
+    public class StudentController : FluentController<Student>
     {
+        public JsonResult SpecOne(FluentSpecification<Student> spec)
+        {
+            var student = Service.SpecOne(spec);
+            return Json(student);
+        }
+
         public JsonResult Add(Student student)
         {
             return Json(Propagate(student));

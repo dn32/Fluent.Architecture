@@ -5,7 +5,7 @@ using Fluent.Architecture.Test.SupportElements.Model;
 
 namespace Fluent.Architecture.Test.SupportElements
 {
-    internal class UserRepository:FluentRepository<User>
+    public class UserRepository:FluentRepository<User>
     {
         [Propagate]
         public User FindById(int id)

@@ -1,10 +1,10 @@
-﻿using Fluent.Architecture.Service;
+﻿using Fluent.Architecture.Services;
 using Fluent.Architecture.Test.SupportElements.Model;
 using Fluent.Architecture.Test.SupportElements.Specifications;
 
 namespace Fluent.Architecture.Test.SupportElements.Services
 {
-    internal class UserService : FluentService<User>
+    public class UserService : FluentService<User>
     {
         protected virtual FluentService<Student> StudentService => null;
 

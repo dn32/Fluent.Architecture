@@ -1,7 +1,9 @@
 ﻿// ReSharper disable CommentTypo
 
 using System.Linq;
-using Fluent.Architecture.Service;
+using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Model;
+using Fluent.Architecture.Services;
 
 namespace Fluent.Architecture.Specifications
 {
@@ -12,7 +14,7 @@ namespace Fluent.Architecture.Specifications
     /// </summary>
     /// <typeparam name="TE">Tipo de entidade da especificação.</typeparam>
     /// <typeparam name="TO">Tipo de objeto de saida da especificação.</typeparam>
-    public abstract class FluentSelectSpecification<TE, TO> : BaseSpecification
+    public abstract class FluentSelectSpecification<TE, TO> : BaseSpecification<TE> where TE : BaseEntity
     {
         /// <summary>
         /// A especificação.
@@ -31,8 +33,9 @@ namespace Fluent.Architecture.Specifications
         }
 
         /// <inheritdoc />
-        protected FluentSelectSpecification(TransactionalService service) : base(service)
-        {
-        }
+        protected FluentSelectSpecification(TransactionalService service) : base(service){}
+
+        /// <inheritdoc />
+        protected FluentSelectSpecification(FluentController<TE> controller) : base(controller){}
     }
 }

@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Fluent.Architecture.Service;
+using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Test.SupportElements.Model;
 
 namespace Fluent.Architecture.Test.SupportElements.Specifications
 {
-    internal class UserByPassword : FluentSpecification<User>
+    public class UserByPassword : FluentSpecification<User>
     {
         private readonly string _password;
 
-        public UserByPassword(TransactionalService service, string password) : base(service)
+        public UserByPassword(FluentController<User> controller, string password) : base(controller)
         {
             _password = password;
         }

@@ -2,16 +2,16 @@
 
 using System;
 using System.Security.Claims;
+using System.Web;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
-
 #if NET461
-using System.Web;
+
 #else
 using Microsoft.AspNetCore.Http;
 #endif
 
-namespace Fluent.Architecture.Service
+namespace Fluent.Architecture.Services
 {
     /// <summary>
     /// Serviço base de todos os serviços do sistema.

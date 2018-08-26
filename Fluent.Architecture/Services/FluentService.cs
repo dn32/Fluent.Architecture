@@ -9,10 +9,9 @@ using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Specifications;
-using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
 
-namespace Fluent.Architecture.Service
+namespace Fluent.Architecture.Services
 {
     ///<inheritdoc/>
     /// <summary>

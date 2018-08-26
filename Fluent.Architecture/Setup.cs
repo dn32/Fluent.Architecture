@@ -10,7 +10,7 @@ using Fluent.Architecture.Exception;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
-using Fluent.Architecture.Service;
+using Fluent.Architecture.Services;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
 

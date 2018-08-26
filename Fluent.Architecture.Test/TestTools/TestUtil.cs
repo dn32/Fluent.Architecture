@@ -6,14 +6,14 @@ using System.Reflection;
 using System.Web.Mvc;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Exception.ValidationException;
-using Fluent.Architecture.Service;
+using Fluent.Architecture.Services;
 using Fluent.Architecture.Test.SupportElements.Mock;
 using Fluent.Architecture.Test.SupportElements.Mock.ControllerMock;
 using Xunit;
 
 namespace Fluent.Architecture.Test.TestTools
 {
-    internal static class TestUtil
+    public static class TestUtil
     {
         public static BaseController GetController(Type controllerType)
         {
@@ -33,11 +33,16 @@ namespace Fluent.Architecture.Test.TestTools
         }
 
 #if NET461
-        public static TR Execute<TR>(Type controllerType, string methodName, params object[] parameters)
+
+        //public static TR Execute<TR>(Type controllerType, string methodName, params object[] parameters)
+        //{
+        //    var controller = TestUtil.GetController(controllerType);
+        //    return Execute<TR>(controller, methodName, parameters);
+        //}
+
+        public static TR Execute<TR>(BaseController controller, string methodName, params object[] parameters)
         {
-
-
-            var controller = TestUtil.GetController(controllerType);
+            var controllerType = controller.GetType();
             MethodInfo method;
             if (parameters == null)
             {
@@ -96,6 +101,7 @@ namespace Fluent.Architecture.Test.TestTools
                 throw ex.InnerException;
             }
         }
+
 #else
         public static TR Execute<TR>(Type controllerType, string methodName, params object[] parameters) where TR : class
         {

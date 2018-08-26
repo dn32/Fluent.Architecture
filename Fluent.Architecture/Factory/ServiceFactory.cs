@@ -6,8 +6,7 @@ using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Factory.Interface;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
-using Fluent.Architecture.Service;
-
+using Fluent.Architecture.Services;
 #if NET461
 using System.Web;
 #else
@@ -20,7 +19,7 @@ namespace Fluent.Architecture.Factory
     /// Classe interna.
     /// Fábrica de serviços.
     /// </summary>
-    public class ServiceFactory
+    internal class ServiceFactory
     {
         /// <summary>
         /// Cria um serviço que terá controle de transação.
@@ -35,8 +34,9 @@ namespace Fluent.Architecture.Factory
         /// <returns>
         /// O serviço criado.
         /// </returns>
-        public static TS Create<TS>(object httpContext) where TS : TransactionalService, new()
+        internal static TS Create<TS>(object httpContext) where TS : TransactionalService, new()
         {
+            //Todo IMPORTANTE checar quem está chamando e barrar chamas externas
             var sessionId = Guid.NewGuid();
             var service = InternalCreate<TS>(sessionId);
             var userSession = CreateUserSession(httpContext, sessionId, service);

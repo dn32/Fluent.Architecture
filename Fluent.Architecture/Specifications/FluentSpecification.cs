@@ -3,7 +3,9 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Fluent.Architecture.Service;
+using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Model;
+using Fluent.Architecture.Services;
 
 namespace Fluent.Architecture.Specifications
 {
@@ -12,7 +14,7 @@ namespace Fluent.Architecture.Specifications
     /// Especificação base para todas as especificações do sistema.
     /// </summary>
     /// <typeparam name="TE">Tipo de entidade da especificação.</typeparam>
-    public abstract class FluentSpecification<TE> : BaseSpecification
+    public abstract class FluentSpecification<TE> : BaseSpecification<TE> where TE : BaseEntity
     {
         /// <summary>
         /// A especificação.
@@ -26,12 +28,13 @@ namespace Fluent.Architecture.Specifications
         public abstract IQueryable<TE> Spec(IQueryable<TE> query);
 
         //Todo documentar
-        public abstract Expression<Func<TE, object>>  Order();
+        public abstract Expression<Func<TE, object>> Order();
 
         /// <inheritdoc />
-        protected FluentSpecification(TransactionalService service) : base(service)
-        {
-        }
+        protected FluentSpecification(TransactionalService service) : base(service) { }
+
+        /// <inheritdoc />
+        protected FluentSpecification(FluentController<TE> controller) : base(controller) { }
 
         internal IQueryable<TE> ToIQueryable(IQueryable<TE> query)
         {

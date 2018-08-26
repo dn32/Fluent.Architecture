@@ -3,7 +3,7 @@ using Fluent.Architecture.Model;
 
 namespace Fluent.Architecture.Test.SupportElements.Model
 {
-    internal class Student : FluentEntity
+    public class Student : FluentEntity
     {
         public int Id { get; set; }
 

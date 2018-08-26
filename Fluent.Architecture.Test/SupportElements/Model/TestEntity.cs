@@ -5,7 +5,7 @@ using Fluent.Architecture.Model;
 namespace Fluent.Architecture.Test.SupportElements.Model
 {
     [NotDbEntity]
-    internal class TestEntity : FluentEntity
+    public class TestEntity : FluentEntity
     {
         public int Id { get; set; }
 
@@ -13,7 +13,9 @@ namespace Fluent.Architecture.Test.SupportElements.Model
 
         public List<int> Data2 { get; set; }
 
+#pragma warning disable 414
         private readonly string _internalString = "my value";
+#pragma warning restore 414
 
         public TestEntity2 TestEntity2 { get; set; } = new TestEntity2();
     }

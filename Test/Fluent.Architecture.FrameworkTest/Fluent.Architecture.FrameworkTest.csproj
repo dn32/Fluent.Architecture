@@ -87,17 +87,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IntegrationTest\ExceptionTest.cs" />
-    <Compile Include="IntegrationTest\FluentServiceTest.cs" />
-    <Compile Include="IntegrationTest\SpecificationTest.cs" />
-    <Compile Include="IntegrationTest\UserTests\Controllers\UserController.cs" />
-    <Compile Include="IntegrationTest\UserTests\Enum\ePersonType.cs" />
-    <Compile Include="IntegrationTest\UserTests\Services\UserService.cs" />
-    <Compile Include="IntegrationTest\UserTests\Models\User.cs" />
-    <Compile Include="IntegrationTest\UserTests\UserTestUtil.cs" />
-    <Compile Include="IntegrationTest\UserTests\Validations\UserValudation.cs" />
-    <Compile Include="IntegrationTest\UserTests\Specifications\UserSpec\UserByEmail.cs" />
-    <Compile Include="IntegrationTest\ValidationsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestUtil.cs" />
   </ItemGroup>

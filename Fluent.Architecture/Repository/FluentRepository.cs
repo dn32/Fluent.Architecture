@@ -6,8 +6,8 @@ using System.Linq;
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Model;
+using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
-using Fluent.Architecture.Service;
 #if NET461
 using System.Data.Entity;
 #else

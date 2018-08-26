@@ -16,7 +16,7 @@ using Xunit;
 
 namespace Fluent.Architecture.Test.Test
 {
-    public class ExceptionTest
+    public class ExceptionTest : FluentInternalTest
     {
         [Fact]
         public void IncorrectDevelopmentExceptionTest()
@@ -40,8 +40,6 @@ namespace Fluent.Architecture.Test.Test
         // For test custom errors
         public void ExceptionFilterTest(bool customErrorEnabled, Type exceptionType)
         {
-            //var context = GetMockContext(customErrorEnabled, exceptionType);
-            var controller = MockUtil.GetMockController(typeof(UserController));
             var filter = new ExceptionHandlerAttribute();
             var exception = new ContextFluentValidation();
 
@@ -50,7 +48,7 @@ namespace Fluent.Architecture.Test.Test
 
             exception.AddInconsistency(Activator.CreateInstance(exceptionType, parameters) as FluentValidationException);
 
-            var exceptionContext = MockUtil.GetMockExceptionContext(exception, controller, customErrorEnabled);
+            var exceptionContext = MockUtil.GetMockExceptionContext(exception, UserControllerInstance, customErrorEnabled);
             
             filter.OnException(exceptionContext);
 

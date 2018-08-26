@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Linq;
-using Fluent.Architecture.Service;
+using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Test.SupportElements.Model;
 
 namespace Fluent.Architecture.Test.SupportElements.Specifications
 {
-    internal class UserIdByEmail : FluentSelectSpecification<User, int>
+    public class UserIdByEmail : FluentSelectSpecification<User, int>
     {
         private readonly string _email;
 
-        public UserIdByEmail(TransactionalService service, string email) : base(service)
+        public UserIdByEmail(FluentController<User> controller, string email) : base(controller)
         {
             _email = email;
         }

@@ -2,6 +2,8 @@
 #if NET461
 using System.Web;
 using System.Web.Mvc;
+using Fluent.Architecture.Services;
+
 #else
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +17,6 @@ namespace Fluent.Architecture.Controllers
     /// </summary>
     public abstract class BaseController : Controller
     {
-
 #if NET461
         private HttpContextBase localHttpContext;
         

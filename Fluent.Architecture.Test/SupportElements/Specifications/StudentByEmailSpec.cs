@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Fluent.Architecture.Service;
+using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Test.SupportElements.Model;
 
 namespace Fluent.Architecture.Test.SupportElements.Specifications
 {
-    internal class StudentByEmailSpec : FluentSpecification<Student>
+    public class StudentByEmailSpec : FluentSpecification<Student>
     {
         private readonly string _email;
+
+        public StudentByEmailSpec(FluentController<Student> controller, string email) : base(controller)
+        {
+            _email = email;
+        }
 
         public StudentByEmailSpec(TransactionalService service, string email) : base(service)
         {

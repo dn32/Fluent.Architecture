@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Fluent.Architecture.Service;
+using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Test.SupportElements.Model;
 
 namespace Fluent.Architecture.Test.SupportElements.Specifications
 {
-    internal class UserAll : FluentSpecification<User>
+    public class UserAll : FluentSpecification<User>
     {
         public UserAll(TransactionalService service) : base(service)
         {

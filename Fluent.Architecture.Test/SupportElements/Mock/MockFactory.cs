@@ -15,7 +15,7 @@ namespace Fluent.Architecture.Test.SupportElements.Mock
     {
         protected string Key;
 
-        internal MockFactory() { }
+        public MockFactory() { }
 
         /// <summary>
         /// Cria um novo mMck.

@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Fluent.Architecture.Service;
+using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Test.SupportElements.Model;
 
 namespace Fluent.Architecture.Test.SupportElements.Specifications
 {
-    internal class StudentByTitleSpec: FluentSpecification<Student>
+    public class StudentByTitleSpec: FluentSpecification<Student>
    {
        private readonly string _title;
 
-        public StudentByTitleSpec(TransactionalService service, string title) : base(service)
+        public StudentByTitleSpec(FluentController<Student> controller, string title) : base(controller)
         {
             _title = title;
         }

@@ -7,7 +7,7 @@ using Fluent.Architecture.Exception;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
-using Fluent.Architecture.Service;
+using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Test.SupportElements;
 using Fluent.Architecture.Test.SupportElements.Controllers;
@@ -23,7 +23,7 @@ using BaseServiceTest = Fluent.Architecture.Test.SupportElements.Services.BaseSe
 
 namespace Fluent.Architecture.Test.Test
 {
-    public class UtilTest
+    public class UtilTest : FluentInternalTest
     {
         [Theory]
         [InlineData(typeof(UserController), typeof(User))]

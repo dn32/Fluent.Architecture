@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Linq;
-using Fluent.Architecture.Service;
+using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Test.SupportElements.Model;
 
 namespace Fluent.Architecture.Test.SupportElements.Specifications
 {
-    internal class UserAndStudentByEmail : FluentSelectSpecification<User, UserStudent>
+    public class UserAndStudentByEmail : FluentSelectSpecification<User, UserStudent>
     {
         private readonly string _email;
 
-        public UserAndStudentByEmail(TransactionalService service, string email) : base(service)
+        public UserAndStudentByEmail(FluentController<User> controller, string email) : base(controller)
         {
             _email = email;
         }
@@ -20,7 +21,7 @@ namespace Fluent.Architecture.Test.SupportElements.Specifications
             var students = Get<Student>();
 
             return query.Where(x => x.Email.Equals(_email, StringComparison.CurrentCultureIgnoreCase))
-                .Join(students, user => user.Id, student => student.Id, (user, student) => new { user, student })
+                .Join(students, user => user.Email, student => student.Email, (user, student) => new { user, student })
                 .Select(x => new UserStudent{User = x.user , Student = x.student });
         }
     }

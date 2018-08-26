@@ -5,7 +5,7 @@ using Fluent.Architecture.Validation;
 
 namespace Fluent.Architecture.Test.SupportElements
 {
-    internal class UserValidation : FluentValidation<User>
+    public class UserValidation : FluentValidation<User>
     {
         public override void Add(User entity)
         {

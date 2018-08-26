@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Fluent.Architecture.Repository;
-using Fluent.Architecture.Service;
+using Fluent.Architecture.Services;
 using Fluent.Architecture.Validation;
 #if NET461
 using System.Web;

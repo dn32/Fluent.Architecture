@@ -10,7 +10,7 @@ namespace Fluent.Architecture.Test.SupportElements.Mock
         public object[] Arguments { get; set; }
         public object ReturnValue { get; set; }
 
-        internal void Proceed()
+        public void Proceed()
         {
             throw new NotImplementedException();
         }

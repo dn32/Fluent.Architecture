@@ -6,20 +6,19 @@ using Xunit;
 
 namespace Fluent.Architecture.Test.Test
 {
-    public class ControllerTest
+    public class ControllerTest : FluentInternalTest
     {
         [Fact]
         public void BaseControllerTest()
         {
-            var controller = TestUtil.GetController(typeof(UserController));
-            controller.SetLocalHttpContext(null);
+            UserControllerInstance.SetLocalHttpContext(null);
 
-            Assert.Null(controller.HttpContext);
+            Assert.Null(UserControllerInstance.HttpContext);
 
             var httpContext = MockUtil.GetHttpContext();
-            controller.SetLocalHttpContext(httpContext);
+            UserControllerInstance.SetLocalHttpContext(httpContext);
 
-            Assert.Equal(httpContext, controller.HttpContext);
+            Assert.Equal(httpContext, UserControllerInstance.HttpContext);
         }
     }
 }

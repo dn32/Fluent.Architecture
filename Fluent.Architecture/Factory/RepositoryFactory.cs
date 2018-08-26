@@ -2,7 +2,7 @@
 using System;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
-using Fluent.Architecture.Service;
+using Fluent.Architecture.Services;
 
 namespace Fluent.Architecture.Factory
 {

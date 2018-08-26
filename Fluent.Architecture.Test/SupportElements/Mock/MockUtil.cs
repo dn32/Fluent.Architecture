@@ -21,6 +21,11 @@ namespace Fluent.Architecture.Test.SupportElements.Mock
             return new HttpContextBaseMock();
         }
 
+        public static TC GetMockController<TC>() where TC : class
+        {
+            return GetMockController(typeof(TC)) as TC;
+        }
+
         public static BaseController GetMockController(Type controllerType)
         {
             var controller = TestUtil.GetController(controllerType);//typeof(UserController));

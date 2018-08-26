@@ -6,7 +6,7 @@ using Fluent.Architecture.Test.SupportElements.Model;
 
 namespace Fluent.Architecture.Test.TestTools
 {
-    internal static class InternalTestUtil
+    public static class InternalTestUtil
     {
         public static User GetNewUser()
         {

@@ -4,7 +4,7 @@ using Fluent.Architecture.Test.SupportElements.Mock;
 
 namespace Fluent.Architecture.Test.TestTools
 {
-    internal class TransactionObjectsTest : TransactionObjects
+    public class TransactionObjectsTest : TransactionObjects
     {
         public TransactionObjectsTest(string dataBaseConnectionString) : base(dataBaseConnectionString)
         {

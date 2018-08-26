@@ -16,13 +16,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Fluent.Architecture.Test.SupportElements.Controllers
 {
-    internal class UserController : FluentController<User>
+    public class UserController : FluentController<User>
     {
         public new UserService Service => base.Service as UserService;
 
         public JsonResult UserByEmail(string email)
         {
-            var user = Service.SpecOne(new UserByEmail(Service, email));
+            var user = Service.SpecOne(new UserByEmail(this, email));
             return Json(user);
         }
 
@@ -94,6 +94,12 @@ namespace Fluent.Architecture.Test.SupportElements.Controllers
         {
             var userId = Service.SpecOne(spec);
             return Json(userId);
+        }
+
+        public JsonResult SpecOne(FluentSelectSpecification<User, UserStudent> spec)
+        {
+            var userStudent = Service.SpecOne(spec);
+            return Json(userStudent);
         }
 
         public JsonResult Exists(FluentSpecification<User> spec)

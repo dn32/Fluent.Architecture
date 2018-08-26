@@ -12,19 +12,14 @@ using Xunit;
 
 namespace Fluent.Architecture.Test.Test
 {
-    public class FluentValidationsTest
+    public class FluentValidationsTest : FluentInternalTest
     {
-        public FluentValidationsTest()
-        {
-            Setup.Initialize();
-        }
-
         [Theory]
         [InlineData(nameof(UserController.Add))]
         [InlineData(nameof(UserController.Update))]
         public void NullParameterTestFail(string method)
         {
-            var error = TestUtil.Execute<ContextFluentValidation>(typeof(UserController), method, null);
+            var error = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, method, null);
 
             Assert.NotNull(error);
             Assert.Single(error.Inconsistencies);
@@ -44,12 +39,12 @@ namespace Fluent.Architecture.Test.Test
 
             if (method == nameof(UserController.Update))
             {
-                user = TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Add), user);
+                user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Add), user);
             }
 
             user.Name = name;
 
-            var error = TestUtil.Execute<ContextFluentValidation>(typeof(UserController), method, user);
+            var error = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, method, user);
 
             Assert.NotNull(error);
             Assert.Single(error.Inconsistencies);
@@ -57,7 +52,7 @@ namespace Fluent.Architecture.Test.Test
 
             if (method == nameof(UserController.Update))
             {
-                TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Remove), user);
+                TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Remove), user);
             }
         }
 
@@ -73,7 +68,7 @@ namespace Fluent.Architecture.Test.Test
                 Id = new Random().Next(1, int.MaxValue)
             };
 
-            var objectReturn = TestUtil.Execute<ContextFluentValidation>(typeof(UserController), method, user);
+            var objectReturn = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, method, user);
             Assert.NotNull(objectReturn);
             Assert.Single(objectReturn.Inconsistencies);
             Assert.IsAssignableFrom<EntityNotFoundFluentValidationException>(objectReturn.Inconsistencies.First());
@@ -90,7 +85,7 @@ namespace Fluent.Architecture.Test.Test
                 PersonType = ePersonType.User,
             };
 
-            var objectReturn = TestUtil.Execute<ContextFluentValidation>(typeof(UserController), method, user);
+            var objectReturn = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, method, user);
             Assert.NotNull(objectReturn);
             Assert.Single(objectReturn.Inconsistencies);
             Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(objectReturn.Inconsistencies.First());
@@ -104,20 +99,20 @@ namespace Fluent.Architecture.Test.Test
             var user = InternalTestUtil.GetNewUser();
 
             //Add
-            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Add), user);
-            user = TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Find), user);
+            TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Add), user);
+            user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Find), user);
             Assert.NotNull(user);
 
             //Update
             user.Name = "New name";
-            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Update), user);
-            user = TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Find), user);
+            TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Update), user);
+            user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Find), user);
             Assert.NotNull(user);
             Assert.Equal("New name", user.Name);
 
             //Remove
-            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Remove), user);
-            user = TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Find), user);
+            TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Remove), user);
+            user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Find), user);
             Assert.Null(user);
         }
 
@@ -127,7 +122,7 @@ namespace Fluent.Architecture.Test.Test
             var user = InternalTestUtil.GetNewUser();
             user.Name = "Maria";
 
-            var error = TestUtil.Execute<ContextFluentValidation>(typeof(UserController), nameof(UserController.Add), user);
+            var error = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, nameof(UserController.Add), user);
             Assert.NotNull(error);
             Assert.Single(error.Inconsistencies);
             Assert.IsAssignableFrom<FluentPropertyValidationException>(error.Inconsistencies.First());
@@ -140,21 +135,21 @@ namespace Fluent.Architecture.Test.Test
             var user = InternalTestUtil.GetNewUser();
             user.Name = "Maria Santos";
 
-            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Add), user);
-            user = TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Find), user);
+            TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Add), user);
+            user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Find), user);
             Assert.NotNull(user);
 
             //Update
             user.Name = "Maria";
-            var error = TestUtil.Execute<ContextFluentValidation>(typeof(UserController), nameof(UserController.Update), user);
+            var error = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, nameof(UserController.Update), user);
             Assert.NotNull(error);
             Assert.Single(error.Inconsistencies);
             Assert.IsAssignableFrom<FluentPropertyValidationException>(error.Inconsistencies.First());
             Assert.Equal(nameof(User.Name), ((FluentPropertyValidationException)error.Inconsistencies.First()).Property);
 
             //Remove
-            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Remove), user);
-            user = TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Find), user);
+            TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Remove), user);
+            user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Find), user);
             Assert.Null(user);
         }
 
@@ -165,20 +160,20 @@ namespace Fluent.Architecture.Test.Test
             user.Name = "Maria Santos";
 
             //Add
-            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Add), user);
-            user = TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Find), user);
+            TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Add), user);
+            user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Find), user);
             Assert.NotNull(user);
 
             //Update
             user.Name = "New name";
-            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Update), user);
-            user = TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Find), user);
+            TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Update), user);
+            user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Find), user);
             Assert.NotNull(user);
             Assert.Equal("New name", user.Name);
 
             //Remove
-            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Remove), user);
-            user = TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Find), user);
+            TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Remove), user);
+            user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Find), user);
             Assert.Null(user);
         }
 

@@ -7,7 +7,7 @@ using Fluent.Architecture.Test.SupportElements.Mock;
 namespace Fluent.Architecture.Test.SupportElements.Model
 {
     [Table("users")]
-    internal class User : FluentEntity
+    public class User : FluentEntity
     {
         [Key, Column(Order = 0)]
         public int Id { get; set; }

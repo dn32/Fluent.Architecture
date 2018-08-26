@@ -8,7 +8,7 @@ namespace Fluent.Architecture.Test.SupportElements.Mock
 {
     public class FluentMockUtil
     {
-        internal static IQueryable<TX> GetObjectQueryForMock<TX>() where TX : BaseEntity
+        public static IQueryable<TX> GetObjectQueryForMock<TX>() where TX : BaseEntity
         {
             var type = typeof(TX);
             if (Setup.LocalContext.TryGetValue(type, out var value))
@@ -33,7 +33,7 @@ namespace Fluent.Architecture.Test.SupportElements.Mock
             }
         }
 
-        internal static string CreateKeyForMock(string fullName, string methodName, object[] parameters)
+        public static string CreateKeyForMock(string fullName, string methodName, object[] parameters)
         {
             var content = new StringBuilder();
 
@@ -42,7 +42,7 @@ namespace Fluent.Architecture.Test.SupportElements.Mock
             return fullName + "." + methodName + "((" + content + "))";
         }
 
-        internal static string CreateKeyForMock(FluentInvocation invocation)
+        public static string CreateKeyForMock(FluentInvocation invocation)
         {
             return CreateKeyForMock(invocation.TargetType.FullName, invocation.Method.GetFriendlyName(), invocation.Arguments);
         }

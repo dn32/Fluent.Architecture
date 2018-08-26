@@ -1,18 +1,21 @@
 ﻿// ReSharper disable CommentTypo
 
 using System.Linq;
+using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
-using Fluent.Architecture.Service;
+using Fluent.Architecture.Services;
 
 namespace Fluent.Architecture.Specifications
 {
     /// <summary>
     /// Especificação base para todas as especificações do sistema.
     /// </summary>
-    public abstract class BaseSpecification
+    public abstract class BaseSpecification<T> where T : BaseEntity
     {
-        private TransactionObjects TransactionObjects { get; }
+        private FluentController<T> Controller { get; set; }
+
+        private TransactionalService Service { get; set; }
 
         /// <summary>
         /// Inicializa a especificação.
@@ -22,7 +25,13 @@ namespace Fluent.Architecture.Specifications
         /// </param>
         protected BaseSpecification(TransactionalService service)
         {
-            TransactionObjects = service.TransactionObjects;
+            Service = service;
+        }
+
+        //Todo doc
+        protected BaseSpecification(FluentController<T> controller)
+        {
+            Controller = controller;
         }
 
         /// <summary>
@@ -36,7 +45,8 @@ namespace Fluent.Architecture.Specifications
         /// </returns>
         protected IQueryable<TX> Get<TX>() where TX : BaseEntity
         {
-            return TransactionObjects.GetObjectQueryInternal<TX>();
+            var transactionObjects = Service == null ? Controller.Service.TransactionObjects : Service.TransactionObjects;
+            return transactionObjects.GetObjectQueryInternal<TX>();
         }
     }
 }

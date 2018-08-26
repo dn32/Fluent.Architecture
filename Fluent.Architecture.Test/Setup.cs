@@ -6,9 +6,9 @@ using Fluent.Architecture.Test.TestTools;
 
 namespace Fluent.Architecture.Test
 {
-    internal class Setup
+    public class Setup
     {
-        internal static Dictionary<Type, IQueryable> LocalContext { get; set; }
+        public static Dictionary<Type, IQueryable> LocalContext { get; set; }
 
         public static void Initialize()
         {
@@ -25,7 +25,7 @@ namespace Fluent.Architecture.Test
         {
             LocalContext = new Dictionary<Type, IQueryable>();
             Architecture.Setup.Initialize(connectionString);
-            Architecture.Setup.SetCustomTypes(transactionObjectsType: typeof(TransactionObjectsTest));
+            //Architecture.Setup.SetCustomTypes(transactionObjectsType: typeof(TransactionObjectsTest));
         }
     }
 }

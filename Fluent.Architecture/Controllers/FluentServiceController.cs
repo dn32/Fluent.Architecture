@@ -1,8 +1,7 @@
 ﻿// ReSharper disable CommentTypo
 
 using Fluent.Architecture.Factory;
-using Fluent.Architecture.Service;
-
+using Fluent.Architecture.Services;
 #if NET461
 using System.Web.Mvc;
 #else
@@ -20,7 +19,7 @@ namespace Fluent.Architecture.Controllers
     /// <typeparam name="TS">O serviço a ser usado pelo controlador.</typeparam>
     public abstract class FluentServiceController<TS> : BaseController where TS : TransactionalService, new()
     {
-        protected TS Service { get; private set; }
+         protected internal TS Service { get; set; }
 
 #if NET461
         public virtual void FluentOnActionExecuting()
