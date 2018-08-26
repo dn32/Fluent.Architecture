@@ -1,4 +1,5 @@
-﻿namespace Fluent.Architecture.Exception
+﻿// ReSharper disable CommentTypo
+namespace Fluent.Architecture.Exception
 {
     /// <inheritdoc />
     /// <summary>

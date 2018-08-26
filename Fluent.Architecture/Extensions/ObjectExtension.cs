@@ -1,4 +1,5 @@
-﻿using System;
+﻿// ReSharper disable CommentTypo
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,20 @@ namespace Fluent.Architecture.Extensions
     /// </summary>
     public static class ObjectExtension
     {
+        /// <summary>
+        /// Verifica se dois objetos são iguais comparando os valores e não a referência.
+        /// </summary>
+        /// <param name="obj1">
+        /// Primeiro objeto a ser comparado.
+        /// </param>
+        /// <param name="obj2">
+        /// Segundo objeto a ser comparado.
+        /// </param>
+        public static bool CompareObjects(this object obj1, object obj2)
+        {
+            return obj1.GetAllDataOfObject() == obj2.GetAllDataOfObject();
+        }
+
         public static object GetDbValue(this object value, PropertyInfo property = null)
         {
             if (value == null)
@@ -27,24 +42,24 @@ namespace Fluent.Architecture.Extensions
 
             var type = value.GetType();
 
-            if (type == typeof(string))
+            if (type == typeof(string) || type == typeof(String))
             {
                 return $"'{value}'";
             }
-            else if (type == typeof(int))
+
+            if (type == typeof(int))
             {
                 return value;
-
             }
-            else if (type == typeof(Guid))
+
+            if (type == typeof(Guid))
             {
                 return $"'{value}'";
             }
 
             try
             {
-                var valorInt = (int)value; // Enum
-                return valorInt;
+                return (int)value; // Enum
             }
             catch (System.Exception)
             {
@@ -74,7 +89,7 @@ namespace Fluent.Architecture.Extensions
 
             if (type == typeof(string) || type == typeof(String))
             {
-                return string.IsNullOrWhiteSpace(value.ToString());
+                return String.IsNullOrWhiteSpace(value.ToString());
             }
 
             if (type == typeof(int))
@@ -107,9 +122,8 @@ namespace Fluent.Architecture.Extensions
         public static string GetAllDataOfObject(this object obj)
         {
             var propertyData = new List<NameAndValue>();
-            //var contentProperty = GetAllPropertyDataOfObject(obj, propertyData);
-            var contentFields = GetAllFieldsDataOfObject(obj, propertyData);
-            return JsonConvert.SerializeObject(contentFields, Formatting.None);
+            GetAllFieldsDataOfObject(obj, propertyData);
+            return JsonConvert.SerializeObject(propertyData, Formatting.None);
         }
 
         /// <summary>
@@ -120,24 +134,20 @@ namespace Fluent.Architecture.Extensions
         /// Lista de valores.
         /// </param>
         /// <returns>A lista com nome e valor de todos os campos do objeto.</returns>
-        public static List<NameAndValue> GetAllFieldsDataOfObject(this object obj, List<NameAndValue> propertyData)
+        private static void GetAllFieldsDataOfObject(this object obj, List<NameAndValue> propertyData)
         {
             if (obj == null || obj is IQueryable)
             {
-                return new List<NameAndValue>();
+                return;
             }
 
             var objectType = obj.GetType();
 
-            //if (objectType.IsPrimitive || objectType.IsValueType || objectType == typeof(string))
-            //{
-            //    propertyData.Add(new NameAndValue { Name = "base", Value = obj });
-            //} else
             if (obj is ICollection collection)
             {
                 foreach (var el in collection)
                 {
-                    propertyData.AddRange(GetAllFieldsDataOfObject(el, propertyData));
+                    GetAllFieldsDataOfObject(el, propertyData);
                 }
             }
             else
@@ -146,12 +156,11 @@ namespace Fluent.Architecture.Extensions
                 {
                     if (item.FieldType.IsPrimitive || item.FieldType.IsValueType || item.FieldType == typeof(string))
                     {
-                        propertyData.Add(new NameAndValue { Name = item.Name, Value = item.GetValue(obj) });
+                        propertyData.Add(new NameAndValue { Name = item.Name.Replace("k__BackingField", ""), Value = item.GetValue(obj) });
                     }
                     else if (item.FieldType.IsClass && !typeof(IEnumerable).IsAssignableFrom(item.FieldType))
                     {
-                        propertyData.AddRange(GetAllFieldsDataOfObject(item.GetValue(obj), propertyData));
-                      //  propertyData.AddRange(GetAllPropertyDataOfObject(item.GetValue(obj), propertyData));
+                        GetAllFieldsDataOfObject(item.GetValue(obj), propertyData);
                     }
                     else
                     {
@@ -162,76 +171,11 @@ namespace Fluent.Architecture.Extensions
 
                         foreach (var propItem in enumerablePropObj1)
                         {
-                           // GetAllPropertyDataOfObject(propItem, propertyData);
                             GetAllFieldsDataOfObject(propItem, propertyData);
                         }
                     }
                 }
             }
-
-            return propertyData;
         }
-
-
-        ///// <summary>
-        ///// Obtem todos o nome e valor de todas as propriedades de um objeto.
-        ///// </summary>
-        ///// <param name="obj">Objeto a ser avaliado.</param>
-        ///// <param name="propertyData">
-        ///// Lista de valores.
-        ///// </param>
-        ///// <returns>A lista com nome e valor de todas as propriedades do objeto.</returns>
-        //public static List<NameAndValue> GetAllPropertyDataOfObject(this object obj, List<NameAndValue> propertyData)
-        //{
-        //    if (obj == null || obj is IQueryable)
-        //    {
-        //        return new List<NameAndValue>();
-        //    }
-
-        //    var objectType = obj.GetType();
-
-        //    //if (objectType.IsPrimitive || objectType.IsValueType || objectType == typeof(string))
-        //    //{
-        //    //    propertyData.Add(new NameAndValue { Name = "base", Value = obj });
-        //    //} else
-        //     if (obj is ICollection collection)
-        //    {
-        //        foreach (var el in collection)
-        //        {
-        //            propertyData.AddRange(GetAllFieldsDataOfObject(el, propertyData));
-        //        }
-        //    }
-        //    else
-        //    {
-        //        foreach (var item in objectType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
-        //        {
-        //            //for value types
-        //            if (item.PropertyType.IsPrimitive || item.PropertyType.IsValueType || item.PropertyType == typeof(string))
-        //            {
-        //                propertyData.Add(new NameAndValue { Name = item.Name, Value = item.GetValue(obj) });
-        //            } //for complex types
-        //            else if (item.PropertyType.IsClass && !typeof(IEnumerable).IsAssignableFrom(item.PropertyType))
-        //            {
-        //                propertyData.AddRange(GetAllPropertyDataOfObject(item.GetValue(obj), propertyData));
-        //                propertyData.AddRange(GetAllFieldsDataOfObject(item.GetValue(obj), propertyData));
-        //            }
-        //            else
-        //            { //for Enumerates
-        //                if (!(item.GetValue(obj) is IEnumerable enumerablePropObj1))
-        //                {
-        //                    continue;
-        //                }
-
-        //                foreach (var propItem in enumerablePropObj1)
-        //                {
-        //                    GetAllPropertyDataOfObject(propItem, propertyData);
-        //                    GetAllFieldsDataOfObject(propItem, propertyData);
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    return propertyData;
-        //}
     }
 }

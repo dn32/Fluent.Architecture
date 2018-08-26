@@ -1,4 +1,5 @@
-﻿using System;
+﻿// ReSharper disable CommentTypo
+
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Fluent.Architecture.Exception.ValidationException;
@@ -6,7 +7,6 @@ using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Service;
 using Fluent.Architecture.Extensions;
-using System.Reflection;
 
 namespace Fluent.Architecture.Validation
 {

@@ -2,6 +2,7 @@
 using Fluent.Architecture.Exception;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Test.InternalTests.IntegrationTest.StudentTests;
+using Fluent.Architecture.Test.Test;
 using Xunit;
 
 namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
@@ -32,8 +33,8 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
             var userStudent = TestUtil.Execute<UserStudent>(typeof(UserController), nameof(UserController.GetUserByEmail), email);
 
             Assert.NotNull(userStudent);
-            Assert.Equal(user.GetAllDataOfObject(), userStudent.User.GetAllDataOfObject());
-            Assert.Equal(student.GetAllDataOfObject(), userStudent.Student.GetAllDataOfObject());
+            FluentAssert.Equal(user, userStudent.User);
+            FluentAssert.Equal(student, userStudent.Student);
 
             TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Remove), user);
             TestUtil.Execute<Student>(typeof(StudentController), nameof(StudentController.Remove), student);

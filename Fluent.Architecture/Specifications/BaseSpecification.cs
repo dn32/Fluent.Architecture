@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿// ReSharper disable CommentTypo
+
+using System.Linq;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Service;
@@ -36,6 +38,5 @@ namespace Fluent.Architecture.Specifications
         {
             return TransactionObjects.GetObjectQueryInternal<TX>();
         }
-
     }
 }

@@ -1,4 +1,6 @@
-﻿#if NET461
+﻿// ReSharper disable CommentTypo
+
+#if NET461
 using System;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;

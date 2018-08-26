@@ -1,4 +1,5 @@
-﻿using Fluent.Architecture.Repository;
+﻿// ReSharper disable CommentTypo
+using Fluent.Architecture.Repository;
 
 namespace Fluent.Architecture.Factory
 {

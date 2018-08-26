@@ -1,8 +1,10 @@
 ﻿#if NET461
 using System;
+using System.Linq.Expressions;
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Exception;
+using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Service;
@@ -10,6 +12,7 @@ using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests;
 using Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests.Specifications;
 using Fluent.Architecture.Test.Mock;
+using Fluent.Architecture.Test.Test;
 using Xunit;
 
 namespace Fluent.Architecture.Test.InternalTests
@@ -80,14 +83,6 @@ namespace Fluent.Architecture.Test.InternalTests
             var id = Service.SessionRequestId;
 
             Assert.NotEqual(id, Guid.Empty);
-        }
-
-        [Fact]
-        public void InitializeServiceFail()
-        {
-            var service = new LocalTestService();
-            var ex = Assert.Throws<IncorrectDevelopmentException>(() => service.SetUserSessionForTest(new UserSessionRequest()));
-            Assert.Equal("You can not initialize the FluentService", ex.Message);
         }
     }
 }

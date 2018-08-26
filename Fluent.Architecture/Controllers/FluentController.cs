@@ -1,4 +1,5 @@
-﻿using Fluent.Architecture.Attributes;
+﻿// ReSharper disable CommentTypo
+using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Service;
 using Fluent.Architecture.Util;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿// ReSharper disable CommentTypo
+using System;
 
 namespace Fluent.Architecture.Attributes
 {

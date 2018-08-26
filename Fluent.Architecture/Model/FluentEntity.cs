@@ -1,4 +1,5 @@
-﻿
+﻿// ReSharper disable CommentTypo
+
 namespace Fluent.Architecture.Model
 {
     /// <inheritdoc />

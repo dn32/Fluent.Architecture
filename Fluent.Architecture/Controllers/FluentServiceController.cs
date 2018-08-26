@@ -1,4 +1,5 @@
-﻿using Fluent.Architecture.Factory;
+﻿// ReSharper disable CommentTypo
+using Fluent.Architecture.Factory;
 using Fluent.Architecture.Service;
 
 #if NET461

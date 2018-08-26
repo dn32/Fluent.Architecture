@@ -1,12 +1,10 @@
-﻿using System;
+﻿// ReSharper disable CommentTypo
+
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using Fluent.Architecture.Attributes;
-using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Exception;
-using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
@@ -36,7 +34,7 @@ namespace Fluent.Architecture.Service
         /// </summary>
         protected internal FluentValidation<T> Validation { get; set; }
 
-        protected internal  override void SetUserSession(UserSessionRequest sessionRequest)
+        protected internal override void SetUserSession(UserSessionRequest sessionRequest)
         {
             base.SetUserSession(sessionRequest);
 
@@ -46,7 +44,6 @@ namespace Fluent.Architecture.Service
             Validation.Init(this, Repository);
         }
 
-        #region PROPAGATION
 #if PROPAGATION
         // Todo Documenta após a organização desses itens.
 
@@ -100,6 +97,11 @@ namespace Fluent.Architecture.Service
         //    return GlobalUtil.GetPropagationMethod<T, T2>(methodName, Repository, GetType(), parameters);
         //}
 
+        //[NotPropagate]
+        //private void CallValidationPerPropagation<T2>(string methodName, object _this, params object[] parameters)
+        //{
+        //    GlobalUtil.GetPropagationMethod<T, T2>(methodName, Validation, _this.GetType(), parameters, true);
+        //}
 
         [NotPropagate]
         public virtual object PropagateService<T2>(string methodName, params object[] parameters)
@@ -132,7 +134,6 @@ namespace Fluent.Architecture.Service
         }
 
 #endif
-        #endregion
 
         #region PASSAGEM DIRETA PARA O REPOSITÓRIO
         //Todo - Esses métoso são redundantes. Crier um mecanismo para não necessitar reencrever essas chamadas.
@@ -278,24 +279,6 @@ namespace Fluent.Architecture.Service
             return Repository.Exists(spec);
         }
 
-        ///// <summary>
-        ///// Avalia se um item existe no banco de dados, baseado em uma especificação.
-        ///// </summary>
-        ///// <typeparam name="TO">
-        ///// O tipo de saida desejada. Deve ser o mesmo definido na saida da especificação.
-        ///// </typeparam>
-        ///// <param name="spec">
-        ///// A especificação de requisição.
-        ///// </param>
-        ///// <returns>
-        ///// Se o item existe ou não.
-        ///// </returns>
-        //[Propagate]
-        //public virtual bool Exists<TO>(FluentSelectSpecification<T, TO> spec)
-        //{
-        //    return Repository.Exists(spec);
-        //}
-
         /// <summary>
         /// Adiciona vários itens de um mesmo tipo ao banco de dados.
         /// </summary>
@@ -371,14 +354,6 @@ namespace Fluent.Architecture.Service
 
         #region PRIVATE
 
-        //#if PROPAGATION
-        //    [NotPropagate]
-        //        private void CallValidationPerPropagation<T2>(string methodName, object _this, params object[] parameters)
-        //        {
-        //            GlobalUtil.GetPropagationMethod<T, T2>(methodName, Validation, _this.GetType(), parameters, true);
-        //        }
-        //#endif
-
         /// <summary>
         /// Valida a tentativa de instância de um serviço.
         /// </summary>
@@ -392,12 +367,6 @@ namespace Fluent.Architecture.Service
             }
 
             throw new IncorrectDevelopmentException($"You can not initialize the {nameof(FluentService<T>)}");
-
-            //var serviceType = GlobalUtil.GetFluentEntityType(mth.ReflectedType, typeof(FluentService<T>));
-            //if (string.IsNullOrWhiteSpace(serviceType.Item1) || serviceType.Item1 != typeof(T).Name)
-            //{
-            //    throw new IncorrectDevelopmentException($"You can not initialize the {nameof(FluentService<T>)}");
-            //}
         }
 
         #endregion

@@ -1,4 +1,5 @@
-﻿#if NET461
+﻿// ReSharper disable CommentTypo
+#if NET461
 using System.Web;
 using System.Web.Mvc;
 #else

@@ -1,4 +1,6 @@
-﻿namespace Fluent.Architecture.Repository
+﻿// ReSharper disable CommentTypo
+
+namespace Fluent.Architecture.Repository
 {
     /// <summary>
     /// Repositório base do sistema.

@@ -1,4 +1,6 @@
-﻿using System;
+﻿// ReSharper disable CommentTypo
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -11,7 +13,6 @@ using Fluent.Architecture.Repository;
 using Fluent.Architecture.Service;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
-
 
 namespace Fluent.Architecture
 {
@@ -26,26 +27,13 @@ namespace Fluent.Architecture
         internal static Dictionary<string, Type> Validations { get; set; }
         internal static Dictionary<string, Type> Model { get; set; }
         internal static Dictionary<Tuple<ePropagateTypes, string>, MethodInfo> Propagators { get; set; }
-        //internal static Dictionary<string, object> Mocks { get; set; }
         public static bool Initialized { get; set; }
-        //internal static bool InTest { get; private set; }
-        //internal static bool RepositoryMock { get; private set; }
         internal static Dictionary<Guid, UserSessionRequest> UserSessionList { get; set; }
         public static bool CreateDatabaseIfNotExists { get; set; }
 
         #endregion
 
         #region PUBLIC METHODS
-
-        //public static void SetRepositoryMock()
-        //{
-        //    RepositoryMock = true;
-        //}
-
-        //public static void SetInTest()
-        //{
-        //    InTest = true;
-        //}
 
         public static void SetCustomTypes(Type transactionObjectsType)
         {
@@ -66,7 +54,6 @@ namespace Fluent.Architecture
 
                 Initialized = true;
 
-                //Mocks = new Dictionary<string, object>();
                 Services = new Dictionary<string, Type>();
                 Repositories = new Dictionary<string, Type>();
                 Validations = new Dictionary<string, Type>();
@@ -136,7 +123,7 @@ namespace Fluent.Architecture
         {
             if (!UserSessionList.TryGetValue(sessionIdGuid, out var userSession))
             {
-                throw new System.Exception("User sessionRequest not fount!");
+                throw new System.Exception("UserSessionRequest not fount!");
             }
 
             return userSession;

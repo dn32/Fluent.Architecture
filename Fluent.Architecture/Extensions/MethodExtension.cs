@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿// ReSharper disable CommentTypo
+using System.Linq;
 using System.Reflection;
 
 namespace Fluent.Architecture.Extensions

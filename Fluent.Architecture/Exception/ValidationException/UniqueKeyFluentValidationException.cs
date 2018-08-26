@@ -1,4 +1,5 @@
-﻿namespace Fluent.Architecture.Exception.ValidationException
+﻿// ReSharper disable CommentTypo
+namespace Fluent.Architecture.Exception.ValidationException
 {
     public class UniqueKeyFluentValidationException : FluentValidationException
     {

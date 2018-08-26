@@ -1,4 +1,5 @@
-﻿using System;
+﻿// ReSharper disable CommentTypo
+using System;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Validation;
 

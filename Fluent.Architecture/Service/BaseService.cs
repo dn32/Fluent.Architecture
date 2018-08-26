@@ -1,5 +1,6 @@
+// ReSharper disable CommentTypo
+
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;

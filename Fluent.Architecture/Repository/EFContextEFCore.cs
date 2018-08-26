@@ -1,4 +1,6 @@
-﻿#if !NET461
+﻿// ReSharper disable CommentTypo
+
+#if !NET461
 using System;
 using System.Linq;
 using System.Reflection;

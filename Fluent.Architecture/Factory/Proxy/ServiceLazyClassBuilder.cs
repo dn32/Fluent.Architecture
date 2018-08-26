@@ -1,4 +1,5 @@
-﻿using System;
+﻿// ReSharper disable CommentTypo
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;

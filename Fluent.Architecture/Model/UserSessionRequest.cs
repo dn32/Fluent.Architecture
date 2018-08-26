@@ -1,4 +1,6 @@
-﻿using System;
+﻿// ReSharper disable CommentTypo
+
+using System;
 using System.Collections.Generic;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Service;

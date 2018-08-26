@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// ReSharper disable CommentTypo
+
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Exception;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Service;

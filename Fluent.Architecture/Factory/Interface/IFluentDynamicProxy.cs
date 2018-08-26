@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿// ReSharper disable CommentTypo
+using System.Reflection;
 
 namespace Fluent.Architecture.Factory.Interface
 {

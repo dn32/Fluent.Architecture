@@ -16,7 +16,15 @@ namespace Fluent.Architecture.Test.InternalTests
 
             public List<int> Data2 { get; set; }
 
-            private readonly string _internalString = "InternalStringValue";
+            private readonly string _internalString = "my value";
+
+            public TestEntity2 TestEntity2 { get; set; } = new TestEntity2();
+        }
+
+        [NotDbEntity]
+        public class TestEntity2 : FluentEntity
+        {
+            public int Id { get; set; }
         }
     }
 }
