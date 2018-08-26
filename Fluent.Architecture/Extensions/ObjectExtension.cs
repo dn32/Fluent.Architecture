@@ -72,7 +72,7 @@ namespace Fluent.Architecture.Extensions
 
             var type = value.GetType();
 
-            if (type == typeof(string) ||type == typeof(String))
+            if (type == typeof(string) || type == typeof(String))
             {
                 return string.IsNullOrWhiteSpace(value.ToString());
             }
@@ -84,7 +84,7 @@ namespace Fluent.Architecture.Extensions
 
             if (type == typeof(Guid))
             {
-                return  (Guid)value == Guid.Empty;
+                return (Guid)value == Guid.Empty;
             }
 
             try
@@ -106,128 +106,132 @@ namespace Fluent.Architecture.Extensions
         /// <returns>Json com todos os dados do onjeto. Exemplo: [{"Name":"Id","Value":0},{"Name":"DataFinal","Value":"9999-12-31T23:59:59.9999999"},{"Name":"IdiomaId","Value":1},{"Name":"ConteudoId","Value":1},{"Name":"TipoDeEvento","Value":"2"},{"Name":"Descricao","Value":"teste"},{"Name":"Mandatorio","Value":1},{"Name":"UsuarioId","Value":1},{"Name":"TipoDeConteudo","Value":"1"}][{"Name":"<Id>k__BackingField","Value":0},{"Name":"<DataFinal>k__BackingField","Value":"9999-12-31T23:59:59.9999999"},{"Name":"<IdiomaId>k__BackingField","Value":1},{"Name":"<ConteudoId>k__BackingField","Value":1},{"Name":"<TipoDeEvento>k__BackingField","Value":"2"},{"Name":"<Descricao>k__BackingField","Value":"teste"},{"Name":"<Mandatorio>k__BackingField","Value":1},{"Name":"<UsuarioId>k__BackingField","Value":1},{"Name":"<TipoDeConteudo>k__BackingField","Value":"1"}]</returns>
         public static string GetAllDataOfObject(this object obj)
         {
-            var contentproperty = GetAllPropertyDataOfObject(obj);
-            var contentFields = GetAllFieldsDataOfObject(obj);
-            return JsonConvert.SerializeObject(contentproperty, Formatting.None) + JsonConvert.SerializeObject(contentFields, Formatting.None);
+            var propertyData = new List<NameAndValue>();
+            //var contentProperty = GetAllPropertyDataOfObject(obj, propertyData);
+            var contentFields = GetAllFieldsDataOfObject(obj, propertyData);
+            return JsonConvert.SerializeObject(contentFields, Formatting.None);
         }
 
         /// <summary>
         /// Obtem todos o nome e valor de todos os campos de um objeto.
         /// </summary>
         /// <param name="obj">Objeto a ser avaliado.</param>
+        /// <param name="propertyData">
+        /// Lista de valores.
+        /// </param>
         /// <returns>A lista com nome e valor de todos os campos do objeto.</returns>
-        public static List<NameAndValue> GetAllFieldsDataOfObject(this object obj)
+        public static List<NameAndValue> GetAllFieldsDataOfObject(this object obj, List<NameAndValue> propertyData)
         {
             if (obj == null || obj is IQueryable)
             {
                 return new List<NameAndValue>();
             }
 
-            var propertyInformations = new List<NameAndValue>();
+            var objectType = obj.GetType();
 
-
-            if (obj is ICollection colection)
+            //if (objectType.IsPrimitive || objectType.IsValueType || objectType == typeof(string))
+            //{
+            //    propertyData.Add(new NameAndValue { Name = "base", Value = obj });
+            //} else
+            if (obj is ICollection collection)
             {
-                foreach (var el in colection)
+                foreach (var el in collection)
                 {
-                    propertyInformations.AddRange(GetAllFieldsDataOfObject(el));
+                    propertyData.AddRange(GetAllFieldsDataOfObject(el, propertyData));
                 }
             }
             else
             {
-
-                foreach (var item in obj.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                foreach (var item in objectType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
-                    //for value types
                     if (item.FieldType.IsPrimitive || item.FieldType.IsValueType || item.FieldType == typeof(string))
                     {
-                        propertyInformations.Add(new NameAndValue { Name = item.Name, Value = item.GetValue(obj) });
+                        propertyData.Add(new NameAndValue { Name = item.Name, Value = item.GetValue(obj) });
                     }
-                    //for complex types
                     else if (item.FieldType.IsClass && !typeof(IEnumerable).IsAssignableFrom(item.FieldType))
                     {
-                        propertyInformations.AddRange(GetAllFieldsDataOfObject(item.GetValue(obj)));
-                        propertyInformations.AddRange(GetAllPropertyDataOfObject(item.GetValue(obj)));
+                        propertyData.AddRange(GetAllFieldsDataOfObject(item.GetValue(obj), propertyData));
+                      //  propertyData.AddRange(GetAllPropertyDataOfObject(item.GetValue(obj), propertyData));
                     }
-                    //for Enumerables
                     else
                     {
-                        var enumerablePropObj1 = item.GetValue(obj) as IEnumerable;
-
-                        if (enumerablePropObj1 == null) continue;
-
-                        var objList = enumerablePropObj1.GetEnumerator();
-
-                        while (objList.MoveNext())
+                        if (!(item.GetValue(obj) is IEnumerable enumerablePropObj1))
                         {
-                            objList.MoveNext();
-                            GetAllFieldsDataOfObject(objList.Current);
-                            GetAllPropertyDataOfObject(objList.Current);
+                            continue;
+                        }
+
+                        foreach (var propItem in enumerablePropObj1)
+                        {
+                           // GetAllPropertyDataOfObject(propItem, propertyData);
+                            GetAllFieldsDataOfObject(propItem, propertyData);
                         }
                     }
                 }
             }
 
-            return propertyInformations;
+            return propertyData;
         }
 
 
-        /// <summary>
-        /// Obtem todos o nome e valor de todas as propriedades de um objeto.
-        /// </summary>
-        /// <param name="obj">Objeto a ser avaliado.</param>
-        /// <returns>A lista com nome e valor de todas as propriedades do objeto.</returns>
-        public static List<NameAndValue> GetAllPropertyDataOfObject(this object obj)
-        {
-            if (obj == null || obj is IQueryable)
-            {
-                return new List<NameAndValue>();
-            }
+        ///// <summary>
+        ///// Obtem todos o nome e valor de todas as propriedades de um objeto.
+        ///// </summary>
+        ///// <param name="obj">Objeto a ser avaliado.</param>
+        ///// <param name="propertyData">
+        ///// Lista de valores.
+        ///// </param>
+        ///// <returns>A lista com nome e valor de todas as propriedades do objeto.</returns>
+        //public static List<NameAndValue> GetAllPropertyDataOfObject(this object obj, List<NameAndValue> propertyData)
+        //{
+        //    if (obj == null || obj is IQueryable)
+        //    {
+        //        return new List<NameAndValue>();
+        //    }
 
-            var propertyInformations = new List<NameAndValue>();
+        //    var objectType = obj.GetType();
 
-            if (obj is ICollection colection)
-            {
-                foreach (var el in colection)
-                {
-                    propertyInformations.AddRange(GetAllFieldsDataOfObject(el));
-                }
-            }
-            else
-            {
-                foreach (var item in obj.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
-                {
-                    //for value types
-                    if (item.PropertyType.IsPrimitive || item.PropertyType.IsValueType || item.PropertyType == typeof(string))
-                    {
-                        propertyInformations.Add(new NameAndValue { Name = item.Name, Value = item.GetValue(obj) });
-                    }
-                    //for complex types
-                    else if (item.PropertyType.IsClass && !typeof(IEnumerable).IsAssignableFrom(item.PropertyType))
-                    {
-                        propertyInformations.AddRange(GetAllPropertyDataOfObject(item.GetValue(obj)));
-                        propertyInformations.AddRange(GetAllFieldsDataOfObject(item.GetValue(obj)));
-                    }
-                    //for Enumerables
-                    else
-                    {
-                        var enumerablePropObj1 = item.GetValue(obj) as IEnumerable;
+        //    //if (objectType.IsPrimitive || objectType.IsValueType || objectType == typeof(string))
+        //    //{
+        //    //    propertyData.Add(new NameAndValue { Name = "base", Value = obj });
+        //    //} else
+        //     if (obj is ICollection collection)
+        //    {
+        //        foreach (var el in collection)
+        //        {
+        //            propertyData.AddRange(GetAllFieldsDataOfObject(el, propertyData));
+        //        }
+        //    }
+        //    else
+        //    {
+        //        foreach (var item in objectType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+        //        {
+        //            //for value types
+        //            if (item.PropertyType.IsPrimitive || item.PropertyType.IsValueType || item.PropertyType == typeof(string))
+        //            {
+        //                propertyData.Add(new NameAndValue { Name = item.Name, Value = item.GetValue(obj) });
+        //            } //for complex types
+        //            else if (item.PropertyType.IsClass && !typeof(IEnumerable).IsAssignableFrom(item.PropertyType))
+        //            {
+        //                propertyData.AddRange(GetAllPropertyDataOfObject(item.GetValue(obj), propertyData));
+        //                propertyData.AddRange(GetAllFieldsDataOfObject(item.GetValue(obj), propertyData));
+        //            }
+        //            else
+        //            { //for Enumerates
+        //                if (!(item.GetValue(obj) is IEnumerable enumerablePropObj1))
+        //                {
+        //                    continue;
+        //                }
 
-                        if (enumerablePropObj1 == null) continue;
+        //                foreach (var propItem in enumerablePropObj1)
+        //                {
+        //                    GetAllPropertyDataOfObject(propItem, propertyData);
+        //                    GetAllFieldsDataOfObject(propItem, propertyData);
+        //                }
+        //            }
+        //        }
+        //    }
 
-                        var objList = enumerablePropObj1.GetEnumerator();
-
-                        while (objList.MoveNext())
-                        {
-                            objList.MoveNext();
-                            GetAllPropertyDataOfObject(objList.Current);
-                            GetAllFieldsDataOfObject(objList.Current);
-                        }
-                    }
-                }
-            }
-
-            return propertyInformations;
-        }
+        //    return propertyData;
+        //}
     }
 }

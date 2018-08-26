@@ -60,7 +60,7 @@ namespace Fluent.Architecture.Validation
             Repository = repository;
         }
 
-        private void RunTheContextValidation()
+        protected void RunTheContextValidation()
         {
             Service.SessionRequest.ContextFluentValidation.Validate();
         }
@@ -123,11 +123,6 @@ namespace Fluent.Architecture.Validation
         public virtual void PropagateService<T2>(string methodName, object[] parameters)
         {
             ParameterMustBeInformed(parameters);
-
-            if (string.IsNullOrEmpty(methodName))
-            {
-                AddInconsistency(new NullParameterFluentValidationException(nameof(methodName)));
-            }
 
             if (NullParameterOk)
             {

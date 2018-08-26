@@ -36,7 +36,7 @@ namespace Fluent.Architecture.Service
         /// </summary>
         protected internal FluentValidation<T> Validation { get; set; }
 
-        internal override void SetUserSession(UserSessionRequest sessionRequest)
+        protected internal  override void SetUserSession(UserSessionRequest sessionRequest)
         {
             base.SetUserSession(sessionRequest);
 
@@ -263,6 +263,21 @@ namespace Fluent.Architecture.Service
             return Repository.Exists(spec);
         }
 
+        /// <summary>
+        /// Avalia se um item existe no banco de dados, baseado em uma especificação.
+        /// </summary>
+        /// <param name="spec">
+        /// A especificação de requisição.
+        /// </param>
+        /// <returns>
+        /// Se o item existe ou não.
+        /// </returns>
+        [Propagate]
+        public virtual bool Exists<TO>(FluentSelectSpecification<T, TO> spec)
+        {
+            return Repository.Exists(spec);
+        }
+
         ///// <summary>
         ///// Avalia se um item existe no banco de dados, baseado em uma especificação.
         ///// </summary>
@@ -376,11 +391,13 @@ namespace Fluent.Architecture.Service
                 return;
             }
 
-            var serviceType = GlobalUtil.GetFluentEntityType(mth.ReflectedType, typeof(FluentService<T>));
-            if (string.IsNullOrWhiteSpace(serviceType.Item1) || serviceType.Item1 != typeof(T).Name)
-            {
-                throw new IncorrectDevelopmentException($"You can not initialize the {nameof(FluentService<T>)}");
-            }
+            throw new IncorrectDevelopmentException($"You can not initialize the {nameof(FluentService<T>)}");
+
+            //var serviceType = GlobalUtil.GetFluentEntityType(mth.ReflectedType, typeof(FluentService<T>));
+            //if (string.IsNullOrWhiteSpace(serviceType.Item1) || serviceType.Item1 != typeof(T).Name)
+            //{
+            //    throw new IncorrectDevelopmentException($"You can not initialize the {nameof(FluentService<T>)}");
+            //}
         }
 
         #endregion

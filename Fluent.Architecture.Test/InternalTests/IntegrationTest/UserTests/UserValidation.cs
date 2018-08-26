@@ -1,4 +1,5 @@
-﻿using Fluent.Architecture.Exception.ValidationException;
+﻿using Fluent.Architecture.Attributes;
+using Fluent.Architecture.Exception.ValidationException;
 using Fluent.Architecture.Validation;
 
 namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
@@ -9,12 +10,16 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
         {
             base.Add(entity);
             UserMustHaveFullName(entity);
+
+            RunTheContextValidation();
         }
 
         public override void Update(User entity)
         {
             base.Update(entity);
             UserMustHaveFullName(entity);
+
+            RunTheContextValidation();
         }
 
         private void UserMustHaveFullName(User user)
@@ -28,6 +33,17 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
             {
                 AddInconsistency(new FluentPropertyValidationException(nameof(user.Name), "User must have full name"));
             }
+        }
+
+        [Propagate]
+        public void FindById(int id)
+        {
+            if (id == 0)
+            {
+                AddInconsistency(new FluentParameterValidationException(nameof(id), $"The {nameof(id)} parameter can not be 0 for this operation."));
+            }
+
+            RunTheContextValidation();
         }
     }
 }

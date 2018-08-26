@@ -79,7 +79,7 @@ namespace Fluent.Architecture.Service
         /// <param name="sessionRequest">
         /// A sessão do usuário.
         /// </param>
-        internal virtual void SetUserSession(UserSessionRequest sessionRequest)
+     protected   internal virtual void SetUserSession(UserSessionRequest sessionRequest)
         {
             SessionRequest = sessionRequest;
         }

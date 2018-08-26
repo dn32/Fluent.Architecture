@@ -286,20 +286,20 @@ namespace Fluent.Architecture
             }
         }
 
-        private static void ValidateIfAllMethodsAreVirtual(IEnumerable<Type> types)
-        {
-            foreach (var item in types)
-            {
-                var methods = item.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-                foreach (var method in methods)
-                {
-                    if ((!method.IsPrivate) && !method.IsVirtual && !method.IsFamily && !method.IsSpecialName && !(new[] { "GetType" }.Contains(method.Name)))
-                    {
-                        throw new IncorrectDevelopmentException($"The {method.ReflectedType.Name}.{method.Name} method must be set to virtual, or private.");
-                    }
-                }
-            }
-        }
+        //private static void ValidateIfAllMethodsAreVirtual(IEnumerable<Type> types)
+        //{
+        //    foreach (var item in types)
+        //    {
+        //        var methods = item.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+        //        foreach (var method in methods)
+        //        {
+        //            if ((!method.IsPrivate) && !method.IsVirtual && !method.IsFamily && !method.IsSpecialName && !(new[] { "GetType" }.Contains(method.Name)))
+        //            {
+        //                throw new IncorrectDevelopmentException($"The {method.ReflectedType.Name}.{method.Name} method must be set to virtual, or private.");
+        //            }
+        //        }
+        //    }
+        //}
 
         #endregion
     }

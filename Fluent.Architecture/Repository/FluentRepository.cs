@@ -31,7 +31,7 @@ namespace Fluent.Architecture.Repository
         /// <summary>
         /// A query contem a referência de todas as tabelas/documentos do banco de dados.
         /// </summary>
-        internal IQueryable<TE> Query => TransactionObjects.GetObjectQueryInternal<TE>();
+       protected internal IQueryable<TE> Query => TransactionObjects.GetObjectQueryInternal<TE>();
 
         /// <summary>
         /// A referência de input de dados para o banco de dados.

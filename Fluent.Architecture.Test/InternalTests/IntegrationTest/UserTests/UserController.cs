@@ -1,5 +1,7 @@
 ﻿#if NET461
+using System;
 using System.Web.Mvc;
+using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Specifications;
@@ -63,6 +65,23 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
             return Json(user);
         }
 
+        public JsonResult FindById(int id)
+        {
+            var user = Propagate(id);
+            return Json(user);
+        }
+
+        public void NotFound()
+        {
+            Propagate(nameof(NotFound));
+        }
+
+        [NotPropagate]
+        public void NotFound2()
+        {
+            Propagate();
+        }
+
         public JsonResult SpecOne(FluentSpecification<User> spec)
         {
             var user = Service.SpecOne(spec);
@@ -82,6 +101,18 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
         }
 
         public JsonResult Count(FluentSpecification<User> spec)
+        {
+            var user = Service.Count(spec);
+            return Json(user);
+        }
+
+        public JsonResult Exists(FluentSelectSpecification<User, int> spec)
+        {
+            var user = Service.Exists(spec);
+            return Json(user);
+        }
+
+        public JsonResult Count(FluentSelectSpecification<User, int> spec)
         {
             var user = Service.Count(spec);
             return Json(user);

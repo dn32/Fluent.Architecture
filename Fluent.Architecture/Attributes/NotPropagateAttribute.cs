@@ -8,7 +8,7 @@ namespace Fluent.Architecture.Attributes
     /// É útil para não interferir na refleção da obtenção do método específico solicitado pelo cliente.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    internal class NotPropagateAttribute : Attribute
+    public class NotPropagateAttribute : Attribute
     {
     }
 }

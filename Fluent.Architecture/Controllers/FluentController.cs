@@ -3,7 +3,7 @@ using Fluent.Architecture.Model;
 using Fluent.Architecture.Service;
 using Fluent.Architecture.Util;
 using System.Text;
-
+using Fluent.Architecture.Exception;
 #if NET461
 using System.Web.Mvc;
 #else
@@ -86,6 +86,11 @@ namespace Fluent.Architecture.Controllers
             if (string.IsNullOrWhiteSpace(methodName))
             {
                 methodName = GlobalUtil.GetMethodByCallerType(GetType())?.Name;
+
+                if (string.IsNullOrWhiteSpace(methodName))
+                {
+                    throw new IncorrectDevelopmentException($"A propagation request was unsuccessful.\nThe request does not indicate the method name and could not be obtained by reflection.\nMake sure that the method that calls the propagation is not decorated with {nameof(NotPropagateAttribute)}, as it should not be.");
+                }
             }
 
             return Service.PropagateService<T2>(methodName, parameters);
