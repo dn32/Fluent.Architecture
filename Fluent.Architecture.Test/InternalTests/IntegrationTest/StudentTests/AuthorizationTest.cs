@@ -41,6 +41,9 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.StudentTests
 
             Assert.NotNull(foundStudent);
             Assert.Equal(student.GetAllDataOfObject(), foundStudent.GetAllDataOfObject());
+         
+            //Remove
+            TestUtil.Execute<Student>(typeof(StudentController), nameof(UserController.Remove), student);
         }
 
         [Fact]

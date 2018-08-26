@@ -46,6 +46,11 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
             return Json(users);
         }
 
+        public void RemoveRange(UserByPassword spec)
+        {
+            Service.RemoveRange(spec);
+        }
+
         public JsonResult Update(User user)
         {
             user = Service.Update(user);
@@ -64,6 +69,12 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
             return Json(user);
         }
 
+        public JsonResult SpecOne(FluentSelectSpecification<User, int> spec)
+        {
+            var userId = Service.SpecOne(spec);
+            return Json(userId);
+        }
+
         public JsonResult Exists(FluentSpecification<User> spec)
         {
             var user = Service.Exists(spec);
@@ -80,6 +91,12 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest.UserTests
         {
             var user = Service.Spec(spec);
             return Json(user);
+        }
+
+        public JsonResult Spec(FluentSelectSpecification<User, int> spec)
+        {
+            var userId = Service.Spec(spec);
+            return Json(userId);
         }
 
         public JsonResult Spec(FluentSpecification<User> spec, FluentPagination pagination)

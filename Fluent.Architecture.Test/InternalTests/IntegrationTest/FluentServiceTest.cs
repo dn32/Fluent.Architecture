@@ -60,6 +60,99 @@ namespace Fluent.Architecture.Test.InternalTests.IntegrationTest
             TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Remove), user);
         }
 
+        [Fact]
+        public void FindSelectSpecTest()
+        {
+            var user1 = UserTestUtil.GetNew();
+            var user2 = UserTestUtil.GetNew();
+            var password = $"{TestUtil.NextRandom()}{TestUtil.NextRandom()}{TestUtil.NextRandom()}";
+            user1.Password = password;
+            user2.Password = password;
+            var spec = new UserIdByPassword(Service, password);
+
+            //Add
+            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Add), user1);
+            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Add), user2);
+
+            //List
+            var userIds = TestUtil.Execute<List<int>>(typeof(UserController), nameof(UserController.Spec), spec);
+
+            Assert.NotNull(userIds);
+            Assert.NotEmpty(userIds);
+            Assert.Equal(2, userIds.Count);
+
+            //Remove
+            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Remove), user1);
+            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Remove), user2);
+        }
+
+        [Fact]
+        public void RemoveRangeByEntitiesTest()
+        {
+            var users = new User[] { UserTestUtil.GetNew(), UserTestUtil.GetNew() };
+            var param = new object[] { users };
+
+            //Add
+            TestUtil.Execute<User[]>(typeof(UserController), nameof(UserController.AddRange), param);
+
+            //Remove
+            TestUtil.Execute<User[]>(typeof(UserController), nameof(UserController.RemoveRange), param);
+
+            var user1 = TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Find), users.First());
+            var user2 = TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Find), users.Last());
+
+            Assert.Null(user1);
+            Assert.Null(user2);
+        }
+
+        [Fact]
+        public void RemoveRangeBySpecTest()
+        {
+            var users = new User[] { UserTestUtil.GetNew(), UserTestUtil.GetNew() };
+            var param = new object[] { users };
+            var password = $"{TestUtil.NextRandom()}{TestUtil.NextRandom()}{TestUtil.NextRandom()}";
+            users[0].Password = password;
+            users[1].Password = password;
+            var spec = new UserByPassword(Service, password);
+
+            //Add
+            TestUtil.Execute<User[]>(typeof(UserController), nameof(UserController.AddRange), param);
+
+            //Remove
+            TestUtil.Execute<User[]>(typeof(UserController), nameof(UserController.RemoveRange), spec);
+
+            var user1 = TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Find), users.First());
+            var user2 = TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Find), users.Last());
+
+            Assert.Null(user1);
+            Assert.Null(user2);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void FindSelectSpecOneTest(bool success)
+        {
+            var user = UserTestUtil.GetNew();
+            var spec = new UserIdByEmail(Service, success ? user.Email : user.Email + "xxy");
+
+            //Add
+            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Add), user);
+            var userId = TestUtil.Execute<int>(typeof(UserController), nameof(UserController.SpecOne), spec);
+
+            if (success)
+            {
+                Assert.NotEqual(0, userId);
+            }
+            else
+            {
+                Assert.Equal(0, userId);
+            }
+
+            //Remove
+            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Remove), user);
+        }
+
         [Theory]
         [InlineData("62", 1)]
         [InlineData("63", 2)]

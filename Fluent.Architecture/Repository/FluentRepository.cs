@@ -136,7 +136,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual TO SpecOne<TO>(FluentSelectSpecification<TE, TO> spec)
         {
-            return spec.ToIQueryable(Query).FirstOrDefault();
+           return spec.Spec(Query).FirstOrDefault();
         }
 
         /// <summary>

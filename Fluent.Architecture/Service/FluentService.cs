@@ -363,21 +363,23 @@ namespace Fluent.Architecture.Service
         //            GlobalUtil.GetPropagationMethod<T, T2>(methodName, Validation, _this.GetType(), parameters, true);
         //        }
         //#endif
+
         /// <summary>
         /// Valida a tentativa de instância de um serviço.
         /// </summary>
         private static void ValidateInit()
         {
-            //var accept = nameof(FluentDependenjeInjector);
             var mth = new StackTrace().GetFrame(2).GetMethod();
-            var name = mth.ReflectedType.Name;
-            if (name != "ServiceFactoryUtil" && name != "ServiceFactory")
+            var name = mth.ReflectedType?.Name;
+            if (name == nameof(ServiceFactory))
             {
-                var serviceType = GlobalUtil.GetFluentEntityType(mth.ReflectedType, typeof(FluentService<T>));
-                if (string.IsNullOrWhiteSpace(serviceType.Item1) || serviceType.Item1 != typeof(T).Name)
-                {
-                    throw new IncorrectDevelopmentException($"You can not initialize the {nameof(FluentService<T>)}");
-                }
+                return;
+            }
+
+            var serviceType = GlobalUtil.GetFluentEntityType(mth.ReflectedType, typeof(FluentService<T>));
+            if (string.IsNullOrWhiteSpace(serviceType.Item1) || serviceType.Item1 != typeof(T).Name)
+            {
+                throw new IncorrectDevelopmentException($"You can not initialize the {nameof(FluentService<T>)}");
             }
         }
 

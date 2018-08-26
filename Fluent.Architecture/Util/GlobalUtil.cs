@@ -111,54 +111,54 @@ namespace Fluent.Architecture.Util
         }
 
 #if PROPAGATION
-        // Todo Documentar quando o conceito de propagação for revisado e testado.
-        [NotPropagate]
-        internal static object GetPropagationMethod<T, T2>(string methodName, object target, Type callerType, object[] parameters, bool ignoreMethodNotFound = false)
-        {
-            if (string.IsNullOrEmpty(methodName))
-            {
-                methodName = GetMethodByCallerType(callerType)?.Name;
-            }
+        //// Todo Documentar quando o conceito de propagação for revisado e testado.
+        //[NotPropagate]
+        //internal static object GetPropagationMethod<T, T2>(string methodName, object target, Type callerType, object[] parameters, bool ignoreMethodNotFound = false)
+        //{
+        //    if (string.IsNullOrEmpty(methodName))
+        //    {
+        //        methodName = GetMethodByCallerType(callerType)?.Name;
+        //    }
 
-            var methods = target.GetType().GetMethods().Where(x => x.IsPublic && x.Name.Equals(methodName, StringComparison.InvariantCultureIgnoreCase) && x.GetCustomAttribute<PropagateAttribute>() != null).ToList();
-            if (methods.Count > 1)
-            {
-                //Todo criar validação na inicialização de duplicidade de método de propagação, atributo em método não público tb
-                throw new IncorrectDevelopmentException($"There is more than one named propagation method {target.GetType()}.{methodName}. This is not allowed. Remove the propagation attribute from one of them, set it to private, or change its name.");
-            }
+        //    var methods = target.GetType().GetMethods().Where(x => x.IsPublic && x.Name.Equals(methodName, StringComparison.InvariantCultureIgnoreCase) && x.GetCustomAttribute<PropagateAttribute>() != null).ToList();
+        //    if (methods.Count > 1)
+        //    {
+        //        //Todo criar validação na inicialização de duplicidade de método de propagação, atributo em método não público tb
+        //        throw new IncorrectDevelopmentException($"There is more than one named propagation method {target.GetType()}.{methodName}. This is not allowed. Remove the propagation attribute from one of them, set it to private, or change its name.");
+        //    }
 
-            var method = methods.FirstOrDefault();
-            if (method == null)
-            {
-                if (ignoreMethodNotFound)
-                {
-                    return null;
-                }
+        //    var method = methods.FirstOrDefault();
+        //    if (method == null)
+        //    {
+        //        if (ignoreMethodNotFound)
+        //        {
+        //            return null;
+        //        }
 
-                throw new IncorrectDevelopmentException($"Propagation method not found {target.GetType()}.{methodName}.\nCheck the method name, make sure it has the propagation attribute, and make sure it is public.");
-            }
+        //        throw new IncorrectDevelopmentException($"Propagation method not found {target.GetType()}.{methodName}.\nCheck the method name, make sure it has the propagation attribute, and make sure it is public.");
+        //    }
 
-            if (method.ContainsGenericParameters)
-            {
-                method = method.GetGenericArguments().Length == 2 ? method.MakeGenericMethod(typeof(T), typeof(T2)) : method.MakeGenericMethod(typeof(T2));
-            }
+        //    if (method.ContainsGenericParameters)
+        //    {
+        //        method = method.GetGenericArguments().Length == 2 ? method.MakeGenericMethod(typeof(T), typeof(T2)) : method.MakeGenericMethod(typeof(T2));
+        //    }
 
-            parameters = CompleteWithNulls(parameters, method);
+        //    parameters = CompleteWithNulls(parameters, method);
 
-            object[] CompleteWithNulls(IReadOnlyCollection<object> _parameters, MethodInfo _method)
-            {
-                var pararAdd = _method.GetParameters().Length - _parameters.Count;
-                var parametersList = _parameters.ToList();
-                for (var i = 0; i < pararAdd; i++)
-                {
-                    parametersList.Add(null);
-                }
+        //    object[] CompleteWithNulls(IReadOnlyCollection<object> _parameters, MethodInfo _method)
+        //    {
+        //        var pararAdd = _method.GetParameters().Length - _parameters.Count;
+        //        var parametersList = _parameters.ToList();
+        //        for (var i = 0; i < pararAdd; i++)
+        //        {
+        //            parametersList.Add(null);
+        //        }
 
-                return parametersList.ToArray();
-            }
+        //        return parametersList.ToArray();
+        //    }
 
-            return method.Invoke(target, parameters);
-        }
+        //    return method.Invoke(target, parameters);
+        //}
 #endif
     }
 }
