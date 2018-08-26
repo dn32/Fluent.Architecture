@@ -128,9 +128,7 @@ namespace Fluent.Architecture.Service
                 return repositoryMethod.Invoke(Repository, parameters);
             }
 
-            var serviceName = type.GetFluentEntityType();
-            var repositoryName = Repository.GetType().GetFluentEntityType();
-            throw new IncorrectDevelopmentException($"The {methodName} method was not found in the service {serviceName} and repository {repositoryName}");
+            throw new IncorrectDevelopmentException($"The NotFound method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User");
         }
 
 #endif

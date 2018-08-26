@@ -1,11 +1,10 @@
 ﻿// ReSharper disable CommentTypo
+
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Service;
 
 #if NET461
-using System.Web.Routing;
 using System.Web.Mvc;
-using System.Web;
 #else
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -47,15 +46,15 @@ namespace Fluent.Architecture.Controllers
             base.OnActionExecuted(filterContext);
         }
 #else
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            if (Service == null)
-            {
-                Service = ServiceFactory.Create<TS>(HttpContext);
-            }
+        //public override void OnActionExecuting(ActionExecutingContext context)
+        //{
+        //    if (Service == null)
+        //    {
+        //        Service = ServiceFactory.Create<TS>(HttpContext);
+        //    }
 
-            base.OnActionExecuting(context);
-        }
+        //    base.OnActionExecuting(context);
+        //}
 #endif
     }
 }

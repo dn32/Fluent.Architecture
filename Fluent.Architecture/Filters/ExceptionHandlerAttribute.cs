@@ -48,13 +48,13 @@ namespace Fluent.Architecture.Filters
         }
     }
 #else
-    public class ExceptionHandlerAttribute 
-    {
-        public void OnException(ExceptionContext filterContext)
-        {
-            throw new NotImplementedException();
-        }
-    }
+    //public class ExceptionHandlerAttribute 
+    //{
+    //    public void OnException(ExceptionContext filterContext)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
 #endif
     //Todo Implementar para net core
 }

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using Fluent.Architecture.Test.TestTools;
 
 namespace Fluent.Architecture.Test
 {
-    public class Setup
+    internal class Setup
     {
         internal static Dictionary<Type, IQueryable> LocalContext { get; set; }
 

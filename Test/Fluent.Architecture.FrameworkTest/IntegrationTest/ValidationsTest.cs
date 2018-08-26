@@ -47,7 +47,7 @@
 //        [InlineData(nameof(UserController.Add), null)]
 //        public void RequiredAddAndUpdateTestFail(string method, string name)
 //        {
-//            var user = UserTestUtil.GetNew();
+//            var user = InternalTestUtil.GetNewUser();
 
 //            if (method == nameof(UserController.Update))
 //            {
@@ -109,7 +109,7 @@
 //        [Fact]
 //        public void AddUpdateAndRemoveSuccess()
 //        {
-//            var user = UserTestUtil.GetNew();
+//            var user = InternalTestUtil.GetNewUser();
 
 //            //Add
 //            TestUtil.Execute<User>(typeof(UserController), nameof(UserController.Add), user);
