@@ -50,7 +50,7 @@ namespace Fluent.Architecture.Test.Test
         public void GetMethodNameByCallerTypeTest()
         {
             var entity = new TestEntity { Id = 3, Data = new List<int> { 1, 2 } }.GetAllDataOfObject();
-            
+
             const string expectedJson = "[{\"Name\":\"<Id>\",\"Value\":3},{\"Name\":\"m_value\",\"Value\":1},{\"Name\":\"m_value\",\"Value\":2},{\"Name\":\"_internalString\",\"Value\":\"my value\"},{\"Name\":\"<Id>\",\"Value\":0}]";
 
             Assert.Equal(expectedJson, entity);
@@ -125,6 +125,28 @@ namespace Fluent.Architecture.Test.Test
             Assert.Equal(func.GetDbValue(), func);
             var guid = Guid.NewGuid();
             Assert.Equal(guid.GetDbValue(), $"'{guid}'");
+        }
+
+        [Fact]
+        public void FluentAssertTest()
+        {
+            var user1 = new User { Id = 1 };
+            var user2 = new User { Id = 1 };
+            var user3 = new User { Id = 3 };
+
+            FluentAssert.Equal(user1, user2);
+
+            var ex = Assert.Throws<System.Exception>(() => FluentAssert.Equal(user1, user3));
+            Assert.Equal("The objects are different", ex.Message);
+        }
+
+        [Fact]
+        public void FluentTestTest()
+        {
+            var date = "17/11/85".GetDate();
+            Assert.Equal(17, date.Day);
+            Assert.Equal(11, date.Month);
+            Assert.Equal(1985, date.Year);
         }
     }
 }

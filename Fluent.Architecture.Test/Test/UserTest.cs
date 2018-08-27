@@ -81,20 +81,5 @@ namespace Fluent.Architecture.Test.Test
             TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Remove), user);
         }
 
-        [Fact]
-        public void PropagationMethodNotFoundFailTest()
-        {
-            var ex = Assert.Throws<IncorrectDevelopmentException>(() => TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.NotFound)));
-            Assert.NotNull(ex);
-            Assert.Equal("The NotFound method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User", ex.Message);
-        }
-
-        [Fact]
-        public void PropagationMethodNotFound2FailTest()
-        {
-            var ex = Assert.Throws<IncorrectDevelopmentException>(() => TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.NotFound2)));
-            Assert.NotNull(ex);
-            Assert.Equal($"A propagation request was unsuccessful.\nThe request does not indicate the method name and could not be obtained by reflection.\nMake sure that the method that calls the propagation is not decorated with { nameof(NotPropagateAttribute)}, as it should not be.", ex.Message);
-        }
     }
 }

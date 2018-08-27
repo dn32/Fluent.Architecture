@@ -120,7 +120,7 @@ namespace Fluent.Architecture.Validation
             RunTheContextValidation();
         }
 
-        public virtual void PropagateService<T2>(string methodName, object[] parameters)
+        public virtual void PropagateService(string methodName, object[] parameters)
         {
             ParameterMustBeInformed(parameters);
 

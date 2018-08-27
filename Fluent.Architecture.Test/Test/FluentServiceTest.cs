@@ -42,26 +42,27 @@ namespace Fluent.Architecture.Test.Test
             TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Remove), user);
         }
 
-        [Theory]
-        [InlineData(true, true)]
-        [InlineData(true, false)]
-        [InlineData(false, true)]
-        [InlineData(false, false)]
-        public void ExistsSuccessTest(bool expectedExists, bool userSelectSpec)
-        {
-            var user = InternalTestUtil.GetNewUser();
-            var passwordForFind = expectedExists ? user.Password : user.Password + "xpto";
-            var spec = userSelectSpec ? new UserByPassword(UserControllerInstance, passwordForFind) as BaseSpecification<User> : new UserIdByPassword(UserControllerInstance, passwordForFind);
+        //Foi para o teste de propagação
+        //[Theory]
+        //[InlineData(true, true)]
+        //[InlineData(true, false)]
+        //[InlineData(false, true)]
+        //[InlineData(false, false)]
+        //public void ExistsSuccessTest(bool expectedExists, bool userSelectSpec)
+        //{
+        //    var user = InternalTestUtil.GetNewUser();
+        //    var passwordForFind = expectedExists ? user.Password : user.Password + "xpto";
+        //    var spec = userSelectSpec ? new UserByPassword(UserControllerInstance, passwordForFind) as BaseSpecification<User> : new UserIdByPassword(UserControllerInstance, passwordForFind);
 
-            //Add
-            TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Add), user);
+        //    //Add
+        //    TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Add), user);
 
-            var exists = TestUtil.Execute<bool>(UserControllerInstance, nameof(UserController.Exists), spec);
-            Assert.Equal(expectedExists, exists);
+        //    var exists = TestUtil.Execute<bool>(UserControllerInstance, nameof(UserController.Exists), spec);
+        //    Assert.Equal(expectedExists, exists);
 
-            //Remove
-            TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Remove), user);
-        }
+        //    //Remove
+        //    TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Remove), user);
+        //}
 
         //[Fact]
         //public void BaseControllerTest()
@@ -221,7 +222,7 @@ namespace Fluent.Architecture.Test.Test
             var countFound = TestUtil.Execute<int>(UserControllerInstance, nameof(UserController.Count), spec);
             Assert.Equal(count, countFound);
 
-            //Test Spec
+            //Test SpecSelect
             var usersReturn = TestUtil.Execute<List<User>>(UserControllerInstance, nameof(UserController.Spec), spec);
             Assert.NotNull(usersReturn);
             Assert.Equal(count, usersReturn.Count);
@@ -282,8 +283,8 @@ namespace Fluent.Architecture.Test.Test
 
             var pagination = new FluentPagination(currentPage, itemsPerPage);
 
-            //Spec
-            var fount = TestUtil.Execute<List<User>>(UserControllerInstance, nameof(UserController.Spec), spec, pagination);
+            //SpecSelect
+            var fount = TestUtil.Execute<List<User>>(UserControllerInstance, nameof(UserController.Spec), new object[]{ spec, pagination });
             Assert.NotNull(fount);
             Assert.Equal(expectedCount, fount.Count);
             Assert.Equal(users.Count, pagination.TotalQuantityOfItems);

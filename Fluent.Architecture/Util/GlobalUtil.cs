@@ -98,16 +98,34 @@ namespace Fluent.Architecture.Util
         }
 
         //Todo doc
-        public static MethodBase GetMethodByCallerType(Type callerType)
+        public static MethodBase GetMethodForPropagation()
         {
-            bool ComparePropagateMethod(StackFrame frame)
+            var frames = new StackTrace().GetFrames();
+            if (frames == null)
             {
-                var method = frame.GetMethod();
-                var type = method.ReflectedType;
-                return type == callerType && method.GetCustomAttribute<NotPropagateAttribute>() == null;
+                return null;
             }
 
-            return new StackTrace().GetFrames()?.LastOrDefault(ComparePropagateMethod)?.GetMethod();
+            var isNext = false;
+
+            foreach (var frame in frames)
+            {
+                var method = frame.GetMethod();
+                if (method.GetCustomAttribute<NotPropagateAttribute>() == null)
+                {
+                    if (isNext)
+                    {
+                        return method;
+                    }
+                }
+
+                if (method.GetCustomAttribute<PropagateInitAttribute>() != null)
+                {
+                    isNext = true;
+                }
+            }
+
+            return null;
         }
 
 #if PROPAGATION
@@ -117,7 +135,7 @@ namespace Fluent.Architecture.Util
         //{
         //    if (string.IsNullOrEmpty(methodName))
         //    {
-        //        methodName = GetMethodByCallerType(callerType)?.Name;
+        //        methodName = GetMethodForPropagation(callerType)?.Name;
         //    }
 
         //    var methods = target.GetType().GetMethods().Where(x => x.IsPublic && x.Name.Equals(methodName, StringComparison.InvariantCultureIgnoreCase) && x.GetCustomAttribute<PropagateAttribute>() != null).ToList();

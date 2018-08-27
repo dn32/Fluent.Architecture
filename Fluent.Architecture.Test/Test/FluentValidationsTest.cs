@@ -19,7 +19,7 @@ namespace Fluent.Architecture.Test.Test
         [InlineData(nameof(UserController.Update))]
         public void NullParameterTestFail(string method)
         {
-            var error = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, method, null);
+            var error = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, method, new object[] { null });
 
             Assert.NotNull(error);
             Assert.Single(error.Inconsistencies);
@@ -68,10 +68,11 @@ namespace Fluent.Architecture.Test.Test
                 Id = new Random().Next(1, int.MaxValue)
             };
 
-            var objectReturn = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, method, user);
-            Assert.NotNull(objectReturn);
-            Assert.Single(objectReturn.Inconsistencies);
-            Assert.IsAssignableFrom<EntityNotFoundFluentValidationException>(objectReturn.Inconsistencies.First());
+            var err = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, method, user);
+            Assert.NotNull(err);
+            Assert.Single(err.Inconsistencies);
+            Assert.IsAssignableFrom<EntityNotFoundFluentValidationException>(err.Inconsistencies.First());
+            Assert.True(err.ValidationError);
         }
 
         [Theory]

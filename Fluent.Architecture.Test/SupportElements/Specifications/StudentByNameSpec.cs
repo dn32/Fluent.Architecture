@@ -7,18 +7,18 @@ using Fluent.Architecture.Test.SupportElements.Model;
 
 namespace Fluent.Architecture.Test.SupportElements.Specifications
 {
-    public class StudentByTitleSpec: FluentSpecification<Student>
+    public class StudentByNameSpec: FluentSpecification<Student>
    {
-       private readonly string _title;
+       private readonly string _name;
 
-        public StudentByTitleSpec(FluentController<Student> controller, string title) : base(controller)
+        public StudentByNameSpec(FluentController<Student> controller, string name) : base(controller)
         {
-            _title = title;
+            _name = name;
         }
 
         public override IQueryable<Student> Spec(IQueryable<Student> query)
         {
-            return query.Where(x => x.Name.Equals(_title, StringComparison.CurrentCultureIgnoreCase));
+            return query.Where(x => x.Name.Equals(_name, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public override Expression<Func<Student, object>> Order()

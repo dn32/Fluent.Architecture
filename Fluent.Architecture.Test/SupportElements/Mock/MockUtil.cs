@@ -33,16 +33,22 @@ namespace Fluent.Architecture.Test.SupportElements.Mock
             return controller;
         }
 
-        public static ExceptionContext GetMockExceptionContext(System.Exception exception, BaseController controller, bool customErrorEnabled)
+        public static ExceptionContext GetMockExceptionContext<TC>(System.Exception exception, BaseController controller, bool customErrorEnabled)
         {
-            var controllerContext = GetMockControllerContext(customErrorEnabled);
+            var controllerContext = GetMockControllerContext<TC>(customErrorEnabled);
             return  new ExceptionContext(controllerContext, exception);
         }
 
-        public static ControllerContext GetMockControllerContext(bool customErrorEnabled)
+        public static ControllerContext GetMockControllerContext<TC>(bool customErrorEnabled)
         {
-            var controller = TestUtil.GetController(typeof(UserController));
+            var controller = TestUtil.GetController(typeof(TC));
             controller.SetLocalHttpContext(new HttpContextBaseMock(customErrorEnabled));
+            return new ControllerContext(controller.HttpContext, new RouteData(), controller);
+        }
+
+        public static ControllerContext GetMockControllerContext(BaseController controller)
+        {
+            controller.SetLocalHttpContext(new HttpContextBaseMock(false));
             return new ControllerContext(controller.HttpContext, new RouteData(), controller);
         }
 #endif

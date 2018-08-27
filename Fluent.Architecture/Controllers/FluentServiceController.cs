@@ -22,27 +22,17 @@ namespace Fluent.Architecture.Controllers
          protected internal TS Service { get; set; }
 
 #if NET461
-        public virtual void FluentOnActionExecuting()
-        {
-            Service = ServiceFactory.Create<TS>(HttpContext);
-        }
-
-        public virtual void FluentOnActionExecuted()
-        {
-            Service.TransactionObjects.Session.SaveChanges();
-            Service.Dispose(true);
-        }
 
         protected override void OnActionExecuting(ActionExecutingContext context)
         {
-            FluentOnActionExecuting();
+            Service = ServiceFactory.Create<TS>(HttpContext);
             base.OnActionExecuting(context);
         }
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            FluentOnActionExecuted();
-            base.OnActionExecuted(filterContext);
+            Service.TransactionObjects.Session.SaveChanges();
+            Service.Dispose(true); base.OnActionExecuted(filterContext);
         }
 #else
         //public override void OnActionExecuting(ActionExecutingContext context)

@@ -8,62 +8,20 @@ using Fluent.Architecture.Test.SupportElements.Model;
 using Fluent.Architecture.Test.SupportElements.Services;
 using Fluent.Architecture.Test.SupportElements.Specifications;
 
-#if NET461
-
-#else
-using Microsoft.AspNetCore.Mvc;
-#endif
-
 namespace Fluent.Architecture.Test.SupportElements.Controllers
 {
-    public class UserController : FluentController<User>
+    public class UserController : FluentFullController<User>
     {
         public new UserService Service => base.Service as UserService;
-
-        public JsonResult UserByEmail(string email)
-        {
-            var user = Service.SpecOne(new UserByEmail(this, email));
-            return Json(user);
-        }
-
-        public JsonResult Add(User user)
-        {
-            user = Service.Add(user);
-            return Json(user);
-        }
-
-        public JsonResult AddRange(User[] users)
-        {
-            Service.AddRange(users);
-            return Json(users);
-        }
-
-        public JsonResult Remove(User user)
-        {
-            user = Service.Remove(user);
-            return Json(user);
-        }
-
-        public JsonResult RemoveRange(User[] users)
-        {
-            Service.RemoveRange(users);
-            return Json(users);
-        }
 
         public void RemoveRange(UserByPassword spec)
         {
             Service.RemoveRange(spec);
         }
 
-        public JsonResult Update(User user)
+        public JsonResult UserByEmail(string email)
         {
-            user = Service.Update(user);
-            return Json(user);
-        }
-
-        public JsonResult Find(User user)
-        {
-            user = Service.Find(user);
+            var user = Service.SpecOne(new UserByEmail(this, email));
             return Json(user);
         }
 
@@ -75,7 +33,7 @@ namespace Fluent.Architecture.Test.SupportElements.Controllers
 
         public void NotFound()
         {
-            Propagate(nameof(NotFound));
+            PropagateMethod(nameof(NotFound));
         }
 
         [NotPropagate]
@@ -104,8 +62,8 @@ namespace Fluent.Architecture.Test.SupportElements.Controllers
 
         public JsonResult Exists(FluentSpecification<User> spec)
         {
-            var user = Service.Exists(spec);
-            return Json(user);
+            var exists = Propagate<bool>(spec);
+            return Json(exists);
         }
 
         public JsonResult Count(FluentSpecification<User> spec)
@@ -154,6 +112,62 @@ namespace Fluent.Architecture.Test.SupportElements.Controllers
             var userStudent = Service.GetUserByEmail(email);
             return Json(userStudent);
         }
+        
+
+
+
+        public JsonResult PropagateMethodTestA()
+        {
+            return Json(PropagateMethod(nameof(PropagateMethodTestA)));
+        }
+        
+        public JsonResult PropagateMethodTestB(int id, string name)
+        {
+            return Json(base.PropagateMethod(nameof(PropagateMethodTestB), new object[] { id, name }));
+        }
+        
+        public JsonResult PropagateMethodTestC(int id, string name)
+        {
+            return Json(base.PropagateMethod<Student>(nameof(PropagateMethodTestC), new object[]{ id, name }));
+        }
+        
+        public JsonResult PropagateMethodTestD(int parameter)
+        {
+            return Json(PropagateMethod(nameof(PropagateMethodTestD), parameter));
+        }
+        
+        public JsonResult PropagateMethodTestE(int id)
+        {
+            return Json(base.PropagateMethod<Student>(nameof(PropagateMethodTestE), id));
+        }
+
+        //===========================
+        
+        public JsonResult PropagateTestF()
+        {
+            return Json(base.Propagate());
+        }
+        
+        public JsonResult PropagateTestG(int id, string name)
+        {
+            return Json(base.Propagate(new object[] { id, name }));
+        }
+        
+        public JsonResult PropagateTestH(int id, string name)
+        {
+            return Json(base.Propagate<Student>(new object[] { id, name }));
+        }
+        
+        public JsonResult PropagateTestI(int id)
+        {
+            return Json(base.Propagate<Student>(new object[] { id }));
+        }
+
+        public JsonResult PropagateTestJ(int id)
+        {
+            return Json(base.Propagate(new object[] { id }));
+        }
+
     }
 }
 

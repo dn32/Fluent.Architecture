@@ -3,8 +3,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Exception;
+using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
@@ -43,69 +45,13 @@ namespace Fluent.Architecture.Services
             Validation.Init(this, Repository);
         }
 
-#if PROPAGATION
+        #region PROPAGATION
+
         // Todo Documenta após a organização desses itens.
-
-        //[NotPropagate]
-        //public virtual object PropagateService(BaseSpecification spec)
-        //{
-        //    return PropagateService(string.Empty, spec);
-        //}
-
-        //[NotPropagate]
-        //public virtual object PropagateService(params object[] parameters)
-        //{
-        //    return PropagateService(string.Empty, parameters);
-        //}
-
-        //[NotPropagate]
-        //public virtual object PropagateService(string methodName, params object[] parameters)
-        //{
-        //    CallValidationPerPropagation<T>(methodName, this, parameters);
-        //    return GlobalUtil.GetPropagationMethod<T, T>(methodName, Repository, GetType(), parameters);
-        //}
-
-        //[NotPropagate]
-        //public virtual object PropagateService<T2>(string methodName, FluentServiceController<TransactionalService> _this, params object[] parameters) where T2 : BaseEntity
-        //{
-        //    // Todo - Note que nesse ponto, T agora é TS. Essas operações abaixo devem ser ajustadas para atender a TS que não tem entidade
-        //    //CallValidationPerPropagation<T>(methodName, _this, parameters);
-        //    //return GlobalUtil.GetPropagationMethod<T, T>(methodName, Repository, GetType(), parameters);
-        //    return null;
-        //}
-
-        //// If this method is internal the interceptor does not pick up and a number of problems will be noticed with sessionRequest control.
-        //[NotPropagate]
-        //public virtual object PropagateService<T2>(FluentController<T> _this, params object[] parameters) where T2 : BaseEntity
-        //{
-        //    CallValidationPerPropagation<T>(string.Empty, _this, parameters);
-        //    return GlobalUtil.GetPropagationMethod<T, T2>(string.Empty, Repository, _this.GetType(), parameters);
-        //}
-
-        //[NotPropagate]
-        //public virtual object PropagateService<T2>(params object[] parameters)
-        //{
-        //    CallValidationPerPropagation<T>(string.Empty, this, parameters);
-        //    return GlobalUtil.GetPropagationMethod<T, T2>(string.Empty, Repository, GetType(), parameters);
-        //}
-
-        //[NotPropagate]
-        //public virtual object PropagateService<T2>(string methodName, params object[] parameters)
-        //{
-        //    CallValidationPerPropagation<T>(methodName, this, parameters);
-        //    return GlobalUtil.GetPropagationMethod<T, T2>(methodName, Repository, GetType(), parameters);
-        //}
-
-        //[NotPropagate]
-        //private void CallValidationPerPropagation<T2>(string methodName, object _this, params object[] parameters)
-        //{
-        //    GlobalUtil.GetPropagationMethod<T, T2>(methodName, Validation, _this.GetType(), parameters, true);
-        //}
-
         [NotPropagate]
-        public virtual object PropagateService<T2>(string methodName, params object[] parameters)
+        public virtual object PropagateService(string methodName, object[] parameters)
         {
-            Validation.PropagateService<T2>(methodName, parameters);
+            Validation.PropagateService(methodName, parameters);
 
             var type = GetType();
             var parameterTypes = parameters.Select(x => x.GetType()).ToArray();
@@ -116,21 +62,60 @@ namespace Fluent.Architecture.Services
             }
 
             var validationMethod = Validation.GetType().GetMethod(methodName, parameterTypes);
+            if (validationMethod == null)
+            {
+                try
+                {
+                    validationMethod = Validation.GetType().GetMethod(methodName);
+                }
+                catch (AmbiguousMatchException)
+                {
+                    throw new IncorrectDevelopmentException($"There are two or more methods of propagation in {validationMethod} with the same name {methodName}. This causes an ambiguity, please change the name of one of them.");
+                }
+            }
+
             if (validationMethod != null)
             {
                 validationMethod.Invoke(Validation, parameters);
             }
 
             var repositoryMethod = Repository.GetType().GetMethod(methodName, parameterTypes);
-            if (repositoryMethod != null)
+
+            if (repositoryMethod == null)
             {
-                return repositoryMethod.Invoke(Repository, parameters);
+                try
+                {
+                    repositoryMethod = Repository.GetType().GetMethod(methodName);
+                }
+                catch (AmbiguousMatchException)
+                {
+                    throw new IncorrectDevelopmentException($"There are two or more methods of propagation in {Repository} with the same name {methodName}. This causes an ambiguity, please change the name of one of them.");
+                }
             }
 
-            throw new IncorrectDevelopmentException($"The NotFound method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User");
+            if (repositoryMethod != null)
+            {
+                var localParameters = repositoryMethod.GetAllParameters();
+                if (parameters.Length > localParameters.Length)
+                {
+                    throw new IncorrectDevelopmentException("The amount of parameters passed is greater than the amount expected by the method.");
+                }
+
+                for (var i = 0; i < parameters.Length; i++)
+                {
+                    if (parameters[i] != null)
+                    {
+                        localParameters[i] = parameters[i];
+                    }
+                }
+
+                return repositoryMethod.Invoke(Repository, localParameters);
+            }
+
+            throw new IncorrectDevelopmentException($"The {methodName} method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User");
         }
 
-#endif
+        #endregion
 
         #region PASSAGEM DIRETA PARA O REPOSITÓRIO
         //Todo - Esses métoso são redundantes. Crier um mecanismo para não necessitar reencrever essas chamadas.
@@ -152,7 +137,7 @@ namespace Fluent.Architecture.Services
         [Propagate]
         public virtual List<TO> Spec<TO>(FluentSelectSpecification<T, TO> spec, FluentPagination pagination = null)
         {
-            return Repository.Spec(spec, pagination);
+            return Repository.SpecSelect(spec, pagination);
         }
 
         /// <summary>

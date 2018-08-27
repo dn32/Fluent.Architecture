@@ -48,7 +48,7 @@ namespace Fluent.Architecture.Test.Test
 
             exception.AddInconsistency(Activator.CreateInstance(exceptionType, parameters) as FluentValidationException);
 
-            var exceptionContext = MockUtil.GetMockExceptionContext(exception, UserControllerInstance, customErrorEnabled);
+            var exceptionContext = MockUtil.GetMockExceptionContext<UserController>(exception, UserControllerInstance, customErrorEnabled);
             
             filter.OnException(exceptionContext);
 

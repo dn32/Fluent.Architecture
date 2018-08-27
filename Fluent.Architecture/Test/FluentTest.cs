@@ -1,4 +1,6 @@
-﻿using System;
+﻿// ReSharper disable CommentTypo
+
+using System;
 
 namespace Fluent.Architecture.Test
 {
@@ -18,7 +20,7 @@ namespace Fluent.Architecture.Test
         /// </returns>
         public static DateTime GetDate(this string ddMMyy)
         {
-            return DateTime.ParseExact(ddMMyy, "dd/MMM/yy", System.Globalization.CultureInfo.InvariantCulture);
+            return DateTime.ParseExact(ddMMyy, "dd/MM/yy", System.Globalization.CultureInfo.InvariantCulture);
         }
     }
 }

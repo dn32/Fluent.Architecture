@@ -1,4 +1,5 @@
 ﻿#if NET461
+using System.Collections.Generic;
 using System.Web.Mvc;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Services;
@@ -22,17 +23,17 @@ namespace Fluent.Architecture.Test.SupportElements.Controllers
 
         public JsonResult Add2(Student student)
         {
-            return Json(Propagate(nameof(FluentService<Student>.Add), student));
+            return Json(PropagateMethod(nameof(FluentService<Student>.Add), student));
         }
 
         public virtual JsonResult Spec(FluentSpecification<Student> spec)
         {
-            return Json(Propagate(nameof(FluentService<Student>.Spec), spec, null));
+            return Json(Propagate<List<Student>>(spec));
         }
 
         public virtual JsonResult Spec2()
         {
-            return Json(Propagate(nameof(FluentService<Student>.Spec), null));
+            return Json(PropagateMethod(nameof(FluentService<Student>.Spec), null));
         }
 
         public JsonResult Find(Student student)

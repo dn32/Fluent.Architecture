@@ -69,13 +69,13 @@ namespace Fluent.Architecture.Repository
             return Input.SqlQuery(sql).SingleOrDefault();
         }
 #else
-        [Propagate]
+        [PropagateMethod]
         internal bool ExistsSql(string sql)
         {
             throw new NotImplementedException();
         }
 
-        [Propagate]
+        [PropagateMethod]
         internal TE FindSingleOrDefaultSql(string sql)
         {
             throw new NotImplementedException();
@@ -98,7 +98,7 @@ namespace Fluent.Architecture.Repository
         /// A lista paginada de resultados.
         /// </returns>
         [Propagate]
-        public virtual List<TO> Spec<TO>(FluentSelectSpecification<TE, TO> spec, FluentPagination pagination = null)
+        public virtual List<TO> SpecSelect<TO>(FluentSelectSpecification<TE, TO> spec, FluentPagination pagination = null)
         {
             return FluentPaginate(spec.ToIQueryable(Query), pagination).ToList();
         }
@@ -231,7 +231,7 @@ namespace Fluent.Architecture.Repository
         ///// <returns>
         ///// Item encontrado ou nulo.
         ///// </returns>
-        //[Propagate]
+        //[PropagateMethod]
         //public virtual TE Find(int id)
         //{
         //    return Input.Find(id);

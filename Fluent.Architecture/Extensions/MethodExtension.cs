@@ -20,5 +20,11 @@ namespace Fluent.Architecture.Extensions
             return method.Name + (method.ContainsGenericParameters ? "<" + string.Join(", ", method.GetGenericArguments().Select(x => x.Name)) + ">" : "") +
                 "(" + string.Join(", ", method.GetParameters().Select(x => x.ParameterType.GetFriendlyName(false) + (showParameterName ? " " + x.Name : ""))) + ")";
         }
+
+        //Todo doc
+        public static object[] GetAllParameters(this MethodBase method)
+        {
+            return method.GetParameters().Select(x => x.DefaultValue).ToArray();
+        }
     }
 }

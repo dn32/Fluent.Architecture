@@ -1,12 +1,14 @@
 ﻿// ReSharper disable CommentTypo
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Exception.ValidationException;
 using Fluent.Architecture.Services;
+using Fluent.Architecture.Test.SupportElements.Controllers;
 using Fluent.Architecture.Test.SupportElements.Mock;
 using Fluent.Architecture.Test.SupportElements.Mock.ControllerMock;
 using Xunit;
@@ -15,14 +17,14 @@ namespace Fluent.Architecture.Test.TestTools
 {
     public static class TestUtil
     {
+        private static readonly Random Random = new Random();
+
+        private static readonly object SyncLock = new object();
+
         public static BaseController GetController(Type controllerType)
         {
             return ControllerMockFactory.Create(controllerType);
         }
-
-        private static readonly Random Random = new Random();
-
-        private static readonly object SyncLock = new object();
 
         public static int NextRandom()
         {
@@ -32,21 +34,18 @@ namespace Fluent.Architecture.Test.TestTools
             }
         }
 
-#if NET461
+        public static TR Execute<TR>(BaseController controller, string methodName, object parameter)
+        {
+            return Execute<TR>(controller, methodName, new object[] { parameter });
+        }
 
-        //public static TR Execute<TR>(Type controllerType, string methodName, params object[] parameters)
-        //{
-        //    var controller = TestUtil.GetController(controllerType);
-        //    return Execute<TR>(controller, methodName, parameters);
-        //}
-
-        public static TR Execute<TR>(BaseController controller, string methodName, params object[] parameters)
+        public static TR Execute<TR>(BaseController controller, string methodName, object[] parameters)
         {
             var controllerType = controller.GetType();
             MethodInfo method;
-            if (parameters == null)
+
+            if (parameters == null || (parameters.Length == 1 && parameters.First() == null))
             {
-                parameters = new object[] { null };
                 method = controllerType.GetMethod(methodName);
             }
             else
@@ -62,19 +61,23 @@ namespace Fluent.Architecture.Test.TestTools
 
             controller.SetLocalHttpContext(new HttpContextBaseMock());
 
-            var fluentOnActionExecuting = controllerType.GetMethod(nameof(FluentServiceController<TransactionalService>.FluentOnActionExecuting));
-            if (fluentOnActionExecuting != null)
+            //var fluentOnActionExecuting = controllerType.GetMethod(nameof(FluentServiceController<TransactionalService>.FluentOnActionExecuting));
+            var actionExecuting = controllerType.GetMethod("OnActionExecuting", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (actionExecuting != null)
             {
-                fluentOnActionExecuting.Invoke(controller, null);
+                var actionExecutingContext = MockActionExecutingContext.Create(controller, methodName);
+                actionExecuting.Invoke(controller, new object[] { actionExecutingContext });
             }
 
             try
             {
                 var returnObj = method.Invoke(controller, parameters) as JsonResult;
-                var fluentOnActionExecuted = controllerType.GetMethod(nameof(FluentServiceController<TransactionalService>.FluentOnActionExecuted));
-                if (fluentOnActionExecuted != null)
+                // var fluentOnActionExecuted = controllerType.GetMethod(nameof(FluentServiceController<TransactionalService>.FluentOnActionExecuted));
+                var actionExecuted = controllerType.GetMethod("OnActionExecuted", BindingFlags.NonPublic | BindingFlags.Instance);
+                if (actionExecuted != null)
                 {
-                    fluentOnActionExecuted.Invoke(controller, null);
+                    var actionExecutedContext = MockActionExecutedContext.Create(controller, methodName);
+                    actionExecuted.Invoke(controller, new object[] { actionExecutedContext });
                 }
 
                 if (returnObj?.Data == null)
@@ -84,7 +87,7 @@ namespace Fluent.Architecture.Test.TestTools
 
                 Assert.IsAssignableFrom<TR>(returnObj.Data);
 
-                return returnObj?.Data as dynamic;
+                return returnObj.Data as dynamic;
             }
             catch (TargetInvocationException ex)
             {
@@ -101,12 +104,5 @@ namespace Fluent.Architecture.Test.TestTools
                 throw ex.InnerException;
             }
         }
-
-#else
-        public static TR Execute<TR>(Type controllerType, string methodName, params object[] parameters) where TR : class
-        {
-            throw new NotImplementedException();
-        }
-#endif
     }
 }

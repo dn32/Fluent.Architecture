@@ -10,7 +10,7 @@ namespace Fluent.Architecture.Specifications
     /// <inheritdoc />
     /// <summary>
     /// Especificação base para todas as especificações do sistema que tiverem a saida diferente da entrada.
-    /// Geralmente o Spec possui em Select nesse caso.
+    /// Geralmente o SpecSelect possui em Select nesse caso.
     /// </summary>
     /// <typeparam name="TE">Tipo de entidade da especificação.</typeparam>
     /// <typeparam name="TO">Tipo de objeto de saida da especificação.</typeparam>
