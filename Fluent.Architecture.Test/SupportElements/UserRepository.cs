@@ -16,7 +16,13 @@ namespace Fluent.Architecture.Test.SupportElements
 
 
         // ======================= PROPAGATION =========================
-
+        //For ambiguity test
+        [Propagate]
+        public void Test(string data) { }
+     
+        //For ambiguity test
+        [Propagate]
+        public void Test(int data) { }
 
         [Propagate]
         public User PropagateMethodTestA()

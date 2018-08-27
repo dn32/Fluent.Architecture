@@ -1,4 +1,5 @@
-﻿using Fluent.Architecture.Controllers;
+﻿using System.Web.Mvc;
+using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Test.SupportElements.Controllers;
 using Fluent.Architecture.Test.SupportElements.Mock;
 

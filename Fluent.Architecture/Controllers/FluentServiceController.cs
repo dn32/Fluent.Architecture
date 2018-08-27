@@ -1,5 +1,8 @@
 ﻿// ReSharper disable CommentTypo
 
+using System;
+using System.Security.Claims;
+using System.Web;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Services;
 #if NET461
@@ -19,7 +22,13 @@ namespace Fluent.Architecture.Controllers
     /// <typeparam name="TS">O serviço a ser usado pelo controlador.</typeparam>
     public abstract class FluentServiceController<TS> : BaseController where TS : TransactionalService, new()
     {
-         protected internal TS Service { get; set; }
+        protected internal TS Service { get; set; }
+
+        public Guid SessionRequestId => Service.SessionRequestId;
+
+        public ClaimsPrincipal ServiceUser => Service.User;
+
+        public HttpContextBase ServiceHttpContext => Service.LocalHttpContext;
 
 #if NET461
 

@@ -85,11 +85,11 @@ namespace Fluent.Architecture.Factory
         private static Type GetSpecializedService(BaseService service)
         {
             var serviceType = service.GetType();
-            if (serviceType.IsAssignableFrom(typeof(IFluentDynamicProxy)))
-            {
-                // Todo "IFluentDynamicProxy ainda não está sendo usado
-                serviceType = service.GetType().BaseType;
-            }
+            //if (serviceType.IsAssignableFrom(typeof(IFluentDynamicProxy)))
+            //{
+            //    // Todo "IFluentDynamicProxy ainda não está sendo usado
+            //    serviceType = service.GetType().BaseType;
+            //}
 
             return GetSpecializedService(serviceType);
         }

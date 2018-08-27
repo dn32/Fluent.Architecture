@@ -8,6 +8,8 @@ namespace Fluent.Architecture.Test.SupportElements.Services
     {
         protected virtual FluentService<Student> StudentService => null;
 
+        protected virtual FluentService<Student> StudentService2 => null;
+
         public UserStudent GetUserByEmail(string email)
         {
             var userSpec = new UserByEmail(this, email);
@@ -15,6 +17,7 @@ namespace Fluent.Architecture.Test.SupportElements.Services
 
             var user = SpecOne(userSpec);
             var student = StudentService.SpecOne(studentSpec);
+            var student2 = StudentService2.SpecOne(studentSpec); //Para o teste de reutilização de serviço na injeção
 
             return new UserStudent
             {

@@ -36,6 +36,14 @@ namespace Fluent.Architecture.Test.SupportElements
             }
         }
 
+        //For ambiguity test
+        [Propagate]
+        public void Test2(string data) { }
+
+        //For ambiguity test
+        [Propagate]
+        public void Test2(int data) { }
+
         [Propagate]
         public void FindById(int id)
         {

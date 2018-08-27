@@ -12,7 +12,7 @@ namespace Fluent.Architecture.Validation
     /// </summary>
     public class ContextFluentValidation: FluentValidationException
     {
-        public List<Exception.ValidationException.FluentValidationException> Inconsistencies { get; set; }
+        public List<FluentValidationException> Inconsistencies { get; set; }
 
         /// <summary>
         /// Se a validação retornou sucesso.

@@ -30,22 +30,15 @@ namespace Fluent.Architecture.Services
         /// </summary>
         public Guid SessionRequestId => SessionRequest.SessionRequestId;
 
-#if NET461
         /// <summary>
         /// HttpContext da requisição vinda do controller.
         /// </summary>
         public HttpContextBase LocalHttpContext => SessionRequest.LocalHttpContext;
-#else
-/// <summary>
-/// HttpContext da requisição vinda do controller.
-/// </summary>
-        public HttpContext LocalHttpContext=> SessionRequest.LocalHttpContext;
-#endif
 
         /// <summary>
         /// Usuário do sistema.
         /// </summary>
-        protected ClaimsPrincipal User => SessionRequest.LocalHttpContext.User as ClaimsPrincipal;
+        public ClaimsPrincipal User => SessionRequest.LocalHttpContext.User as ClaimsPrincipal;
 
         /// <summary>
         /// Obtem a injeção de dependência de propriedades Lazy-loading.
@@ -80,7 +73,7 @@ namespace Fluent.Architecture.Services
         /// <param name="sessionRequest">
         /// A sessão do usuário.
         /// </param>
-     protected   internal virtual void SetUserSession(UserSessionRequest sessionRequest)
+        protected internal virtual void SetUserSession(UserSessionRequest sessionRequest)
         {
             SessionRequest = sessionRequest;
         }

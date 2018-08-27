@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web.Mvc;
+using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Exception;
 using Fluent.Architecture.Exception.ValidationException;
 using Fluent.Architecture.Extensions;
@@ -70,6 +72,34 @@ namespace Fluent.Architecture.Test.Test
         }
 
         [Fact]
+        public void AmbiguousMethodOnRepositoryMatchException()
+        {
+            bool Spec(BaseController controller)
+            {
+                ((UserController)controller).Test();
+                return true;
+            }
+
+            var ex = Assert.Throws<IncorrectDevelopmentException>(() => TestUtil.Execute(UserControllerInstance, null, null, Spec));
+            Assert.NotNull(ex);
+            Assert.Equal("There are two or more methods of propagation in Fluent.Architecture.Test.SupportElements.UserRepository with the same name Test. This causes an ambiguity, please change the name of one of them.", ex.Message);
+        }
+
+        [Fact]
+        public void AmbiguousMethodOnValidationMatchException()
+        {
+            bool Spec(BaseController controller)
+            {
+                ((UserController)controller).Test2();
+                return true;
+            }
+
+            var ex = Assert.Throws<IncorrectDevelopmentException>(() => TestUtil.Execute(UserControllerInstance, null, null, Spec));
+            Assert.NotNull(ex);
+            Assert.Equal("There are two or more methods of propagation in  with the same name Test2. This causes an ambiguity, please change the name of one of them.", ex.Message);
+        }
+
+        [Fact]
         public void PropagationMethodNotFound2FailTest()
         {
             var ex = Assert.Throws<IncorrectDevelopmentException>(() => TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.NotFound2), null));
@@ -98,25 +128,26 @@ namespace Fluent.Architecture.Test.Test
             TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Remove), user);
         }
 
-
-
         [Fact]
         public void PropagateMethodTestBNullParameter()
         {
-            JsonResult propagateMethodTestB(UserController controller)
+            ContextFluentValidation PropagateMethodTestB(BaseController controller)
             {
                 var id = TestUtil.NextRandom();
-                var ret = controller.PropagateMethodTestB(id, null);
+                var ret = Assert.Throws<ContextFluentValidation>(() => ((UserController)controller).PropagateMethodTestB(id, null));
                 return ret;
             }
 
-
-            var error = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, nameof(UserController.PropagateMethodTestB), new object[] { });
-
+            var error = TestUtil.Execute(UserControllerInstance, null, null, PropagateMethodTestB);
 
             Assert.NotNull(error);
             Assert.Single(error.Inconsistencies);
-            Assert.IsAssignableFrom<NullParameterFluentValidationException>(error.Inconsistencies.First());
+            Assert.NotNull(error.Message);
+            Assert.IsAssignableFrom<FluentParameterValidationException>(error.Inconsistencies.First());
+            var ex = error.Inconsistencies.First() as FluentParameterValidationException;
+
+            Assert.NotNull(ex);
+            Assert.Equal("parameters", ex.Parameter);
         }
 
         [Fact]

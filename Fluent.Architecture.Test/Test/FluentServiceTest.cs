@@ -1,18 +1,14 @@
 ﻿#if NET461
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
+using System.Web;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
-using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Test.SupportElements.Controllers;
-using Fluent.Architecture.Test.SupportElements.Mock;
 using Fluent.Architecture.Test.SupportElements.Model;
-using Fluent.Architecture.Test.SupportElements.Services;
 using Fluent.Architecture.Test.SupportElements.Specifications;
 using Fluent.Architecture.Test.TestTools;
 using Xunit;
@@ -41,36 +37,6 @@ namespace Fluent.Architecture.Test.Test
             //Remove
             TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Remove), user);
         }
-
-        //Foi para o teste de propagação
-        //[Theory]
-        //[InlineData(true, true)]
-        //[InlineData(true, false)]
-        //[InlineData(false, true)]
-        //[InlineData(false, false)]
-        //public void ExistsSuccessTest(bool expectedExists, bool userSelectSpec)
-        //{
-        //    var user = InternalTestUtil.GetNewUser();
-        //    var passwordForFind = expectedExists ? user.Password : user.Password + "xpto";
-        //    var spec = userSelectSpec ? new UserByPassword(UserControllerInstance, passwordForFind) as BaseSpecification<User> : new UserIdByPassword(UserControllerInstance, passwordForFind);
-
-        //    //Add
-        //    TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Add), user);
-
-        //    var exists = TestUtil.Execute<bool>(UserControllerInstance, nameof(UserController.Exists), spec);
-        //    Assert.Equal(expectedExists, exists);
-
-        //    //Remove
-        //    TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Remove), user);
-        //}
-
-        //[Fact]
-        //public void BaseControllerTest()
-        //{
-        //    var id = Service.SessionRequestId;
-
-        //    Assert.NotEqual(id, Guid.Empty);
-        //}
 
         [Theory]
         [InlineData(true)]
@@ -142,6 +108,55 @@ namespace Fluent.Architecture.Test.Test
 
             Assert.Null(user1);
             Assert.Null(user2);
+        }
+
+
+        [Fact]
+        public void SessionRequestIdTest()
+        {
+            Guid PropagateMethodTestB(BaseController controller)
+            {
+                return ((UserController)controller).SessionRequestId;
+            }
+
+            var sessionId = TestUtil.Execute(UserControllerInstance, null, null, PropagateMethodTestB);
+            Assert.NotEqual(Guid.Empty, sessionId);
+        }
+
+        [Fact]
+        public void UserTest()
+        {
+            object PropagateMethodTestB(BaseController controller)
+            {
+                return ((UserController)controller).ServiceUser;
+            }
+
+            var serviceUser = TestUtil.Execute(UserControllerInstance, null, null, PropagateMethodTestB);
+            Assert.NotNull(serviceUser);
+        }
+
+        [Fact]
+        public void HttpContextTest()
+        {
+            HttpContextBase PropagateMethodTestB(BaseController controller)
+            {
+                return controller.HttpContext;
+            }
+
+            var httpContextBase = TestUtil.Execute(UserControllerInstance, null, null, PropagateMethodTestB);
+            Assert.NotNull(httpContextBase);
+        }
+
+        [Fact]
+        public void ServiceHttpContextTest()
+        {
+            object PropagateMethodTestB(BaseController controller)
+            {
+                return ((UserController)controller).ServiceHttpContext;
+            }
+
+            var serviceUser = TestUtil.Execute(UserControllerInstance, null, null, PropagateMethodTestB);
+            Assert.NotNull(serviceUser);
         }
 
         [Fact]
@@ -284,7 +299,7 @@ namespace Fluent.Architecture.Test.Test
             var pagination = new FluentPagination(currentPage, itemsPerPage);
 
             //SpecSelect
-            var fount = TestUtil.Execute<List<User>>(UserControllerInstance, nameof(UserController.Spec), new object[]{ spec, pagination });
+            var fount = TestUtil.Execute<List<User>>(UserControllerInstance, nameof(UserController.Spec), new object[] { spec, pagination });
             Assert.NotNull(fount);
             Assert.Equal(expectedCount, fount.Count);
             Assert.Equal(users.Count, pagination.TotalQuantityOfItems);

@@ -33,9 +33,6 @@ namespace Fluent.Architecture.Specifications
         }
 
         /// <inheritdoc />
-        protected FluentSelectSpecification(TransactionalService service) : base(service){}
-
-        /// <inheritdoc />
         protected FluentSelectSpecification(FluentController<TE> controller) : base(controller){}
     }
 }

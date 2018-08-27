@@ -11,6 +11,7 @@ using Fluent.Architecture.Services;
 using Fluent.Architecture.Test.SupportElements.Controllers;
 using Fluent.Architecture.Test.SupportElements.Mock;
 using Fluent.Architecture.Test.SupportElements.Mock.ControllerMock;
+using Fluent.Architecture.Validation;
 using Xunit;
 
 namespace Fluent.Architecture.Test.TestTools
@@ -39,29 +40,32 @@ namespace Fluent.Architecture.Test.TestTools
             return Execute<TR>(controller, methodName, new object[] { parameter });
         }
 
-        public static TR Execute<TR>(BaseController controller, string methodName, object[] parameters)
+        public static TR Execute<TR>(BaseController controller, string methodName, object[] parameters, Func<BaseController, TR> action = null)
         {
             var controllerType = controller.GetType();
-            MethodInfo method;
+            MethodInfo method = null;
 
-            if (parameters == null || (parameters.Length == 1 && parameters.First() == null))
+            if (action == null)
             {
-                method = controllerType.GetMethod(methodName);
-            }
-            else
-            {
-                var parameterTypes = (from parameter in parameters select parameter == null ? typeof(object) : parameter.GetType()).ToList();
-                method = controllerType.GetMethod(methodName, parameterTypes.ToArray());
-            }
+                if (parameters == null || (parameters.Length == 1 && parameters.First() == null))
+                {
+                    method = controllerType.GetMethod(methodName);
+                }
+                else
+                {
+                    var parameterTypes = (from parameter in parameters
+                        select parameter == null ? typeof(object) : parameter.GetType()).ToList();
+                    method = controllerType.GetMethod(methodName, parameterTypes.ToArray());
+                }
 
-            if (method == null)
-            {
-                throw new System.Exception($"The {methodName} method was not found in {controllerType}.");
+                if (method == null)
+                {
+                    throw new System.Exception($"The {methodName} method was not found in {controllerType}.");
+                }
             }
 
             controller.SetLocalHttpContext(new HttpContextBaseMock());
 
-            //var fluentOnActionExecuting = controllerType.GetMethod(nameof(FluentServiceController<TransactionalService>.FluentOnActionExecuting));
             var actionExecuting = controllerType.GetMethod("OnActionExecuting", BindingFlags.NonPublic | BindingFlags.Instance);
             if (actionExecuting != null)
             {
@@ -71,8 +75,16 @@ namespace Fluent.Architecture.Test.TestTools
 
             try
             {
-                var returnObj = method.Invoke(controller, parameters) as JsonResult;
-                // var fluentOnActionExecuted = controllerType.GetMethod(nameof(FluentServiceController<TransactionalService>.FluentOnActionExecuted));
+                JsonResult returnObj;
+                if (action == null)
+                {
+                    returnObj = method.Invoke(controller, parameters) as JsonResult;
+                }
+                else
+                {
+                    returnObj = new JsonResult{Data = action(controller) };
+                }
+
                 var actionExecuted = controllerType.GetMethod("OnActionExecuted", BindingFlags.NonPublic | BindingFlags.Instance);
                 if (actionExecuted != null)
                 {

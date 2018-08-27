@@ -93,11 +93,6 @@ namespace Fluent.Architecture.Controllers
             if (string.IsNullOrWhiteSpace(methodName))
             {
                 methodName = GlobalUtil.GetMethodForPropagation()?.Name;
-
-                if (string.IsNullOrWhiteSpace(methodName))
-                {
-                    throw new IncorrectDevelopmentException($"A propagation request was unsuccessful.\nThe request does not indicate the method name and could not be obtained by reflection.\nMake sure that the method that calls the propagation is not decorated with {nameof(NotPropagateAttribute)}, as it should not be.");
-                }
             }
 
             return Service.PropagateService(methodName, parameters);

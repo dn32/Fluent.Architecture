@@ -101,11 +101,7 @@ namespace Fluent.Architecture.Util
         public static MethodBase GetMethodForPropagation()
         {
             var frames = new StackTrace().GetFrames();
-            if (frames == null)
-            {
-                return null;
-            }
-
+           
             var isNext = false;
 
             foreach (var frame in frames)

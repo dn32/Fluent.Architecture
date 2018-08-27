@@ -91,8 +91,7 @@ namespace Fluent.Architecture.Validation
         {
             ParameterMustBeInformed(entity);
             RequiredPropertyMustBeInformed(entity);
-            AllKeysMustBeInformed(entity);
-            //  AllFluentKeysMustBeInformed(entity, true);
+            AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
             EntityMustExistInDatabase(entity);
 
             RunTheContextValidation();
@@ -178,33 +177,12 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
                 }
             }
         }
-
+      
         private void AllKeysMustBeInformed(T entity)
         {
-            if (!NullParameterOk)
-            {
-                KeyValuesOk = false;
-                return;
-            }
-
             KeyValuesOk = true;
 
-            var keyValues = entity.GetKeyValues();
-            foreach (var key in keyValues)
-            {
-                if (key.Value.IsFluentNull())
-                {
-                    AddInconsistency(new PropertyRequiredFluentValidationException(key.Property.Name));
-                    KeyValuesOk = false;
-                }
-            }
-        }
-
-        private void AllFluentKeysMustBeInformed(T entity)
-        {
-            KeyValuesOk = true;
-
-            var properties = entity.GetType().GetFluentUniqueKeyProperties();
+            var properties = entity.GetType().GetKeyProperties();
             foreach (var property in properties)
             {
                 if (property.GetValue(entity).IsFluentNull())
@@ -214,7 +192,6 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
                 }
             }
         }
-
         private void AllKeysShouldBeInformedWhenThereAreMoreThanOne(T entity)
         {
             if (!NullParameterOk || !KeyValuesOk)
@@ -226,7 +203,7 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
             var properties = entityType.GetKeyProperties();
             if (properties.Count > 1)
             {
-                AllFluentKeysMustBeInformed(entity);
+                AllKeysMustBeInformed(entity);
             }
             else
             {

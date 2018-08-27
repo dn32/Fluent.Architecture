@@ -27,6 +27,52 @@ namespace Fluent.Architecture.Test.Test
         }
 
         [Theory]
+        [InlineData(nameof(UserController.Add))]
+        [InlineData(nameof(UserController.Update))]
+        public void NullKeyNullTestFail(string method)
+        {
+            var user = InternalTestUtil.GetNewUser();
+            user.PersonType = null;
+            var error = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, method, user);
+
+            Assert.NotNull(error);
+            Assert.Single(error.Inconsistencies);
+            Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(error.Inconsistencies.First());
+        }
+
+        [Fact]
+        public void EntityExistsInDatabaseAddFail()
+        {
+            var user = InternalTestUtil.GetNewUser();
+            user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Add), user);
+            Assert.NotNull(user);
+
+            var error = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, nameof(UserController.Add), user);
+
+            Assert.NotNull(error);
+            Assert.Single(error.Inconsistencies);
+            Assert.IsAssignableFrom<EntityExistsFluentValidationException>(error.Inconsistencies.First());
+        }
+
+        //[Fact]
+        //public void EntityExistsInDatabaseUpdateFail()
+        //{
+        //    var user1 = InternalTestUtil.GetNewUser();
+        //    user1 = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Add), user1);
+        //    Assert.NotNull(user1);
+
+        //    var user2 = InternalTestUtil.GetNewUser();
+        //    user2 = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Add), user2);
+        //    Assert.NotNull(user2);
+
+        //    var error = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, nameof(UserController.Update), user1);
+
+        //    Assert.NotNull(error);
+        //    Assert.Single(error.Inconsistencies);
+        //    Assert.IsAssignableFrom<EntityExistsFluentValidationException>(error.Inconsistencies.First());
+        //}
+
+        [Theory]
         [InlineData(nameof(UserController.Update), "")]
         [InlineData(nameof(UserController.Add), "")]
         [InlineData(nameof(UserController.Update), " ")]

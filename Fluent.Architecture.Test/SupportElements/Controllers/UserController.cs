@@ -19,6 +19,15 @@ namespace Fluent.Architecture.Test.SupportElements.Controllers
             Service.RemoveRange(spec);
         }
 
+        public void Test()
+        {
+            Propagate();
+        }
+        public void Test2()
+        {
+            Propagate();
+        }
+
         public JsonResult UserByEmail(string email)
         {
             var user = Service.SpecOne(new UserByEmail(this, email));
