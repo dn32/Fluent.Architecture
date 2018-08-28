@@ -12,10 +12,12 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|AnyCPU'">
     <DefineConstants>TRACE;NO_PROPAGATION</DefineConstants>
+     <StyleCopTreatErrors>true</StyleCopTreatErrors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net461|AnyCPU'">
     <DefineConstants>TRACE;PROPAGATION</DefineConstants>
+    <StyleCopTreatErrors>true</StyleCopTreatErrors>
   </PropertyGroup>
 
 
@@ -36,6 +38,13 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.1" />
     <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StyleCop.MSBuild" Version="5.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
