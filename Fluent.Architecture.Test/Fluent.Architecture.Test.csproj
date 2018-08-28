@@ -25,9 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Fluent.Architecture">
-      <HintPath>..\Fluent.Architecture\bin\Debug\net461\Fluent.Architecture.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\Fluent.Architecture\Fluent.Architecture.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Net.Http" />
