@@ -17,88 +17,89 @@ using Fluent.Architecture.Test.SupportElements.Services;
 using Fluent.Architecture.Test.SupportElements.Specifications;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
-using Xunit;
+using NUnit.Framework;
 
 using BaseServiceTest = Fluent.Architecture.Test.SupportElements.Services.BaseServiceTest;
 
 namespace Fluent.Architecture.Test.Test
 {
+    [TestFixture]
     public class UtilTest : FluentInternalTest
     {
         [Theory]
-        [InlineData(typeof(UserController), typeof(User))]
-        [InlineData(typeof(UserService), typeof(User))]
-        [InlineData(typeof(UserByEmail), typeof(User))]
-        [InlineData(typeof(UserValidation), typeof(User))]
-        [InlineData(typeof(UserRepository), typeof(User))]
+        [TestCase(typeof(UserController), typeof(User))]
+        [TestCase(typeof(UserService), typeof(User))]
+        [TestCase(typeof(UserByEmail), typeof(User))]
+        [TestCase(typeof(UserValidation), typeof(User))]
+        [TestCase(typeof(UserRepository), typeof(User))]
 
-        [InlineData(typeof(FluentController<User>), typeof(User))]
-        [InlineData(typeof(FluentService<User>), typeof(User))]
-        [InlineData(typeof(FluentValidation<User>), typeof(User))]
-        [InlineData(typeof(FluentRepository<User>), typeof(User))]
-        [InlineData(typeof(FluentSpecification<User>), typeof(User))]
+        [TestCase(typeof(FluentController<User>), typeof(User))]
+        [TestCase(typeof(FluentService<User>), typeof(User))]
+        [TestCase(typeof(FluentValidation<User>), typeof(User))]
+        [TestCase(typeof(FluentRepository<User>), typeof(User))]
+        [TestCase(typeof(FluentSpecification<User>), typeof(User))]
 
-        [InlineData(null, null)]
-        [InlineData(typeof(object), null)]
+        [TestCase(null, null)]
+        [TestCase(typeof(object), null)]
         public void GetFluentEntityTypeTest(Type currentType, Type fluentType)
         {
             var fluentTypeFound = currentType.GetFluentEntityType();
-            Assert.Equal(fluentType, fluentTypeFound);
+            Assert.AreEqual(fluentType, fluentTypeFound);
         }
 
-        [Fact]
+        [Test]
         public void GetMethodNameByCallerTypeTest()
         {
             var entity = new TestEntity { Id = 3, Data = new List<int> { 1, 2 } }.GetAllDataOfObject();
 
             const string expectedJson = "[{\"Name\":\"<Id>\",\"Value\":3},{\"Name\":\"m_value\",\"Value\":1},{\"Name\":\"m_value\",\"Value\":2},{\"Name\":\"_internalString\",\"Value\":\"my value\"},{\"Name\":\"<Id>\",\"Value\":0}]";
 
-            Assert.Equal(expectedJson, entity);
+            Assert.AreEqual(expectedJson, entity);
         }
 
-        [Fact]
+        [Test]
         public void GetMethodNameByCallerTypeIQueryableTest()
         {
             var entity = new List<TestEntity>().AsQueryable().GetAllDataOfObject();
             const string expectedJson = "[]";
-            Assert.Equal(expectedJson, entity);
+            Assert.AreEqual(expectedJson, entity);
         }
 
-        [Fact]
+        [Test]
         public void GetMethodNameByCallerTypeNullTest()
         {
             var entity = ObjectExtension.GetAllDataOfObject(null);
             const string expectedJson = "[]";
-            Assert.Equal(expectedJson, entity);
+            Assert.AreEqual(expectedJson, entity);
         }
 
-        [Fact]
+        [Test]
         public void GetMethodNameByCallerTypeListTest()
         {
             var entity = new List<TestEntity> { new TestEntity() }.GetAllDataOfObject();
             const string expectedJson = "[{\"Name\":\"<Id>\",\"Value\":0},{\"Name\":\"_internalString\",\"Value\":\"my value\"},{\"Name\":\"<Id>\",\"Value\":0}]";
-            Assert.Equal(expectedJson, entity);
+            Assert.AreEqual(expectedJson, entity);
         }
 
-        [Fact]
+        [Test]
         public void InitializeServiceFail()
         {
             var service = new BaseServiceTest.LocalTestService();
             var ex = Assert.Throws<IncorrectDevelopmentException>(() => service.SetUserSessionForTest(new UserSessionRequest()));
-            Assert.Equal("You can not initialize the FluentService", ex.Message);
+            Assert.AreEqual("You can not initialize the FluentService", ex.Message);
         }
 
         [Theory]
-        [InlineData("")]
-        [InlineData(" ")]
-        [InlineData(ePersonType.None)]
-        [InlineData(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        [TestCase(ePersonType.None)]
+        [TestCase(null)]
         public void IsFluentNullTest(object _object)
         {
             Assert.True(_object.IsFluentNull());
         }
 
-        [Fact]
+        [Test]
         public void IsFluentNull2Test()
         {
             Assert.True(Guid.Empty.IsFluentNull());
@@ -109,25 +110,25 @@ namespace Fluent.Architecture.Test.Test
         }
 
         [Theory]
-        [InlineData("A", "'A'")]
-        [InlineData(" ", "' '")]
-        [InlineData(ePersonType.None, 0)]
-        [InlineData(null, null)]
+        [TestCase("A", "'A'")]
+        [TestCase(" ", "' '")]
+        [TestCase(ePersonType.None, 0)]
+        [TestCase(null, null)]
         public void GetDbValueTest(object _object, object dbValue)
         {
-            Assert.Equal(dbValue, _object.GetDbValue());
+            Assert.AreEqual(dbValue, _object.GetDbValue());
         }
 
-        [Fact]
+        [Test]
         public void GetDbValue2Test()
         {
             Func<int> func = () => 1;
-            Assert.Equal(func.GetDbValue(), func);
+            Assert.AreEqual(func.GetDbValue(), func);
             var guid = Guid.NewGuid();
-            Assert.Equal(guid.GetDbValue(), $"'{guid}'");
+            Assert.AreEqual(guid.GetDbValue(), $"'{guid}'");
         }
 
-        [Fact]
+        [Test]
         public void FluentAssertTest()
         {
             var user1 = new User { Id = 1 };
@@ -137,24 +138,24 @@ namespace Fluent.Architecture.Test.Test
             FluentAssert.Equal(user1, user2);
 
             var ex = Assert.Throws<System.Exception>(() => FluentAssert.Equal(user1, user3));
-            Assert.Equal("The objects are different", ex.Message);
+            Assert.AreEqual("The objects are different", ex.Message);
         }
 
-        [Fact]
+        [Test]
         public void FluentTestTest()
         {
             var date = "17/11/85".GetDate();
-            Assert.Equal(17, date.Day);
-            Assert.Equal(11, date.Month);
-            Assert.Equal(1985, date.Year);
+            Assert.AreEqual(17, date.Day);
+            Assert.AreEqual(11, date.Month);
+            Assert.AreEqual(1985, date.Year);
         }
 
-        [Fact]
+        [Test]
         public void GetMethodForPropagationFail()
         {
             var ex = Assert.Throws<IncorrectDevelopmentException>(() => GlobalUtil.GetMethodForPropagation());
             Assert.NotNull(ex);
-            Assert.Equal("The propagation call could not be traced. Only BaseController child controllers can make propagation call.", ex.Message);
+            Assert.AreEqual("The propagation call could not be traced. Only BaseController child controllers can make propagation call.", ex.Message);
         }
     }
 }

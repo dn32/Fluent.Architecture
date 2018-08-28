@@ -12,17 +12,18 @@ using Fluent.Architecture.Test.SupportElements.Controllers;
 using Fluent.Architecture.Test.SupportElements.Model;
 using Fluent.Architecture.Test.SupportElements.Specifications;
 using Fluent.Architecture.Test.TestTools;
-using Xunit;
+using NUnit.Framework;
 
 namespace Fluent.Architecture.Test.Test
 {
+    [TestFixture]
     public class FluentServiceTest : FluentInternalTest
     {
         [Theory]
-        [InlineData(nameof(UserController.Count), 1, true)]
-        [InlineData(nameof(UserController.Count), 1, false)]
-        [InlineData(nameof(UserController.Count), 0, true)]
-        [InlineData(nameof(UserController.Count), 0, false)]
+        [TestCase(nameof(UserController.Count), 1, true)]
+        [TestCase(nameof(UserController.Count), 1, false)]
+        [TestCase(nameof(UserController.Count), 0, true)]
+        [TestCase(nameof(UserController.Count), 0, false)]
         public void CountSuccessTest(string method, int expectedCount, bool userSelectSpec)
         {
             var user = InternalTestUtil.GetNewUser();
@@ -33,15 +34,15 @@ namespace Fluent.Architecture.Test.Test
             TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Add), user);
 
             var count = TestUtil.Execute<int>(UserControllerInstance, method, spec);
-            Assert.Equal(expectedCount, count);
+            Assert.AreEqual(expectedCount, count);
 
             //Remove
             TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Remove), user);
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
+        [TestCase(true)]
+        [TestCase(false)]
         public void FindOneTest(bool success)
         {
             var user = InternalTestUtil.GetNewUser();
@@ -55,7 +56,7 @@ namespace Fluent.Architecture.Test.Test
             if (success)
             {
                 Assert.NotNull(userFound);
-                Assert.Equal(user.GetAllDataOfObject(), userFound.GetAllDataOfObject());
+                Assert.AreEqual(user.GetAllDataOfObject(), userFound.GetAllDataOfObject());
             }
             else
             {
@@ -66,7 +67,7 @@ namespace Fluent.Architecture.Test.Test
             TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Remove), user);
         }
 
-        [Fact]
+        [Test]
         public void FindSelectSpecTest()
         {
             var user1 = InternalTestUtil.GetNewUser();
@@ -84,15 +85,15 @@ namespace Fluent.Architecture.Test.Test
             var userIds = TestUtil.Execute<List<int>>(UserControllerInstance, nameof(UserController.Spec), spec);
 
             Assert.NotNull(userIds);
-            Assert.NotEmpty(userIds);
-            Assert.Equal(2, userIds.Count);
+            Assert.IsNotEmpty(userIds);
+            Assert.AreEqual(2, userIds.Count);
 
             //Remove
             TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Remove), user1);
             TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Remove), user2);
         }
 
-        [Fact]
+        [Test]
         public void RemoveRangeByEntitiesTest()
         {
             var users = new User[] { InternalTestUtil.GetNewUser(), InternalTestUtil.GetNewUser() };
@@ -112,7 +113,7 @@ namespace Fluent.Architecture.Test.Test
         }
 
 
-        [Fact]
+        [Test]
         public void SessionRequestIdTest()
         {
             Guid PropagateMethodTestB(BaseController controller)
@@ -121,10 +122,10 @@ namespace Fluent.Architecture.Test.Test
             }
 
             var sessionId = TestUtil.Execute(UserControllerInstance, null, null, PropagateMethodTestB);
-            Assert.NotEqual(Guid.Empty, sessionId);
+            Assert.AreNotEqual(Guid.Empty, sessionId);
         }
 
-        [Fact]
+        [Test]
         public void UserTest()
         {
             object PropagateMethodTestB(BaseController controller)
@@ -136,7 +137,7 @@ namespace Fluent.Architecture.Test.Test
             Assert.NotNull(serviceUser);
         }
 
-        [Fact]
+        [Test]
         public void HttpContextTest()
         {
             HttpContextBase PropagateMethodTestB(BaseController controller)
@@ -148,7 +149,7 @@ namespace Fluent.Architecture.Test.Test
             Assert.NotNull(httpContextBase);
         }
 
-        [Fact]
+        [Test]
         public void ServiceHttpContextTest()
         {
             object PropagateMethodTestB(BaseController controller)
@@ -160,7 +161,7 @@ namespace Fluent.Architecture.Test.Test
             Assert.NotNull(serviceUser);
         }
 
-        [Fact]
+        [Test]
         public void RemoveRangeBySpecTest()
         {
             var users = new User[] { InternalTestUtil.GetNewUser(), InternalTestUtil.GetNewUser() };
@@ -184,8 +185,8 @@ namespace Fluent.Architecture.Test.Test
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
+        [TestCase(true)]
+        [TestCase(false)]
         public void FindSelectSpecOneTest(bool success)
         {
             var user = InternalTestUtil.GetNewUser();
@@ -197,11 +198,11 @@ namespace Fluent.Architecture.Test.Test
 
             if (success)
             {
-                Assert.NotEqual(0, userId);
+                Assert.AreNotEqual(0, userId);
             }
             else
             {
-                Assert.Equal(0, userId);
+                Assert.AreEqual(0, userId);
             }
 
             //Remove
@@ -209,9 +210,9 @@ namespace Fluent.Architecture.Test.Test
         }
 
         [Theory]
-        [InlineData("62", 1)]
-        [InlineData("63", 2)]
-        [InlineData("64", 0)]
+        [TestCase("62", 1)]
+        [TestCase("63", 2)]
+        [TestCase("64", 0)]
         public void CountTest(string number, int count)
         {
             var user1 = InternalTestUtil.GetNewUser();
@@ -236,23 +237,23 @@ namespace Fluent.Architecture.Test.Test
 
             //Test Count
             var countFound = TestUtil.Execute<int>(UserControllerInstance, nameof(UserController.Count), spec);
-            Assert.Equal(count, countFound);
+            Assert.AreEqual(count, countFound);
 
             //Test SpecSelect
             var usersReturn = TestUtil.Execute<List<User>>(UserControllerInstance, nameof(UserController.Spec), spec);
             Assert.NotNull(usersReturn);
-            Assert.Equal(count, usersReturn.Count);
+            Assert.AreEqual(count, usersReturn.Count);
 
             //Remove
             TestUtil.Execute<User[]>(UserControllerInstance, nameof(UserController.RemoveRange), usersParam);
         }
 
         [Theory]
-        [InlineData(1, 10)]
-        [InlineData(0, 10)]
-        [InlineData(5, 7)]
-        [InlineData(11, 10)]
-        [InlineData(15, 10)]
+        [TestCase(1, 10)]
+        [TestCase(0, 10)]
+        [TestCase(5, 7)]
+        [TestCase(11, 10)]
+        [TestCase(15, 10)]
         public void PaginationTest(int currentPage, int itemsPerPage)
         {
             var users = new List<User>();
@@ -295,15 +296,15 @@ namespace Fluent.Architecture.Test.Test
 
             //Test Count
             var countFound = TestUtil.Execute<int>(UserControllerInstance, nameof(UserController.Count), spec);
-            Assert.Equal(users.Count, countFound);
+            Assert.AreEqual(users.Count, countFound);
 
             var pagination = new FluentPagination(currentPage, itemsPerPage);
 
             //SpecSelect
             var fount = TestUtil.Execute<List<User>>(UserControllerInstance, nameof(UserController.Spec), new object[] { spec, pagination });
             Assert.NotNull(fount);
-            Assert.Equal(expectedCount, fount.Count);
-            Assert.Equal(users.Count, pagination.TotalQuantityOfItems);
+            Assert.AreEqual(expectedCount, fount.Count);
+            Assert.AreEqual(users.Count, pagination.TotalQuantityOfItems);
 
             if (expectedCount > 0)
             {
@@ -311,8 +312,8 @@ namespace Fluent.Architecture.Test.Test
                 var firstItem = users[indexFirst];
                 var lastItem = users[indexFirst + expectedCount - 1];
 
-                Assert.Equal(firstItem.Password, fount.First().Password);
-                Assert.Equal(lastItem.Password, fount.Last().Password);
+                Assert.AreEqual(firstItem.Password, fount.First().Password);
+                Assert.AreEqual(lastItem.Password, fount.Last().Password);
             }
 
             //Remove

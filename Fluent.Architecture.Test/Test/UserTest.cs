@@ -9,13 +9,14 @@ using Fluent.Architecture.Test.SupportElements.Services;
 using Fluent.Architecture.Test.SupportElements.Specifications;
 using Fluent.Architecture.Test.TestTools;
 using Fluent.Architecture.Util;
-using Xunit;
+using NUnit.Framework;
 
 namespace Fluent.Architecture.Test.Test
 {
+    [TestFixture]
     public class UserTest : FluentInternalTest
     {
-        [Fact]
+        [Test]
         public void GetUserAndStudentByEmailTest()
         {
             var email = $"test{TestUtil.NextRandom()}@mail.com";
@@ -37,7 +38,7 @@ namespace Fluent.Architecture.Test.Test
             TestUtil.Execute<Student>(StudentControllerInstance, nameof(StudentController.Remove), student);
         }
 
-        [Fact]
+        [Test]
         public void GetUserAndStudentByEmailJoinTest()
         {
             var email = $"test{TestUtil.NextRandom()}@mail.com";
@@ -61,8 +62,8 @@ namespace Fluent.Architecture.Test.Test
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
+        [TestCase(true)]
+        [TestCase(false)]
         public void PropagationInCustomRepositorySuccessTest(bool found)
         {
             var user = InternalTestUtil.GetNewUser();
@@ -73,7 +74,7 @@ namespace Fluent.Architecture.Test.Test
             if (found)
             {
                 Assert.NotNull(foundUser);
-                Assert.Equal(user.GetAllDataOfObject(), foundUser.GetAllDataOfObject());
+                Assert.AreEqual(user.GetAllDataOfObject(), foundUser.GetAllDataOfObject());
             }
             else
             {

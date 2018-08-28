@@ -14,15 +14,16 @@ using Fluent.Architecture.Test.SupportElements.Model;
 using Fluent.Architecture.Test.SupportElements.Specifications;
 using Fluent.Architecture.Test.TestTools;
 using Fluent.Architecture.Validation;
-using Xunit;
+using NUnit.Framework;
 
 namespace Fluent.Architecture.Test.Test
 {
+    [TestFixture]
     public class PropagationTest : FluentInternalTest
     {
         [Theory]
-        [InlineData(nameof(StudentController.Add))]
-        [InlineData(nameof(StudentController.Add2))]
+        [TestCase(nameof(StudentController.Add))]
+        [TestCase(nameof(StudentController.Add2))]
         public void AddPropagationTest(string methodName)
         {
             var student = InternalTestUtil.GetNewStudent();
@@ -32,22 +33,22 @@ namespace Fluent.Architecture.Test.Test
             var foundStudent = TestUtil.Execute<Student>(StudentControllerInstance, nameof(StudentController.Find), student);
 
             Assert.NotNull(foundStudent);
-            Assert.Equal(student.GetAllDataOfObject(), foundStudent.GetAllDataOfObject());
+            Assert.AreEqual(student.GetAllDataOfObject(), foundStudent.GetAllDataOfObject());
 
             //Remove
             TestUtil.Execute<Student>(StudentControllerInstance, nameof(UserController.Remove), student);
         }
 
-        [Fact]
+        [Test]
         public void AddPropagationFullParameterIsNullFail()
         {
             var error = TestUtil.Execute<ContextFluentValidation>(StudentControllerInstance, nameof(StudentController.Spec2), null);
             Assert.NotNull(error);
-            Assert.Single(error.Inconsistencies);
+            Assert.AreEqual(1, error.Inconsistencies.Count);
             Assert.IsAssignableFrom<NullParameterFluentValidationException>(error.Inconsistencies.First());
         }
 
-        [Fact]
+        [Test]
         public void AddPropagationOneParameter()
         {
             var student = InternalTestUtil.GetNewStudent();
@@ -58,21 +59,21 @@ namespace Fluent.Architecture.Test.Test
             var spec = new StudentByNameSpec(StudentControllerInstance, student.Name);
             var students = TestUtil.Execute<List<Student>>(StudentControllerInstance, nameof(StudentController.Spec), spec);
             Assert.NotNull(students);
-            Assert.NotEmpty(students);
+            Assert.IsNotEmpty(students);
 
             //Remove
             TestUtil.Execute<Student>(StudentControllerInstance, nameof(UserController.Remove), student);
         }
 
-        [Fact]
+        [Test]
         public void PropagationMethodNotFoundFailTest()
         {
             var ex = Assert.Throws<IncorrectDevelopmentException>(() => TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.NotFound), null));
             Assert.NotNull(ex);
-            Assert.Equal("The NotFound method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User", ex.Message);
+            Assert.AreEqual("The NotFound method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User", ex.Message);
         }
 
-        [Fact]
+        [Test]
         public void AmbiguousMethodOnRepositoryMatchException()
         {
             bool Spec(BaseController controller)
@@ -83,10 +84,10 @@ namespace Fluent.Architecture.Test.Test
 
             var ex = Assert.Throws<IncorrectDevelopmentException>(() => TestUtil.Execute(UserControllerInstance, null, null, Spec));
             Assert.NotNull(ex);
-            Assert.Equal("There are two or more methods of propagation in Fluent.Architecture.Test.SupportElements.UserRepository with the same name Test. This causes an ambiguity, please change the name of one of them.", ex.Message);
+            Assert.AreEqual("There are two or more methods of propagation in Fluent.Architecture.Test.SupportElements.UserRepository with the same name Test. This causes an ambiguity, please change the name of one of them.", ex.Message);
         }
 
-        [Fact]
+        [Test]
         public void AmbiguousMethodOnValidationMatchException()
         {
             bool Spec(BaseController controller)
@@ -97,22 +98,22 @@ namespace Fluent.Architecture.Test.Test
 
             var ex = Assert.Throws<IncorrectDevelopmentException>(() => TestUtil.Execute(UserControllerInstance, null, null, Spec));
             Assert.NotNull(ex);
-            Assert.Equal("There are two or more methods of propagation in  with the same name Test2. This causes an ambiguity, please change the name of one of them.", ex.Message);
+            Assert.AreEqual("There are two or more methods of propagation in  with the same name Test2. This causes an ambiguity, please change the name of one of them.", ex.Message);
         }
 
-        //[Fact]
+        //[Test]
         //public void PropagationMethodNotFound2FailTest()
         //{
         //    var ex = Assert.Throws<IncorrectDevelopmentException>(() => TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.NotFound2), null));
         //    Assert.NotNull(ex);
-        //    Assert.Equal($"The InvokeMethod method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User", ex.Message);
+        //    Assert.AreEqual($"The InvokeMethod method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User", ex.Message);
         //}
 
         [Theory]
-        [InlineData(true, true)]
-        [InlineData(true, false)]
-        [InlineData(false, true)]
-        [InlineData(false, false)]
+        [TestCase(true, true)]
+        [TestCase(true, false)]
+        [TestCase(false, true)]
+        [TestCase(false, false)]
         public void ExistsSuccessPropagationTest(bool expectedExists, bool userSelectSpec)
         {
             var user = InternalTestUtil.GetNewUser();
@@ -123,13 +124,13 @@ namespace Fluent.Architecture.Test.Test
             TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Add), user);
 
             var exists = TestUtil.Execute<bool>(UserControllerInstance, nameof(UserController.Exists), spec);
-            Assert.Equal(expectedExists, exists);
+            Assert.AreEqual(expectedExists, exists);
 
             //Remove
             TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Remove), user);
         }
 
-        [Fact]
+        [Test]
         public void PropagateMethodTestBNullParameter()
         {
             ContextFluentValidation PropagateMethodTestB(BaseController controller)
@@ -142,24 +143,24 @@ namespace Fluent.Architecture.Test.Test
             var error = TestUtil.Execute(UserControllerInstance, null, null, PropagateMethodTestB);
 
             Assert.NotNull(error);
-            Assert.Single(error.Inconsistencies);
+            Assert.AreEqual(1, error.Inconsistencies.Count);
             Assert.NotNull(error.Message);
             Assert.IsAssignableFrom<FluentParameterValidationException>(error.Inconsistencies.First());
             var ex = error.Inconsistencies.First() as FluentParameterValidationException;
 
             Assert.NotNull(ex);
-            Assert.Equal("parameters", ex.Parameter);
+            Assert.AreEqual("parameters", ex.Parameter);
         }
 
-        [Fact]
+        [Test]
         public void PropagateMethodTestA()
         {
             var user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.PropagateMethodTestA), null);
             Assert.NotNull(user);
-            Assert.Equal(1, user.Id);
+            Assert.AreEqual(1, user.Id);
         }
 
-        [Fact]
+        [Test]
         public void PropagateParameterCountFail()
         {
             IncorrectDevelopmentException ParameterCountFail(BaseController controller)
@@ -170,96 +171,96 @@ namespace Fluent.Architecture.Test.Test
             var error = TestUtil.Execute(UserControllerInstance, null, null, ParameterCountFail);
 
             Assert.NotNull(error);
-            Assert.Equal("The amount of parameters passed is greater than the amount expected by the method.", error.Message);
+            Assert.AreEqual("The amount of parameters passed is greater than the amount expected by the method.", error.Message);
         }
 
-        [Fact]
+        [Test]
         public void PropagateMethodTestB()
         {
             var id = TestUtil.NextRandom();
             var name = "My name B";
             var user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.PropagateMethodTestB), new object[] { id, name });
             Assert.NotNull(user);
-            Assert.Equal(id, user.Id);
-            Assert.Equal(name, user.Name);
+            Assert.AreEqual(id, user.Id);
+            Assert.AreEqual(name, user.Name);
         }
 
-        [Fact]
+        [Test]
         public void PropagateMethodTestC()
         {
             var id = TestUtil.NextRandom();
             var name = "My name C";
             var student = TestUtil.Execute<Student>(UserControllerInstance, nameof(UserController.PropagateMethodTestC), new object[] { id, name });
             Assert.NotNull(student);
-            Assert.Equal(id, student.Id);
-            Assert.Equal(name, student.Name);
+            Assert.AreEqual(id, student.Id);
+            Assert.AreEqual(name, student.Name);
         }
 
-        [Fact]
+        [Test]
         public void PropagateMethodTestD()
         {
             var id = TestUtil.NextRandom();
             var user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.PropagateMethodTestD), id);
             Assert.NotNull(user);
-            Assert.Equal(id, user.Id);
+            Assert.AreEqual(id, user.Id);
         }
 
-        [Fact]
+        [Test]
         public void PropagateMethodTestE()
         {
             var id = TestUtil.NextRandom();
             var user = TestUtil.Execute<Student>(UserControllerInstance, nameof(UserController.PropagateMethodTestE), id);
             Assert.NotNull(user);
-            Assert.Equal(id, user.Id);
+            Assert.AreEqual(id, user.Id);
         }
 
-        [Fact]
+        [Test]
         public void PropagateTestF()
         {
             var user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.PropagateTestF), null);
             Assert.NotNull(user);
-            Assert.Equal(1, user.Id);
+            Assert.AreEqual(1, user.Id);
         }
 
-        [Fact]
+        [Test]
         public void PropagateTestG()
         {
             var id = TestUtil.NextRandom();
             var name = "My name G";
             var user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.PropagateTestG), new object[] { id, name });
             Assert.NotNull(user);
-            Assert.Equal(id, user.Id);
-            Assert.Equal(name, user.Name);
+            Assert.AreEqual(id, user.Id);
+            Assert.AreEqual(name, user.Name);
         }
 
-        [Fact]
+        [Test]
         public void PropagateTestH()
         {
             var id = TestUtil.NextRandom();
             var name = "My name H";
             var student = TestUtil.Execute<Student>(UserControllerInstance, nameof(UserController.PropagateTestH), new object[] { id, name });
             Assert.NotNull(student);
-            Assert.Equal(id, student.Id);
-            Assert.Equal(name, student.Name);
+            Assert.AreEqual(id, student.Id);
+            Assert.AreEqual(name, student.Name);
         }
 
-        [Fact]
+        [Test]
         public void PropagateTestI()
         {
 
             var id = TestUtil.NextRandom();
             var student = TestUtil.Execute<Student>(UserControllerInstance, nameof(UserController.PropagateTestI), id);
             Assert.NotNull(student);
-            Assert.Equal(id, student.Id);
+            Assert.AreEqual(id, student.Id);
         }
 
-        [Fact]
+        [Test]
         public void PropagateTestJ()
         {
             var id = TestUtil.NextRandom();
             var user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.PropagateTestJ), id);
             Assert.NotNull(user);
-            Assert.Equal(id, user.Id);
+            Assert.AreEqual(id, user.Id);
         }
     }
 }

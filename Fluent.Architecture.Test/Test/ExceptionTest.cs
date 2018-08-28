@@ -10,30 +10,31 @@ using Fluent.Architecture.Test.SupportElements;
 using Fluent.Architecture.Test.SupportElements.Controllers;
 using Fluent.Architecture.Test.SupportElements.Mock;
 using Fluent.Architecture.Validation;
-using Xunit;
+using NUnit.Framework;
 
 namespace Fluent.Architecture.Test.Test
 {
+    [TestFixture]
     public class ExceptionTest : FluentInternalTest
     {
-        [Fact]
+        [Test]
         public void IncorrectDevelopmentExceptionTest()
         {
             var message = "test message";
             var incorrect = new IncorrectDevelopmentException(message);
-            Assert.Equal(message, incorrect.Message);
+            Assert.AreEqual(message, incorrect.Message);
         }
 
         [Theory]
-        [InlineData(false, typeof(EntityExistsFluentValidationException))]
-        [InlineData(false, typeof(PropertyNotNullFluentValidationException))]
-        [InlineData(false, typeof(UniqueKeyFluentValidationException))]
-        [InlineData(false, typeof(EntityNotFoundFluentValidationException))]
-        [InlineData(false, typeof(FluentValidationException))]
-        [InlineData(false, typeof(NullParameterFluentValidationException))]
-        [InlineData(false, typeof(PropertyRequiredFluentValidationException))]
+        [TestCase(false, typeof(EntityExistsFluentValidationException))]
+        [TestCase(false, typeof(PropertyNotNullFluentValidationException))]
+        [TestCase(false, typeof(UniqueKeyFluentValidationException))]
+        [TestCase(false, typeof(EntityNotFoundFluentValidationException))]
+        [TestCase(false, typeof(FluentValidationException))]
+        [TestCase(false, typeof(NullParameterFluentValidationException))]
+        [TestCase(false, typeof(PropertyRequiredFluentValidationException))]
 
-        [InlineData(true, typeof(EntityExistsFluentValidationException))]
+        [TestCase(true, typeof(EntityExistsFluentValidationException))]
         // For test custom errors
         public void ExceptionFilterTest(bool customErrorEnabled, Type exceptionType)
         {
@@ -55,11 +56,11 @@ namespace Fluent.Architecture.Test.Test
             }
             else
             {
-                Assert.Equal(exception, ((JsonResult)exceptionContext.Result).Data);
+                Assert.AreEqual(exception, ((JsonResult)exceptionContext.Result).Data);
             }
         }
 
-        [Fact]
+        [Test]
         public void ExceptionFilter2Test()
         {
             var filter = new ExceptionHandlerAttribute();

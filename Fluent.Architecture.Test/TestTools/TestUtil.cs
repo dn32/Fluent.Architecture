@@ -1,18 +1,14 @@
 ﻿// ReSharper disable CommentTypo
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Exception.ValidationException;
-using Fluent.Architecture.Services;
-using Fluent.Architecture.Test.SupportElements.Controllers;
 using Fluent.Architecture.Test.SupportElements.Mock;
 using Fluent.Architecture.Test.SupportElements.Mock.ControllerMock;
-using Fluent.Architecture.Validation;
-using Xunit;
+using NUnit.Framework;
 
 namespace Fluent.Architecture.Test.TestTools
 {
@@ -97,7 +93,7 @@ namespace Fluent.Architecture.Test.TestTools
                     return default(TR);
                 }
 
-                Assert.IsAssignableFrom<TR>(returnObj.Data);
+                Assert.True(returnObj.Data is TR);
 
                 return returnObj.Data as dynamic;
             }
