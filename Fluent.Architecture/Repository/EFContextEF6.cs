@@ -46,15 +46,6 @@ namespace Fluent.Architecture.Repository
                 }
             }
 
-            if (Setup.CreateDatabaseIfNotExists)
-            {
-                Database.SetInitializer(new CreateDatabaseIfNotExists<EfContext>());
-            }
-            else
-            {
-                Database.SetInitializer<EfContext>(null);
-            }
-
             base.OnModelCreating(modelBuilder);
         }
     }

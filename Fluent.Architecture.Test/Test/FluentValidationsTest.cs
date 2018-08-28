@@ -3,6 +3,7 @@
 using System;
 using System.Linq;
 using Fluent.Architecture.Exception.ValidationException;
+using Fluent.Architecture.Test.SupportElements;
 using Fluent.Architecture.Test.SupportElements.Controllers;
 using Fluent.Architecture.Test.SupportElements.Mock;
 using Fluent.Architecture.Test.SupportElements.Model;
@@ -29,7 +30,7 @@ namespace Fluent.Architecture.Test.Test
         [Theory]
         [InlineData(nameof(UserController.Add))]
         [InlineData(nameof(UserController.Update))]
-        public void NullKeyNullTestFail(string method)
+        public void NullAllKeyNullTestFail(string method)
         {
             var user = InternalTestUtil.GetNewUser();
             user.PersonType = null;
@@ -38,6 +39,19 @@ namespace Fluent.Architecture.Test.Test
             Assert.NotNull(error);
             Assert.Single(error.Inconsistencies);
             Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(error.Inconsistencies.First());
+        }
+
+        [Fact]
+        public void NullOneKeyNullTestFail()
+        {
+            var student = InternalTestUtil.GetNewStudent();
+            student.Id = TestUtil.NextRandom();
+            var error = TestUtil.Execute<ContextFluentValidation>(StudentControllerInstance, nameof(UserController.Add), student);
+
+            Assert.NotNull(error);
+            Assert.Single(error.Inconsistencies);
+            Assert.IsAssignableFrom<FluentPropertyValidationException>(error.Inconsistencies.First());
+            Assert.Equal("The key must not be entered for this operation.", error.Inconsistencies.First().Message);
         }
 
         [Fact]

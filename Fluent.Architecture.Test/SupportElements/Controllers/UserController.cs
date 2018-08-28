@@ -1,4 +1,5 @@
 ﻿#if NET461
+using System;
 using System.Web.Mvc;
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Controllers;
@@ -23,6 +24,7 @@ namespace Fluent.Architecture.Test.SupportElements.Controllers
         {
             Propagate();
         }
+
         public void Test2()
         {
             Propagate();
@@ -45,11 +47,10 @@ namespace Fluent.Architecture.Test.SupportElements.Controllers
             PropagateMethod(nameof(NotFound));
         }
 
-        [NotPropagate]
-        public void NotFound2()
-        {
-            Propagate();
-        }
+        //public void NotFound2()
+        //{
+        //    Propagate();
+        //}
 
         public JsonResult SpecOne(FluentSpecification<User> spec)
         {
@@ -122,9 +123,6 @@ namespace Fluent.Architecture.Test.SupportElements.Controllers
             return Json(userStudent);
         }
         
-
-
-
         public JsonResult PropagateMethodTestA()
         {
             return Json(PropagateMethod(nameof(PropagateMethodTestA)));
@@ -132,12 +130,12 @@ namespace Fluent.Architecture.Test.SupportElements.Controllers
         
         public JsonResult PropagateMethodTestB(int id, string name)
         {
-            return Json(base.PropagateMethod(nameof(PropagateMethodTestB), new object[] { id, name }));
+            return Json(PropagateMethod(nameof(PropagateMethodTestB), new object[] { id, name }));
         }
         
         public JsonResult PropagateMethodTestC(int id, string name)
         {
-            return Json(base.PropagateMethod<Student>(nameof(PropagateMethodTestC), new object[]{ id, name }));
+            return Json(PropagateMethod<Student>(nameof(PropagateMethodTestC), new object[]{ id, name }));
         }
         
         public JsonResult PropagateMethodTestD(int parameter)
@@ -147,36 +145,40 @@ namespace Fluent.Architecture.Test.SupportElements.Controllers
         
         public JsonResult PropagateMethodTestE(int id)
         {
-            return Json(base.PropagateMethod<Student>(nameof(PropagateMethodTestE), id));
+            return Json(PropagateMethod<Student>(nameof(PropagateMethodTestE), id));
         }
 
         //===========================
         
         public JsonResult PropagateTestF()
         {
-            return Json(base.Propagate());
+            return Json(Propagate());
         }
         
         public JsonResult PropagateTestG(int id, string name)
         {
-            return Json(base.Propagate(new object[] { id, name }));
+            return Json(Propagate(new object[] { id, name }));
         }
         
         public JsonResult PropagateTestH(int id, string name)
         {
-            return Json(base.Propagate<Student>(new object[] { id, name }));
+            return Json(Propagate<Student>(new object[] { id, name }));
         }
         
         public JsonResult PropagateTestI(int id)
         {
-            return Json(base.Propagate<Student>(new object[] { id }));
+            return Json(Propagate<Student>(new object[] { id }));
         }
 
         public JsonResult PropagateTestJ(int id)
         {
-            return Json(base.Propagate(new object[] { id }));
+            return Json(Propagate(new object[] { id }));
         }
 
+        public void ParameterCountFail()
+        {
+            PropagateMethod("Spec", new object[] { 1,2,3 });
+        }
     }
 }
 

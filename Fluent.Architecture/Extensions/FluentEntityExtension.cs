@@ -49,12 +49,12 @@ namespace Fluent.Architecture.Extensions
 
         public static List<PropertyInfo> GetFluentUniqueKeyProperties(this Type entityType)
         {
-            return entityType.GetProperties().Where(x => x.GetCustomAttribute<FluentUnicKeyAttribute>(true) != null).ToList();
+            return entityType.GetProperties().Where(x => x.GetCustomAttribute<FluentUniqueKeyAttribute>(true) != null).ToList();
         }
 
         public static List<PropertyInfo> GetKeyAndFluentUniqueKeyProperties(this Type entityType)
         {
-            return entityType.GetProperties().Where(x => x.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || x.GetCustomAttribute<KeyAttribute>(true) != null || x.GetCustomAttribute<FluentUnicKeyAttribute>(true) != null).ToList();
+            return entityType.GetProperties().Where(x => x.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || x.GetCustomAttribute<KeyAttribute>(true) != null || x.GetCustomAttribute<FluentUniqueKeyAttribute>(true) != null).ToList();
         }
 
         public static List<PropertyInfo> GetPropertiesByAttribute<TA>(this Type entityType) where TA : Attribute

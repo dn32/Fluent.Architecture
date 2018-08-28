@@ -1,9 +1,7 @@
-﻿using System.Web.Mvc;
-using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Test.SupportElements.Controllers;
+﻿using Fluent.Architecture.Test.SupportElements.Controllers;
 using Fluent.Architecture.Test.SupportElements.Mock;
 
-namespace Fluent.Architecture.Test.Test
+namespace Fluent.Architecture.Test.SupportElements
 {
     public class FluentInternalTest
     {

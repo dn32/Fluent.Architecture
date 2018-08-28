@@ -2,11 +2,13 @@
 using Fluent.Architecture.Exception;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Factory;
+using Fluent.Architecture.Test.SupportElements;
 using Fluent.Architecture.Test.SupportElements.Controllers;
 using Fluent.Architecture.Test.SupportElements.Model;
 using Fluent.Architecture.Test.SupportElements.Services;
 using Fluent.Architecture.Test.SupportElements.Specifications;
 using Fluent.Architecture.Test.TestTools;
+using Fluent.Architecture.Util;
 using Xunit;
 
 namespace Fluent.Architecture.Test.Test
@@ -80,6 +82,5 @@ namespace Fluent.Architecture.Test.Test
 
             TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Remove), user);
         }
-
     }
 }

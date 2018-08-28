@@ -3,6 +3,7 @@ using System;
 
 namespace Fluent.Architecture.Attributes
 {
+    /// <inheritdoc />
     /// <summary>
     /// Indica que o método decorado com esse atributo oferece o padrão de propagação.
     /// </summary>

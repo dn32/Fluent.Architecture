@@ -9,7 +9,7 @@ namespace Fluent.Architecture.Test.SupportElements.Model
 
         public string Name { get; set; }
 
-        [FluentUnicKey]
+        [FluentUniqueKey]
         public string Document { get; set; }
 
         public string Email { get; set; }

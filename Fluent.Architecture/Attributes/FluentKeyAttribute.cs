@@ -8,7 +8,7 @@ namespace Fluent.Architecture.Attributes
     /// Indica que o método decorado representa uma chave de valor único no banco de dados.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class FluentUnicKeyAttribute : Attribute
+    public class FluentUniqueKeyAttribute : Attribute
     {
     }
 }

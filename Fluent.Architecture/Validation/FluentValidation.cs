@@ -177,7 +177,7 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
                 }
             }
         }
-      
+
         private void AllKeysMustBeInformed(T entity)
         {
             KeyValuesOk = true;
@@ -210,7 +210,8 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
                 var property = properties.First();
                 if (!property.GetValue(entity).IsFluentNull())
                 {
-                    throw new FluentPropertyValidationException(property.Name, "The key must not be entered for this operation.");
+                    AddInconsistency(new FluentPropertyValidationException(property.Name, "The key must not be entered for this operation."));
+                    KeyValuesOk = false;
                 }
             }
         }

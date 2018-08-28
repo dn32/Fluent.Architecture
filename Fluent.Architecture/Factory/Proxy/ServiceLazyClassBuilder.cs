@@ -41,10 +41,6 @@ namespace Fluent.Architecture.Factory.Proxy
         private static void OverwriteProperties(TypeBuilder typeBuilder, Guid sessionId)
         {
             var serviceProperties = typeBuilder.BaseType?.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).Where(x => x.PropertyType.IsSubclassOf(typeof(BaseService))).ToList();
-            if (serviceProperties == null)
-            {
-                return;
-            };
 
             foreach (var property in serviceProperties)
             {

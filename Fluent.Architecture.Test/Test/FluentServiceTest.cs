@@ -7,6 +7,7 @@ using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Specifications;
+using Fluent.Architecture.Test.SupportElements;
 using Fluent.Architecture.Test.SupportElements.Controllers;
 using Fluent.Architecture.Test.SupportElements.Model;
 using Fluent.Architecture.Test.SupportElements.Specifications;

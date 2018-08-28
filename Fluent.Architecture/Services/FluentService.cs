@@ -48,7 +48,6 @@ namespace Fluent.Architecture.Services
         #region PROPAGATION
 
         // Todo Documenta após a organização desses itens.
-        [NotPropagate]
         public virtual object PropagateService(string methodName, object[] parameters)
         {
             Validation.PropagateService(methodName, parameters);
@@ -58,7 +57,14 @@ namespace Fluent.Architecture.Services
             var serviceMethod = type.GetMethod(methodName, parameterTypes);
             if (serviceMethod != null)
             {
-                return serviceMethod.Invoke(this, parameters);
+                try
+                {
+                    return serviceMethod.Invoke(this, parameters);
+                }
+                catch (System.Exception ex)
+                {
+                    throw ex.InnerException;
+                }
             }
 
             var validationMethod = Validation.GetType().GetMethod(methodName, parameterTypes);

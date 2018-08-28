@@ -8,6 +8,7 @@ using Fluent.Architecture.Exception.ValidationException;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
+using Fluent.Architecture.Test.SupportElements;
 using Fluent.Architecture.Test.SupportElements.Controllers;
 using Fluent.Architecture.Test.SupportElements.Model;
 using Fluent.Architecture.Test.SupportElements.Specifications;
@@ -99,13 +100,13 @@ namespace Fluent.Architecture.Test.Test
             Assert.Equal("There are two or more methods of propagation in  with the same name Test2. This causes an ambiguity, please change the name of one of them.", ex.Message);
         }
 
-        [Fact]
-        public void PropagationMethodNotFound2FailTest()
-        {
-            var ex = Assert.Throws<IncorrectDevelopmentException>(() => TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.NotFound2), null));
-            Assert.NotNull(ex);
-            Assert.Equal($"The InvokeMethod method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User", ex.Message);
-        }
+        //[Fact]
+        //public void PropagationMethodNotFound2FailTest()
+        //{
+        //    var ex = Assert.Throws<IncorrectDevelopmentException>(() => TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.NotFound2), null));
+        //    Assert.NotNull(ex);
+        //    Assert.Equal($"The InvokeMethod method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User", ex.Message);
+        //}
 
         [Theory]
         [InlineData(true, true)]
@@ -156,6 +157,20 @@ namespace Fluent.Architecture.Test.Test
             var user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.PropagateMethodTestA), null);
             Assert.NotNull(user);
             Assert.Equal(1, user.Id);
+        }
+
+        [Fact]
+        public void PropagateParameterCountFail()
+        {
+            IncorrectDevelopmentException ParameterCountFail(BaseController controller)
+            {
+                return Assert.Throws<IncorrectDevelopmentException>(() => ((UserController)controller).ParameterCountFail());
+            }
+
+            var error = TestUtil.Execute(UserControllerInstance, null, null, ParameterCountFail);
+
+            Assert.NotNull(error);
+            Assert.Equal("The amount of parameters passed is greater than the amount expected by the method.", error.Message);
         }
 
         [Fact]

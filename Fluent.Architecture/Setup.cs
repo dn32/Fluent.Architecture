@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Attributes;
@@ -29,15 +30,27 @@ namespace Fluent.Architecture
         internal static Dictionary<Tuple<ePropagateTypes, string>, MethodInfo> Propagators { get; set; }
         public static bool Initialized { get; set; }
         internal static Dictionary<Guid, UserSessionRequest> UserSessionList { get; set; }
-        public static bool CreateDatabaseIfNotExists { get; set; }
 
         #endregion
 
         #region PUBLIC METHODS
 
-        public static void SetCustomTypes(Type transactionObjectsType)
+        //For mock
+        //public static void SetCustomTypes(Type transactionObjectsType)
+        //{
+        //    TransactionObjectsType = transactionObjectsType;
+        //}
+
+        public static void DbSetup(bool createDatabaseIfNotExists)
         {
-            TransactionObjectsType = transactionObjectsType;
+            if (createDatabaseIfNotExists)
+            {
+                Database.SetInitializer(new CreateDatabaseIfNotExists<EfContext>());
+            }
+            else
+            {
+                Database.SetInitializer<EfContext>(null);
+            }
         }
 
         public static void Initialize(string connectionString, bool createDatabaseIfNotExists = true)
@@ -49,10 +62,10 @@ namespace Fluent.Architecture
                     return;
                 }
 
-                CreateDatabaseIfNotExists = createDatabaseIfNotExists;
+                Initialized = true;
+
                 TransactionObjects.DataBaseConnectionString = connectionString;
 
-                Initialized = true;
 
                 Services = new Dictionary<string, Type>();
                 Repositories = new Dictionary<string, Type>();
@@ -112,6 +125,8 @@ namespace Fluent.Architecture
                 FindPropagators(Repositories, ePropagateTypes.Repository);
                 FindPropagators(Services, ePropagateTypes.Service);
                 FindPropagators(Validations, ePropagateTypes.Validation);
+
+                DbSetup(createDatabaseIfNotExists);
             }
         }
 
@@ -226,8 +241,7 @@ namespace Fluent.Architecture
         {
             if (Model.ContainsKey(service.Item2.Name))
             {
-                throw new IncorrectDevelopmentException(
-                    $"There are two entity classes with the same name {service.Item2.Name}. This is not allowed.");
+                throw new IncorrectDevelopmentException($"There are two entity classes with the same name {service.Item2.Name}. This is not allowed.");
             }
 
             Model.Add(service.Item2.Name, service.Item2);

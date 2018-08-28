@@ -148,6 +148,14 @@ namespace Fluent.Architecture.Test.Test
             Assert.Equal(11, date.Month);
             Assert.Equal(1985, date.Year);
         }
+
+        [Fact]
+        public void GetMethodForPropagationFail()
+        {
+            var ex = Assert.Throws<IncorrectDevelopmentException>(() => GlobalUtil.GetMethodForPropagation());
+            Assert.NotNull(ex);
+            Assert.Equal("The propagation call could not be traced. Only BaseController child controllers can make propagation call.", ex.Message);
+        }
     }
 }
 #endif

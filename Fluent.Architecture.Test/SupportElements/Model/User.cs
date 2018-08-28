@@ -18,10 +18,10 @@ namespace Fluent.Architecture.Test.SupportElements.Model
         [Required]
         public string Name { get; set; }
 
-        [FluentUnicKey]
+        [FluentUniqueKey]
         public string UserName { get; set; }
 
-        [FluentUnicKey]
+        [FluentUniqueKey]
         public string Email { get; set; }
 
         public string Tel { get; set; }

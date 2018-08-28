@@ -23,63 +23,54 @@ namespace Fluent.Architecture.Controllers
     {
         #region PROPAGATION
         
-        [PropagateInit, NotPropagate]
         protected T PropagateMethod(string methodName)
         {
             return PropagateInternal(methodName, new object[] { }) as T;
         }
 
-        [PropagateInit, NotPropagate]
         protected T PropagateMethod(string methodName, params object[] parameters)
         {
             return PropagateInternal(methodName, parameters) as T;
         }
 
-        [PropagateInit, NotPropagate]
         protected TX PropagateMethod<TX>(string methodName, object[] parameters)
         {
             return (TX)PropagateInternal(methodName, parameters);
         }
 
-        [PropagateInit, NotPropagate]
         protected T PropagateMethod(string methodName, object parameter)
         {
             return PropagateInternal(methodName, parameter == null ? new object[] { } : new object[] { parameter }) as T;
         }
 
-        [PropagateInit, NotPropagate]
         protected TX PropagateMethod<TX>(string methodName, object parameter)
         {
             return (TX)PropagateInternal(methodName, parameter == null ? new object[] { } : new[] { parameter });
         }
 
         //===========================
-
-        [PropagateInit, NotPropagate]
+       
         protected T Propagate()
         {
             return PropagateInternal(string.Empty, new object[] { }) as T;
         }
-
-        [PropagateInit, NotPropagate]
+       
         protected T Propagate(object[] parameters)
         {
             return PropagateInternal(string.Empty, parameters) as T;
         }
 
-        [PropagateInit, NotPropagate]
+       
         protected TX Propagate<TX>(object[] parameters)
         {
             return (TX)PropagateInternal(string.Empty, parameters);
         }
 
-        [PropagateInit, NotPropagate]
         protected TX Propagate<TX>(object parameter)
         {
             return (TX)PropagateInternal(string.Empty, new[] { parameter });
         }
 
-        [PropagateInit, NotPropagate]
         protected T Propagate(object parameter)
         {
             return (T)PropagateInternal(string.Empty, new object[] { parameter });
@@ -87,7 +78,6 @@ namespace Fluent.Architecture.Controllers
 
         //===================================
 
-        [NotPropagate]
         private object PropagateInternal(string methodName, object[] parameters)
         {
             if (string.IsNullOrWhiteSpace(methodName))

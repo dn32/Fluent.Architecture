@@ -6,13 +6,11 @@ using Fluent.Architecture.Exception;
 using Fluent.Architecture.Exception.ValidationException;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Filters;
+using Fluent.Architecture.Test.SupportElements;
 using Fluent.Architecture.Test.SupportElements.Controllers;
 using Fluent.Architecture.Test.SupportElements.Mock;
 using Fluent.Architecture.Validation;
 using Xunit;
-#if NET461
-
-#endif
 
 namespace Fluent.Architecture.Test.Test
 {
@@ -26,7 +24,6 @@ namespace Fluent.Architecture.Test.Test
             Assert.Equal(message, incorrect.Message);
         }
 
-#if NET461
         [Theory]
         [InlineData(false, typeof(EntityExistsFluentValidationException))]
         [InlineData(false, typeof(PropertyNotNullFluentValidationException))]
@@ -49,7 +46,7 @@ namespace Fluent.Architecture.Test.Test
             exception.AddInconsistency(Activator.CreateInstance(exceptionType, parameters) as FluentValidationException);
 
             var exceptionContext = MockUtil.GetMockExceptionContext<UserController>(exception, UserControllerInstance, customErrorEnabled);
-            
+
             filter.OnException(exceptionContext);
 
             if (customErrorEnabled)
@@ -62,8 +59,18 @@ namespace Fluent.Architecture.Test.Test
             }
         }
 
-#endif
+        [Fact]
+        public void ExceptionFilter2Test()
+        {
+            var filter = new ExceptionHandlerAttribute();
+            var exception = new System.Exception("Test Exception");
 
+            var exceptionContext = MockUtil.GetMockExceptionContext<UserController>(exception, UserControllerInstance, false);
+
+            filter.OnException(exceptionContext);
+            var data = ((JsonResult)exceptionContext.Result).Data;
+            FluentAssert.Equal("[{\"Name\":\"<Error>i__Field\",\"Value\":true},{\"Name\":\"<Message>i__Field\",\"Value\":\"Test Exception\"}]", data.GetAllDataOfObject());
+        }
     }
 }
 #endif

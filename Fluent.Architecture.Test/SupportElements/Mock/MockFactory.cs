@@ -15,29 +15,29 @@ namespace Fluent.Architecture.Test.SupportElements.Mock
     {
         protected string Key;
 
-        public MockFactory() { }
+        //public MockFactory() { }
 
-        /// <summary>
-        /// Cria um novo mMck.
-        /// </summary>
-        /// <typeparam name="TResult">
-        /// O tipo de retorno do Mock.
-        /// </typeparam>
-        /// <param name="expression">
-        /// O método que deseja simular.
-        /// </param>
-        /// <returns>
-        /// O <see cref="MockFactory{TX}"/> para definir o valor de return facilmente.
-        /// </returns>
-        public MockFactory<TX> Create<TResult>(Expression<Func<TX, TResult>> expression)
-        {
-            dynamic body = expression.Body;
-            var methodName = ((MethodInfo)body.Method).GetFriendlyName();
+        ///// <summary>
+        ///// Cria um novo mMck.
+        ///// </summary>
+        ///// <typeparam name="TResult">
+        ///// O tipo de retorno do Mock.
+        ///// </typeparam>
+        ///// <param name="expression">
+        ///// O método que deseja simular.
+        ///// </param>
+        ///// <returns>
+        ///// O <see cref="MockFactory{TX}"/> para definir o valor de return facilmente.
+        ///// </returns>
+        //public MockFactory<TX> Create<TResult>(Expression<Func<TX, TResult>> expression)
+        //{
+        //    dynamic body = expression.Body;
+        //    var methodName = ((MethodInfo)body.Method).GetFriendlyName();
 
-            var parameters = ((ReadOnlyCollection<Expression>)body.Arguments).Select(GetExpressionValue).ToArray();
-            Key = FluentMockUtil.CreateKeyForMock(typeof(TX).FullName, methodName, parameters);
-            return this ;
-        }
+        //    var parameters = ((ReadOnlyCollection<Expression>)body.Arguments).Select(GetExpressionValue).ToArray();
+        //    Key = FluentMockUtil.CreateKeyForMock(typeof(TX).FullName, methodName, parameters);
+        //    return this ;
+        //}
 
         /// <summary>
         /// Permite definir o valor desejado para o retorno do Mock.
