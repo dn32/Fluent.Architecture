@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Fluent.Architecture.Validation
 {
-    using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.InteropServices;
 
     using Fluent.Architecture.Exceptions.ValidationException;
 
@@ -15,7 +15,7 @@ namespace Fluent.Architecture.Validation
     /// </summary>
     public class ContextFluentValidationException : FluentValidationException
     {
-        public List<FluentValidationException> Inconsistencies { get; }
+        public ICollection<FluentValidationException> Inconsistencies { get; }
 
         /// <summary>
         /// Se a validação retornou sucesso.

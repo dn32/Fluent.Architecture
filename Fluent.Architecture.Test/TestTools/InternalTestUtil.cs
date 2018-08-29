@@ -1,11 +1,13 @@
 ﻿// ReSharper disable CommentTypo
 
-using Fluent.Architecture.Test.SupportElements;
 using Fluent.Architecture.Test.SupportElements.Mock;
 using Fluent.Architecture.Test.SupportElements.Model;
+using System.Runtime.InteropServices;
 
 namespace Fluent.Architecture.Test.TestTools
 {
+
+    [ComVisible(true)]
     public static class InternalTestUtil
     {
         public static User GetNewUser()

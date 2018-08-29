@@ -10,12 +10,13 @@ using Fluent.Architecture.Test.SupportElements.Model;
 using Fluent.Architecture.Test.TestTools;
 using Fluent.Architecture.Validation;
 using NUnit.Framework;
+using System.Runtime.InteropServices;
+using Fluent.Architecture.Exceptions.ValidationException;
 
 namespace Fluent.Architecture.Test.Test
 {
-    using Fluent.Architecture.Exceptions.ValidationException;
-
     [TestFixture]
+    [ComVisible(true)]
     public class FluentValidationsTest : FluentInternalTest
     {
         [Theory]

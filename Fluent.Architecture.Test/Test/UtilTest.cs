@@ -17,14 +17,16 @@ using Fluent.Architecture.Test.SupportElements.Specifications;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
 using NUnit.Framework;
+using System.Runtime.InteropServices;
+using Fluent.Architecture.Exceptions;
 
 using BaseServiceTest = Fluent.Architecture.Test.SupportElements.Services.BaseServiceTest;
 
 namespace Fluent.Architecture.Test.Test
 {
-    using Fluent.Architecture.Exceptions;
 
     [TestFixture]
+    [ComVisible(true)]
     public class UtilTest : FluentInternalTest
     {
         [Theory]

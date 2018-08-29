@@ -13,13 +13,15 @@ using Fluent.Architecture.Test.SupportElements.Specifications;
 using Fluent.Architecture.Test.TestTools;
 using Fluent.Architecture.Validation;
 using NUnit.Framework;
+using System.Runtime.InteropServices;
+using Fluent.Architecture.Exceptions;
+using Fluent.Architecture.Exceptions.ValidationException;
 
 namespace Fluent.Architecture.Test.Test
 {
-    using Fluent.Architecture.Exceptions;
-    using Fluent.Architecture.Exceptions.ValidationException;
 
     [TestFixture]
+    [ComVisible(true)]
     public class PropagationTest : FluentInternalTest
     {
         [Theory]

@@ -2,10 +2,12 @@
 using Fluent.Architecture.Test.SupportElements;
 using Fluent.Architecture.Test.SupportElements.Mock;
 using NUnit.Framework;
+using System.Runtime.InteropServices;
 
 namespace Fluent.Architecture.Test.Test
 {
     [TestFixture]
+    [ComVisible(true)]
     public class ControllerTest : FluentInternalTest
     {
         [Test]

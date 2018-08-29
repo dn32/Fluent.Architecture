@@ -1,12 +1,11 @@
 ﻿#if NET461
-using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using Fluent.Architecture.Test.TestTools;
+using System.Runtime.InteropServices;
 
 namespace Fluent.Architecture.Test
 {
+
+    [ComVisible(true)]
     public class Setup
     {
         public static void Initialize()

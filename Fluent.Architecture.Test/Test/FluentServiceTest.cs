@@ -13,10 +13,12 @@ using Fluent.Architecture.Test.SupportElements.Model;
 using Fluent.Architecture.Test.SupportElements.Specifications;
 using Fluent.Architecture.Test.TestTools;
 using NUnit.Framework;
+    using System.Runtime.InteropServices;
 
 namespace Fluent.Architecture.Test.Test
 {
     [TestFixture]
+    [ComVisible(true)]
     public class FluentServiceTest : FluentInternalTest
     {
         [Theory]

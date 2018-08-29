@@ -1,18 +1,16 @@
-﻿using Fluent.Architecture.Attributes;
-using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Factory;
+﻿using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Test.SupportElements;
 using Fluent.Architecture.Test.SupportElements.Controllers;
 using Fluent.Architecture.Test.SupportElements.Model;
-using Fluent.Architecture.Test.SupportElements.Services;
 using Fluent.Architecture.Test.SupportElements.Specifications;
 using Fluent.Architecture.Test.TestTools;
-using Fluent.Architecture.Util;
 using NUnit.Framework;
+using System.Runtime.InteropServices;
 
 namespace Fluent.Architecture.Test.Test
 {
     [TestFixture]
+    [ComVisible(true)]
     public class UserTest : FluentInternalTest
     {
         [Test]

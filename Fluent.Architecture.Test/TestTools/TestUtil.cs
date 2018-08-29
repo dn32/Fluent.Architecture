@@ -8,11 +8,13 @@ using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Test.SupportElements.Mock;
 using Fluent.Architecture.Test.SupportElements.Mock.ControllerMock;
 using NUnit.Framework;
+using System.Runtime.InteropServices;
+using Fluent.Architecture.Exceptions.ValidationException;
 
 namespace Fluent.Architecture.Test.TestTools
 {
-    using Fluent.Architecture.Exceptions.ValidationException;
 
+    [ComVisible(true)]
     public static class TestUtil
     {
         private static readonly Random Random = new Random();
@@ -51,7 +53,7 @@ namespace Fluent.Architecture.Test.TestTools
                 else
                 {
                     var parameterTypes = (from parameter in parameters
-                        select parameter == null ? typeof(object) : parameter.GetType()).ToList();
+                                          select parameter == null ? typeof(object) : parameter.GetType()).ToList();
                     method = controllerType.GetMethod(methodName, parameterTypes.ToArray());
                 }
 
@@ -79,7 +81,7 @@ namespace Fluent.Architecture.Test.TestTools
                 }
                 else
                 {
-                    returnObj = new JsonResult{Data = action(controller) };
+                    returnObj = new JsonResult { Data = action(controller) };
                 }
 
                 var actionExecuted = controllerType.GetMethod("OnActionExecuted", BindingFlags.NonPublic | BindingFlags.Instance);
