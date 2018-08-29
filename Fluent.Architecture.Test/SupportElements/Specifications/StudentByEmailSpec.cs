@@ -14,17 +14,17 @@ namespace Fluent.Architecture.Test.SupportElements.Specifications
 
         public StudentByEmailSpec(FluentController<Student> controller, string email) : base(controller)
         {
-            _email = email;
+            this._email = email;
         }
 
         public StudentByEmailSpec(TransactionalService service, string email) : base(service)
         {
-            _email = email;
+            this._email = email;
         }
 
         public override IQueryable<Student> Spec(IQueryable<Student> query)
         {
-            return query.Where(x => x.Email.Equals(_email, StringComparison.CurrentCultureIgnoreCase));
+            return query.Where(x => x.Email.Equals(this._email, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public override Expression<Func<Student, object>> Order()

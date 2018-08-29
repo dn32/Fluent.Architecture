@@ -27,7 +27,7 @@ namespace Fluent.Architecture.Specifications
         /// </returns>
         public abstract IQueryable<TE> Spec(IQueryable<TE> query);
 
-        //Todo documentar
+        // Todo documentar
         public abstract Expression<Func<TE, object>> Order();
 
         /// <inheritdoc />
@@ -38,7 +38,7 @@ namespace Fluent.Architecture.Specifications
 
         internal IQueryable<TE> ToIQueryable(IQueryable<TE> query)
         {
-            return Spec(query).OrderBy(Order());
+            return this.Spec(query).OrderBy(this.Order());
         }
     }
 }

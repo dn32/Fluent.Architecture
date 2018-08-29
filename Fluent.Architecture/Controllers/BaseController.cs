@@ -20,12 +20,13 @@ namespace Fluent.Architecture.Controllers
 #if NET461
         private HttpContextBase localHttpContext;
         
-        public new HttpContextBase HttpContext => localHttpContext ?? base.HttpContext;
+        public new HttpContextBase HttpContext => this.localHttpContext ?? base.HttpContext;
 
         public void SetLocalHttpContext(HttpContextBase httpContext)
         {
-            localHttpContext = httpContext;
+            this.localHttpContext = httpContext;
         }
+
 #else
         private HttpContext localHttpContext;
 

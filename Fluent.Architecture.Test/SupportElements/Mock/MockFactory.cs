@@ -15,7 +15,7 @@ namespace Fluent.Architecture.Test.SupportElements.Mock
     {
         protected string Key;
 
-        //public MockFactory() { }
+        // public MockFactory() { }
 
         ///// <summary>
         ///// Cria um novo mMck.
@@ -29,15 +29,15 @@ namespace Fluent.Architecture.Test.SupportElements.Mock
         ///// <returns>
         ///// O <see cref="MockFactory{TX}"/> para definir o valor de return facilmente.
         ///// </returns>
-        //public MockFactory<TX> Create<TResult>(Expression<Func<TX, TResult>> expression)
-        //{
-        //    dynamic body = expression.Body;
-        //    var methodName = ((MethodInfo)body.Method).GetFriendlyName();
+        // public MockFactory<TX> Create<TResult>(Expression<Func<TX, TResult>> expression)
+        // {
+        // dynamic body = expression.Body;
+        // var methodName = ((MethodInfo)body.Method).GetFriendlyName();
 
-        //    var parameters = ((ReadOnlyCollection<Expression>)body.Arguments).Select(GetExpressionValue).ToArray();
-        //    Key = FluentMockUtil.CreateKeyForMock(typeof(TX).FullName, methodName, parameters);
-        //    return this ;
-        //}
+        // var parameters = ((ReadOnlyCollection<Expression>)body.Arguments).Select(GetExpressionValue).ToArray();
+        // Key = FluentMockUtil.CreateKeyForMock(typeof(TX).FullName, methodName, parameters);
+        // return this ;
+        // }
 
         /// <summary>
         /// Permite definir o valor desejado para o retorno do Mock.
@@ -48,8 +48,9 @@ namespace Fluent.Architecture.Test.SupportElements.Mock
         public virtual void Return(object @return)
         {
             throw new NotImplementedException();
-            //Architecture.Setup.SetInTest();
-            //TransactionInterceptorMock.Add(Key, @return);
+
+            // Architecture.Setup.SetInTest();
+            // TransactionInterceptorMock.Add(Key, @return);
         }
 
         /// <summary>
@@ -67,7 +68,7 @@ namespace Fluent.Architecture.Test.SupportElements.Mock
             if (propValue == null)
             {
                 expression = ((dynamic)expression).Expression;
-                return GetExpressionValue(expression);
+                return MockFactory<TX>.GetExpressionValue(expression);
             }
 
             return propValue.GetValue(expression);

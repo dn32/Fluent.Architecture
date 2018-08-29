@@ -8,7 +8,7 @@ namespace Fluent.Architecture.Test.SupportElements.Mock
     {
         public MockControllerDescriptor(Type controllerType)
         {
-            ControllerType = controllerType;
+            this.ControllerType = controllerType;
         }
 
         public override ActionDescriptor FindAction(ControllerContext controllerContext, string actionName)

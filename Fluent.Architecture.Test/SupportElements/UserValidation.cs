@@ -11,37 +11,37 @@ namespace Fluent.Architecture.Test.SupportElements
         public override void Add(User entity)
         {
             base.Add(entity);
-            UserMustHaveFullName(entity);
+            this.UserMustHaveFullName(entity);
 
-            RunTheContextValidation();
+            this.RunTheContextValidation();
         }
 
         public override void Update(User entity)
         {
             base.Update(entity);
-            UserMustHaveFullName(entity);
+            this.UserMustHaveFullName(entity);
 
-            RunTheContextValidation();
+            this.RunTheContextValidation();
         }
 
         private void UserMustHaveFullName(User user)
         {
-            if (!NullParameterOk)
+            if (!this.NullParameterOk)
             {
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(user.Name) || !user.Name.Trim().Contains(" "))
             {
-                AddInconsistency(new FluentPropertyValidationException(nameof(user.Name), "User must have full name"));
+                this.AddInconsistency(new FluentPropertyValidationException(nameof(user.Name), "User must have full name"));
             }
         }
 
-        //For ambiguity test
+        // For ambiguity test
         [Propagate]
         public void Test2(string data) { }
 
-        //For ambiguity test
+        // For ambiguity test
         [Propagate]
         public void Test2(int data) { }
 
@@ -50,10 +50,10 @@ namespace Fluent.Architecture.Test.SupportElements
         {
             if (id == 0)
             {
-                AddInconsistency(new FluentParameterValidationException(nameof(id), $"The {nameof(id)} parameter can not be 0 for this operation."));
+                this.AddInconsistency(new FluentParameterValidationException(nameof(id), $"The {nameof(id)} parameter can not be 0 for this operation."));
             }
 
-            RunTheContextValidation();
+            this.RunTheContextValidation();
         }
     }
 }

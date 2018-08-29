@@ -25,13 +25,13 @@ namespace Fluent.Architecture.Specifications
         /// </param>
         protected BaseSpecification(TransactionalService service)
         {
-            Service = service;
+            this.Service = service;
         }
 
-        //Todo doc
+        // Todo doc
         protected BaseSpecification(FluentController<T> controller)
         {
-            Controller = controller;
+            this.Controller = controller;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Fluent.Architecture.Specifications
         /// </returns>
         protected IQueryable<TX> Get<TX>() where TX : BaseEntity
         {
-            var transactionObjects = Service == null ? Controller.Service.TransactionObjects : Service.TransactionObjects;
+            var transactionObjects = this.Service == null ?this.Controller.Service.TransactionObjects :this.Service.TransactionObjects;
             return transactionObjects.GetObjectQueryInternal<TX>();
         }
     }

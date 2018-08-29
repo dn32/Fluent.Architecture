@@ -10,14 +10,14 @@ namespace Fluent.Architecture.Test.SupportElements.Mock
 
         public MockActionDescriptor(string actionName, Type controllerType)
         {
-            ActionName = actionName;
-            ControllerDescriptor = new MockControllerDescriptor(controllerType);
+            this.ActionName = actionName;
+            this.ControllerDescriptor = new MockControllerDescriptor(controllerType);
         }
 
         public MockActionDescriptor(string actionName, ControllerDescriptor controllerDescriptor)
         {
-            ActionName = actionName;
-            ControllerDescriptor = controllerDescriptor;
+            this.ActionName = actionName;
+            this.ControllerDescriptor = controllerDescriptor;
         }
 
         public override object Execute(ControllerContext controllerContext, IDictionary<string, object> parameters)

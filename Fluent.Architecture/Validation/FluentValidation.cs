@@ -20,10 +20,10 @@ namespace Fluent.Architecture.Validation
     {
         #region INTERNAL
 
-        //Todo documentar
+        // Todo documentar
         public bool NullParameterOk { get; set; } = true;
 
-        //Todo documentar
+        // Todo documentar
         public bool KeyValuesOk { get; set; } = true;
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Fluent.Architecture.Validation
         /// </param>
         protected void AddInconsistency(FluentValidationException ex)
         {
-            Service.SessionRequest.ContextFluentValidationException.AddInconsistency(ex);
+            this.Service.SessionRequest.ContextFluentValidationException.AddInconsistency(ex);
         }
 
         /// <summary>
@@ -58,13 +58,13 @@ namespace Fluent.Architecture.Validation
         /// </param>
         internal void Init(FluentService<T> service, FluentRepository<T> repository)
         {
-            Service = service;
-            Repository = repository;
+            this.Service = service;
+            this.Repository = repository;
         }
 
         protected void RunTheContextValidation()
         {
-            Service.SessionRequest.ContextFluentValidationException.Validate();
+            this.Service.SessionRequest.ContextFluentValidationException.Validate();
         }
 
         #endregion
@@ -77,12 +77,12 @@ namespace Fluent.Architecture.Validation
         /// </param>
         public virtual void Add(T entity)
         {
-            ParameterMustBeInformed(entity);
-            RequiredPropertyMustBeInformed(entity);
-            AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
-            EntityShouldNotExistInDatabaseBasedOnKeys(entity);
+            this.ParameterMustBeInformed(entity);
+            this.RequiredPropertyMustBeInformed(entity);
+            this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
+            this.EntityShouldNotExistInDatabaseBasedOnKeys(entity);
 
-            RunTheContextValidation();
+            this.RunTheContextValidation();
         }
 
         /// <summary>
@@ -91,12 +91,12 @@ namespace Fluent.Architecture.Validation
         /// <param name="entity"></param>
         public virtual void Update(T entity)
         {
-            ParameterMustBeInformed(entity);
-            RequiredPropertyMustBeInformed(entity);
-            AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
-            EntityMustExistInDatabase(entity);
+            this.ParameterMustBeInformed(entity);
+            this.RequiredPropertyMustBeInformed(entity);
+            this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
+            this.EntityMustExistInDatabase(entity);
 
-            RunTheContextValidation();
+            this.RunTheContextValidation();
         }
 
         /// <summary>
@@ -105,38 +105,38 @@ namespace Fluent.Architecture.Validation
         /// <param name="entity"></param>
         public virtual void Remove(T entity)
         {
-            ParameterMustBeInformed(entity);
-            AllKeysMustBeInformed(entity);
-            EntityMustExistInDatabase(entity);
+            this.ParameterMustBeInformed(entity);
+            this.AllKeysMustBeInformed(entity);
+            this.EntityMustExistInDatabase(entity);
 
-            RunTheContextValidation();
+            this.RunTheContextValidation();
         }
 
-        //Todo Documentar
+        // Todo Documentar
         public virtual void Find(T entity)
         {
-            ParameterMustBeInformed(entity);
-            AllKeysMustBeInformed(entity);
+            this.ParameterMustBeInformed(entity);
+            this.AllKeysMustBeInformed(entity);
 
-            RunTheContextValidation();
+            this.RunTheContextValidation();
         }
 
         public virtual void PropagateService(string methodName, object[] parameters)
         {
-            ParameterMustBeInformed(parameters);
+            this.ParameterMustBeInformed(parameters);
 
-            if (NullParameterOk)
+            if (this.NullParameterOk)
             {
                 foreach (var parameter in parameters)
                 {
                     if (parameter == null)
                     {
-                        AddInconsistency(new FluentParameterValidationException(nameof(parameters), "No propagation parameter can be null."));
+                        this.AddInconsistency(new FluentParameterValidationException(nameof(parameters), "No propagation parameter can be null."));
                     }
                 }
             }
 
-            RunTheContextValidation();
+            this.RunTheContextValidation();
         }
 
         /*
@@ -148,24 +148,23 @@ Evite escrever negação, mas quando não for possível evitar, escreva assim: E
 A entida não pode existir. Se existir, teremos uma inconsistência.
 =============================         
          */
-
         #region VALIDATIONS
 
         private void ParameterMustBeInformed(object entity)
         {
             if (entity == null)
             {
-                AddInconsistency(new NullParameterFluentValidationException(nameof(entity)));
-                NullParameterOk = false;
+                this.AddInconsistency(new NullParameterFluentValidationException(nameof(entity)));
+                this.NullParameterOk = false;
                 return;
             }
 
-            NullParameterOk = true;
+            this.NullParameterOk = true;
         }
 
         private void RequiredPropertyMustBeInformed(T entity)
         {
-            if (!NullParameterOk)
+            if (!this.NullParameterOk)
             {
                 return;
             }
@@ -175,28 +174,29 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
             {
                 if (property.GetValue(entity).IsFluentNull())
                 {
-                    AddInconsistency(new PropertyRequiredFluentValidationException(property.Name));
+                    this.AddInconsistency(new PropertyRequiredFluentValidationException(property.Name));
                 }
             }
         }
 
         private void AllKeysMustBeInformed(T entity)
         {
-            KeyValuesOk = true;
+            this.KeyValuesOk = true;
 
             var properties = entity.GetType().GetKeyProperties();
             foreach (var property in properties)
             {
                 if (property.GetValue(entity).IsFluentNull())
                 {
-                    AddInconsistency(new PropertyRequiredFluentValidationException(property.Name));
-                    KeyValuesOk = false;
+                    this.AddInconsistency(new PropertyRequiredFluentValidationException(property.Name));
+                    this.KeyValuesOk = false;
                 }
             }
         }
+
         private void AllKeysShouldBeInformedWhenThereAreMoreThanOne(T entity)
         {
-            if (!NullParameterOk || !KeyValuesOk)
+            if (!this.NullParameterOk || !this.KeyValuesOk)
             {
                 return;
             }
@@ -205,46 +205,46 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
             var properties = entityType.GetKeyProperties();
             if (properties.Count > 1)
             {
-                AllKeysMustBeInformed(entity);
+                this.AllKeysMustBeInformed(entity);
             }
             else
             {
                 var property = properties.First();
                 if (!property.GetValue(entity).IsFluentNull())
                 {
-                    AddInconsistency(new FluentPropertyValidationException(property.Name, "The key must not be entered for this operation."));
-                    KeyValuesOk = false;
+                    this.AddInconsistency(new FluentPropertyValidationException(property.Name, "The key must not be entered for this operation."));
+                    this.KeyValuesOk = false;
                 }
             }
         }
 
         private void EntityMustExistInDatabase(T entity)
         {
-            if (!NullParameterOk || !KeyValuesOk)
+            if (!this.NullParameterOk || !this.KeyValuesOk)
             {
                 return;
             }
 
-            if (!Repository.Exists(entity))
+            if (!this.Repository.Exists(entity))
             {
                 var keys = entity.GetKeyValues().Select(x => $"{{{x.Property.Name}:{x.Value}}}").ToArray();
                 var keyValues = string.Join(", ", keys);
-                AddInconsistency(new EntityNotFoundFluentValidationException(keyValues));
+                this.AddInconsistency(new EntityNotFoundFluentValidationException(keyValues));
             }
         }
 
         private void EntityShouldNotExistInDatabaseBasedOnKeys(T entity)
         {
-            if (!NullParameterOk || !KeyValuesOk)
+            if (!this.NullParameterOk || !this.KeyValuesOk)
             {
                 return;
             }
 
-            if (Repository.Exists(entity))
+            if (this.Repository.Exists(entity))
             {
                 var keys = entity.GetKeyValues().Select(x => $"{{{x.Property.Name}:{x.Value}}}").ToArray();
                 var keyValues = string.Join(", ", keys);
-                AddInconsistency(new EntityExistsFluentValidationException(keyValues));
+                this.AddInconsistency(new EntityExistsFluentValidationException(keyValues));
             }
         }
 

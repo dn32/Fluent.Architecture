@@ -10,7 +10,7 @@ namespace Fluent.Architecture.Test.SupportElements.Services
         {
             public void SetUserSessionForTest(UserSessionRequest sessionRequest)
             {
-                SetUserSession(sessionRequest);
+                this.SetUserSession(sessionRequest);
             }
         }
     }

@@ -12,39 +12,39 @@ namespace Fluent.Architecture.Test.SupportElements.Controllers
     {
         public JsonResult SpecOne(FluentSpecification<Student> spec)
         {
-            var student = Service.SpecOne(spec);
-            return Json(student);
+            var student = this.Service.SpecOne(spec);
+            return this.Json(student);
         }
 
         public JsonResult Add(Student student)
         {
-            return Json(Propagate(student));
+            return this.Json(this.Propagate(student));
         }
 
         public JsonResult Add2(Student student)
         {
-            return Json(PropagateMethod(nameof(FluentService<Student>.Add), student));
+            return this.Json(this.PropagateMethod(nameof(FluentService<Student>.Add), student));
         }
 
         public virtual JsonResult Spec(FluentSpecification<Student> spec)
         {
-            return Json(Propagate<List<Student>>(spec));
+            return this.Json(this.Propagate<List<Student>>(spec));
         }
 
         public virtual JsonResult Spec2()
         {
-            return Json(PropagateMethod(nameof(FluentService<Student>.Spec), null));
+            return this.Json(this.PropagateMethod(nameof(FluentService<Student>.Spec), null));
         }
 
         public JsonResult Find(Student student)
         {
-            return Json(Service.Find(student));
+            return this.Json(this.Service.Find(student));
         }
 
         public JsonResult Remove(Student student)
         {
-            student = Service.Remove(student);
-            return Json(student);
+            student = this.Service.Remove(student);
+            return this.Json(student);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Fluent.Architecture.Specifications
 
         internal IQueryable<TO> ToIQueryable(IQueryable<TE> query)
         {
-            return Spec(query);
+            return this.Spec(query);
         }
 
         /// <inheritdoc />

@@ -11,8 +11,8 @@ namespace Fluent.Architecture.Test.SupportElements
         public FluentInternalTest()
         {
             Setup.Initialize();
-            UserControllerInstance = MockUtil.GetMockController<UserController>();
-            StudentControllerInstance = MockUtil.GetMockController<StudentController>();
+            this.UserControllerInstance = MockUtil.GetMockController<UserController>();
+            this.StudentControllerInstance = MockUtil.GetMockController<StudentController>();
         }
     }
 }

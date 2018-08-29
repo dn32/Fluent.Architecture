@@ -12,13 +12,13 @@ namespace Fluent.Architecture.Extensions
 {
     public static class FluentEntityExtension
     {
-        //Todo documentar
+        // Todo documentar
         public static string GetTableName(this object entity)
         {
             return entity.GetType().GetTableName();
         }
 
-        //Todo documentar
+        // Todo documentar
         public static string GetTableName(this Type entityType)
         {
             var name = entityType.GetCustomAttribute<TableAttribute>()?.Name;
@@ -30,7 +30,7 @@ namespace Fluent.Architecture.Extensions
             return name;
         }
 
-        //Todo documentar
+        // Todo documentar
         public static string GetColumnName(this PropertyInfo property)
         {
             var name = property.GetCustomAttribute<ColumnAttribute>()?.Name;
@@ -62,7 +62,7 @@ namespace Fluent.Architecture.Extensions
             return entityType.GetProperties().Where(x => x.GetCustomAttribute<TA>(true) != null).ToList();
         }
 
-        //Todo documentar
+        // Todo documentar
         public static List<KeyValue> GetFluentUniqueKeyValues(this object entity)
         {
             var returnList = new List<KeyValue>();
@@ -75,7 +75,7 @@ namespace Fluent.Architecture.Extensions
             return returnList;
         }
 
-        //Todo documentar
+        // Todo documentar
         public static List<KeyValue> GetKeyValues(this object entity)
         {
             var returnList = new List<KeyValue>();

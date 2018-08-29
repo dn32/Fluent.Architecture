@@ -18,10 +18,10 @@ namespace Fluent.Architecture.Factory.Proxy
 
         internal static object CreateObject(Type parent, Guid sessionId)
         {
-            var assembly = new AssemblyName(AssemblyName);
-            var dynamicClass = CreateClass(parent, assembly);
-            CreateConstructor(dynamicClass);
-            OverwriteProperties(dynamicClass, sessionId);
+            var assembly = new AssemblyName(ServiceLazyClassBuilder.AssemblyName);
+            var dynamicClass = ServiceLazyClassBuilder.CreateClass(parent, assembly);
+            ServiceLazyClassBuilder.CreateConstructor(dynamicClass);
+            ServiceLazyClassBuilder.OverwriteProperties(dynamicClass, sessionId);
             var type = dynamicClass.CreateType();
             return Activator.CreateInstance(type);
         }
@@ -34,7 +34,7 @@ namespace Fluent.Architecture.Factory.Proxy
 #else
             var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(Guid.NewGuid().ToString()), AssemblyBuilderAccess.Run);
 #endif
-            var moduleBuilder = assemblyBuilder.DefineDynamicModule(ModuleName);
+            var moduleBuilder = assemblyBuilder.DefineDynamicModule(ServiceLazyClassBuilder.ModuleName);
             return moduleBuilder.DefineType(assembly.FullName, TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.AutoClass | TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.AutoLayout, parent);
         }
 
@@ -44,19 +44,22 @@ namespace Fluent.Architecture.Factory.Proxy
 
             foreach (var property in serviceProperties)
             {
-                OverwriteProperty(typeBuilder.BaseType, property, typeBuilder, sessionId);
+                ServiceLazyClassBuilder.OverwriteProperty(typeBuilder.BaseType, property, typeBuilder, sessionId);
             }
         }
 
         private static void OverwriteProperty(Type baseType, PropertyInfo property, TypeBuilder typeBuilder, Guid sessionId)
         {
             var metodProp = property.GetGetMethod(true);
-            var propertyBuilder = typeBuilder.DefineProperty(property.Name, PropertyAttributes.HasDefault, property.PropertyType, null);
-            var getPropMthdBldr = typeBuilder.DefineMethod(metodProp.Name,
-                MethodAttributes.Public |
-                MethodAttributes.SpecialName |
-                MethodAttributes.Virtual |
-                MethodAttributes.HideBySig,
+            var propertyBuilder = typeBuilder.DefineProperty(
+                property.Name,
+                PropertyAttributes.HasDefault,
+                property.PropertyType,
+                null);
+            var getPropMthdBldr = typeBuilder.DefineMethod(
+                metodProp.Name,
+                MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.Virtual
+                | MethodAttributes.HideBySig,
                 property.PropertyType,
                 Type.EmptyTypes);
 
@@ -66,7 +69,8 @@ namespace Fluent.Architecture.Factory.Proxy
             methodInfo = methodInfo.MakeGenericMethod(property.PropertyType);
             getIl.Emit(OpCodes.Ldstr, sessionId.ToString());
             getIl.EmitCall(OpCodes.Callvirt, methodInfo, new[] { typeof(string) });
-            //getIl.Emit(OpCodes.Callvirt, methodInfo);
+
+            // getIl.Emit(OpCodes.Callvirt, methodInfo);
             getIl.Emit(OpCodes.Ret);
             propertyBuilder.SetGetMethod(getPropMthdBldr);
         }

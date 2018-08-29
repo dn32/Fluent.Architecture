@@ -35,7 +35,7 @@ namespace Fluent.Architecture.Factory
                 localType = epositoryType;
             }
 
-            var repository = Create(localType);
+            var repository = RepositoryFactory<T>.Create(localType);
             repository.TransactionObjects = transactionObjects;
             repository.Service = service;
             return repository;
@@ -43,13 +43,14 @@ namespace Fluent.Architecture.Factory
 
         private static FluentRepository<T> Create(Type repositoryType)
         {
-            //if (!Setup.InTest)
-            //{
-                return Activator.CreateInstance(repositoryType) as FluentRepository<T>;
-            //}
+            // if (!Setup.InTest)
+            // {
+            return Activator.CreateInstance(repositoryType) as FluentRepository<T>;
 
-            //var interceptor = new TransactionInterceptorMock(false, Guid.Empty);
-            //return RepositoryClassBuilder.Create<T>(repositoryType, interceptor) as FluentRepository<T>;
+            // }
+
+            // var interceptor = new TransactionInterceptorMock(false, Guid.Empty);
+            // return RepositoryClassBuilder.Create<T>(repositoryType, interceptor) as FluentRepository<T>;
         }
     }
 }

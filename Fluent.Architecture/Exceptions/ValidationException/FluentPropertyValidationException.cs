@@ -23,7 +23,7 @@ namespace Fluent.Architecture.Exceptions.ValidationException
             throw new NotImplementedException();
         }
 
-        public FluentPropertyValidationException(string message, System.Exception innerException) : base(message)
+        public FluentPropertyValidationException(string message, Exception innerException) : base(message)
         {
             throw new NotImplementedException();
         }

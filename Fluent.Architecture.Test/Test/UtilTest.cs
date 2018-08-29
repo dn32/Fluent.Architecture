@@ -106,7 +106,7 @@ namespace Fluent.Architecture.Test.Test
         public void IsFluentNull2Test()
         {
             Assert.True(Guid.Empty.IsFluentNull());
-            Assert.True(String.Empty.IsFluentNull());
+            Assert.True(string.Empty.IsFluentNull());
             Assert.True(string.Empty.IsFluentNull());
             Func<int> func = () => 1;
             Assert.False(func.IsFluentNull());
@@ -140,7 +140,7 @@ namespace Fluent.Architecture.Test.Test
 
             FluentAssert.Equal(user1, user2);
 
-            var ex = Assert.Throws<System.Exception>(() => FluentAssert.Equal(user1, user3));
+            var ex = Assert.Throws<Exception>(() => FluentAssert.Equal(user1, user3));
             Assert.AreEqual("The objects are different", ex.Message);
         }
 

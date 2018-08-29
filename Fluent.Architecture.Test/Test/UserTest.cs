@@ -9,6 +9,8 @@ using System.Runtime.InteropServices;
 
 namespace Fluent.Architecture.Test.Test
 {
+    using Fluent.Architecture.Controllers;
+
     [TestFixture]
     [ComVisible(true)]
     public class UserTest : FluentInternalTest
@@ -22,17 +24,17 @@ namespace Fluent.Architecture.Test.Test
             student.Email = email;
             user.Email = email;
 
-            user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Add), user);
-            student = TestUtil.Execute<Student>(StudentControllerInstance, nameof(UserController.Add), student);
+            user = TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Add), user);
+            student = TestUtil.Execute<Student>(this.StudentControllerInstance, nameof(FluentFullController<User>.Add), student);
 
-            var userStudent = TestUtil.Execute<UserStudent>(UserControllerInstance, nameof(UserController.GetUserByEmail), email);
+            var userStudent = TestUtil.Execute<UserStudent>(this.UserControllerInstance, nameof(UserController.GetUserByEmail), email);
 
             Assert.NotNull(userStudent);
             FluentAssert.Equal(user, userStudent.User);
             FluentAssert.Equal(student, userStudent.Student);
 
-            TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Remove), user);
-            TestUtil.Execute<Student>(StudentControllerInstance, nameof(StudentController.Remove), student);
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Remove), user);
+            TestUtil.Execute<Student>(this.StudentControllerInstance, nameof(StudentController.Remove), student);
         }
 
         [Test]
@@ -44,18 +46,18 @@ namespace Fluent.Architecture.Test.Test
             student.Email = email;
             user.Email = email;
 
-            user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Add), user);
-            student = TestUtil.Execute<Student>(StudentControllerInstance, nameof(UserController.Add), student);
+            user = TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Add), user);
+            student = TestUtil.Execute<Student>(this.StudentControllerInstance, nameof(FluentFullController<User>.Add), student);
 
-            var spec = new UserAndStudentByEmail(UserControllerInstance, email);
-            var userStudent = TestUtil.Execute<UserStudent>(UserControllerInstance, nameof(UserController.SpecOne), spec);
+            var spec = new UserAndStudentByEmail(this.UserControllerInstance, email);
+            var userStudent = TestUtil.Execute<UserStudent>(this.UserControllerInstance, nameof(UserController.SpecOne), spec);
 
             Assert.NotNull(userStudent);
             FluentAssert.Equal(user, userStudent.User);
             FluentAssert.Equal(student, userStudent.Student);
 
-            TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Remove), user);
-            TestUtil.Execute<Student>(StudentControllerInstance, nameof(StudentController.Remove), student);
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Remove), user);
+            TestUtil.Execute<Student>(this.StudentControllerInstance, nameof(StudentController.Remove), student);
         }
 
         [Theory]
@@ -64,9 +66,9 @@ namespace Fluent.Architecture.Test.Test
         public void PropagationInCustomRepositorySuccessTest(bool found)
         {
             var user = InternalTestUtil.GetNewUser();
-            user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Add), user);
+            user = TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Add), user);
             var userId = found ? user.Id : user.Id + TestUtil.NextRandom();
-            var foundUser = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.FindById), userId);
+            var foundUser = TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.FindById), userId);
 
             if (found)
             {
@@ -78,7 +80,7 @@ namespace Fluent.Architecture.Test.Test
                 Assert.Null(foundUser);
             }
 
-            TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Remove), user);
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Remove), user);
         }
     }
 }

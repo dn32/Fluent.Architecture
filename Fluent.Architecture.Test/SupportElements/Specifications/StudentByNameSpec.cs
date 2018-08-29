@@ -13,12 +13,12 @@ namespace Fluent.Architecture.Test.SupportElements.Specifications
 
         public StudentByNameSpec(FluentController<Student> controller, string name) : base(controller)
         {
-            _name = name;
+            this._name = name;
         }
 
         public override IQueryable<Student> Spec(IQueryable<Student> query)
         {
-            return query.Where(x => x.Name.Equals(_name, StringComparison.CurrentCultureIgnoreCase));
+            return query.Where(x => x.Name.Equals(this._name, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public override Expression<Func<Student, object>> Order()

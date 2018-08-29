@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace Fluent.Architecture.Filters
 {
 #if NET461
+
+    /// <inheritdoc />
     public class ExceptionHandlerAttribute : HandleErrorAttribute
     {
         public override void OnException(ExceptionContext filterContext)
@@ -20,26 +22,20 @@ namespace Fluent.Architecture.Filters
                 if (filterContext.Exception is ContextFluentValidationException exception)
                 {
                     filterContext.Result = new JsonResult
-                    {
-                        JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                        Data = exception
-                    };
+                                           {
+                                               JsonRequestBehavior = JsonRequestBehavior.AllowGet, Data = exception
+                                           };
                 }
                 else
                 {
                     filterContext.Result = new JsonResult
-                    {
-                        JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                        Data = new
-                        {
-                            Error = true,
-                            filterContext.Exception.Message
-                        }
-                    };
+                                           {
+                                               JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                                               Data = new { Error = true, filterContext.Exception.Message }
+                                           };
                 }
 
-                //Todo implementar o log de erros aqui posteriormente
-
+                // Todo implementar o log de erros aqui posteriormente
                 filterContext.ExceptionHandled = true;
                 filterContext.HttpContext.Response.Clear();
                 filterContext.HttpContext.Response.StatusCode = 500;
@@ -48,14 +44,22 @@ namespace Fluent.Architecture.Filters
         }
     }
 #else
-    //public class ExceptionHandlerAttribute 
-    //{
-    //    public void OnException(ExceptionContext filterContext)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
+
+// public class ExceptionHandlerAttribute 
+
+// {
+
+// public void OnException(ExceptionContext filterContext)
+
+// {
+
+// throw new NotImplementedException();
+
+// }
+
+// }
 #endif
-    //Todo Implementar para net core
+
+    // Todo Implementar para net core
 }
 

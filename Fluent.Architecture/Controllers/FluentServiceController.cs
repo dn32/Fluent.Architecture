@@ -24,35 +24,43 @@ namespace Fluent.Architecture.Controllers
     {
         protected internal TS Service { get; set; }
 
-        public Guid SessionRequestId => Service.SessionRequestId;
+        public Guid SessionRequestId => this.Service.SessionRequestId;
 
-        public ClaimsPrincipal ServiceUser => Service.User;
+        public ClaimsPrincipal ServiceUser => this.Service.User;
 
-        public HttpContextBase ServiceHttpContext => Service.LocalHttpContext;
+        public HttpContextBase ServiceHttpContext => this.Service.LocalHttpContext;
 
 #if NET461
 
         protected override void OnActionExecuting(ActionExecutingContext context)
         {
-            Service = ServiceFactory.Create<TS>(HttpContext);
+            this.Service = ServiceFactory.Create<TS>(this.HttpContext);
             base.OnActionExecuting(context);
         }
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            Service.TransactionObjects.Session.SaveChanges();
-            Service.Dispose(true); base.OnActionExecuted(filterContext);
+            this.Service.TransactionObjects.Session.SaveChanges();
+            this.Service.Dispose(true); base.OnActionExecuted(filterContext);
         }
-#else
-        //public override void OnActionExecuting(ActionExecutingContext context)
-        //{
-        //    if (Service == null)
-        //    {
-        //        Service = ServiceFactory.Create<TS>(HttpContext);
-        //    }
 
-        //    base.OnActionExecuting(context);
-        //}
+#else
+
+// public override void OnActionExecuting(ActionExecutingContext context)
+
+// {
+
+// if (Service == null)
+
+// {
+
+// Service = ServiceFactory.Create<TS>(HttpContext);
+
+// }
+
+// base.OnActionExecuting(context);
+
+// }
 #endif
     }
 }

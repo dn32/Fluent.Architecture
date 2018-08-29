@@ -17,11 +17,11 @@ namespace Fluent.Architecture.Extensions
         /// <returns>O nome amigável do método.</returns>
         public static string GetFriendlyName(this MethodBase method, bool showParameterName = false)
         {
-            return method.Name + (method.ContainsGenericParameters ? "<" + string.Join(", ", method.GetGenericArguments().Select(x => x.Name)) + ">" : "") +
-                "(" + string.Join(", ", method.GetParameters().Select(x => x.ParameterType.GetFriendlyName(false) + (showParameterName ? " " + x.Name : ""))) + ")";
+            return method.Name + (method.ContainsGenericParameters ? "<" + string.Join(", ", method.GetGenericArguments().Select(x => x.Name)) + ">" : string.Empty) +
+                "(" + string.Join(", ", method.GetParameters().Select(x => x.ParameterType.GetFriendlyName(false) + (showParameterName ? " " + x.Name : string.Empty))) + ")";
         }
 
-        //Todo doc
+        // Todo doc
         public static object[] GetAllParameters(this MethodBase method)
         {
             return method.GetParameters().Select(x => x.DefaultValue).ToArray();

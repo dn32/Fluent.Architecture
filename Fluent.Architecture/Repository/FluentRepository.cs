@@ -33,12 +33,12 @@ namespace Fluent.Architecture.Repository
         /// <summary>
         /// A query contem a referência de todas as tabelas/documentos do banco de dados.
         /// </summary>
-       protected internal IQueryable<TE> Query => TransactionObjects.GetObjectQueryInternal<TE>();
+       protected internal IQueryable<TE> Query => this.TransactionObjects.GetObjectQueryInternal<TE>();
 
         /// <summary>
         /// A referência de input de dados para o banco de dados.
         /// </summary>
-        internal DbSet<TE> Input => TransactionObjects.GetObjectInputDataInternal<TE>();
+        internal DbSet<TE> Input => this.TransactionObjects.GetObjectInputDataInternal<TE>();
 
         /// <summary>
         /// O serviço qual esse repositório representa.
@@ -47,10 +47,11 @@ namespace Fluent.Architecture.Repository
 
         private void RunTheContextValidation()
         {
-            Service.SessionRequest.ContextFluentValidationException.Validate();
+            this.Service.SessionRequest.ContextFluentValidationException.Validate();
         }
 
 #if NET461
+
         /// <summary>
         /// Todo - Muito cuidado, pois se definir esse método como público, pode permitir vilnerabilidades no sistema.
         /// </summary>
@@ -59,15 +60,16 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         internal bool ExistsSql(string sql)
         {
-            return Input.SqlQuery(sql).Any();
+            return this.Input.SqlQuery(sql).Any();
         }
 
-        //Todo - Codumentar
+        // Todo - Codumentar
         [Propagate]
         internal TE FindSingleOrDefaultSql(string sql)
         {
-            return Input.SqlQuery(sql).SingleOrDefault();
+            return this.Input.SqlQuery(sql).SingleOrDefault();
         }
+
 #else
         [PropagateMethod]
         internal bool ExistsSql(string sql)
@@ -100,7 +102,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual List<TO> SpecSelect<TO>(FluentSelectSpecification<TE, TO> spec, FluentPagination pagination = null)
         {
-            return FluentPaginate(spec.ToIQueryable(Query), pagination).ToList();
+            return FluentRepository<TE>.FluentPaginate(spec.ToIQueryable(this.Query), pagination).ToList();
         }
 
        
@@ -120,7 +122,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual List<TE> Spec(FluentSpecification<TE> spec, FluentPagination pagination = null)
         {
-            return FluentPaginate(spec.ToIQueryable(Query), pagination).ToList();
+            return FluentRepository<TE>.FluentPaginate(spec.ToIQueryable(this.Query), pagination).ToList();
         }
 
         /// <summary>
@@ -138,7 +140,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual TO SpecOne<TO>(FluentSelectSpecification<TE, TO> spec)
         {
-           return spec.Spec(Query).FirstOrDefault();
+           return spec.Spec(this.Query).FirstOrDefault();
         }
 
         /// <summary>
@@ -153,7 +155,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual TE SpecOne(FluentSpecification<TE> spec)
         {
-            return spec.ToIQueryable(Query).FirstOrDefault();
+            return spec.ToIQueryable(this.Query).FirstOrDefault();
         }
 
         /// <summary>
@@ -168,7 +170,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual bool Exists(FluentSpecification<TE> spec)
         {
-            return spec.ToIQueryable(Query).Any();
+            return spec.ToIQueryable(this.Query).Any();
         }
 
         /// <summary>
@@ -186,7 +188,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual bool Exists<TO>(FluentSelectSpecification<TE, TO> spec)
         {
-            return spec.ToIQueryable(Query).Any();
+            return spec.ToIQueryable(this.Query).Any();
         }
 
         /// <summary>
@@ -204,7 +206,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual int Count<TO>(FluentSelectSpecification<TE, TO> spec)
         {
-            return spec.ToIQueryable(Query).Count();
+            return spec.ToIQueryable(this.Query).Count();
         }
 
         /// <summary>
@@ -219,7 +221,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual int Count(FluentSpecification<TE> spec)
         {
-            return spec.ToIQueryable(Query).Count();
+            return spec.ToIQueryable(this.Query).Count();
         }
 
         ///// <summary>
@@ -231,22 +233,21 @@ namespace Fluent.Architecture.Repository
         ///// <returns>
         ///// Item encontrado ou nulo.
         ///// </returns>
-        //[PropagateMethod]
-        //public virtual TE Find(int id)
-        //{
-        //    return Input.Find(id);
-        //}
-
+        // [PropagateMethod]
+        // public virtual TE Find(int id)
+        // {
+        // return Input.Find(id);
+        // }
         public TE Find(TE entity)
         {
-            var sql = CreateSqlFromKeyAndFluentUniqueKeys(entity);
-            return FindSingleOrDefaultSql(sql);
+            var sql = FluentRepository<TE>.CreateSqlFromKeyAndFluentUniqueKeys(entity);
+            return this.FindSingleOrDefaultSql(sql);
         }
 
         public bool Exists(TE entity)
         {
-            var sql = CreateSqlFromKeyAndFluentUniqueKeys(entity);
-            return ExistsSql(sql);
+            var sql = FluentRepository<TE>.CreateSqlFromKeyAndFluentUniqueKeys(entity);
+            return this.ExistsSql(sql);
         }
 
         /// <summary>
@@ -258,8 +259,8 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual void AddRange(params TE[] entities)
         {
-            RunTheContextValidation();
-            entities.ToList().ForEach(x => Input.Add(x));
+            this.RunTheContextValidation();
+            entities.ToList().ForEach(x => this.Input.Add(x));
         }
 
         /// <summary>
@@ -271,10 +272,10 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual TE Add(TE entity)
         {
-            RunTheContextValidation();
+            this.RunTheContextValidation();
 
 #if NET461
-            return Input.Add(entity);
+            return this.Input.Add(entity);
 #else
             return Input.Add(entity).Entity;
 #endif
@@ -289,15 +290,16 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual TE Update(TE entity)
         {
-            RunTheContextValidation();
+            this.RunTheContextValidation();
 
 #if NET461
-            var currentEntity = Find(entity);
-            TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
+            var currentEntity = this.Find(entity);
+            this.TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
             return entity;
 #else
             throw new NotImplementedException();
-            // Input.Update(entity);
+            
+// Input.Update(entity);
 #endif
         }
 
@@ -310,10 +312,10 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual TE Remove(TE entity)
         {
-            RunTheContextValidation();
+            this.RunTheContextValidation();
 
 #if NET461
-          return Input.Remove(Find(entity));
+          return this.Input.Remove(this.Find(entity));
 #else
             throw new NotImplementedException();
 #endif
@@ -321,27 +323,26 @@ namespace Fluent.Architecture.Repository
 
         public virtual void RemoveRange(FluentSpecification<TE> spec)
         {
-            var list = spec.ToIQueryable(Query);
-            Input.RemoveRange(list);
+            var list = spec.ToIQueryable(this.Query);
+            this.Input.RemoveRange(list);
         }
 
         [Propagate]
         public virtual void RemoveRange(params TE[] entities)
         {
-            entities.ToList().ForEach(x => Remove(x));
+            entities.ToList().ForEach(x => this.Remove(x));
         }
 
         #region INTERNAL
 
-        //private static string CreateSqlFromKeys(TE entity)
-        //{
-        //    var tableName = entity.GetTableName();
-        //    var keyValues = entity.GetKeyValues().Select(x => $"({x.Key} = {x.Value} and {x.Key} != 0)").ToArray();
-        //    var sql = $"select * from {tableName} where ";
-        //    sql += string.Join(" and ", keyValues);
-        //    return sql;
-        //}
-
+        // private static string CreateSqlFromKeys(TE entity)
+        // {
+        // var tableName = entity.GetTableName();
+        // var keyValues = entity.GetKeyValues().Select(x => $"({x.Key} = {x.Value} and {x.Key} != 0)").ToArray();
+        // var sql = $"select * from {tableName} where ";
+        // sql += string.Join(" and ", keyValues);
+        // return sql;
+        // }
         private static string CreateSqlFromKeyAndFluentUniqueKeys(TE entity)
         {
             var tableName = entity.GetTableName();

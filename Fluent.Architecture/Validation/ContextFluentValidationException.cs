@@ -48,7 +48,7 @@ namespace Fluent.Architecture.Validation
         /// Initializes a new instance of the <see cref="ContextFluentValidationException"/> class. 
         /// Inicializa o contexto de validação.
         /// </summary>
-        public ContextFluentValidationException() : base("")
+        public ContextFluentValidationException() : base(string.Empty)
         {
             this.Inconsistencies = new List<FluentValidationException>();
         }

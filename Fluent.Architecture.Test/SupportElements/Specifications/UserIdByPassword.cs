@@ -12,12 +12,12 @@ namespace Fluent.Architecture.Test.SupportElements.Specifications
 
         public UserIdByPassword(FluentController<User> controller, string password) : base(controller)
         {
-            _password = password;
+            this._password = password;
         }
 
         public override IQueryable<int> Spec(IQueryable<User> query)
         {
-            return query.Where(x => x.Password.Equals(_password, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Id);
+            return query.Where(x => x.Password.Equals(this._password, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Id);
         }
     }
 }

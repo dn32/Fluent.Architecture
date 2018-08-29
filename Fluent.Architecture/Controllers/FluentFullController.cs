@@ -3,39 +3,40 @@ using Fluent.Architecture.Model;
 
 namespace Fluent.Architecture.Controllers
 {
-    //Todo item novo. Documentar
-    public class FluentFullController<T> : FluentController<T> where T : BaseEntity, new()
+    // Todo item novo. Documentar
+    public class FluentFullController<T> : FluentController<T>
+        where T : BaseEntity, new()
     {
         public JsonResult Add(T entity)
         {
-            return Json(Service.Add(entity));
+            return this.Json(this.Service.Add(entity));
         }
 
         public JsonResult AddRange(T[] entities)
         {
-            Propagate(entities as object);
-            return Json(entities);
+            this.Propagate(entities as object);
+            return this.Json(entities);
         }
 
         public JsonResult Remove(T entity)
         {
-            return Json(Service.Remove(entity));
+            return this.Json(this.Service.Remove(entity));
         }
 
         public JsonResult RemoveRange(T[] entities)
         {
-            Service.RemoveRange(entities);
-            return Json(entities);
+            this.Service.RemoveRange(entities);
+            return this.Json(entities);
         }
 
         public JsonResult Update(T entity)
         {
-            return Json(Service.Update(entity));
+            return this.Json(this.Service.Update(entity));
         }
 
         public JsonResult Find(T entity)
         {
-            return Json(Service.Find(entity));
+            return this.Json(this.Service.Find(entity));
         }
     }
 }

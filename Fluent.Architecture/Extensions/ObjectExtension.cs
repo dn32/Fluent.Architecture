@@ -61,7 +61,7 @@ namespace Fluent.Architecture.Extensions
             {
                 return (int)value; // Enum
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 // ignored
             }
@@ -89,7 +89,7 @@ namespace Fluent.Architecture.Extensions
 
             if (type == typeof(string) || type == typeof(String))
             {
-                return String.IsNullOrWhiteSpace(value.ToString());
+                return string.IsNullOrWhiteSpace(value.ToString());
             }
 
             if (type == typeof(int))
@@ -106,7 +106,7 @@ namespace Fluent.Architecture.Extensions
             {
                 return (int)value == 0; // Enum
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 // ignored
             }
@@ -117,12 +117,15 @@ namespace Fluent.Architecture.Extensions
         /// <summary>
         /// Obtem todos os dados de um objeto, incluindo de campos e propriedades privadas.
         /// </summary>
-        /// <param name="obj">Objeto a ser avaliado.</param>
+        /// <param name="objectToCheck">Objeto a ser avaliado.</param>
         /// <returns>Json com todos os dados do onjeto. Exemplo: [{"Name":"Id","Value":0},{"Name":"DataFinal","Value":"9999-12-31T23:59:59.9999999"},{"Name":"IdiomaId","Value":1},{"Name":"ConteudoId","Value":1},{"Name":"TipoDeEvento","Value":"2"},{"Name":"Descricao","Value":"teste"},{"Name":"Mandatorio","Value":1},{"Name":"UsuarioId","Value":1},{"Name":"TipoDeConteudo","Value":"1"}][{"Name":"<Id>k__BackingField","Value":0},{"Name":"<DataFinal>k__BackingField","Value":"9999-12-31T23:59:59.9999999"},{"Name":"<IdiomaId>k__BackingField","Value":1},{"Name":"<ConteudoId>k__BackingField","Value":1},{"Name":"<TipoDeEvento>k__BackingField","Value":"2"},{"Name":"<Descricao>k__BackingField","Value":"teste"},{"Name":"<Mandatorio>k__BackingField","Value":1},{"Name":"<UsuarioId>k__BackingField","Value":1},{"Name":"<TipoDeConteudo>k__BackingField","Value":"1"}]</returns>
-        public static string GetAllDataOfObject(this object obj)
+        /// <returns>
+        /// O json referente ao objeto.
+        /// </returns>
+        public static string GetAllDataOfObject(this object objectToCheck)
         {
             var propertyData = new List<NameAndValue>();
-            GetAllFieldsDataOfObject(obj, propertyData);
+            ObjectExtension.GetAllFieldsDataOfObject(objectToCheck, propertyData);
             return JsonConvert.SerializeObject(propertyData, Formatting.None);
         }
 
@@ -147,7 +150,7 @@ namespace Fluent.Architecture.Extensions
             {
                 foreach (var el in collection)
                 {
-                    GetAllFieldsDataOfObject(el, propertyData);
+                    ObjectExtension.GetAllFieldsDataOfObject(el, propertyData);
                 }
             }
             else
@@ -156,11 +159,11 @@ namespace Fluent.Architecture.Extensions
                 {
                     if (item.FieldType.IsPrimitive || item.FieldType.IsValueType || item.FieldType == typeof(string))
                     {
-                        propertyData.Add(new NameAndValue { Name = item.Name.Replace("k__BackingField", ""), Value = item.GetValue(obj) });
+                        propertyData.Add(new NameAndValue { Name = item.Name.Replace("k__BackingField", string.Empty), Value = item.GetValue(obj) });
                     }
                     else if (item.FieldType.IsClass && !typeof(IEnumerable).IsAssignableFrom(item.FieldType))
                     {
-                        GetAllFieldsDataOfObject(item.GetValue(obj), propertyData);
+                        ObjectExtension.GetAllFieldsDataOfObject(item.GetValue(obj), propertyData);
                     }
                     else
                     {
@@ -171,7 +174,7 @@ namespace Fluent.Architecture.Extensions
 
                         foreach (var propItem in enumerablePropObj1)
                         {
-                            GetAllFieldsDataOfObject(propItem, propertyData);
+                            ObjectExtension.GetAllFieldsDataOfObject(propItem, propertyData);
                         }
                     }
                 }

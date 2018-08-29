@@ -15,28 +15,28 @@ namespace Fluent.Architecture.Test.SupportElements.Mock.ControllerMock
 
         public override IPrincipal User { get; set; }
 
-        public override bool IsCustomErrorEnabled => SetIsCustomErrorEnabled;
+        public override bool IsCustomErrorEnabled => this.SetIsCustomErrorEnabled;
 
         public HttpContextBaseMock(HttpRequestBase request, HttpResponseBase response)
         {
-            Request = request;
-            Response = response;
-            User = new ClaimsPrincipal();
+            this.Request = request;
+            this.Response = response;
+            this.User = new ClaimsPrincipal();
         }
 
         public HttpContextBaseMock()
         {
-            Request = new HttpRequestBaseMock();
-            Response = new HttpResponseBaseMock();
-            User = new ClaimsPrincipal();
+            this.Request = new HttpRequestBaseMock();
+            this.Response = new HttpResponseBaseMock();
+            this.User = new ClaimsPrincipal();
         }
 
         public HttpContextBaseMock(bool isCustomErrorEnabled)
         {
-            Request = new HttpRequestBaseMock();
-            Response = new HttpResponseBaseMock();
-            SetIsCustomErrorEnabled = isCustomErrorEnabled;
-            User = new ClaimsPrincipal();
+            this.Request = new HttpRequestBaseMock();
+            this.Response = new HttpResponseBaseMock();
+            this.SetIsCustomErrorEnabled = isCustomErrorEnabled;
+            this.User = new ClaimsPrincipal();
         }
     }
 }

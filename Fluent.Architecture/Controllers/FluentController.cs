@@ -24,55 +24,54 @@ namespace Fluent.Architecture.Controllers
         
         protected T PropagateMethod(string methodName)
         {
-            return PropagateInternal(methodName, Array.Empty<object>()) as T;
+            return this.PropagateInternal(methodName, Array.Empty<object>()) as T;
         }
 
         protected T PropagateMethod(string methodName, params object[] parameters)
         {
-            return PropagateInternal(methodName, parameters) as T;
+            return this.PropagateInternal(methodName, parameters) as T;
         }
 
         protected TX PropagateMethod<TX>(string methodName, object[] parameters)
         {
-            return (TX)PropagateInternal(methodName, parameters);
+            return (TX)this.PropagateInternal(methodName, parameters);
         }
 
         protected T PropagateMethod(string methodName, object parameter)
         {
-            return PropagateInternal(methodName, parameter == null ? Array.Empty<object>() : new object[] { parameter }) as T;
+            return this.PropagateInternal(methodName, parameter == null ? Array.Empty<object>() : new object[] { parameter }) as T;
         }
 
         protected TX PropagateMethod<TX>(string methodName, object parameter)
         {
-            return (TX)PropagateInternal(methodName, parameter == null ? Array.Empty<object>() : new[] { parameter });
+            return (TX)this.PropagateInternal(methodName, parameter == null ? Array.Empty<object>() : new[] { parameter });
         }
 
         //===========================
        
         protected T Propagate()
         {
-            return PropagateInternal(string.Empty, Array.Empty<object>()) as T;
+            return this.PropagateInternal(string.Empty, Array.Empty<object>()) as T;
         }
        
         protected T Propagate(object[] parameters)
         {
-            return PropagateInternal(string.Empty, parameters) as T;
+            return this.PropagateInternal(string.Empty, parameters) as T;
         }
-
        
         protected TX Propagate<TX>(object[] parameters)
         {
-            return (TX)PropagateInternal(string.Empty, parameters);
+            return (TX)this.PropagateInternal(string.Empty, parameters);
         }
 
         protected TX Propagate<TX>(object parameter)
         {
-            return (TX)PropagateInternal(string.Empty, new[] { parameter });
+            return (TX)this.PropagateInternal(string.Empty, new[] { parameter });
         }
 
         protected T Propagate(object parameter)
         {
-            return (T)PropagateInternal(string.Empty, new object[] { parameter });
+            return (T)this.PropagateInternal(string.Empty, new object[] { parameter });
         }
 
         //===================================
@@ -84,7 +83,7 @@ namespace Fluent.Architecture.Controllers
                 methodName = GlobalUtil.GetMethodForPropagation()?.Name;
             }
 
-            return Service.PropagateService(methodName, parameters);
+            return this.Service.PropagateService(methodName, parameters);
         }
 
         #endregion
@@ -92,7 +91,7 @@ namespace Fluent.Architecture.Controllers
 #if NET461
         protected internal new JsonResult Json(object data)
         {
-            return Json(data, JsonRequestBehavior.AllowGet);
+            return this.Json(data, JsonRequestBehavior.AllowGet);
         }
 #else
 

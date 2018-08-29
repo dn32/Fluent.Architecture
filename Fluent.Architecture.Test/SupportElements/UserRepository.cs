@@ -5,22 +5,25 @@ using Fluent.Architecture.Test.SupportElements.Model;
 
 namespace Fluent.Architecture.Test.SupportElements
 {
+    using System.Diagnostics.CodeAnalysis;
+
     public class UserRepository : FluentRepository<User>
     {
         [Propagate]
         public User FindById(int id)
         {
-            return Query.FirstOrDefault(x => x.Id.Equals(id));
+            return this.Query.FirstOrDefault(x => x.Id.Equals(id));
         }
 
 
 
         // ======================= PROPAGATION =========================
-        //For ambiguity test
+        // For ambiguity test
+        [SuppressMessage("StyleCop.CSharp.LayoutRules", "SA1502:ElementMustNotBeOnSingleLine", Justification = "Reviewed. Suppression is OK here.")]
         [Propagate]
         public void Test(string data) { }
      
-        //For ambiguity test
+        // For ambiguity test
         [Propagate]
         public void Test(int data) { }
 
@@ -54,8 +57,7 @@ namespace Fluent.Architecture.Test.SupportElements
             return new Student { Id = id };
         }
 
-        //===========================
-
+        // ===========================
         [Propagate]
         public User PropagateTestF()
         {

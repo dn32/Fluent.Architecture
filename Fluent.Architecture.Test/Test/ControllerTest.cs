@@ -13,14 +13,14 @@ namespace Fluent.Architecture.Test.Test
         [Test]
         public void BaseControllerTest()
         {
-            UserControllerInstance.SetLocalHttpContext(null);
+            this.UserControllerInstance.SetLocalHttpContext(null);
 
-            Assert.Null(UserControllerInstance.HttpContext);
+            Assert.Null(this.UserControllerInstance.HttpContext);
 
             var httpContext = MockUtil.GetHttpContext();
-            UserControllerInstance.SetLocalHttpContext(httpContext);
+            this.UserControllerInstance.SetLocalHttpContext(httpContext);
 
-            Assert.AreEqual(httpContext, UserControllerInstance.HttpContext);
+            Assert.AreEqual(httpContext, this.UserControllerInstance.HttpContext);
         }
     }
 }

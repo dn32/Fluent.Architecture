@@ -15,10 +15,10 @@ namespace Fluent.Architecture.Test.SupportElements.Mock.ControllerMock
 
         public HttpRequestBaseMock()
         {
-            Url = new Uri("http://localhost");
-            ApplicationPath = "/";//AppDomain.CurrentDomain.BaseDirectory;
+            this.Url = new Uri("http://localhost");
+            this.ApplicationPath = "/";// AppDomain.CurrentDomain.BaseDirectory;
 
-            ServerVariables = new NameValueCollection
+            this.ServerVariables = new NameValueCollection
                 {
                     { "HTTP_HOST", "localhost" }
                 };

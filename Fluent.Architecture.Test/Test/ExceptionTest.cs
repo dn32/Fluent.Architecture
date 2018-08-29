@@ -36,8 +36,8 @@ namespace Fluent.Architecture.Test.Test
         [TestCase(false, typeof(FluentValidationException))]
         [TestCase(false, typeof(NullParameterFluentValidationException))]
         [TestCase(false, typeof(PropertyRequiredFluentValidationException))]
-
         [TestCase(true, typeof(EntityExistsFluentValidationException))]
+
         // For test custom errors
         public void ExceptionFilterTest(bool customErrorEnabled, Type exceptionType)
         {
@@ -47,9 +47,13 @@ namespace Fluent.Architecture.Test.Test
             var parameters = exceptionType.GetConstructorParameters();
             parameters[0] = "Id";
 
-            exception.AddInconsistency(Activator.CreateInstance(exceptionType, parameters) as FluentValidationException);
+            exception.AddInconsistency(
+                Activator.CreateInstance(exceptionType, parameters) as FluentValidationException);
 
-            var exceptionContext = MockUtil.GetMockExceptionContext<UserController>(exception, UserControllerInstance, customErrorEnabled);
+            var exceptionContext = MockUtil.GetMockExceptionContext<UserController>(
+                exception,
+                this.UserControllerInstance,
+                customErrorEnabled);
 
             filter.OnException(exceptionContext);
 
@@ -67,9 +71,9 @@ namespace Fluent.Architecture.Test.Test
         public void ExceptionFilter2Test()
         {
             var filter = new ExceptionHandlerAttribute();
-            var exception = new System.Exception("Test Exception");
+            var exception = new Exception("Test Exception");
 
-            var exceptionContext = MockUtil.GetMockExceptionContext<UserController>(exception, UserControllerInstance, false);
+            var exceptionContext = MockUtil.GetMockExceptionContext<UserController>(exception, this.UserControllerInstance, false);
 
             filter.OnException(exceptionContext);
             var data = ((JsonResult)exceptionContext.Result).Data;

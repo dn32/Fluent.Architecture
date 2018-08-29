@@ -13,6 +13,6 @@ namespace Fluent.Architecture.Services
         /// <summary>
         /// Objetos de transação do serviço.
         /// </summary>
-        internal TransactionObjects TransactionObjects => SessionRequest.TransactionObjects;
+        internal TransactionObjects TransactionObjects => this.SessionRequest.TransactionObjects;
     }
 }

@@ -100,7 +100,7 @@ namespace Fluent.Architecture.Util
             }
         }
 
-        //Todo doc
+        // Todo doc
         public static MethodBase GetMethodForPropagation()
         {
             var frames = new StackTrace().GetFrames();

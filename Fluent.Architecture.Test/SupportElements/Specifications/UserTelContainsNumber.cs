@@ -14,12 +14,12 @@ namespace Fluent.Architecture.Test.SupportElements.Specifications
 
         public UserTelContainsNumber(FluentController<User> controller, string number) : base(controller)
         {
-            _number = number;
+            this._number = number;
         }
 
         public override IQueryable<User> Spec(IQueryable<User> query)
         {
-            return query.Where(x => x.Tel.Contains(_number));
+            return query.Where(x => x.Tel.Contains(this._number));
         }
 
         public override Expression<Func<User, object>> Order()

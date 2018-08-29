@@ -13,7 +13,7 @@ namespace Fluent.Architecture.Exceptions.ValidationException
 
         public string Parameter { get; set; }
         
-        public FluentParameterValidationException(string message, System.Exception innerException) : base(message)
+        public FluentParameterValidationException(string message, Exception innerException) : base(message)
         {
             throw new NotImplementedException();
         }

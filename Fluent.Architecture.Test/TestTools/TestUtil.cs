@@ -28,15 +28,15 @@ namespace Fluent.Architecture.Test.TestTools
 
         public static int NextRandom()
         {
-            lock (SyncLock)
+            lock (TestUtil.SyncLock)
             {
-                return Random.Next(1, int.MaxValue);
+                return TestUtil.Random.Next(1, int.MaxValue);
             }
         }
 
         public static TR Execute<TR>(BaseController controller, string methodName, object parameter)
         {
-            return Execute<TR>(controller, methodName, new object[] { parameter });
+            return TestUtil.Execute<TR>(controller, methodName, new object[] { parameter });
         }
 
         public static TR Execute<TR>(BaseController controller, string methodName, object[] parameters, Func<BaseController, TR> action = null)
@@ -59,7 +59,7 @@ namespace Fluent.Architecture.Test.TestTools
 
                 if (method == null)
                 {
-                    throw new System.Exception($"The {methodName} method was not found in {controllerType}.");
+                    throw new Exception($"The {methodName} method was not found in {controllerType}.");
                 }
             }
 

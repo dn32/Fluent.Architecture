@@ -18,7 +18,10 @@ namespace Fluent.Architecture.Services
     /// </summary>
     public abstract class BaseService
     {
-        private bool Disposed { get; set; }
+        protected BaseService()
+        {
+            this.Disposed = false;
+        }
 
         /// <summary>
         /// Entidade organizadora da injeção de dependência e do contexto da requisição do usuário.
@@ -28,17 +31,19 @@ namespace Fluent.Architecture.Services
         /// <summary>
         /// Obtem o identificador da sessão da requisição atual.
         /// </summary>
-        public Guid SessionRequestId => SessionRequest.SessionRequestId;
+        public Guid SessionRequestId => this.SessionRequest.SessionRequestId;
 
         /// <summary>
         /// HttpContext da requisição vinda do controller.
         /// </summary>
-        public HttpContextBase LocalHttpContext => SessionRequest.LocalHttpContext;
+        public HttpContextBase LocalHttpContext => this.SessionRequest.LocalHttpContext;
 
         /// <summary>
         /// Usuário do sistema.
         /// </summary>
-        public ClaimsPrincipal User => SessionRequest.LocalHttpContext.User as ClaimsPrincipal;
+        public ClaimsPrincipal User => this.SessionRequest.LocalHttpContext.User as ClaimsPrincipal;
+
+        private bool Disposed { get; }
 
         /// <summary>
         /// Obtem a injeção de dependência de propriedades Lazy-loading.
@@ -55,16 +60,26 @@ namespace Fluent.Architecture.Services
         public virtual BaseService GetServiceDependency<TS>(string sessionId) where TS : BaseService, new()
         {
             var sessionIdGuid = Guid.Parse(sessionId);
-            SessionRequest = Setup.GetUserRequestSession(sessionIdGuid);
+            this.SessionRequest = Setup.GetUserRequestSession(sessionIdGuid);
 
-            if (SessionRequest.Services.TryGetValue(typeof(TS), out var ser))
+            if (this.SessionRequest.Services.TryGetValue(typeof(TS), out var ser))
             {
                 return ser as TS;
             }
 
-            var service = ServiceFactory.CreateInternalServiceRuntime(typeof(TS), SessionRequest.LocalHttpContext, sessionIdGuid) as TS;
-            SessionRequest.Services.Add(typeof(TS), service);
+            var service = ServiceFactory.CreateInternalServiceRuntime(typeof(TS), sessionIdGuid) as TS;
+            this.SessionRequest.Services.Add(typeof(TS), service);
             return service;
+        }
+
+        public void Dispose(bool primaryService)
+        {
+            if (this.Disposed)
+            {
+                return;
+            }
+
+            this.SessionRequest.Dispose(primaryService);
         }
 
         /// <summary>
@@ -75,18 +90,7 @@ namespace Fluent.Architecture.Services
         /// </param>
         protected internal virtual void SetUserSession(UserSessionRequest sessionRequest)
         {
-            SessionRequest = sessionRequest;
-        }
-
-        public void Dispose(bool primaryService)
-        {
-            if (Disposed)
-            {
-                return;
-            }
-
-            Disposed = true;
-            SessionRequest.Dispose(primaryService);
+            this.SessionRequest = sessionRequest;
         }
     }
 }

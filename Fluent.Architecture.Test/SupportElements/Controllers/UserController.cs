@@ -17,167 +17,166 @@ namespace Fluent.Architecture.Test.SupportElements.Controllers
 
         public void RemoveRange(UserByPassword spec)
         {
-            Service.RemoveRange(spec);
+            this.Service.RemoveRange(spec);
         }
 
         public void Test()
         {
-            Propagate();
+            this.Propagate();
         }
 
         public void Test2()
         {
-            Propagate();
+            this.Propagate();
         }
 
         public JsonResult UserByEmail(string email)
         {
-            var user = Service.SpecOne(new UserByEmail(this, email));
-            return Json(user);
+            var user = this.Service.SpecOne(new UserByEmail(this, email));
+            return this.Json(user);
         }
 
         public JsonResult FindById(int id)
         {
-            var user = Propagate(id);
-            return Json(user);
+            var user = this.Propagate(id);
+            return this.Json(user);
         }
 
         public void NotFound()
         {
-            PropagateMethod(nameof(NotFound));
+            this.PropagateMethod(nameof(UserController.NotFound));
         }
 
-        //public void NotFound2()
-        //{
-        //    Propagate();
-        //}
-
+        // public void NotFound2()
+        // {
+        // Propagate();
+        // }
         public JsonResult SpecOne(FluentSpecification<User> spec)
         {
-            var user = Service.SpecOne(spec);
-            return Json(user);
+            var user = this.Service.SpecOne(spec);
+            return this.Json(user);
         }
 
         public JsonResult SpecOne(FluentSelectSpecification<User, int> spec)
         {
-            var userId = Service.SpecOne(spec);
-            return Json(userId);
+            var userId = this.Service.SpecOne(spec);
+            return this.Json(userId);
         }
 
         public JsonResult SpecOne(FluentSelectSpecification<User, UserStudent> spec)
         {
-            var userStudent = Service.SpecOne(spec);
-            return Json(userStudent);
+            var userStudent = this.Service.SpecOne(spec);
+            return this.Json(userStudent);
         }
 
         public JsonResult Exists(FluentSpecification<User> spec)
         {
-            var exists = Propagate<bool>(spec);
-            return Json(exists);
+            var exists = this.Propagate<bool>(spec);
+            return this.Json(exists);
         }
 
         public JsonResult Count(FluentSpecification<User> spec)
         {
-            var user = Service.Count(spec);
-            return Json(user);
+            var user = this.Service.Count(spec);
+            return this.Json(user);
         }
 
         public JsonResult Exists(FluentSelectSpecification<User, int> spec)
         {
-            var user = Service.Exists(spec);
-            return Json(user);
+            var user = this.Service.Exists(spec);
+            return this.Json(user);
         }
 
         public JsonResult Count(FluentSelectSpecification<User, int> spec)
         {
-            var user = Service.Count(spec);
-            return Json(user);
+            var user = this.Service.Count(spec);
+            return this.Json(user);
         }
 
         public JsonResult Spec(FluentSpecification<User> spec)
         {
-            var user = Service.Spec(spec);
-            return Json(user);
+            var user = this.Service.Spec(spec);
+            return this.Json(user);
         }
 
         public JsonResult Spec(FluentSelectSpecification<User, int> spec)
         {
-            var userId = Service.Spec(spec);
-            return Json(userId);
+            var userId = this.Service.Spec(spec);
+            return this.Json(userId);
         }
 
         public JsonResult Spec(FluentSpecification<User> spec, FluentPagination pagination)
         {
-            var user = Service.Spec(spec, pagination);
-            return Json(user);
+            var user = this.Service.Spec(spec, pagination);
+            return this.Json(user);
         }
 
         public void RemoveRange(FluentSpecification<User> spec)
         {
-            Service.RemoveRange(spec);
+            this.Service.RemoveRange(spec);
         }
 
         public JsonResult GetUserByEmail(string email)
         {
-            var userStudent = Service.GetUserByEmail(email);
-            return Json(userStudent);
+            var userStudent = this.Service.GetUserByEmail(email);
+            return this.Json(userStudent);
         }
         
         public JsonResult PropagateMethodTestA()
         {
-            return Json(PropagateMethod(nameof(PropagateMethodTestA)));
+            return this.Json(this.PropagateMethod(nameof(UserController.PropagateMethodTestA)));
         }
         
         public JsonResult PropagateMethodTestB(int id, string name)
         {
-            return Json(PropagateMethod(nameof(PropagateMethodTestB), new object[] { id, name }));
+            return this.Json(this.PropagateMethod(nameof(UserController.PropagateMethodTestB), new object[] { id, name }));
         }
         
         public JsonResult PropagateMethodTestC(int id, string name)
         {
-            return Json(PropagateMethod<Student>(nameof(PropagateMethodTestC), new object[]{ id, name }));
+            return this.Json(this.PropagateMethod<Student>(nameof(UserController.PropagateMethodTestC), new object[]{ id, name }));
         }
         
         public JsonResult PropagateMethodTestD(int parameter)
         {
-            return Json(PropagateMethod(nameof(PropagateMethodTestD), parameter));
+            return this.Json(this.PropagateMethod(nameof(UserController.PropagateMethodTestD), parameter));
         }
         
         public JsonResult PropagateMethodTestE(int id)
         {
-            return Json(PropagateMethod<Student>(nameof(PropagateMethodTestE), id));
+            return this.Json(this.PropagateMethod<Student>(nameof(UserController.PropagateMethodTestE), id));
         }
 
-        //===========================
+        // ===========================
         
         public JsonResult PropagateTestF()
         {
-            return Json(Propagate());
+            return this.Json(this.Propagate());
         }
         
         public JsonResult PropagateTestG(int id, string name)
         {
-            return Json(Propagate(new object[] { id, name }));
+            return this.Json(this.Propagate(new object[] { id, name }));
         }
         
         public JsonResult PropagateTestH(int id, string name)
         {
-            return Json(Propagate<Student>(new object[] { id, name }));
+            return this.Json(this.Propagate<Student>(new object[] { id, name }));
         }
         
         public JsonResult PropagateTestI(int id)
         {
-            return Json(Propagate<Student>(new object[] { id }));
+            return this.Json(this.Propagate<Student>(new object[] { id }));
         }
 
         public JsonResult PropagateTestJ(int id)
         {
-            return Json(Propagate(new object[] { id }));
+            return this.Json(this.Propagate(new object[] { id }));
         }
 
         public void ParameterCountFail()
         {
-            PropagateMethod("Spec", new object[] { 1,2,3 });
+            this.PropagateMethod("Spec", new object[] { 1, 2, 3 });
         }
     }
 }

@@ -12,12 +12,12 @@ namespace Fluent.Architecture.Test.SupportElements.Specifications
 
         public UserIdByEmail(FluentController<User> controller, string email) : base(controller)
         {
-            _email = email;
+            this._email = email;
         }
 
         public override IQueryable<int> Spec(IQueryable<User> query)
         {
-            return query.Where(x => x.Email.Equals(_email, StringComparison.CurrentCultureIgnoreCase)).Select(x => x.Id);
+            return query.Where(x => x.Email.Equals(this._email, StringComparison.CurrentCultureIgnoreCase)).Select(x => x.Id);
         }
     }
 }

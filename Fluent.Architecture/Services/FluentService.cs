@@ -14,6 +14,8 @@ using Fluent.Architecture.Validation;
 
 namespace Fluent.Architecture.Services
 {
+    using System;
+
     using Fluent.Architecture.Exceptions;
 
     ///<inheritdoc/>
@@ -29,8 +31,7 @@ namespace Fluent.Architecture.Services
         ///// O repositório do serviço.
         ///// </summary>
         //// protected internal FluentRepository<T> Repository { get; set; }
-      
-        protected internal FluentRepository<T> Repository;
+        protected internal FluentRepository<T> Repository { get; set; }
 
         /// <summary>
         /// A validação do serviço.
@@ -41,10 +42,10 @@ namespace Fluent.Architecture.Services
         {
             base.SetUserSession(sessionRequest);
 
-            ValidateInit();
-            Repository = RepositoryFactory<T>.Create(TransactionObjects, this);
-            Validation = ValidationFactory.Create<T>();
-            Validation.Init(this, Repository);
+            FluentService<T>.ValidateInit();
+            this.Repository = RepositoryFactory<T>.Create(this.TransactionObjects, this);
+            this.Validation = ValidationFactory.Create<T>();
+            this.Validation.Init(this, this.Repository);
         }
 
         #region PROPAGATION
@@ -52,9 +53,9 @@ namespace Fluent.Architecture.Services
         // Todo Documenta após a organização desses itens.
         public virtual object PropagateService(string methodName, object[] parameters)
         {
-            Validation.PropagateService(methodName, parameters);
+            this.Validation.PropagateService(methodName, parameters);
 
-            var type = GetType();
+            var type = this.GetType();
             var parameterTypes = parameters.Select(x => x.GetType()).ToArray();
             var serviceMethod = type.GetMethod(methodName, parameterTypes);
             if (serviceMethod != null)
@@ -63,41 +64,43 @@ namespace Fluent.Architecture.Services
                 {
                     return serviceMethod.Invoke(this, parameters);
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
                     throw ex.InnerException;
                 }
             }
 
-            var validationMethod = Validation.GetType().GetMethod(methodName, parameterTypes);
+            var validationMethod = this.Validation.GetType().GetMethod(methodName, parameterTypes);
             if (validationMethod == null)
             {
                 try
                 {
-                    validationMethod = Validation.GetType().GetMethod(methodName);
+                    validationMethod = this.Validation.GetType().GetMethod(methodName);
                 }
                 catch (AmbiguousMatchException)
                 {
-                    throw new IncorrectDevelopmentException($"There are two or more methods of propagation in {validationMethod} with the same name {methodName}. This causes an ambiguity, please change the name of one of them.");
+                    throw new IncorrectDevelopmentException(
+                        $"There are two or more methods of propagation in {validationMethod} with the same name {methodName}. This causes an ambiguity, please change the name of one of them.");
                 }
             }
 
             if (validationMethod != null)
             {
-                validationMethod.Invoke(Validation, parameters);
+                validationMethod.Invoke(this.Validation, parameters);
             }
 
-            var repositoryMethod = Repository.GetType().GetMethod(methodName, parameterTypes);
+            var repositoryMethod = this.Repository.GetType().GetMethod(methodName, parameterTypes);
 
             if (repositoryMethod == null)
             {
                 try
                 {
-                    repositoryMethod = Repository.GetType().GetMethod(methodName);
+                    repositoryMethod = this.Repository.GetType().GetMethod(methodName);
                 }
                 catch (AmbiguousMatchException)
                 {
-                    throw new IncorrectDevelopmentException($"There are two or more methods of propagation in {Repository} with the same name {methodName}. This causes an ambiguity, please change the name of one of them.");
+                    throw new IncorrectDevelopmentException(
+                        $"There are two or more methods of propagation in {this.Repository} with the same name {methodName}. This causes an ambiguity, please change the name of one of them.");
                 }
             }
 
@@ -106,7 +109,8 @@ namespace Fluent.Architecture.Services
                 var localParameters = repositoryMethod.GetAllParameters();
                 if (parameters.Length > localParameters.Length)
                 {
-                    throw new IncorrectDevelopmentException("The amount of parameters passed is greater than the amount expected by the method.");
+                    throw new IncorrectDevelopmentException(
+                        "The amount of parameters passed is greater than the amount expected by the method.");
                 }
 
                 for (var i = 0; i < parameters.Length; i++)
@@ -117,16 +121,18 @@ namespace Fluent.Architecture.Services
                     }
                 }
 
-                return repositoryMethod.Invoke(Repository, localParameters);
+                return repositoryMethod.Invoke(this.Repository, localParameters);
             }
 
-            throw new IncorrectDevelopmentException($"The {methodName} method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User");
+            throw new IncorrectDevelopmentException(
+                $"The {methodName} method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User");
         }
 
         #endregion
 
         #region PASSAGEM DIRETA PARA O REPOSITÓRIO
-        //Todo - Esses métoso são redundantes. Crier um mecanismo para não necessitar reencrever essas chamadas.
+
+        // Todo - Esses métoso são redundantes. Crier um mecanismo para não necessitar reencrever essas chamadas.
         /// <summary>
         /// Executa uma solicitação baseada em uma especificação e retorna uma lista paginada de resultados.
         /// </summary>
@@ -145,7 +151,7 @@ namespace Fluent.Architecture.Services
         [Propagate]
         public virtual List<TO> Spec<TO>(FluentSelectSpecification<T, TO> spec, FluentPagination pagination = null)
         {
-            return Repository.SpecSelect(spec, pagination);
+            return this.Repository.SpecSelect(spec, pagination);
         }
 
         /// <summary>
@@ -163,7 +169,7 @@ namespace Fluent.Architecture.Services
         [Propagate]
         public virtual List<T> Spec(FluentSpecification<T> spec, FluentPagination pagination = null)
         {
-            return Repository.Spec(spec, pagination);
+            return this.Repository.Spec(spec, pagination);
         }
 
         /// <summary>
@@ -181,7 +187,7 @@ namespace Fluent.Architecture.Services
         [Propagate]
         public virtual TO SpecOne<TO>(FluentSelectSpecification<T, TO> spec)
         {
-            return Repository.SpecOne(spec);
+            return this.Repository.SpecOne(spec);
         }
 
         /// <summary>
@@ -196,7 +202,7 @@ namespace Fluent.Architecture.Services
         [Propagate]
         public virtual T SpecOne(FluentSpecification<T> spec)
         {
-            return Repository.SpecOne(spec);
+            return this.Repository.SpecOne(spec);
         }
 
         /// <summary>
@@ -214,7 +220,7 @@ namespace Fluent.Architecture.Services
         [Propagate]
         public virtual int Count<TO>(FluentSelectSpecification<T, TO> spec)
         {
-            return Repository.Count(spec);
+            return this.Repository.Count(spec);
         }
 
         /// <summary>
@@ -229,14 +235,14 @@ namespace Fluent.Architecture.Services
         [Propagate]
         public virtual int Count(FluentSpecification<T> spec)
         {
-            return Repository.Count(spec);
+            return this.Repository.Count(spec);
         }
 
-        //Todo documentar
+        // Todo documentar
         [Propagate]
         public virtual void RemoveRange(FluentSpecification<T> spec)
         {
-            Repository.RemoveRange(spec);
+            this.Repository.RemoveRange(spec);
         }
 
         /// <summary>
@@ -251,7 +257,7 @@ namespace Fluent.Architecture.Services
         [Propagate]
         public virtual bool Exists(FluentSpecification<T> spec)
         {
-            return Repository.Exists(spec);
+            return this.Repository.Exists(spec);
         }
 
         /// <summary>
@@ -266,7 +272,7 @@ namespace Fluent.Architecture.Services
         [Propagate]
         public virtual bool Exists<TO>(FluentSelectSpecification<T, TO> spec)
         {
-            return Repository.Exists(spec);
+            return this.Repository.Exists(spec);
         }
 
         /// <summary>
@@ -278,8 +284,8 @@ namespace Fluent.Architecture.Services
         [Propagate]
         public virtual void AddRange(params T[] entities)
         {
-            entities.ToList().ForEach(Validation.Add);
-            Repository.AddRange(entities);
+            entities.ToList().ForEach(this.Validation.Add);
+            this.Repository.AddRange(entities);
         }
 
         /// <summary>
@@ -291,16 +297,16 @@ namespace Fluent.Architecture.Services
         [Propagate]
         public virtual T Add(T entity)
         {
-            Validation.Add(entity);
-            return Repository.Add(entity);
+            this.Validation.Add(entity);
+            return this.Repository.Add(entity);
         }
 
-        //Todo documentar
+        // Todo documentar
         [Propagate]
         public virtual T Find(T entity)
         {
-            Validation.Find(entity);
-            return Repository.Find(entity);
+            this.Validation.Find(entity);
+            return this.Repository.Find(entity);
         }
 
         /// <summary>
@@ -312,8 +318,8 @@ namespace Fluent.Architecture.Services
         [Propagate]
         public virtual T Update(T entity)
         {
-            Validation.Update(entity);
-            return Repository.Update(entity);
+            this.Validation.Update(entity);
+            return this.Repository.Update(entity);
         }
 
         /// <summary>
@@ -325,21 +331,22 @@ namespace Fluent.Architecture.Services
         [Propagate]
         public virtual T Remove(T entity)
         {
-            Validation.Remove(entity);
-            return Repository.Remove(entity);
+            this.Validation.Remove(entity);
+            return this.Repository.Remove(entity);
         }
 
-        //Todo documentar
+        // Todo documentar
         [Propagate]
         public virtual void RemoveRange(params T[] entities)
         {
             foreach (var entity in entities)
             {
-                Validation.Remove(entity);
+                this.Validation.Remove(entity);
             }
 
-            Repository.RemoveRange(entities);
+            this.Repository.RemoveRange(entities);
         }
+
         #endregion
 
         #region PRIVATE

@@ -29,12 +29,15 @@ namespace Fluent.Architecture.Model
         {
             this.ContextFluentValidationException = new ContextFluentValidationException();
         }
+
 #if NET461
+
         /// <summary>
         /// HttpContext da requisição vinda do controller.
         /// </summary>
-        public HttpContextBase LocalHttpContext => HttpContext as HttpContextBase;
+        public HttpContextBase LocalHttpContext => this.HttpContext as HttpContextBase;
 #else
+
         /// <summary>
         /// HttpContext da requisição vinda do controller.
         /// </summary>
@@ -42,17 +45,17 @@ namespace Fluent.Architecture.Model
 #endif
         public void Dispose(bool primaryService)
         {
-            Setup.RemoveSession(SessionRequestId);
-            TransactionObjects.Dispose();
+            Setup.RemoveSession(this.SessionRequestId);
+            this.TransactionObjects.Dispose();
 
-            foreach (var service in Services.Values)
+            foreach (var service in this.Services.Values)
             {
                 service.Dispose(false);
             }
 
             if (primaryService)
             {
-                Services.Clear();
+                this.Services.Clear();
             }
         }
     }

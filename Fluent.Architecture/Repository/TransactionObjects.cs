@@ -31,7 +31,7 @@ namespace Fluent.Architecture.Repository
         /// </returns>
         internal static TransactionObjects Create()
         {
-            return Activator.CreateInstance(Setup.TransactionObjectsType, DataBaseConnectionString) as TransactionObjects;
+            return Activator.CreateInstance(Setup.TransactionObjectsType, TransactionObjects.DataBaseConnectionString) as TransactionObjects;
         }
 
         /// <summary>
@@ -43,8 +43,8 @@ namespace Fluent.Architecture.Repository
         /// </param>
         public TransactionObjects(string dataBaseConnectionString)
         {
-            DataBaseConnectionString = dataBaseConnectionString;
-            this.Session = ContextFactory.Create(DataBaseConnectionString);
+            TransactionObjects.DataBaseConnectionString = dataBaseConnectionString;
+            this.Session = ContextFactory.Create(TransactionObjects.DataBaseConnectionString);
         }
         
         internal DbSet<TX> GetObjectInputDataInternal<TX>() where TX : BaseEntity
