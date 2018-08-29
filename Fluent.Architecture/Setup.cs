@@ -17,6 +17,7 @@ using Fluent.Architecture.Validation;
 namespace Fluent.Architecture
 {
     using System.ComponentModel.DataAnnotations;
+    using System.Management.Instrumentation;
 
     using Fluent.Architecture.Exceptions;
 
@@ -147,7 +148,7 @@ namespace Fluent.Architecture
         {
             if (!UserSessionList.TryGetValue(sessionIdGuid, out var userSession))
             {
-                throw new Exception("UserSessionRequest not fount!");
+                throw new InstanceNotFoundException("UserSessionRequest not fount!");
             }
 
             return userSession;

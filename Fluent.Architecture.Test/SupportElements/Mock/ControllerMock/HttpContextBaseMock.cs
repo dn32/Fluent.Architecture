@@ -11,7 +11,7 @@ namespace Fluent.Architecture.Test.SupportElements.Mock.ControllerMock
 
         public override HttpRequestBase Request { get; }
 
-        private bool SetIsCustomErrorEnabled { get; set; }
+        private bool SetIsCustomErrorEnabled { get; }
 
         public override IPrincipal User { get; set; }
 

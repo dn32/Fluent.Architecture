@@ -1,7 +1,5 @@
 ﻿#if NET461
-using System;
 using System.Web.Mvc;
-using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Specifications;
@@ -121,49 +119,49 @@ namespace Fluent.Architecture.Test.SupportElements.Controllers
             var userStudent = this.Service.GetUserByEmail(email);
             return this.Json(userStudent);
         }
-        
+
         public JsonResult PropagateMethodTestA()
         {
             return this.Json(this.PropagateMethod(nameof(this.PropagateMethodTestA)));
         }
-        
+
         public JsonResult PropagateMethodTestB(int id, string name)
         {
-            return this.Json(this.PropagateMethod(nameof(this.PropagateMethodTestB), new object[] { id, name }));
+            return this.Json(this.PropagateMethod(nameof(this.PropagateMethodTestB), id, name));
         }
-        
+
         public JsonResult PropagateMethodTestC(int id, string name)
         {
-            return this.Json(this.PropagateMethod<Student>(nameof(this.PropagateMethodTestC), new object[]{ id, name }));
+            return this.Json(this.PropagateMethod<Student>(nameof(this.PropagateMethodTestC), new object[] { id, name }));
         }
-        
+
         public JsonResult PropagateMethodTestD(int parameter)
         {
             return this.Json(this.PropagateMethod(nameof(this.PropagateMethodTestD), parameter));
         }
-        
+
         public JsonResult PropagateMethodTestE(int id)
         {
             return this.Json(this.PropagateMethod<Student>(nameof(this.PropagateMethodTestE), id));
         }
 
         // ===========================
-        
+
         public JsonResult PropagateTestF()
         {
             return this.Json(this.Propagate());
         }
-        
+
         public JsonResult PropagateTestG(int id, string name)
         {
             return this.Json(this.Propagate(new object[] { id, name }));
         }
-        
+
         public JsonResult PropagateTestH(int id, string name)
         {
             return this.Json(this.Propagate<Student>(new object[] { id, name }));
         }
-        
+
         public JsonResult PropagateTestI(int id)
         {
             return this.Json(this.Propagate<Student>(new object[] { id }));
