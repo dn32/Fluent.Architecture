@@ -13,23 +13,29 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fluent.Architecture.Repository
 {
-    /// <inheritdoc />
     /// <summary>
     /// Obtetos de transação.
     /// </summary>
-    public class TransactionObjects : IDisposable
+    public class TransactionObjects
     {
+        public void Dispose()
+        {
+           this.Session.Dispose();
+        }
+
         /// <summary>
-        /// Sessão do EF.
+        /// Cria uma instância da classse.
         /// </summary>
-        internal EfContext Session { get; set; }
-
-        ///// <summary>
-        ///// String de conexão com o banco de dados.
-        ///// </summary>
-        internal static string DataBaseConnectionString { get; set; }
+        /// <returns>
+        /// A insância da classe.
+        /// </returns>
+        internal static TransactionObjects Create()
+        {
+            return Activator.CreateInstance(Setup.TransactionObjectsType, DataBaseConnectionString) as TransactionObjects;
+        }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="TransactionObjects"/> class. 
         /// Inicializa objeto de transação.
         /// </summary>
         /// <param name="dataBaseConnectionString">
@@ -38,7 +44,12 @@ namespace Fluent.Architecture.Repository
         public TransactionObjects(string dataBaseConnectionString)
         {
             DataBaseConnectionString = dataBaseConnectionString;
-            Session = ContextFactory.Create(DataBaseConnectionString);
+            this.Session = ContextFactory.Create(DataBaseConnectionString);
+        }
+        
+        internal DbSet<TX> GetObjectInputDataInternal<TX>() where TX : BaseEntity
+        {
+            return this.Session.Set<TX>();
         }
 
         /// <summary>
@@ -52,26 +63,17 @@ namespace Fluent.Architecture.Repository
         /// </returns>
         protected internal virtual IQueryable<TX> GetObjectQueryInternal<TX>() where TX : BaseEntity
         {
-            return Session.Set<TX>();
-        }
-
-        internal DbSet<TX> GetObjectInputDataInternal<TX>() where TX : BaseEntity
-        {
-            return Session.Set<TX>();
+            return this.Session.Set<TX>();
         }
 
         /// <summary>
-        /// Cria uma instância da classse.
+        /// Sessão do EF.
         /// </summary>
-        /// <returns></returns>
-        internal static TransactionObjects Create()
-        {
-            return Activator.CreateInstance(Setup.TransactionObjectsType, DataBaseConnectionString) as TransactionObjects;
-        }
+        internal EfContext Session { get; set; }
 
-        public void Dispose()
-        {
-            Session.Dispose();
-        }
+        ///// <summary>
+        ///// String de conexão com o banco de dados.
+        ///// </summary>
+        internal static string DataBaseConnectionString { get; set; }
     }
 }

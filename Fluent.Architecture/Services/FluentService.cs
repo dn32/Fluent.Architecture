@@ -24,10 +24,11 @@ namespace Fluent.Architecture.Services
     /// </typeparam>
     public class FluentService<T> : TransactionalService where T : BaseEntity
     {
-        /// <summary>
-        /// O repositório do serviço.
-        /// </summary>
-        // protected internal FluentRepository<T> Repository { get; set; }
+        ///// <summary>
+        ///// O repositório do serviço.
+        ///// </summary>
+        //// protected internal FluentRepository<T> Repository { get; set; }
+      
         protected internal FluentRepository<T> Repository;
 
         /// <summary>

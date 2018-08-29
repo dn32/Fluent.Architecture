@@ -61,24 +61,24 @@ namespace Fluent.Architecture.Test.Test
         public void GetMethodNameByCallerTypeIQueryableTest()
         {
             var entity = new List<TestEntity>().AsQueryable().GetAllDataOfObject();
-            const string expectedJson = "[]";
-            Assert.AreEqual(expectedJson, entity);
+            const string ExpectedJson = "[]";
+            Assert.AreEqual(ExpectedJson, entity);
         }
 
         [Test]
         public void GetMethodNameByCallerTypeNullTest()
         {
             var entity = ObjectExtension.GetAllDataOfObject(null);
-            const string expectedJson = "[]";
-            Assert.AreEqual(expectedJson, entity);
+            const string ExpectedJson = "[]";
+            Assert.AreEqual(ExpectedJson, entity);
         }
 
         [Test]
         public void GetMethodNameByCallerTypeListTest()
         {
             var entity = new List<TestEntity> { new TestEntity() }.GetAllDataOfObject();
-            const string expectedJson = "[{\"Name\":\"<Id>\",\"Value\":0},{\"Name\":\"_internalString\",\"Value\":\"my value\"},{\"Name\":\"<Id>\",\"Value\":0}]";
-            Assert.AreEqual(expectedJson, entity);
+            const string ExpectedJson = "[{\"Name\":\"<Id>\",\"Value\":0},{\"Name\":\"_internalString\",\"Value\":\"my value\"},{\"Name\":\"<Id>\",\"Value\":0}]";
+            Assert.AreEqual(ExpectedJson, entity);
         }
 
         [Test]

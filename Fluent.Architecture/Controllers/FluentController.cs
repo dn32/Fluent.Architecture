@@ -1,10 +1,7 @@
 ﻿// ReSharper disable CommentTypo
 
-using System.Linq;
-using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Util;
-using Fluent.Architecture.Exception;
 using Fluent.Architecture.Services;
 #if NET461
 using System.Web.Mvc;
@@ -14,6 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Fluent.Architecture.Controllers
 {
+    using System;
+
     /// <inheritdoc />
     /// <summary>
     /// Controlador genérico padrão recomendado para herança por todos os controladores que tiverem entidade.
@@ -25,7 +24,7 @@ namespace Fluent.Architecture.Controllers
         
         protected T PropagateMethod(string methodName)
         {
-            return PropagateInternal(methodName, new object[] { }) as T;
+            return PropagateInternal(methodName, Array.Empty<object>()) as T;
         }
 
         protected T PropagateMethod(string methodName, params object[] parameters)
@@ -40,19 +39,19 @@ namespace Fluent.Architecture.Controllers
 
         protected T PropagateMethod(string methodName, object parameter)
         {
-            return PropagateInternal(methodName, parameter == null ? new object[] { } : new object[] { parameter }) as T;
+            return PropagateInternal(methodName, parameter == null ? Array.Empty<object>() : new object[] { parameter }) as T;
         }
 
         protected TX PropagateMethod<TX>(string methodName, object parameter)
         {
-            return (TX)PropagateInternal(methodName, parameter == null ? new object[] { } : new[] { parameter });
+            return (TX)PropagateInternal(methodName, parameter == null ? Array.Empty<object>() : new[] { parameter });
         }
 
         //===========================
        
         protected T Propagate()
         {
-            return PropagateInternal(string.Empty, new object[] { }) as T;
+            return PropagateInternal(string.Empty, Array.Empty<object>()) as T;
         }
        
         protected T Propagate(object[] parameters)

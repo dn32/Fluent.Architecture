@@ -17,29 +17,37 @@ using Fluent.Architecture.Validation;
 
 namespace Fluent.Architecture
 {
-    public class Setup
+    public static class Setup
     {
         #region PROPERTIES
 
         private static readonly object LockInitialization = new object();
+
         internal static Type TransactionObjectsType { get; set; }
+
         internal static Dictionary<string, Type> Services { get; set; }
+
         internal static Dictionary<string, Type> Repositories { get; set; }
+
         internal static Dictionary<string, Type> Validations { get; set; }
+
         internal static Dictionary<string, Type> Model { get; set; }
+
         internal static Dictionary<Tuple<ePropagateTypes, string>, MethodInfo> Propagators { get; set; }
+
         public static bool Initialized { get; set; }
+
         internal static Dictionary<Guid, UserSessionRequest> UserSessionList { get; set; }
 
         #endregion
 
         #region PUBLIC METHODS
 
-        //For mock
-        //public static void SetCustomTypes(Type transactionObjectsType)
-        //{
-        //    TransactionObjectsType = transactionObjectsType;
-        //}
+        //// For mock
+        //// public static void SetCustomTypes(Type transactionObjectsType)
+        //// {
+        //// TransactionObjectsType = transactionObjectsType;
+        //// }
 
         public static void DbSetup(bool createDatabaseIfNotExists)
         {
@@ -116,9 +124,9 @@ namespace Fluent.Architecture
                      .ForEach(AddModel);
                 }
 
-                //ValidateIfAllMethodsAreVirtual(Services.Values.ToList()); // To intercept
-                //ValidateIfAllMethodsAreVirtual(Repositories.Values.ToList()); // To intercept
-                //ValidateIfAllMethodsAreVirtual(Validations.Values.ToList()); //It is not necessary
+                // ValidateIfAllMethodsAreVirtual(Services.Values.ToList()); // To intercept
+                // ValidateIfAllMethodsAreVirtual(Repositories.Values.ToList()); // To intercept
+                // ValidateIfAllMethodsAreVirtual(Validations.Values.ToList()); //It is not necessary
 
                 CheckErrorInTheRepository(Repositories.Values.ToList());
 
@@ -287,20 +295,20 @@ namespace Fluent.Architecture
             }
         }
 
-        //private static void ValidateIfAllMethodsAreVirtual(IEnumerable<Type> types)
-        //{
-        //    foreach (var item in types)
-        //    {
-        //        var methods = item.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-        //        foreach (var method in methods)
-        //        {
-        //            if ((!method.IsPrivate) && !method.IsVirtual && !method.IsFamily && !method.IsSpecialName && !(new[] { "GetType" }.Contains(method.Name)))
-        //            {
-        //                throw new IncorrectDevelopmentException($"The {method.ReflectedType.Name}.{method.Name} method must be set to virtual, or private.");
-        //            }
-        //        }
-        //    }
-        //}
+        // private static void ValidateIfAllMethodsAreVirtual(IEnumerable<Type> types)
+        // {
+        // foreach (var item in types)
+        // {
+        // var methods = item.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+        // foreach (var method in methods)
+        // {
+        // if ((!method.IsPrivate) && !method.IsVirtual && !method.IsFamily && !method.IsSpecialName && !(new[] { "GetType" }.Contains(method.Name)))
+        // {
+        // throw new IncorrectDevelopmentException($"The {method.ReflectedType.Name}.{method.Name} method must be set to virtual, or private.");
+        // }
+        // }
+        // }
+        // }
 
         #endregion
     }
