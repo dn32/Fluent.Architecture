@@ -20,7 +20,6 @@ namespace Fluent.Architecture.Services
     {
         protected BaseService()
         {
-            this.Disposed = false;
         }
 
         /// <summary>
@@ -43,7 +42,7 @@ namespace Fluent.Architecture.Services
         /// </summary>
         public ClaimsPrincipal User => this.SessionRequest.LocalHttpContext.User as ClaimsPrincipal;
 
-        private bool Disposed { get; }
+        private bool Disposed { get; set; }
 
         /// <summary>
         /// Obtem a injeção de dependência de propriedades Lazy-loading.
@@ -79,6 +78,7 @@ namespace Fluent.Architecture.Services
                 return;
             }
 
+            Disposed = true;
             this.SessionRequest.Dispose(primaryService);
         }
 

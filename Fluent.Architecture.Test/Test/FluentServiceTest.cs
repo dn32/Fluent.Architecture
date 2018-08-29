@@ -33,7 +33,7 @@ namespace Fluent.Architecture.Test.Test
             var spec = userSelectSpec ? new UserByPassword(this.UserControllerInstance, passwordForFind) as BaseSpecification<User> : new UserIdByPassword(this.UserControllerInstance, passwordForFind);
 
             //Add
-            TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Add), user);
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Add), user);
 
             var count = TestUtil.Execute<int>(this.UserControllerInstance, method, spec);
             Assert.AreEqual(expectedCount, count);
