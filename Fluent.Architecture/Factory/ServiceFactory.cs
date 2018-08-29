@@ -38,8 +38,8 @@ namespace Fluent.Architecture.Factory
         {
             // Todo IMPORTANTE checar quem está chamando e barrar chamas externas
             var sessionId = Guid.NewGuid();
-            var service = ServiceFactory.InternalCreate<TS>(sessionId);
-            var userSession = ServiceFactory.CreateUserSession(httpContext, sessionId, service);
+            var service = InternalCreate<TS>(sessionId);
+            var userSession = CreateUserSession(httpContext, sessionId, service);
             service.SetUserSession(userSession);
             return service;
         }
@@ -58,7 +58,7 @@ namespace Fluent.Architecture.Factory
         /// </returns>
         internal static object CreateInternalServiceRuntime(Type serviceType, Guid sessionId)
         {
-            var service = ServiceFactory.InternalCreate(serviceType, sessionId);
+            var service = InternalCreate(serviceType, sessionId);
             service.SetUserSession(Setup.GetUserRequestSession(sessionId));
             return service;
         }
@@ -67,8 +67,8 @@ namespace Fluent.Architecture.Factory
 
         private static TS InternalCreate<TS>(Guid sessionId) where TS : TransactionalService
         {
-            var serviceType = ServiceFactory.GetSpecializedService(typeof(TS));
-            return ServiceFactory.InternalCreate(serviceType, sessionId) as TS;
+            var serviceType = GetSpecializedService(typeof(TS));
+            return InternalCreate(serviceType, sessionId) as TS;
         }
 
         private static TransactionalService InternalCreate(Type serviceType, Guid sessionId)
@@ -85,7 +85,7 @@ namespace Fluent.Architecture.Factory
             //// // Todo "IFluentDynamicProxy ainda não está sendo usado
             //// serviceType = service.GetType().BaseType;
             //// }
-            return ServiceFactory.GetSpecializedService(serviceType);
+            return GetSpecializedService(serviceType);
         }
 
         private static Type GetSpecializedService(Type serviceType)
@@ -108,7 +108,7 @@ namespace Fluent.Architecture.Factory
         {
             var transactionObjects = TransactionObjects.Create(); 
 
-            var serviceType = ServiceFactory.GetSpecializedService(service);
+            var serviceType = GetSpecializedService(service);
             var userSession = new UserSessionRequest
             {
                 TransactionObjects = transactionObjects,

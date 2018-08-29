@@ -18,10 +18,10 @@ namespace Fluent.Architecture.Factory.Proxy
 
         internal static object CreateObject(Type parent, Guid sessionId)
         {
-            var assembly = new AssemblyName(ServiceLazyClassBuilder.AssemblyName);
-            var dynamicClass = ServiceLazyClassBuilder.CreateClass(parent, assembly);
-            ServiceLazyClassBuilder.CreateConstructor(dynamicClass);
-            ServiceLazyClassBuilder.OverwriteProperties(dynamicClass, sessionId);
+            var assembly = new AssemblyName(AssemblyName);
+            var dynamicClass = CreateClass(parent, assembly);
+            CreateConstructor(dynamicClass);
+            OverwriteProperties(dynamicClass, sessionId);
             var type = dynamicClass.CreateType();
             return Activator.CreateInstance(type);
         }
@@ -34,7 +34,7 @@ namespace Fluent.Architecture.Factory.Proxy
 #else
             var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(Guid.NewGuid().ToString()), AssemblyBuilderAccess.Run);
 #endif
-            var moduleBuilder = assemblyBuilder.DefineDynamicModule(ServiceLazyClassBuilder.ModuleName);
+            var moduleBuilder = assemblyBuilder.DefineDynamicModule(ModuleName);
             return moduleBuilder.DefineType(assembly.FullName, TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.AutoClass | TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.AutoLayout, parent);
         }
 
@@ -44,7 +44,7 @@ namespace Fluent.Architecture.Factory.Proxy
 
             foreach (var property in serviceProperties)
             {
-                ServiceLazyClassBuilder.OverwriteProperty(typeBuilder.BaseType, property, typeBuilder, sessionId);
+                OverwriteProperty(typeBuilder.BaseType, property, typeBuilder, sessionId);
             }
         }
 

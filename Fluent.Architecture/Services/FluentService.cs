@@ -42,7 +42,7 @@ namespace Fluent.Architecture.Services
         {
             base.SetUserSession(sessionRequest);
 
-            FluentService<T>.ValidateInit();
+            ValidateInit();
             this.Repository = RepositoryFactory<T>.Create(this.TransactionObjects, this);
             this.Validation = ValidationFactory.Create<T>();
             this.Validation.Init(this, this.Repository);

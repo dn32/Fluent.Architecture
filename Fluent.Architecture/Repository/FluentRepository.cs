@@ -102,7 +102,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual List<TO> SpecSelect<TO>(FluentSelectSpecification<TE, TO> spec, FluentPagination pagination = null)
         {
-            return FluentRepository<TE>.FluentPaginate(spec.ToIQueryable(this.Query), pagination).ToList();
+            return FluentPaginate(spec.ToIQueryable(this.Query), pagination).ToList();
         }
 
        
@@ -122,7 +122,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual List<TE> Spec(FluentSpecification<TE> spec, FluentPagination pagination = null)
         {
-            return FluentRepository<TE>.FluentPaginate(spec.ToIQueryable(this.Query), pagination).ToList();
+            return FluentPaginate(spec.ToIQueryable(this.Query), pagination).ToList();
         }
 
         /// <summary>
@@ -240,13 +240,13 @@ namespace Fluent.Architecture.Repository
         // }
         public TE Find(TE entity)
         {
-            var sql = FluentRepository<TE>.CreateSqlFromKeyAndFluentUniqueKeys(entity);
+            var sql = CreateSqlFromKeyAndFluentUniqueKeys(entity);
             return this.FindSingleOrDefaultSql(sql);
         }
 
         public bool Exists(TE entity)
         {
-            var sql = FluentRepository<TE>.CreateSqlFromKeyAndFluentUniqueKeys(entity);
+            var sql = CreateSqlFromKeyAndFluentUniqueKeys(entity);
             return this.ExistsSql(sql);
         }
 
@@ -299,6 +299,7 @@ namespace Fluent.Architecture.Repository
 #else
             throw new NotImplementedException();
             
+
 // Input.Update(entity);
 #endif
         }

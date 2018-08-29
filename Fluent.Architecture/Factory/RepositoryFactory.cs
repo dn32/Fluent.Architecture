@@ -35,7 +35,7 @@ namespace Fluent.Architecture.Factory
                 localType = epositoryType;
             }
 
-            var repository = RepositoryFactory<T>.Create(localType);
+            var repository = Create(localType);
             repository.TransactionObjects = transactionObjects;
             repository.Service = service;
             return repository;

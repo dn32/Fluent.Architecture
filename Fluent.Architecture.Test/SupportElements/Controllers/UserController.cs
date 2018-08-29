@@ -44,7 +44,7 @@ namespace Fluent.Architecture.Test.SupportElements.Controllers
 
         public void NotFound()
         {
-            this.PropagateMethod(nameof(UserController.NotFound));
+            this.PropagateMethod(nameof(this.NotFound));
         }
 
         // public void NotFound2()
@@ -124,27 +124,27 @@ namespace Fluent.Architecture.Test.SupportElements.Controllers
         
         public JsonResult PropagateMethodTestA()
         {
-            return this.Json(this.PropagateMethod(nameof(UserController.PropagateMethodTestA)));
+            return this.Json(this.PropagateMethod(nameof(this.PropagateMethodTestA)));
         }
         
         public JsonResult PropagateMethodTestB(int id, string name)
         {
-            return this.Json(this.PropagateMethod(nameof(UserController.PropagateMethodTestB), new object[] { id, name }));
+            return this.Json(this.PropagateMethod(nameof(this.PropagateMethodTestB), new object[] { id, name }));
         }
         
         public JsonResult PropagateMethodTestC(int id, string name)
         {
-            return this.Json(this.PropagateMethod<Student>(nameof(UserController.PropagateMethodTestC), new object[]{ id, name }));
+            return this.Json(this.PropagateMethod<Student>(nameof(this.PropagateMethodTestC), new object[]{ id, name }));
         }
         
         public JsonResult PropagateMethodTestD(int parameter)
         {
-            return this.Json(this.PropagateMethod(nameof(UserController.PropagateMethodTestD), parameter));
+            return this.Json(this.PropagateMethod(nameof(this.PropagateMethodTestD), parameter));
         }
         
         public JsonResult PropagateMethodTestE(int id)
         {
-            return this.Json(this.PropagateMethod<Student>(nameof(UserController.PropagateMethodTestE), id));
+            return this.Json(this.PropagateMethod<Student>(nameof(this.PropagateMethodTestE), id));
         }
 
         // ===========================

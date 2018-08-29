@@ -23,7 +23,7 @@ namespace Fluent.Architecture.Test.SupportElements.Mock
 
         public static TC GetMockController<TC>() where TC : class
         {
-            return MockUtil.GetMockController(typeof(TC)) as TC;
+            return GetMockController(typeof(TC)) as TC;
         }
 
         public static BaseController GetMockController(Type controllerType)
@@ -35,7 +35,7 @@ namespace Fluent.Architecture.Test.SupportElements.Mock
 
         public static ExceptionContext GetMockExceptionContext<TC>(Exception exception, BaseController controller, bool customErrorEnabled)
         {
-            var controllerContext = MockUtil.GetMockControllerContext<TC>(customErrorEnabled);
+            var controllerContext = GetMockControllerContext<TC>(customErrorEnabled);
             return  new ExceptionContext(controllerContext, exception);
         }
 

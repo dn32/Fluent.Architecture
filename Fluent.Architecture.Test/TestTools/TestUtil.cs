@@ -28,15 +28,15 @@ namespace Fluent.Architecture.Test.TestTools
 
         public static int NextRandom()
         {
-            lock (TestUtil.SyncLock)
+            lock (SyncLock)
             {
-                return TestUtil.Random.Next(1, int.MaxValue);
+                return Random.Next(1, int.MaxValue);
             }
         }
 
         public static TR Execute<TR>(BaseController controller, string methodName, object parameter)
         {
-            return TestUtil.Execute<TR>(controller, methodName, new object[] { parameter });
+            return Execute<TR>(controller, methodName, new object[] { parameter });
         }
 
         public static TR Execute<TR>(BaseController controller, string methodName, object[] parameters, Func<BaseController, TR> action = null)

@@ -21,7 +21,7 @@ namespace Fluent.Architecture.Extensions
         /// <returns>O valor padrão do tipo.</returns>
         public static object GetDefaultValue(this Type type)
         {
-            return type.IsValueType ? TypeExtension.TypeDefaults.GetOrAdd(type, Activator.CreateInstance) : null;
+            return type.IsValueType ? TypeDefaults.GetOrAdd(type, Activator.CreateInstance) : null;
         }
 
         // Todo - Documentar
@@ -51,7 +51,7 @@ namespace Fluent.Architecture.Extensions
             var typeParameters = type.GetGenericArguments();
             for (var i = 0; i < typeParameters.Length; ++i)
             {
-                var typeParamName = TypeExtension.GetFriendlyName(typeParameters[i], useGenericT);
+                var typeParamName = GetFriendlyName(typeParameters[i], useGenericT);
                 typeParamName = useGenericT ? "T" : typeParamName;
                 friendlyName += (i == 0 ? typeParamName : ", " + typeParamName);
             }

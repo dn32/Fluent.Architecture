@@ -19,7 +19,7 @@ namespace Fluent.Architecture.Model
         /// <summary>
         /// A quantidade de itens por página.
         /// </summary>
-        public int ItemsPerPage => this._itemsPerPage == 0 ? FluentPagination.ItemsPerPageDefault :this._itemsPerPage;
+        public int ItemsPerPage => this._itemsPerPage == 0 ? ItemsPerPageDefault :this._itemsPerPage;
 
         /// <summary>
         /// A página atual.
@@ -42,7 +42,7 @@ namespace Fluent.Architecture.Model
         public FluentPagination(int currentPage, int? itemsPerPage)
         {
             this.CurrentPage = currentPage;
-            this._itemsPerPage = itemsPerPage ?? FluentPagination.ItemsPerPageDefault;
+            this._itemsPerPage = itemsPerPage ?? ItemsPerPageDefault;
         }
     }
 }

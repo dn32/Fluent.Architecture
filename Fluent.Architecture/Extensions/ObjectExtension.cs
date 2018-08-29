@@ -125,7 +125,7 @@ namespace Fluent.Architecture.Extensions
         public static string GetAllDataOfObject(this object objectToCheck)
         {
             var propertyData = new List<NameAndValue>();
-            ObjectExtension.GetAllFieldsDataOfObject(objectToCheck, propertyData);
+            GetAllFieldsDataOfObject(objectToCheck, propertyData);
             return JsonConvert.SerializeObject(propertyData, Formatting.None);
         }
 
@@ -150,7 +150,7 @@ namespace Fluent.Architecture.Extensions
             {
                 foreach (var el in collection)
                 {
-                    ObjectExtension.GetAllFieldsDataOfObject(el, propertyData);
+                    GetAllFieldsDataOfObject(el, propertyData);
                 }
             }
             else
@@ -163,7 +163,7 @@ namespace Fluent.Architecture.Extensions
                     }
                     else if (item.FieldType.IsClass && !typeof(IEnumerable).IsAssignableFrom(item.FieldType))
                     {
-                        ObjectExtension.GetAllFieldsDataOfObject(item.GetValue(obj), propertyData);
+                        GetAllFieldsDataOfObject(item.GetValue(obj), propertyData);
                     }
                     else
                     {
@@ -174,7 +174,7 @@ namespace Fluent.Architecture.Extensions
 
                         foreach (var propItem in enumerablePropObj1)
                         {
-                            ObjectExtension.GetAllFieldsDataOfObject(propItem, propertyData);
+                            GetAllFieldsDataOfObject(propItem, propertyData);
                         }
                     }
                 }

@@ -24,6 +24,7 @@ namespace Fluent.Architecture.Test.SupportElements
         public void Test(string data) { }
      
         // For ambiguity test
+        [SuppressMessage("StyleCop.CSharp.LayoutRules", "SA1502:ElementMustNotBeOnSingleLine", Justification = "Reviewed. Suppression is OK here.")]
         [Propagate]
         public void Test(int data) { }
 

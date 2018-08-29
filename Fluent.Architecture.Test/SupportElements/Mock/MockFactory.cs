@@ -68,7 +68,7 @@ namespace Fluent.Architecture.Test.SupportElements.Mock
             if (propValue == null)
             {
                 expression = ((dynamic)expression).Expression;
-                return MockFactory<TX>.GetExpressionValue(expression);
+                return GetExpressionValue(expression);
             }
 
             return propValue.GetValue(expression);
