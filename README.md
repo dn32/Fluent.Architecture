@@ -12,7 +12,7 @@ Veja o [Wiki](https://github.com/dn32/Fluent.Architecture/wiki)
 Ultima versão estável:
 
 [![Nuget](https://img.shields.io/nuget/vpre/Fluent.Architecture.svg)](http://nuget.org/packages/Fluent.Architecture)
-
+ 
 
 Ultima versão Beta:
 
