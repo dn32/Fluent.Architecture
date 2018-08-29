@@ -1,8 +1,6 @@
 ﻿// ReSharper disable CommentTypo
 namespace Fluent.Architecture.Exceptions.ValidationException
 {
-    using System;
-
     public class EntityExistsFluentValidationException : FluentValidationException
     {
         public EntityExistsFluentValidationException(string entityKeys)

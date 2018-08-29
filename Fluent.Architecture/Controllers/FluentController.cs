@@ -39,7 +39,7 @@ namespace Fluent.Architecture.Controllers
 
         protected T PropagateMethod(string methodName, object parameter)
         {
-            return this.PropagateInternal(methodName, parameter == null ? Array.Empty<object>() : new object[] { parameter }) as T;
+            return this.PropagateInternal(methodName, parameter == null ? Array.Empty<object>() : new[] { parameter }) as T;
         }
 
         protected TX PropagateMethod<TX>(string methodName, object parameter)
@@ -71,7 +71,7 @@ namespace Fluent.Architecture.Controllers
 
         protected T Propagate(object parameter)
         {
-            return (T)this.PropagateInternal(string.Empty, new object[] { parameter });
+            return (T)this.PropagateInternal(string.Empty, new[] { parameter });
         }
 
         //===================================

@@ -24,6 +24,7 @@ using BaseServiceTest = Fluent.Architecture.Test.SupportElements.Services.BaseSe
 
 namespace Fluent.Architecture.Test.Test
 {
+    using System.ComponentModel.DataAnnotations;
 
     [TestFixture]
     [ComVisible(true)]
@@ -140,7 +141,7 @@ namespace Fluent.Architecture.Test.Test
 
             FluentAssert.Equal(user1, user2);
 
-            var ex = Assert.Throws<Exception>(() => FluentAssert.Equal(user1, user3));
+            var ex = Assert.Throws<ValidationException>(() => FluentAssert.Equal(user1, user3));
             Assert.AreEqual("The objects are different", ex.Message);
         }
 

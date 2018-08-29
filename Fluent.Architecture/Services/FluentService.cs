@@ -66,7 +66,7 @@ namespace Fluent.Architecture.Services
                 }
                 catch (Exception ex)
                 {
-                    throw ex.InnerException;
+                    throw ex.InnerException ?? throw ex;
                 }
             }
 

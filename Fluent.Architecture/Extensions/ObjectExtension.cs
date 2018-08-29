@@ -61,7 +61,7 @@ namespace Fluent.Architecture.Extensions
             {
                 return (int)value; // Enum
             }
-            catch (Exception)
+            catch
             {
                 // ignored
             }
@@ -106,7 +106,7 @@ namespace Fluent.Architecture.Extensions
             {
                 return (int)value == 0; // Enum
             }
-            catch (Exception)
+            catch
             {
                 // ignored
             }
@@ -118,9 +118,8 @@ namespace Fluent.Architecture.Extensions
         /// Obtem todos os dados de um objeto, incluindo de campos e propriedades privadas.
         /// </summary>
         /// <param name="objectToCheck">Objeto a ser avaliado.</param>
-        /// <returns>Json com todos os dados do onjeto. Exemplo: [{"Name":"Id","Value":0},{"Name":"DataFinal","Value":"9999-12-31T23:59:59.9999999"},{"Name":"IdiomaId","Value":1},{"Name":"ConteudoId","Value":1},{"Name":"TipoDeEvento","Value":"2"},{"Name":"Descricao","Value":"teste"},{"Name":"Mandatorio","Value":1},{"Name":"UsuarioId","Value":1},{"Name":"TipoDeConteudo","Value":"1"}][{"Name":"<Id>k__BackingField","Value":0},{"Name":"<DataFinal>k__BackingField","Value":"9999-12-31T23:59:59.9999999"},{"Name":"<IdiomaId>k__BackingField","Value":1},{"Name":"<ConteudoId>k__BackingField","Value":1},{"Name":"<TipoDeEvento>k__BackingField","Value":"2"},{"Name":"<Descricao>k__BackingField","Value":"teste"},{"Name":"<Mandatorio>k__BackingField","Value":1},{"Name":"<UsuarioId>k__BackingField","Value":1},{"Name":"<TipoDeConteudo>k__BackingField","Value":"1"}]</returns>
         /// <returns>
-        /// O json referente ao objeto.
+        /// Json com todos os dados do onjeto.
         /// </returns>
         public static string GetAllDataOfObject(this object objectToCheck)
         {

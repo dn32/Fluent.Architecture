@@ -37,7 +37,7 @@ namespace Fluent.Architecture
 
         internal static Dictionary<string, Type> Model { get; set; }
 
-        internal static Dictionary<Tuple<ePropagateTypes, string>, MethodInfo> Propagators { get; set; }
+        internal static Dictionary<Tuple<EPropagateTypes, string>, MethodInfo> Propagators { get; set; }
 
         public static bool Initialized { get; set; }
 
@@ -82,7 +82,7 @@ namespace Fluent.Architecture
                 Repositories = new Dictionary<string, Type>();
                 Validations = new Dictionary<string, Type>();
                 Model = new Dictionary<string, Type>();
-                Propagators = new Dictionary<Tuple<ePropagateTypes, string>, MethodInfo>();
+                Propagators = new Dictionary<Tuple<EPropagateTypes, string>, MethodInfo>();
                 UserSessionList = new Dictionary<Guid, UserSessionRequest>();
                 TransactionObjectsType = typeof(TransactionObjects);
 
@@ -132,9 +132,9 @@ namespace Fluent.Architecture
                 // ValidateIfAllMethodsAreVirtual(Validations.Values.ToList()); //It is not necessary
                 CheckErrorInTheRepository(Repositories.Values.ToList());
 
-                FindPropagators(Repositories, ePropagateTypes.Repository);
-                FindPropagators(Services, ePropagateTypes.Service);
-                FindPropagators(Validations, ePropagateTypes.Validation);
+                FindPropagators(Repositories, EPropagateTypes.Repository);
+                FindPropagators(Services, EPropagateTypes.Service);
+                FindPropagators(Validations, EPropagateTypes.Validation);
 
                 DbSetup(createDatabaseIfNotExists);
             }
@@ -257,7 +257,7 @@ namespace Fluent.Architecture
             Model.Add(service.Item2.Name, service.Item2);
         }
 
-        private static void FindPropagators(Dictionary<string, Type> elements, ePropagateTypes type)
+        private static void FindPropagators(Dictionary<string, Type> elements, EPropagateTypes type)
         {
             foreach (var item in elements)
             {
@@ -266,7 +266,7 @@ namespace Fluent.Architecture
 
                 foreach (var method in propagators)
                 {
-                    var key = new Tuple<ePropagateTypes, string>(type, $"{item.Key} {method.GetFriendlyName()}");
+                    var key = new Tuple<EPropagateTypes, string>(type, $"{item.Key} {method.GetFriendlyName()}");
                     Propagators.Add(key, method);
                 }
             }

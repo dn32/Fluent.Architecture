@@ -8,8 +8,8 @@ namespace Fluent.Architecture.Model
     public class FluentPagination
     {
         private const int ItemsPerPageDefault = 10;
-        private int _currentPage;
-        private readonly int _itemsPerPage;
+        private int currentPage;
+        private readonly int itemsPerPage;
 
         /// <summary>
         /// Essa propriedade é preenchida durante a requisição e retornada com o valor da quantidade total de itens referentes à solicitação.
@@ -19,15 +19,15 @@ namespace Fluent.Architecture.Model
         /// <summary>
         /// A quantidade de itens por página.
         /// </summary>
-        public int ItemsPerPage => this._itemsPerPage == 0 ? ItemsPerPageDefault :this._itemsPerPage;
+        public int ItemsPerPage => this.itemsPerPage == 0 ? ItemsPerPageDefault : this.itemsPerPage;
 
         /// <summary>
         /// A página atual.
         /// </summary>
         public int CurrentPage
         {
-            get => this._currentPage == 0 ? 1 :this._currentPage;
-            set => this._currentPage = value;
+            get => this.currentPage == 0 ? 1 : this.currentPage;
+            set => this.currentPage = value;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Fluent.Architecture.Model
         public FluentPagination(int currentPage, int? itemsPerPage)
         {
             this.CurrentPage = currentPage;
-            this._itemsPerPage = itemsPerPage ?? ItemsPerPageDefault;
+            this.itemsPerPage = itemsPerPage ?? ItemsPerPageDefault;
         }
     }
 }

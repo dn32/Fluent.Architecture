@@ -174,7 +174,7 @@ namespace Fluent.Architecture.Test.SupportElements.Controllers
 
         public void ParameterCountFail()
         {
-            this.PropagateMethod("Spec", new object[] { 1, 2, 3 });
+            this.PropagateMethod("Spec", 1, 2, 3);
         }
     }
 }

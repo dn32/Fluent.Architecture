@@ -3,12 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Factory.Interface;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
 #if NET461
-using System.Web;
 #else
 using Microsoft.AspNetCore.Http;
 #endif

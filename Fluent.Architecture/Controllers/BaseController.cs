@@ -2,7 +2,6 @@
 #if NET461
 using System.Web;
 using System.Web.Mvc;
-using Fluent.Architecture.Services;
 
 #else
 using Microsoft.AspNetCore.Http;

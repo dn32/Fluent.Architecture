@@ -13,9 +13,9 @@ namespace Fluent.Architecture.Specifications
     /// </summary>
     public abstract class BaseSpecification<T> where T : BaseEntity
     {
-        private FluentController<T> Controller { get; set; }
+        private FluentController<T> Controller { get; }
 
-        private TransactionalService Service { get; set; }
+        private TransactionalService Service { get; }
 
         /// <summary>
         /// Inicializa a especificação.

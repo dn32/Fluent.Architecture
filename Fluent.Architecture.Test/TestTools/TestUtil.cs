@@ -13,6 +13,7 @@ using Fluent.Architecture.Exceptions.ValidationException;
 
 namespace Fluent.Architecture.Test.TestTools
 {
+    using Fluent.Architecture.Exceptions;
 
     [ComVisible(true)]
     public static class TestUtil
@@ -59,7 +60,7 @@ namespace Fluent.Architecture.Test.TestTools
 
                 if (method == null)
                 {
-                    throw new Exception($"The {methodName} method was not found in {controllerType}.");
+                    throw new MethodNotFoundException($"The {methodName} method was not found in {controllerType}.");
                 }
             }
 

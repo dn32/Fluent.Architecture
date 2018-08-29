@@ -20,4 +20,5 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1018:Mark attributes with AttributeUsageAttribute", Justification = "<Pending>", Scope = "type", Target = "~T:Fluent.Architecture.Filters.ExceptionHandlerAttribute")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1813:Avoid unsealed attributes", Justification = "<Pending>", Scope = "type", Target = "~T:Fluent.Architecture.Filters.ExceptionHandlerAttribute")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1032:Implement standard exception constructors", Justification = "<Pending>", Scope = "type", Target = "~T:Fluent.Architecture.Exceptions.ValidationException.NullParameterFluentValidationException")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "type", Target = "~T:Fluent.Architecture.Enum.EPropagateTypes")]
 

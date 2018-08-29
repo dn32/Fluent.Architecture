@@ -7,6 +7,8 @@ using Fluent.Architecture.Services;
 
 namespace Fluent.Architecture.Factory.Proxy
 {
+    using Fluent.Architecture.Exceptions;
+
     /// <summary>
     /// Classe interna.
     /// Responsável pela criação do proxi dos serviços de injeção de dependência.
@@ -42,6 +44,11 @@ namespace Fluent.Architecture.Factory.Proxy
         {
             var serviceProperties = typeBuilder.BaseType?.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).Where(x => x.PropertyType.IsSubclassOf(typeof(BaseService))).ToList();
 
+            if (serviceProperties == null)
+            {
+                throw new InvalidOperationException("typeBuilder not contains a BaseType");
+            }
+
             foreach (var property in serviceProperties)
             {
                 OverwriteProperty(typeBuilder.BaseType, property, typeBuilder, sessionId);
@@ -50,14 +57,14 @@ namespace Fluent.Architecture.Factory.Proxy
 
         private static void OverwriteProperty(Type baseType, PropertyInfo property, TypeBuilder typeBuilder, Guid sessionId)
         {
-            var metodProp = property.GetGetMethod(true);
+            var method = property.GetGetMethod(true);
             var propertyBuilder = typeBuilder.DefineProperty(
                 property.Name,
                 PropertyAttributes.HasDefault,
                 property.PropertyType,
                 null);
             var getPropMthdBldr = typeBuilder.DefineMethod(
-                metodProp.Name,
+                method.Name,
                 MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.Virtual
                 | MethodAttributes.HideBySig,
                 property.PropertyType,
@@ -66,6 +73,11 @@ namespace Fluent.Architecture.Factory.Proxy
             var getIl = getPropMthdBldr.GetILGenerator();
             getIl.Emit(OpCodes.Ldarg_0);
             var methodInfo = baseType.GetMethod(nameof(BaseService.GetServiceDependency));
+            if (methodInfo == null)
+            {
+                throw new MethodNotFoundException(nameof(BaseService.GetServiceDependency));
+            }
+
             methodInfo = methodInfo.MakeGenericMethod(property.PropertyType);
             getIl.Emit(OpCodes.Ldstr, sessionId.ToString());
             getIl.EmitCall(OpCodes.Callvirt, methodInfo, new[] { typeof(string) });

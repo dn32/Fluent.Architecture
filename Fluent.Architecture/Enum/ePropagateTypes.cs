@@ -1,11 +1,12 @@
 ﻿
+// ReSharper disable CommentTypo
 namespace Fluent.Architecture.Enum
 {
     /// <summary>
     /// Enumerador interno.
     /// Indica o tipo de propagação a ser referenciado no dicionário de propagações possíveis.
     /// </summary>
-    internal enum ePropagateTypes
+    internal enum EPropagateTypes
     {
         Service = 1,
         Validation = 2,

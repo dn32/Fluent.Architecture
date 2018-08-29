@@ -32,10 +32,10 @@ namespace Fluent.Architecture.Extensions
         }
 
         /// <summary>
-        /// Obtem o nome amigável de um tipo. Exemplo: FluentSelectSpecification<FluentEntity>
+        /// Obtem o nome amigável de um tipo. Exemplo: FluentSelectSpecification FluentEntity
         /// </summary>
         /// <param name="type">O tipo a ser tratado.</param>
-        /// <param name="useGenericT">Se deve indicar os tipos genéricos como T. Exemplo com true: FluentSelectSpecification<T, T>. Exemplo com false: FluentSelectSpecification<FluentEntity, TO></param>
+        /// <param name="useGenericT">Se deve indicar os tipos genéricos como T. Exemplo com true: FluentSelectSpecification T, T. Exemplo com false: FluentSelectSpecification FluentEntity, TO </param>
         /// <returns>O nome amigável do tipo.</returns>
         public static string GetFriendlyName(this Type type, bool useGenericT = true)
         {

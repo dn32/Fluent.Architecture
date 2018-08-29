@@ -16,6 +16,7 @@ using Fluent.Architecture.Validation;
 namespace Fluent.Architecture.Util
 {
     using Fluent.Architecture.Exceptions;
+    using Fluent.Architecture.Exceptions.ValidationException;
 
     /// <summary>
     /// Utilitários de uso global.
@@ -104,6 +105,10 @@ namespace Fluent.Architecture.Util
         public static MethodBase GetMethodForPropagation()
         {
             var frames = new StackTrace().GetFrames();
+            if (frames == null)
+            {
+                throw new NullParameterException(nameof(frames));
+            }
 
             foreach (var frame in frames)
             {
