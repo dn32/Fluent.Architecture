@@ -13,7 +13,7 @@ namespace Fluent.Architecture.Validation
     /// <summary>
     /// Retorno de validação padrão do sistema.
     /// </summary>
-    public class ContextFluentValidation : FluentValidationException
+    public class ContextFluentValidationException : FluentValidationException
     {
         public List<FluentValidationException> Inconsistencies { get; }
 
@@ -45,10 +45,10 @@ namespace Fluent.Architecture.Validation
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ContextFluentValidationException"/> class. 
         /// Inicializa o contexto de validação.
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1642:ConstructorSummaryDocumentationMustBeginWithStandardText", Justification = "Reviewed. Suppression is OK here.")]
-        public ContextFluentValidation() : base("")
+        public ContextFluentValidationException() : base("")
         {
             this.Inconsistencies = new List<FluentValidationException>();
         }

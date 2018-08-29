@@ -43,7 +43,7 @@ namespace Fluent.Architecture.Test.Test
         [Test]
         public void AddPropagationFullParameterIsNullFail()
         {
-            var error = TestUtil.Execute<ContextFluentValidation>(StudentControllerInstance, nameof(StudentController.Spec2), null);
+            var error = TestUtil.Execute<ContextFluentValidationException>(StudentControllerInstance, nameof(StudentController.Spec2), null);
             Assert.NotNull(error);
             Assert.AreEqual(1, error.Inconsistencies.Count);
             Assert.IsAssignableFrom<NullParameterFluentValidationException>(error.Inconsistencies.First());
@@ -134,10 +134,10 @@ namespace Fluent.Architecture.Test.Test
         [Test]
         public void PropagateMethodTestBNullParameter()
         {
-            ContextFluentValidation PropagateMethodTestB(BaseController controller)
+            ContextFluentValidationException PropagateMethodTestB(BaseController controller)
             {
                 var id = TestUtil.NextRandom();
-                var ret = Assert.Throws<ContextFluentValidation>(() => ((UserController)controller).PropagateMethodTestB(id, null));
+                var ret = Assert.Throws<ContextFluentValidationException>(() => ((UserController)controller).PropagateMethodTestB(id, null));
                 return ret;
             }
 

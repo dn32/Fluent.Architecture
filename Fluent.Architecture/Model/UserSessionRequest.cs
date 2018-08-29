@@ -21,13 +21,13 @@ namespace Fluent.Architecture.Model
         internal Dictionary<Type, BaseService> Services { get; set; }
         internal TransactionObjects TransactionObjects { get; set; }
         internal Guid SessionRequestId { get; set; }
-        public ContextFluentValidation ContextFluentValidation { get; set; }
+        public ContextFluentValidationException ContextFluentValidationException { get; set; }
 
         internal object HttpContext;
 
         public UserSessionRequest()
         {
-            ContextFluentValidation = new ContextFluentValidation();
+            this.ContextFluentValidationException = new ContextFluentValidationException();
         }
 #if NET461
         /// <summary>

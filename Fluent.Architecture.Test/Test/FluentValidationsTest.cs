@@ -23,7 +23,7 @@ namespace Fluent.Architecture.Test.Test
         [TestCase(nameof(UserController.Update))]
         public void NullParameterTestFail(string method)
         {
-            var error = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, method, new object[] { null });
+            var error = TestUtil.Execute<ContextFluentValidationException>(UserControllerInstance, method, new object[] { null });
 
             Assert.NotNull(error);
             Assert.AreEqual(1, error.Inconsistencies.Count);
@@ -37,7 +37,7 @@ namespace Fluent.Architecture.Test.Test
         {
             var user = InternalTestUtil.GetNewUser();
             user.PersonType = null;
-            var error = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, method, user);
+            var error = TestUtil.Execute<ContextFluentValidationException>(UserControllerInstance, method, user);
 
             Assert.NotNull(error);
             Assert.AreEqual(1, error.Inconsistencies.Count);
@@ -49,7 +49,7 @@ namespace Fluent.Architecture.Test.Test
         {
             var student = InternalTestUtil.GetNewStudent();
             student.Id = TestUtil.NextRandom();
-            var error = TestUtil.Execute<ContextFluentValidation>(StudentControllerInstance, nameof(UserController.Add), student);
+            var error = TestUtil.Execute<ContextFluentValidationException>(StudentControllerInstance, nameof(UserController.Add), student);
 
             Assert.NotNull(error);
             Assert.AreEqual(1, error.Inconsistencies.Count);
@@ -64,7 +64,7 @@ namespace Fluent.Architecture.Test.Test
             user = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Add), user);
             Assert.NotNull(user);
 
-            var error = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, nameof(UserController.Add), user);
+            var error = TestUtil.Execute<ContextFluentValidationException>(UserControllerInstance, nameof(UserController.Add), user);
 
             Assert.NotNull(error);
             Assert.AreEqual(1, error.Inconsistencies.Count);
@@ -82,7 +82,7 @@ namespace Fluent.Architecture.Test.Test
         //    user2 = TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.Add), user2);
         //    Assert.NotNull(user2);
 
-        //    var error = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, nameof(UserController.Update), user1);
+        //    var error = TestUtil.Execute<ContextFluentValidationException>(UserControllerInstance, nameof(UserController.Update), user1);
 
         //    Assert.NotNull(error);
         //    Assert.Single(error.Inconsistencies);
@@ -107,7 +107,7 @@ namespace Fluent.Architecture.Test.Test
 
             user.Name = name;
 
-            var error = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, method, user);
+            var error = TestUtil.Execute<ContextFluentValidationException>(UserControllerInstance, method, user);
 
             Assert.NotNull(error);
             Assert.AreEqual(1, error.Inconsistencies.Count);
@@ -131,7 +131,7 @@ namespace Fluent.Architecture.Test.Test
                 Id = new Random().Next(1, int.MaxValue)
             };
 
-            var err = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, method, user);
+            var err = TestUtil.Execute<ContextFluentValidationException>(UserControllerInstance, method, user);
             Assert.NotNull(err);
             Assert.AreEqual(1, err.Inconsistencies.Count);
             Assert.IsAssignableFrom<EntityNotFoundFluentValidationException>(err.Inconsistencies.First());
@@ -149,7 +149,7 @@ namespace Fluent.Architecture.Test.Test
                 PersonType = ePersonType.User,
             };
 
-            var objectReturn = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, method, user);
+            var objectReturn = TestUtil.Execute<ContextFluentValidationException>(UserControllerInstance, method, user);
             Assert.NotNull(objectReturn);
             Assert.AreEqual(1, objectReturn.Inconsistencies.Count);
             Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(objectReturn.Inconsistencies.First());
@@ -186,7 +186,7 @@ namespace Fluent.Architecture.Test.Test
             var user = InternalTestUtil.GetNewUser();
             user.Name = "Maria";
 
-            var error = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, nameof(UserController.Add), user);
+            var error = TestUtil.Execute<ContextFluentValidationException>(UserControllerInstance, nameof(UserController.Add), user);
             Assert.NotNull(error);
             Assert.AreEqual(1, error.Inconsistencies.Count);
             Assert.IsAssignableFrom<FluentPropertyValidationException>(error.Inconsistencies.First());
@@ -205,7 +205,7 @@ namespace Fluent.Architecture.Test.Test
 
             //Update
             user.Name = "Maria";
-            var error = TestUtil.Execute<ContextFluentValidation>(UserControllerInstance, nameof(UserController.Update), user);
+            var error = TestUtil.Execute<ContextFluentValidationException>(UserControllerInstance, nameof(UserController.Update), user);
             Assert.NotNull(error);
             Assert.AreEqual(1, error.Inconsistencies.Count);
             Assert.IsAssignableFrom<FluentPropertyValidationException>(error.Inconsistencies.First());

@@ -62,7 +62,7 @@ namespace Fluent.Architecture.Services
                 return ser as TS;
             }
 
-            var service = ServiceFactory.CreateInternalServiceRuntime(typeof(TS), SessionRequest.TransactionObjects, SessionRequest.LocalHttpContext, sessionIdGuid) as TS;
+            var service = ServiceFactory.CreateInternalServiceRuntime(typeof(TS), SessionRequest.LocalHttpContext, sessionIdGuid) as TS;
             SessionRequest.Services.Add(typeof(TS), service);
             return service;
         }

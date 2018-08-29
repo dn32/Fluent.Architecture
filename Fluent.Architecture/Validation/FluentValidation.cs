@@ -44,7 +44,7 @@ namespace Fluent.Architecture.Validation
         /// </param>
         protected void AddInconsistency(FluentValidationException ex)
         {
-            Service.SessionRequest.ContextFluentValidation.AddInconsistency(ex);
+            Service.SessionRequest.ContextFluentValidationException.AddInconsistency(ex);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Fluent.Architecture.Validation
 
         protected void RunTheContextValidation()
         {
-            Service.SessionRequest.ContextFluentValidation.Validate();
+            Service.SessionRequest.ContextFluentValidationException.Validate();
         }
 
         #endregion

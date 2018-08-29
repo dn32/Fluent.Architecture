@@ -12,13 +12,5 @@ namespace Fluent.Architecture.Exceptions
             : base(message)
         {
         }
-
-        public IncorrectDevelopmentException()
-        {
-        }
-
-        public IncorrectDevelopmentException(string message, System.Exception innerException) : base(message, innerException)
-        {
-        }
     }
 }

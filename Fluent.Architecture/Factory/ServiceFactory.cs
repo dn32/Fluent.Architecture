@@ -50,9 +50,6 @@ namespace Fluent.Architecture.Factory
         /// <param name="serviceType">
         /// O tipo de serviço a ser criado.
         /// </param>
-        /// <param name="transactionObjects">
-        /// Os objetos de transação do serviço original.
-        /// </param>
         /// <param name="httpContext">
         /// O controxto do controller do serviço original.
         /// </param>
@@ -62,7 +59,7 @@ namespace Fluent.Architecture.Factory
         /// <returns>
         /// O serviço criado.
         /// </returns>
-        internal static object CreateInternalServiceRuntime(Type serviceType, TransactionObjects transactionObjects, object httpContext, Guid sessionId)
+        internal static object CreateInternalServiceRuntime(Type serviceType, object httpContext, Guid sessionId)
         {
             var service = InternalCreate(serviceType, sessionId);
             service.SetUserSession(Setup.GetUserRequestSession(sessionId));

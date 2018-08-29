@@ -47,7 +47,7 @@ namespace Fluent.Architecture.Repository
 
         private void RunTheContextValidation()
         {
-            Service.SessionRequest.ContextFluentValidation.Validate();
+            Service.SessionRequest.ContextFluentValidationException.Validate();
         }
 
 #if NET461

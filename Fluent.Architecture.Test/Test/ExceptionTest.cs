@@ -41,7 +41,7 @@ namespace Fluent.Architecture.Test.Test
         public void ExceptionFilterTest(bool customErrorEnabled, Type exceptionType)
         {
             var filter = new ExceptionHandlerAttribute();
-            var exception = new ContextFluentValidation();
+            var exception = new ContextFluentValidationException();
 
             var parameters = exceptionType.GetConstructorParameters();
             parameters[0] = "Id";

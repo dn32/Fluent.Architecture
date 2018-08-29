@@ -17,7 +17,7 @@ namespace Fluent.Architecture.Filters
         {
             if (!filterContext.HttpContext.IsCustomErrorEnabled)
             {
-                if (filterContext.Exception is ContextFluentValidation exception)
+                if (filterContext.Exception is ContextFluentValidationException exception)
                 {
                     filterContext.Result = new JsonResult
                     {
