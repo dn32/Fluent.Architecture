@@ -37,6 +37,7 @@ namespace Fluent.Architecture.Test.Test
         [TestCase(false, typeof(NullParameterFluentValidationException))]
         [TestCase(false, typeof(PropertyRequiredFluentValidationException))]
         [TestCase(true, typeof(EntityExistsFluentValidationException))]
+        [TestCase(true, typeof(MethodNotFoundException))]
 
         // For test custom errors
         public void ExceptionFilterTest(bool customErrorEnabled, Type exceptionType)

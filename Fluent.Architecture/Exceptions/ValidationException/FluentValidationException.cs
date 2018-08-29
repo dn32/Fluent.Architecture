@@ -2,9 +2,6 @@
 
 namespace Fluent.Architecture.Exceptions.ValidationException
 {
-    using System;
-    using System.Runtime.Serialization;
-
     using Exception = System.Exception;
 
     /// <inheritdoc />
@@ -14,20 +11,6 @@ namespace Fluent.Architecture.Exceptions.ValidationException
 
         public FluentValidationException(string message)
             : base(message)
-        {
-        }
-
-        public FluentValidationException()
-        {
-            throw new NotImplementedException();
-        }
-
-        public FluentValidationException(string message, Exception innerException) : base(message, innerException)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected FluentValidationException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }

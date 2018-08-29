@@ -100,10 +100,10 @@ namespace Fluent.Architecture.Util
         public static MethodBase GetMethodForPropagation()
         {
             var frames = new StackTrace().GetFrames();
-            if (frames == null)
-            {
-                throw new NullParameterException(nameof(frames));
-            }
+            //if (frames == null)
+            //{
+            //    throw new NullParameterException(nameof(frames));
+            //}
 
             foreach (var frame in frames)
             {

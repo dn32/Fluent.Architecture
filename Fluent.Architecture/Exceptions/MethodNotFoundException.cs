@@ -1,6 +1,11 @@
-﻿namespace Fluent.Architecture.Exceptions
+﻿// ReSharper disable CommentTypo
+
+using System;
+
+namespace Fluent.Architecture.Exceptions
 {
-    public class MethodNotFoundException : NotFoundException
+    [Serializable]
+    public class MethodNotFoundException : Exception
     {
         public MethodNotFoundException(string message) : base(message)
         {
