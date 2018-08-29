@@ -1,23 +1,18 @@
 ﻿// ReSharper disable CommentTypo
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Validation;
+using Fluent.Architecture.Exceptions;
 
 namespace Fluent.Architecture.Util
 {
-    using Fluent.Architecture.Exceptions;
-    using Fluent.Architecture.Exceptions.ValidationException;
-
     /// <summary>
     /// Utilitários de uso global.
     /// </summary>

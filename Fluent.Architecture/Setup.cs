@@ -13,14 +13,11 @@ using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
+using System.Management.Instrumentation;
+using Fluent.Architecture.Exceptions;
 
 namespace Fluent.Architecture
 {
-    using System.ComponentModel.DataAnnotations;
-    using System.Management.Instrumentation;
-
-    using Fluent.Architecture.Exceptions;
-
     public static class Setup
     {
         #region PROPERTIES
@@ -99,7 +96,7 @@ namespace Fluent.Architecture
                     {
                         types = assembly.GetTypes();
                     }
-                    catch (Exception)
+                    catch
                     {
                         continue;
                     }

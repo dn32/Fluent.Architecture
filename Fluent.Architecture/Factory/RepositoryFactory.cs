@@ -30,9 +30,9 @@ namespace Fluent.Architecture.Factory
         internal static FluentRepository<T> Create(TransactionObjects transactionObjects, FluentService<T> service)
         {
             var localType = typeof(FluentRepository<T>);
-            if (Setup.Repositories.TryGetValue(typeof(T).Name, out var epositoryType))
+            if (Setup.Repositories.TryGetValue(typeof(T).Name, out var repositoryType))
             {
-                localType = epositoryType;
+                localType = repositoryType;
             }
 
             var repository = Create(localType);

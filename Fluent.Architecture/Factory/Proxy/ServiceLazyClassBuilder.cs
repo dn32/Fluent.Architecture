@@ -63,14 +63,14 @@ namespace Fluent.Architecture.Factory.Proxy
                 PropertyAttributes.HasDefault,
                 property.PropertyType,
                 null);
-            var getPropMthdBldr = typeBuilder.DefineMethod(
+            var getProp = typeBuilder.DefineMethod(
                 method.Name,
                 MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.Virtual
                 | MethodAttributes.HideBySig,
                 property.PropertyType,
                 Type.EmptyTypes);
 
-            var getIl = getPropMthdBldr.GetILGenerator();
+            var getIl = getProp.GetILGenerator();
             getIl.Emit(OpCodes.Ldarg_0);
             var methodInfo = baseType.GetMethod(nameof(BaseService.GetServiceDependency));
             if (methodInfo == null)
@@ -84,7 +84,7 @@ namespace Fluent.Architecture.Factory.Proxy
 
             // getIl.Emit(OpCodes.Callvirt, methodInfo);
             getIl.Emit(OpCodes.Ret);
-            propertyBuilder.SetGetMethod(getPropMthdBldr);
+            propertyBuilder.SetGetMethod(getProp);
         }
 
         private static void CreateConstructor(TypeBuilder typeBuilder)

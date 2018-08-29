@@ -18,10 +18,6 @@ namespace Fluent.Architecture.Services
     /// </summary>
     public abstract class BaseService
     {
-        protected BaseService()
-        {
-        }
-
         /// <summary>
         /// Entidade organizadora da injeção de dependência e do contexto da requisição do usuário.
         /// </summary>

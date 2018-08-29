@@ -2,13 +2,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Fluent.Architecture.Exceptions.ValidationException;
 
 namespace Fluent.Architecture.Validation
 {
-    using System.Runtime.InteropServices;
-
-    using Fluent.Architecture.Exceptions.ValidationException;
-
     /// <inheritdoc />
     /// <summary>
     /// Retorno de validação padrão do sistema.
