@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Exception;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
@@ -16,6 +15,8 @@ using Fluent.Architecture.Validation;
 
 namespace Fluent.Architecture.Util
 {
+    using Fluent.Architecture.Exceptions;
+
     /// <summary>
     /// Utilitários de uso global.
     /// </summary>

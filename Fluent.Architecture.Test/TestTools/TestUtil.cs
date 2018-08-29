@@ -5,13 +5,14 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
 using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Exception.ValidationException;
 using Fluent.Architecture.Test.SupportElements.Mock;
 using Fluent.Architecture.Test.SupportElements.Mock.ControllerMock;
 using NUnit.Framework;
 
 namespace Fluent.Architecture.Test.TestTools
 {
+    using Fluent.Architecture.Exceptions.ValidationException;
+
     public static class TestUtil
     {
         private static readonly Random Random = new Random();

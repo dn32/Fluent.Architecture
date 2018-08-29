@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Enum;
-using Fluent.Architecture.Exception;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
@@ -17,6 +16,8 @@ using Fluent.Architecture.Validation;
 
 namespace Fluent.Architecture
 {
+    using Fluent.Architecture.Exceptions;
+
     public static class Setup
     {
         #region PROPERTIES

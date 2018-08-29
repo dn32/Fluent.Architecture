@@ -1,5 +1,5 @@
 ﻿// ReSharper disable CommentTypo
-namespace Fluent.Architecture.Exception.ValidationException
+namespace Fluent.Architecture.Exceptions.ValidationException
 {
     public class PropertyNotNullFluentValidationException : FluentValidationException
     {

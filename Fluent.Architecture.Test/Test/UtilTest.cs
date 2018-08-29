@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Exception;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
@@ -23,6 +22,8 @@ using BaseServiceTest = Fluent.Architecture.Test.SupportElements.Services.BaseSe
 
 namespace Fluent.Architecture.Test.Test
 {
+    using Fluent.Architecture.Exceptions;
+
     [TestFixture]
     public class UtilTest : FluentInternalTest
     {

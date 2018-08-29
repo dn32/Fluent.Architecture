@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Attributes;
-using Fluent.Architecture.Exception;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
@@ -15,6 +14,8 @@ using Fluent.Architecture.Validation;
 
 namespace Fluent.Architecture.Services
 {
+    using Fluent.Architecture.Exceptions;
+
     ///<inheritdoc/>
     /// <summary>
     /// Serviço base para serviços com relacionamento direto com uma entidade.

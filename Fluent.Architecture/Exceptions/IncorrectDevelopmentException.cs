@@ -1,5 +1,5 @@
 ﻿// ReSharper disable CommentTypo
-namespace Fluent.Architecture.Exception
+namespace Fluent.Architecture.Exceptions
 {
     /// <inheritdoc />
     /// <summary>

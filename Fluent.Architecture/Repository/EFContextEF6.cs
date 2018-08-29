@@ -31,7 +31,7 @@ namespace Fluent.Architecture.Repository
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-            var entityMethod = typeof(DbModelBuilder).GetMethod("Entity", new Type[] { });
+            var entityMethod = typeof(DbModelBuilder).GetMethod("Entity", Array.Empty<Type>());
             var exportedTypes = Setup.Model.Values.ToList();
             foreach (var type in exportedTypes)
             {
@@ -42,7 +42,7 @@ namespace Fluent.Architecture.Repository
 
                 if (type.IsSubclassOf(typeof(FluentEntity)))
                 {
-                    if (entityMethod != null) entityMethod.MakeGenericMethod(type).Invoke(modelBuilder, new object[] { });
+                    if (entityMethod != null) entityMethod.MakeGenericMethod(type).Invoke(modelBuilder, Array.Empty<object>());
                 }
             }
 

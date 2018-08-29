@@ -1,5 +1,4 @@
 ﻿using Fluent.Architecture.Attributes;
-using Fluent.Architecture.Exception;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Test.SupportElements;

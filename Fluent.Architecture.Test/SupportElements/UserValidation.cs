@@ -1,10 +1,11 @@
 ﻿using Fluent.Architecture.Attributes;
-using Fluent.Architecture.Exception.ValidationException;
 using Fluent.Architecture.Test.SupportElements.Model;
 using Fluent.Architecture.Validation;
 
 namespace Fluent.Architecture.Test.SupportElements
 {
+    using Fluent.Architecture.Exceptions.ValidationException;
+
     public class UserValidation : FluentValidation<User>
     {
         public override void Add(User entity)

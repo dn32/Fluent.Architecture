@@ -3,8 +3,6 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
 using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Exception;
-using Fluent.Architecture.Exception.ValidationException;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
@@ -18,6 +16,9 @@ using NUnit.Framework;
 
 namespace Fluent.Architecture.Test.Test
 {
+    using Fluent.Architecture.Exceptions;
+    using Fluent.Architecture.Exceptions.ValidationException;
+
     [TestFixture]
     public class PropagationTest : FluentInternalTest
     {

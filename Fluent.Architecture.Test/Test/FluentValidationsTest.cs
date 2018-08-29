@@ -2,7 +2,7 @@
 
 using System;
 using System.Linq;
-using Fluent.Architecture.Exception.ValidationException;
+
 using Fluent.Architecture.Test.SupportElements;
 using Fluent.Architecture.Test.SupportElements.Controllers;
 using Fluent.Architecture.Test.SupportElements.Mock;
@@ -13,6 +13,8 @@ using NUnit.Framework;
 
 namespace Fluent.Architecture.Test.Test
 {
+    using Fluent.Architecture.Exceptions.ValidationException;
+
     [TestFixture]
     public class FluentValidationsTest : FluentInternalTest
     {
