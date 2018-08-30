@@ -6,6 +6,7 @@ namespace Fluent.Architecture.Test.SupportElements
     public class FluentInternalTest
     {
         public UserController UserControllerInstance { get; set; }
+
         public StudentController StudentControllerInstance { get; set; }
 
         public FluentInternalTest()

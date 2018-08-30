@@ -3,6 +3,7 @@
 using System.Linq;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Model;
+using Fluent.Architecture.Services;
 
 namespace Fluent.Architecture.Specifications
 {
@@ -33,5 +34,8 @@ namespace Fluent.Architecture.Specifications
 
         /// <inheritdoc />
         protected FluentSelectSpecification(FluentController<TE> controller) : base(controller){}
+
+        /// <inheritdoc />
+        protected FluentSelectSpecification(TransactionalService service) : base(service) { }
     }
 }

@@ -2,20 +2,14 @@
 using System.Web.Mvc;
 using System.Web.Routing;
 using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Test.SupportElements.Controllers;
 using Fluent.Architecture.Test.SupportElements.Mock.ControllerMock;
 using Fluent.Architecture.Test.TestTools;
 
 #if NET461
-
-#endif
-
 namespace Fluent.Architecture.Test.SupportElements.Mock
 {
     public static class MockUtil
     {
-#if NET461
-
         public static HttpContextBaseMock GetHttpContext()
         {
             return new HttpContextBaseMock();
@@ -51,7 +45,6 @@ namespace Fluent.Architecture.Test.SupportElements.Mock
             controller.SetLocalHttpContext(new HttpContextBaseMock(false));
             return new ControllerContext(controller.HttpContext, new RouteData(), controller);
         }
-
-#endif
     }
 }
+#endif
