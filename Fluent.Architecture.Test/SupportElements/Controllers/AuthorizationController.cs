@@ -21,6 +21,11 @@ namespace Fluent.Architecture.Test.SupportElements.Controllers
             return this.Json(this.Propagate(student));
         }
 
+        public JsonResult Update(Student student)
+        {
+            return this.Json(this.Propagate(student));
+        }
+
         public JsonResult Add2(Student student)
         {
             return this.Json(this.PropagateMethod(nameof(FluentService<Student>.Add), student));

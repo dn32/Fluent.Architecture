@@ -93,7 +93,7 @@ namespace Fluent.Architecture.Validation
         {
             this.ParameterMustBeInformed(entity);
             this.RequiredPropertyMustBeInformed(entity);
-            this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
+            this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, isUpdate: true);
             this.EntityMustExistInDatabase(entity);
 
             this.RunTheContextValidation();
@@ -194,7 +194,7 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
             }
         }
 
-        private void AllKeysShouldBeInformedWhenThereAreMoreThanOne(T entity)
+        private void AllKeysShouldBeInformedWhenThereAreMoreThanOne(T entity, bool isUpdate = false)
         {
             if (!this.NullParameterOk || !this.KeyValuesOk)
             {
@@ -210,8 +210,23 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
             else
             {
                 var property = properties.First();
-                if (!property.GetValue(entity).IsFluentNull())
+                if (property.GetValue(entity).IsFluentNull())
                 {
+                    if (!isUpdate)
+                    {
+                        return;
+                    }
+
+                    this.AddInconsistency(new PropertyRequiredFluentValidationException(property.Name));
+                    this.KeyValuesOk = false;
+                }
+                else
+                {
+                    if (isUpdate)
+                    {
+                        return;
+                    }
+
                     this.AddInconsistency(new FluentPropertyValidationException(property.Name, "The key must not be entered for this operation."));
                     this.KeyValuesOk = false;
                 }

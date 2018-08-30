@@ -2,6 +2,7 @@
 #if NET461
 using System.Web.Mvc;
 using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Model;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
 
@@ -26,9 +27,9 @@ namespace Fluent.Architecture.Filters
                     filterContext.Result = new CustomJsonResult
                     {
                         JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                        Data = new
+                        Data = new ValidationReturn
                         {
-                            exception.Message,
+                            Message= exception.Message,
                             ValidationError = true
                         }
                     };

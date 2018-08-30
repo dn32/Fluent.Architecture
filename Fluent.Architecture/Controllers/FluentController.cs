@@ -86,6 +86,7 @@ namespace Fluent.Architecture.Controllers
             return new CustomJsonResult
             {
                 Data = data,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
             };
         }
 

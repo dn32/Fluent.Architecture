@@ -47,17 +47,32 @@ namespace Fluent.Architecture.Test.Test
             Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(error.Inconsistencies.First());
         }
 
-        [Test]
-        public void NullOneKeyNullTestFail()
+        [Theory]
+        [TestCase(nameof(FluentFullController<User>.Add))]
+        public void NullOneKeyNullTestAddFail(string method)
         {
             var student = InternalTestUtil.GetNewStudent();
             student.Id = TestUtil.NextRandom();
-            var error = TestUtil.Execute<ContextFluentValidationException>(this.StudentControllerInstance, nameof(FluentFullController<User>.Add), student);
+            var error = TestUtil.Execute<ContextFluentValidationException>(this.StudentControllerInstance, method, student);
 
             Assert.NotNull(error);
             Assert.AreEqual(1, error.Inconsistencies.Count);
             Assert.IsAssignableFrom<FluentPropertyValidationException>(error.Inconsistencies.First());
             Assert.AreEqual("The key must not be entered for this operation.", error.Inconsistencies.First().Message);
+        }
+
+        [Theory]
+        [TestCase(nameof(FluentFullController<User>.Update))]
+        public void NullOneKeyNullTestUpdateFail(string method)
+        {
+            var student = InternalTestUtil.GetNewStudent();
+            student.Id = 0;
+            var error = TestUtil.Execute<ContextFluentValidationException>(this.StudentControllerInstance, method, student);
+
+            Assert.NotNull(error);
+            Assert.AreEqual(1, error.Inconsistencies.Count);
+            Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(error.Inconsistencies.First());
+            Assert.AreEqual($"The property {nameof(Student.Id)} must have a value for this operation.", error.Inconsistencies.First().Message);
         }
 
         [Test]

@@ -13,6 +13,9 @@ using NUnit.Framework;
 using System.Runtime.InteropServices;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Exceptions.ValidationException;
+using Fluent.Architecture.Model;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Fluent.Architecture.Test.Test
 {
@@ -64,10 +67,12 @@ namespace Fluent.Architecture.Test.Test
             }
             else
             {
-                Assert.AreEqual(exception, ((JsonResult)exceptionContext.Result).Data);
+                var validationReturn = ((JsonResult)exceptionContext.Result).Data as ValidationReturn;
+                Assert.True(validationReturn?.ValidationError);
+                Assert.AreEqual(exception.Message, validationReturn?.Message);
             }
         }
-
+        
         [Test]
         public void ExceptionFilter2Test()
         {
