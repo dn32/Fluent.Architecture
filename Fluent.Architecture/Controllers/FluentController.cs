@@ -1,18 +1,14 @@
-﻿// ReSharper disable CommentTypo
+﻿#if NET461
+// ReSharper disable CommentTypo
 
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Services;
-#if NET461
 using System.Web.Mvc;
-#else
-using Microsoft.AspNetCore.Mvc;
-#endif
+using System;
 
 namespace Fluent.Architecture.Controllers
 {
-    using System;
-
     /// <inheritdoc />
     /// <summary>
     /// Controlador genérico padrão recomendado para herança por todos os controladores que tiverem entidade.
@@ -20,8 +16,7 @@ namespace Fluent.Architecture.Controllers
     /// <typeparam name="T">O tipo da entidade do controller.</typeparam>
     public abstract class FluentController<T> : FluentServiceController<FluentService<T>> where T : BaseEntity
     {
-        #region PROPAGATION
-        
+
         protected T PropagateMethod(string methodName)
         {
             return this.PropagateInternal(methodName, Array.Empty<object>()) as T;
@@ -48,17 +43,17 @@ namespace Fluent.Architecture.Controllers
         }
 
         //===========================
-       
+
         protected T Propagate()
         {
             return this.PropagateInternal(string.Empty, Array.Empty<object>()) as T;
         }
-       
+
         protected T Propagate(object[] parameters)
         {
             return this.PropagateInternal(string.Empty, parameters) as T;
         }
-       
+
         protected TX Propagate<TX>(object[] parameters)
         {
             return (TX)this.PropagateInternal(string.Empty, parameters);
@@ -86,15 +81,24 @@ namespace Fluent.Architecture.Controllers
             return this.Service.PropagateService(methodName, parameters);
         }
 
-        #endregion
-
-#if NET461
         protected internal new JsonResult Json(object data)
         {
-            return this.Json(data, JsonRequestBehavior.AllowGet);
+            return new CustomJsonResult
+            {
+                Data = data,
+            };
         }
-#else
 
-#endif
+        protected override JsonResult Json(object data, string contentType, System.Text.Encoding contentEncoding, JsonRequestBehavior behavior)
+        {
+            return new CustomJsonResult
+            {
+                Data = data,
+                ContentType = contentType,
+                ContentEncoding = contentEncoding,
+                JsonRequestBehavior = behavior
+            };
+        }
     }
 }
+#endif

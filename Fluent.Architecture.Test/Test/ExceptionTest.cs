@@ -42,7 +42,7 @@ namespace Fluent.Architecture.Test.Test
         // For test custom errors
         public void ExceptionFilterTest(bool customErrorEnabled, Type exceptionType)
         {
-            var filter = new ExceptionHandlerAttribute();
+            var filter = new FluentExceptionHandlerAttribute();
             var exception = new ContextFluentValidationException();
 
             var parameters = exceptionType.GetConstructorParameters();
@@ -71,7 +71,7 @@ namespace Fluent.Architecture.Test.Test
         [Test]
         public void ExceptionFilter2Test()
         {
-            var filter = new ExceptionHandlerAttribute();
+            var filter = new FluentExceptionHandlerAttribute();
             var exception = new Exception("Test Exception");
 
             var exceptionContext = MockUtil.GetMockExceptionContext<UserController>(exception, this.UserControllerInstance, false);

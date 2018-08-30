@@ -57,6 +57,18 @@ namespace Fluent.Architecture.Extensions
             return entityType.GetProperties().Where(x => x.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || x.GetCustomAttribute<KeyAttribute>(true) != null || x.GetCustomAttribute<FluentUniqueKeyAttribute>(true) != null).ToList();
         }
 
+        public static List<KeyValue> GetKeyAndFluentUniqueKeyValues(this object entity)
+        {
+            var returnList = new List<KeyValue>();
+            var properties = entity.GetType().GetKeyAndFluentUniqueKeyProperties();
+            foreach (var property in properties)
+            {
+                returnList.Add(new KeyValue { Property = property, ColumnName = property.GetColumnName(), Value = property.GetValue(entity).GetDbValue(property) });
+            }
+
+            return returnList;
+        }
+
         public static List<PropertyInfo> GetPropertiesByAttribute<TA>(this Type entityType) where TA : Attribute
         {
             return entityType.GetProperties().Where(x => x.GetCustomAttribute<TA>(true) != null).ToList();
@@ -79,7 +91,7 @@ namespace Fluent.Architecture.Extensions
         public static List<KeyValue> GetKeyValues(this object entity)
         {
             var returnList = new List<KeyValue>();
-            var properties = entity.GetType().GetKeyAndFluentUniqueKeyProperties();
+            var properties = entity.GetType().GetKeyProperties();
             foreach (var property in properties)
             {
                 returnList.Add(new KeyValue { Property = property, ColumnName = property.GetColumnName(), Value = property.GetValue(entity).GetDbValue(property) });

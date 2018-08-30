@@ -1,9 +1,9 @@
 ﻿// ReSharper disable CommentTypo
 
+using System;
+
 namespace Fluent.Architecture.Exceptions.ValidationException
 {
-    using Exception = System.Exception;
-
     /// <inheritdoc />
     public class FluentValidationException : Exception
     {

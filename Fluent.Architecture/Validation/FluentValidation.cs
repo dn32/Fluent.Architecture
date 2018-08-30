@@ -242,7 +242,7 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
 
             if (this.Repository.Exists(entity))
             {
-                var keys = entity.GetKeyValues().Select(x => $"{{{x.Property.Name}:{x.Value}}}").ToArray();
+                var keys = entity.GetKeyAndFluentUniqueKeyValues().Select(x => $"{{{x.Property.Name}:{x.Value}}}").ToArray();
                 var keyValues = string.Join(", ", keys);
                 this.AddInconsistency(new EntityExistsFluentValidationException(keyValues));
             }
