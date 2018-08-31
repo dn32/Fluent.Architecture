@@ -27,8 +27,9 @@ namespace Fluent.Architecture.Sample.Test.Test
             var error = TestUtil.Execute<ContextFluentValidationException>(this.UserControllerInstance, method, new object[] { null });
 
             Assert.NotNull(error);
-            Assert.AreEqual(1, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<NullParameterFluentValidationException>(error.Inconsistencies.First());
+            Assert.AreEqual(2, error.Inconsistencies.Count);
+            Assert.IsAssignableFrom<FluentPropertyValidationException>(error.Inconsistencies.First());
+            Assert.IsAssignableFrom<NullParameterFluentValidationException>(error.Inconsistencies.Last());
         }
 
         [Theory]
@@ -125,8 +126,9 @@ namespace Fluent.Architecture.Sample.Test.Test
             var error = TestUtil.Execute<ContextFluentValidationException>(this.UserControllerInstance, method, user);
 
             Assert.NotNull(error);
-            Assert.AreEqual(1, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(error.Inconsistencies.First());
+            Assert.AreEqual(2, error.Inconsistencies.Count);
+            Assert.IsAssignableFrom<FluentPropertyValidationException>(error.Inconsistencies.First());
+            Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(error.Inconsistencies.Last());
 
             if (method == nameof(FluentFullController<User>.Update))
             {
@@ -136,6 +138,24 @@ namespace Fluent.Architecture.Sample.Test.Test
 
         [Theory]
         [TestCase(nameof(FluentFullController<User>.Update))]
+        public void UpdateAndUpdateNotFoundFail(string method)
+        {
+            var user = new User
+            {
+                Name = $"test{Guid.NewGuid()}@mail.com",
+                PersonType = ePersonType.User,
+                Id = new Random().Next(1, int.MaxValue)
+            };
+
+            var error = TestUtil.Execute<ContextFluentValidationException>(this.UserControllerInstance, method, user);
+            Assert.NotNull(error);
+            Assert.AreEqual(2, error.Inconsistencies.Count);
+            Assert.IsAssignableFrom<FluentPropertyValidationException>(error.Inconsistencies.First());
+            Assert.IsAssignableFrom<EntityNotFoundFluentValidationException>(error.Inconsistencies.Last());
+            Assert.True(error.ValidationError);
+        }
+
+        [Theory]
         [TestCase(nameof(FluentFullController<User>.Remove))]
         public void UpdateAndRemoveNotFoundFail(string method)
         {
@@ -146,15 +166,33 @@ namespace Fluent.Architecture.Sample.Test.Test
                 Id = new Random().Next(1, int.MaxValue)
             };
 
-            var err = TestUtil.Execute<ContextFluentValidationException>(this.UserControllerInstance, method, user);
-            Assert.NotNull(err);
-            Assert.AreEqual(1, err.Inconsistencies.Count);
-            Assert.IsAssignableFrom<EntityNotFoundFluentValidationException>(err.Inconsistencies.First());
-            Assert.True(err.ValidationError);
+            var error = TestUtil.Execute<ContextFluentValidationException>(this.UserControllerInstance, method, user);
+            Assert.NotNull(error);
+            Assert.AreEqual(1, error.Inconsistencies.Count);
+            Assert.IsAssignableFrom<EntityNotFoundFluentValidationException>(error.Inconsistencies.Last());
+            Assert.True(error.ValidationError);
+        }
+        
+        [Theory]
+        [TestCase(nameof(FluentFullController<User>.Update))]
+        public void UpdateAndUpdateNotKeyValueFail(string method)
+        {
+            var user = new User
+            {
+                Name = $"test{Guid.NewGuid()}@mail.com",
+                PersonType = ePersonType.User,
+            };
+
+            var objectReturn = TestUtil.Execute<ContextFluentValidationException>(this.UserControllerInstance, method, user);
+            Assert.NotNull(objectReturn);
+            Assert.AreEqual(2, objectReturn.Inconsistencies.Count);
+            Assert.IsAssignableFrom<FluentPropertyValidationException>(objectReturn.Inconsistencies.First());
+            Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(objectReturn.Inconsistencies.Last());
+
+            objectReturn.Inconsistencies.Clear();
         }
 
         [Theory]
-        [TestCase(nameof(FluentFullController<User>.Update))]
         [TestCase(nameof(FluentFullController<User>.Remove))]
         public void UpdateAndRemoveNotKeyValueFail(string method)
         {
@@ -167,7 +205,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             var objectReturn = TestUtil.Execute<ContextFluentValidationException>(this.UserControllerInstance, method, user);
             Assert.NotNull(objectReturn);
             Assert.AreEqual(1, objectReturn.Inconsistencies.Count);
-            Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(objectReturn.Inconsistencies.First());
+            Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(objectReturn.Inconsistencies.Last());
 
             objectReturn.Inconsistencies.Clear();
         }
