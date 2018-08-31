@@ -85,7 +85,7 @@ namespace Fluent.Architecture.Sample.Test.Test
 
             var ex = Assert.Throws<IncorrectDevelopmentException>(() => TestUtil.Execute(this.UserControllerInstance, null, null, Spec));
             Assert.NotNull(ex);
-            Assert.AreEqual("There are two or more methods of propagation in Fluent.Architecture.Test.SupportElements.UserRepository with the same name Test. This causes an ambiguity, please change the name of one of them.", ex.Message);
+            Assert.AreEqual("There are two or more methods of propagation in Fluent.Architecture.Sample.Test.SupportElements.UserRepository with the same name Test. This causes an ambiguity, please change the name of one of them.", ex.Message);
         }
 
         [Test]

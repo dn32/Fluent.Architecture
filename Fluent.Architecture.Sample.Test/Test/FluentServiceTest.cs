@@ -115,7 +115,6 @@ namespace Fluent.Architecture.Sample.Test.Test
             Assert.Null(user2);
         }
 
-
         [Test]
         public void SessionRequestIdTest()
         {

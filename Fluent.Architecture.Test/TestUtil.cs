@@ -74,10 +74,10 @@ namespace Fluent.Architecture.Test
 
             try
             {
-                JsonResult returnObj;
+                object returnObj;
                 if (action == null)
                 {
-                    returnObj = method.Invoke(controller, parameters) as JsonResult;
+                    returnObj = method.Invoke(controller, parameters);
                 }
                 else
                 {
@@ -91,14 +91,26 @@ namespace Fluent.Architecture.Test
                     actionExecuted.Invoke(controller, new object[] { actionExecutedContext });
                 }
 
-                if (returnObj?.Data == null)
+                if (returnObj == null)
                 {
                     return default(TR);
                 }
 
-                Assert.True(returnObj.Data is TR);
+                if (returnObj is JsonResult jsonResult)
+                {
+                    if (jsonResult.Data == null)
+                    {
+                        return default(TR);
+                    }
 
-                return returnObj.Data as dynamic;
+                    Assert.True(jsonResult.Data is TR);
+
+                    return jsonResult.Data as dynamic;
+                }
+                
+                Assert.True(returnObj is TR);
+
+                return returnObj as dynamic;
             }
             catch (TargetInvocationException ex)
             {
