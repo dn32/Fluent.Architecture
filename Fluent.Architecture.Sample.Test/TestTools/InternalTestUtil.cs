@@ -11,6 +11,17 @@ namespace Fluent.Architecture.Sample.Test.TestTools
     [ComVisible(true)]
     public static class InternalTestUtil
     {
+        public static Course GetNewCourse()
+        {
+            var rand = TestUtil.NextRandom();
+            return new Course
+            {
+                Id = rand,
+                Title = $"Title {rand}",
+                Description = $"Description { rand }"
+            };
+        }
+
         public static User GetNewUser()
         {
             var rand = TestUtil.NextRandom();

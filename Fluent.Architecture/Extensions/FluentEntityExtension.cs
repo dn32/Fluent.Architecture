@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Model;
@@ -40,6 +41,21 @@ namespace Fluent.Architecture.Extensions
             }
 
             return name;
+        }
+
+        public static PropertyInfo GetKeyProperty(this Type entityType)
+        {
+            return entityType.GetProperties().Where(x => x.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || x.GetCustomAttribute<KeyAttribute>(true) != null)?.First();
+        }
+
+        public static int GetKeyValue(this object entity)
+        {
+            if (int.TryParse(entity.GetType().GetKeyProperty().GetValue(entity).ToString(), out var id))
+            {
+                return id;
+            }
+
+            throw new InvalidOperationException();
         }
 
         public static List<PropertyInfo> GetKeyProperties(this Type entityType)

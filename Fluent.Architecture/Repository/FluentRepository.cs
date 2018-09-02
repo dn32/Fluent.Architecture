@@ -1,17 +1,16 @@
 ﻿// ReSharper disable CommentTypo
+#if NET461
 
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Reflection;
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Model;
+using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
-#if NET461
-using System.Data.Entity;
-#else
-using Microsoft.EntityFrameworkCore;
-#endif
 
 namespace Fluent.Architecture.Repository
 {
@@ -32,19 +31,21 @@ namespace Fluent.Architecture.Repository
         /// <summary>
         /// A query contem a referência de todas as tabelas/documentos do banco de dados.
         /// </summary>
-       protected internal IQueryable<TE> Query => this.TransactionObjects.GetObjectQueryInternal<TE>();
+        protected internal IQueryable<TE> Query => this.TransactionObjects.GetObjectQueryInternal<TE>();
 
         /// <summary>
         /// A referência de input de dados para o banco de dados.
         /// </summary>
         internal DbSet<TE> Input => this.TransactionObjects.GetObjectInputDataInternal<TE>();
 
+        internal DbSet<Translation> TranslactionInput => this.TransactionObjects.GetObjectInputDataInternal<Translation>();
+
         /// <summary>
         /// O serviço qual esse repositório representa.
         /// </summary>
         internal FluentService<TE> Service { get; set; }
 
-        private void RunTheContextValidation()
+        protected void RunTheContextValidation()
         {
             this.Service.SessionRequest.ContextFluentValidationException.Validate();
         }
@@ -103,9 +104,7 @@ namespace Fluent.Architecture.Repository
         {
             return FluentPaginate(spec.ToIQueryable(this.Query), pagination).ToList();
         }
-
-       
-
+        
         /// <summary>
         /// Executa uma solicitação baseada em uma especificação e retorna uma lista paginada de resultados.
         /// </summary>
@@ -139,7 +138,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual TO SpecOne<TO>(FluentSelectSpecification<TE, TO> spec)
         {
-           return spec.Spec(this.Query).FirstOrDefault();
+            return spec.Spec(this.Query).FirstOrDefault();
         }
 
         /// <summary>
@@ -262,22 +261,11 @@ namespace Fluent.Architecture.Repository
             entities.ToList().ForEach(x => this.Input.Add(x));
         }
 
-        /// <summary>
-        /// Adiciona um item ao banco de dados.
-        /// </summary>
-        /// <param name="entity">
-        /// Item a ser adicionado.
-        /// </param>
         [Propagate]
         public virtual TE Add(TE entity)
         {
-            this.RunTheContextValidation();
-
-#if NET461
-            return this.Input.Add(entity);
-#else
-            return Input.Add(entity).Entity;
-#endif
+            RunTheContextValidation();
+            return Input.Add(entity);
         }
 
         /// <summary>
@@ -291,16 +279,9 @@ namespace Fluent.Architecture.Repository
         {
             this.RunTheContextValidation();
 
-#if NET461
             var currentEntity = this.Find(entity);
             this.TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
             return entity;
-#else
-            throw new NotImplementedException();
-            
-
-// Input.Update(entity);
-#endif
         }
 
         /// <summary>
@@ -314,11 +295,7 @@ namespace Fluent.Architecture.Repository
         {
             this.RunTheContextValidation();
 
-#if NET461
-          return this.Input.Remove(this.Find(entity));
-#else
-            throw new NotImplementedException();
-#endif
+            return this.Input.Remove(this.Find(entity));
         }
 
         public virtual void RemoveRange(FluentSpecification<TE> spec)
@@ -378,3 +355,4 @@ namespace Fluent.Architecture.Repository
         #endregion
     }
 }
+#endif

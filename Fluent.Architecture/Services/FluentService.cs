@@ -9,6 +9,7 @@ using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
+using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Validation;
 
@@ -294,11 +295,14 @@ namespace Fluent.Architecture.Services
         /// <param name="entity">
         /// Item a ser adicionado.
         /// </param>
+        /// <param name="language">
+        /// Idioma do da entidade a ser salva.
+        /// </param>
         [Propagate]
-        public virtual T Add(T entity)
+        public virtual T Add(T entity, Language language = null)
         {
             this.Validation.Add(entity);
-            return this.Repository.Add(entity);
+            return this.Repository.Add(entity, language);
         }
 
         // Todo documentar

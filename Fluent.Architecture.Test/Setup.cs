@@ -1,5 +1,4 @@
 ﻿#if NET461
-using System.Configuration;
 using System.Runtime.InteropServices;
 
 namespace Fluent.Architecture.Test
@@ -8,11 +7,9 @@ namespace Fluent.Architecture.Test
     [ComVisible(true)]
     public static class Setup
     {
-        public static void Initialize()
+        public static void Initialize(string connectionString)
         {
-            var connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             Architecture.Setup.Initialize(connectionString, true);
-
             // Architecture.Setup.SetCustomTypes(transactionObjectsType: typeof(TransactionObjectsTest));
         }
     }

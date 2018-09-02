@@ -48,7 +48,7 @@ namespace Fluent.Architecture.Test
             {
                 if (parameters == null || (parameters.Length == 1 && parameters.First() == null))
                 {
-                    method = controllerType.GetMethod(methodName);
+                    method = controllerType.GetMethod(methodName, BindingFlags.FlattenHierarchy);
                 }
                 else
                 {

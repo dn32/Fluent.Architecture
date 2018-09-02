@@ -1,16 +1,12 @@
 ﻿// ReSharper disable CommentTypo
+#if NET461
 
 using System;
 using System.Security.Claims;
 using System.Web;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Services;
-#if NET461
 using System.Web.Mvc;
-#else
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Filters;
-#endif
 
 namespace Fluent.Architecture.Controllers
 {
@@ -30,7 +26,6 @@ namespace Fluent.Architecture.Controllers
 
         public HttpContextBase ServiceHttpContext => this.Service.LocalHttpContext;
 
-#if NET461
 
         protected override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -40,27 +35,23 @@ namespace Fluent.Architecture.Controllers
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            this.Service.TransactionObjects.Session.SaveChanges();
-            this.Service.Dispose(true); base.OnActionExecuted(filterContext);
+            var session = Service.TransactionObjects.Session;
+
+            using (var transaction = session.Database.BeginTransaction())
+            {
+                session.SaveChanges();
+
+                if (Service.ExecuteInteractions())
+                {
+                    session.SaveChanges();
+                }
+
+                transaction.Commit();
+            }
+
+            this.Service.Dispose(true);
+            base.OnActionExecuted(filterContext);
         }
-
-#else
-
-// public override void OnActionExecuting(ActionExecutingContext context)
-
-// {
-
-// if (Service == null)
-
-// {
-
-// Service = ServiceFactory.Create<TS>(HttpContext);
-
-// }
-
-// base.OnActionExecuting(context);
-
-// }
-#endif
     }
 }
+#endif

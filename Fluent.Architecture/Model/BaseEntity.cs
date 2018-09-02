@@ -1,4 +1,8 @@
 ﻿// ReSharper disable CommentTypo
+
+using System.Collections.Generic;
+using Fluent.Architecture.Sample.Test.SupportElements.Model;
+
 namespace Fluent.Architecture.Model
 {
     /// <summary>
@@ -6,5 +10,6 @@ namespace Fluent.Architecture.Model
     /// </summary>
     public abstract class BaseEntity
     {
+       // internal List<Translation> Translations { get; set; }
     }
 }

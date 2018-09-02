@@ -1,9 +1,11 @@
 ﻿// ReSharper disable CommentTypo
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
+using Fluent.Architecture.Sample.Test.SupportElements.Model;
 
 #if NET461
 using System.Data.Entity;
@@ -20,7 +22,7 @@ namespace Fluent.Architecture.Repository
     {
         public void Dispose()
         {
-           this.Session.Dispose();
+            this.Session.Dispose();
         }
 
         /// <summary>
@@ -46,7 +48,7 @@ namespace Fluent.Architecture.Repository
             DataBaseConnectionString = dataBaseConnectionString;
             this.Session = ContextFactory.Create(DataBaseConnectionString);
         }
-        
+
         internal DbSet<TX> GetObjectInputDataInternal<TX>() where TX : BaseEntity
         {
             return this.Session.Set<TX>();

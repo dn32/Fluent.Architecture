@@ -1,5 +1,7 @@
-﻿using System.Web.Mvc;
+﻿using System.Data.Entity.Core.Common.CommandTrees;
+using System.Web.Mvc;
 using Fluent.Architecture.Model;
+using Fluent.Architecture.Sample.Test.SupportElements.Model;
 
 namespace Fluent.Architecture.Controllers
 {
@@ -9,12 +11,19 @@ namespace Fluent.Architecture.Controllers
     {
         public JsonResult Add(T entity)
         {
-            return this.Json(this.Service.Add(entity));
+            entity = this.Service.Add(entity);
+            return this.Json(entity);
         }
 
-        public JsonResult AddRange(T[] entities)
+        public JsonResult Add(T entity, Language language)
         {
-            this.Propagate(entities as object);
+            entity = this.Service.Add(entity, language);
+            return this.Json(entity);
+        }
+
+        public JsonResult AddRange(T[] entities, Language language = null)
+        {
+            this.Propagate(new object[] { entities, language });
             return this.Json(entities);
         }
 
