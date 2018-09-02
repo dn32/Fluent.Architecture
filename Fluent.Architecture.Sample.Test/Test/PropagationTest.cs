@@ -37,7 +37,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             Assert.AreEqual(student.GetAllDataOfObject(), foundStudent.GetAllDataOfObject());
 
             // Remove
-            TestUtil.Execute<Student>(this.StudentControllerInstance, nameof(FluentFullController<User>.Remove), student);
+            TestUtil.Execute<Student>(this.StudentControllerInstance, nameof(UserController.Remove), student);
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             Assert.IsNotEmpty(students);
 
             // Remove
-            TestUtil.Execute<Student>(this.StudentControllerInstance, nameof(FluentFullController<User>.Remove), student);
+            TestUtil.Execute<Student>(this.StudentControllerInstance, nameof(UserController.Remove), student);
         }
 
         [Test]
@@ -121,13 +121,13 @@ namespace Fluent.Architecture.Sample.Test.Test
             var spec = userSelectSpec ? new UserByPassword(this.UserControllerInstance, passwordForFind) as BaseSpecification<User> : new UserIdByPassword(this.UserControllerInstance, passwordForFind);
 
             // Add
-            TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Add), user);
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Add), user);
 
             var exists = TestUtil.Execute<bool>(this.UserControllerInstance, nameof(UserController.Exists), spec);
             Assert.AreEqual(expectedExists, exists);
 
             // Remove
-            TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Remove), user);
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Remove), user);
         }
 
         [Test]

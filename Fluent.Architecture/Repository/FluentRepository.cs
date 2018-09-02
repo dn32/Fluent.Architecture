@@ -28,6 +28,8 @@ namespace Fluent.Architecture.Repository
         /// </summary>
         internal TransactionObjects TransactionObjects { get; set; }
 
+        protected internal  EfContext Session => TransactionObjects.Session;
+
         /// <summary>
         /// A query contem a referência de todas as tabelas/documentos do banco de dados.
         /// </summary>
@@ -236,13 +238,13 @@ namespace Fluent.Architecture.Repository
         // {
         // return Input.Find(id);
         // }
-        public TE Find(TE entity)
+        public virtual TE Find(TE entity)
         {
             var sql = CreateSqlFromKeyAndFluentUniqueKeys(entity);
             return this.FindSingleOrDefaultSql(sql);
         }
 
-        public bool Exists(TE entity)
+        public virtual bool Exists(TE entity)
         {
             var sql = CreateSqlFromKeyAndFluentUniqueKeys(entity);
             return this.ExistsSql(sql);
@@ -281,7 +283,7 @@ namespace Fluent.Architecture.Repository
 
             var currentEntity = this.Find(entity);
             this.TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
-            return entity;
+            return currentEntity;
         }
 
         /// <summary>

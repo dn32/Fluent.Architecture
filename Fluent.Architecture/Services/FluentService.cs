@@ -1,38 +1,35 @@
 ﻿// ReSharper disable CommentTypo
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Attributes;
+using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
-using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Validation;
 
 namespace Fluent.Architecture.Services
 {
-    using System;
-
-    using Fluent.Architecture.Exceptions;
-
     ///<inheritdoc/>
-    /// <summary>
-    /// Serviço base para serviços com relacionamento direto com uma entidade.
-    /// </summary>
-    /// <typeparam name="T">
-    /// A entidade relacionada ao serviço.
-    /// </typeparam>
-    public class FluentService<T> : TransactionalService where T : BaseEntity
+        /// <summary>
+        /// Serviço base para serviços com relacionamento direto com uma entidade.
+        /// </summary>
+        /// <typeparam name="T">
+        /// A entidade relacionada ao serviço.
+        /// </typeparam>
+        public class FluentService<T> : TransactionalService where T : BaseEntity
     {
         ///// <summary>
         ///// O repositório do serviço.
         ///// </summary>
         //// protected internal FluentRepository<T> Repository { get; set; }
-        protected internal FluentRepository<T> Repository { get; set; }
+        protected internal virtual FluentRepository<T> Repository { get; set; }
 
         /// <summary>
         /// A validação do serviço.
@@ -295,14 +292,11 @@ namespace Fluent.Architecture.Services
         /// <param name="entity">
         /// Item a ser adicionado.
         /// </param>
-        /// <param name="language">
-        /// Idioma do da entidade a ser salva.
-        /// </param>
         [Propagate]
-        public virtual T Add(T entity, Language language = null)
+        public virtual T Add(T entity)
         {
             this.Validation.Add(entity);
-            return this.Repository.Add(entity, language);
+            return this.Repository.Add(entity);
         }
 
         // Todo documentar

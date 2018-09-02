@@ -9,9 +9,48 @@ using Fluent.Architecture.Specifications;
 
 namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
 {
-    public class UserController : FluentFullController<User>
+    public class UserController : FluentController<User>
     {
         public new UserService Service => base.Service as UserService;
+
+        public JsonResult Add(User entity)
+        {
+            entity = this.Service.Add(entity);
+            return this.Json(entity);
+        }
+
+        public JsonResult AddRange(User[] entities)
+        {
+            this.Propagate(new object[] { entities });
+            return this.Json(entities);
+        }
+
+        public JsonResult Remove(User entity)
+        {
+            return this.Json(this.Service.Remove(entity));
+        }
+
+        public JsonResult RemoveRange(User[] entities)
+        {
+            this.Service.RemoveRange(entities);
+            return this.Json(entities);
+        }
+
+        public JsonResult Update(User entity)
+        {
+            return this.Json(this.Service.Update(entity));
+        }
+
+        public JsonResult Find(User entity)
+        {
+            return this.Json(this.Service.Find(entity));
+        }
+
+        public JsonResult Find(User entity, string language)
+        {
+            var entityFinded = Propagate(new object[] { entity, language });
+            return this.Json(entityFinded);
+        }
 
         public void RemoveRange(UserByPassword spec)
         {

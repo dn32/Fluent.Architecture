@@ -22,7 +22,17 @@ namespace Fluent.Architecture.Factory
         /// </returns>
         public static FluentValidation<T> Create<T>() where T : BaseEntity
         {
-            var localType = typeof(FluentValidation<T>);
+            Type localType;
+
+            if (typeof(T).IsSubclassOf(typeof(FluentGlobalizedEntity)))
+            {
+                localType = typeof(FluentGlobalizedValidation<>).MakeGenericType(typeof(T));
+            }
+            else
+            {
+                localType = typeof(FluentValidation<T>);
+            }
+
             if (Setup.Validations.TryGetValue(typeof(T).Name, out var validationType))
             {
                 localType = validationType;

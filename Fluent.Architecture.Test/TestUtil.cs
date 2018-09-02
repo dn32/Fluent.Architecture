@@ -48,12 +48,11 @@ namespace Fluent.Architecture.Test
             {
                 if (parameters == null || (parameters.Length == 1 && parameters.First() == null))
                 {
-                    method = controllerType.GetMethod(methodName, BindingFlags.FlattenHierarchy);
+                    method = controllerType.GetMethod(methodName);
                 }
                 else
                 {
-                    var parameterTypes = (from parameter in parameters
-                                          select parameter == null ? typeof(object) : parameter.GetType()).ToList();
+                    var parameterTypes = (from parameter in parameters select parameter == null ? typeof(object) : parameter.GetType()).ToList();
                     method = controllerType.GetMethod(methodName, parameterTypes.ToArray());
                 }
 

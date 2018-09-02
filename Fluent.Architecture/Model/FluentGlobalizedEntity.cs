@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Fluent.Architecture.Model
 {
@@ -8,6 +9,11 @@ namespace Fluent.Architecture.Model
         [MaxLength(5)]
         public string Language { get; set; }
 
-        public bool IsDefaultLanguage { get; set; }
+        [NotMapped] public bool IsDefaultLanguage { get; set; }
+
+        protected FluentGlobalizedEntity()
+        {
+            IsDefaultLanguage = true;
+        }
     }
 }

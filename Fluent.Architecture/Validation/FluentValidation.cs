@@ -2,16 +2,14 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Services;
+using Fluent.Architecture.Exceptions.ValidationException;
 
 namespace Fluent.Architecture.Validation
 {
-    using Fluent.Architecture.Exceptions.ValidationException;
-
     /// <summary>
     /// A classe de validação base de todas as validações com entidade do sistema.
     /// </summary>

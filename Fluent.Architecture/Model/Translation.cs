@@ -7,7 +7,7 @@ namespace Fluent.Architecture.Model
     public class Translation : FluentEntity
     {
         [Key, Column(Order = 0)]
-        public int LanguageId { get; set; }
+        public string Language { get; set; }
 
         [Key, Column(Order = 1)]
         public string EntityType { get; set; }

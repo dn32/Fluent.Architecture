@@ -14,6 +14,12 @@ namespace Fluent.Architecture.Extensions
     public static class FluentEntityExtension
     {
         // Todo documentar
+        public static string GetTypeName(this object entity)
+        {
+            return entity.GetType().Name;
+        }
+
+        // Todo documentar
         public static string GetTableName(this object entity)
         {
             return entity.GetType().GetTableName();

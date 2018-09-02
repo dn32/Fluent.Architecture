@@ -1,5 +1,6 @@
 ﻿// ReSharper disable CommentTypo
 using System;
+using System.Linq;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
@@ -29,7 +30,17 @@ namespace Fluent.Architecture.Factory
         /// </returns>
         internal static FluentRepository<T> Create(TransactionObjects transactionObjects, FluentService<T> service)
         {
-            var localType = typeof(FluentRepository<T>);
+            Type localType;
+
+            if (typeof(T).IsSubclassOf(typeof(FluentGlobalizedEntity)))
+            {
+                localType = typeof(FluentGlobalizedRepository<>).MakeGenericType(typeof(T));
+            }
+            else
+            {
+                localType = typeof(FluentRepository<T>);
+            }
+
             if (Setup.Repositories.TryGetValue(typeof(T).Name, out var repositoryType))
             {
                 localType = repositoryType;
@@ -43,14 +54,7 @@ namespace Fluent.Architecture.Factory
 
         private static FluentRepository<T> Create(Type repositoryType)
         {
-            // if (!Setup.InTest)
-            // {
             return Activator.CreateInstance(repositoryType) as FluentRepository<T>;
-
-            // }
-
-            // var interceptor = new TransactionInterceptorMock(false, Guid.Empty);
-            // return RepositoryClassBuilder.Create<T>(repositoryType, interceptor) as FluentRepository<T>;
         }
     }
 }

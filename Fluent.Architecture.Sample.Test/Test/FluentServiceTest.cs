@@ -40,7 +40,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             Assert.AreEqual(expectedCount, count);
 
             //Remove
-            TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Remove), user);
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Remove), user);
         }
 
         [Theory]
@@ -52,8 +52,8 @@ namespace Fluent.Architecture.Sample.Test.Test
             var spec = new UserByEmail(this.UserControllerInstance, success ? user.Email : user.Email + "xxy");
 
             //Add
-            TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Add), user);
-            user = TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Find), user);
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Add), user);
+            user = TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Find), user);
             var userFound = TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.SpecOne), spec);
 
             if (success)
@@ -67,7 +67,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             }
 
             //Remove
-            TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Remove), user);
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Remove), user);
         }
 
         [Test]
@@ -81,8 +81,8 @@ namespace Fluent.Architecture.Sample.Test.Test
             var spec = new UserIdByPassword(this.UserControllerInstance, password);
 
             //Add
-            TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Add), user1);
-            TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Add), user2);
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Add), user1);
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Add), user2);
 
             //List
             var userIds = TestUtil.Execute<List<int>>(this.UserControllerInstance, nameof(UserController.Spec), spec);
@@ -92,8 +92,8 @@ namespace Fluent.Architecture.Sample.Test.Test
             Assert.AreEqual(2, userIds.Count);
 
             //Remove
-            TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Remove), user1);
-            TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Remove), user2);
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Remove), user1);
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Remove), user2);
         }
 
         [Test]
@@ -103,13 +103,13 @@ namespace Fluent.Architecture.Sample.Test.Test
             var param = new object[] { users };
 
             //Add
-            TestUtil.Execute<User[]>(this.UserControllerInstance, nameof(FluentFullController<User>.AddRange), param);
+            TestUtil.Execute<User[]>(this.UserControllerInstance, nameof(UserController.AddRange), param);
 
             //Remove
             TestUtil.Execute<User[]>(this.UserControllerInstance, nameof(UserController.RemoveRange), param);
 
-            var user1 = TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Find), users.First());
-            var user2 = TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Find), users.Last());
+            var user1 = TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Find), users.First());
+            var user2 = TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Find), users.Last());
 
             Assert.Null(user1);
             Assert.Null(user2);
@@ -174,13 +174,13 @@ namespace Fluent.Architecture.Sample.Test.Test
             var spec = new UserByPassword(this.UserControllerInstance, password);
 
             //Add
-            TestUtil.Execute<User[]>(this.UserControllerInstance, nameof(FluentFullController<User>.AddRange), param);
+            TestUtil.Execute<User[]>(this.UserControllerInstance, nameof(UserController.AddRange), param);
 
             //Remove
             TestUtil.Execute<User[]>(this.UserControllerInstance, nameof(UserController.RemoveRange), spec);
 
-            var user1 = TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Find), users.First());
-            var user2 = TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Find), users.Last());
+            var user1 = TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Find), users.First());
+            var user2 = TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Find), users.Last());
 
             Assert.Null(user1);
             Assert.Null(user2);
@@ -195,7 +195,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             var spec = new UserIdByEmail(this.UserControllerInstance, success ? user.Email : user.Email + "xxy");
 
             //Add
-            TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Add), user);
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Add), user);
             var userId = TestUtil.Execute<int>(this.UserControllerInstance, nameof(UserController.SpecOne), spec);
 
             if (success)
@@ -208,7 +208,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             }
 
             //Remove
-            TestUtil.Execute<User>(this.UserControllerInstance, nameof(FluentFullController<User>.Remove), user);
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Remove), user);
         }
 
         [Theory]
@@ -235,7 +235,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             var spec = new UserTelContainsNumber(this.UserControllerInstance, number);
 
             //Add
-            TestUtil.Execute<User[]>(this.UserControllerInstance, nameof(FluentFullController<User>.AddRange), usersParam);
+            TestUtil.Execute<User[]>(this.UserControllerInstance, nameof(UserController.AddRange), usersParam);
 
             //Test Count
             var countFound = TestUtil.Execute<int>(this.UserControllerInstance, nameof(UserController.Count), spec);
@@ -294,7 +294,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             var spec = new UserTelContainsNumber(this.UserControllerInstance, telNumber);
 
             //Add
-            TestUtil.Execute<User[]>(this.UserControllerInstance, nameof(FluentFullController<User>.AddRange), usersParam);
+            TestUtil.Execute<User[]>(this.UserControllerInstance, nameof(UserController.AddRange), usersParam);
 
             //Test Count
             var countFound = TestUtil.Execute<int>(this.UserControllerInstance, nameof(UserController.Count), spec);
