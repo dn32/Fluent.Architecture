@@ -16,7 +16,6 @@ namespace Fluent.Architecture.Controllers
     /// <typeparam name="T">O tipo da entidade do controller.</typeparam>
     public abstract class FluentController<T> : FluentServiceController<FluentService<T>> where T : BaseEntity
     {
-
         protected T PropagateMethod(string methodName)
         {
             return this.PropagateInternal(methodName, Array.Empty<object>()) as T;
@@ -87,17 +86,6 @@ namespace Fluent.Architecture.Controllers
             {
                 Data = data,
                 JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-            };
-        }
-
-        protected override JsonResult Json(object data, string contentType, System.Text.Encoding contentEncoding, JsonRequestBehavior behavior)
-        {
-            return new CustomJsonResult
-            {
-                Data = data,
-                ContentType = contentType,
-                ContentEncoding = contentEncoding,
-                JsonRequestBehavior = behavior
             };
         }
     }

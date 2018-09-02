@@ -1,6 +1,7 @@
 ﻿// ReSharper disable CommentTypo
 #if NET461
 
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
@@ -23,22 +24,29 @@ namespace Fluent.Architecture.Repository
     {
         private void AddTranslation(FluentGlobalizedEntity entity)
         {
-            var properties = typeof(TE).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => x.GetCustomAttribute<FluentGlobalizationAttribute>() != null).ToList();
-            var translations = properties.Select(x =>
-                new Translation
-                {
-                    EntityType = entity.GetTypeName(),
-                    EntityId = entity.GetKeyValue(),
-                    Language = entity.Language,
-                    Property = x.Name,
-                    Value = x.GetValue(entity).ToString()
-                })
-                .ToList();
+            var translations = ExtractTranslactionsOfEntity(entity);
 
             foreach (var translation in translations)
             {
                 TranslactionInput.Add(translation);
             }
+        }
+
+        private static List<Translation> ExtractTranslactionsOfEntity(FluentGlobalizedEntity entity)
+        {
+            var properties = typeof(TE).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => x.GetCustomAttribute<FluentGlobalizationAttribute>() != null).ToList();
+            var translations = properties.Select(x =>
+                    new Translation
+                    {
+                        EntityType = entity.GetTypeName(),
+                        EntityId = entity.GetKeyValue(),
+                        Language = entity.Language,
+                        Property = x.Name,
+                        Value = x.GetValue(entity).ToString()
+                    })
+                .ToList();
+
+            return translations;
         }
 
         /// <summary>
@@ -82,39 +90,32 @@ namespace Fluent.Architecture.Repository
             return FindAllTranslationsOfAnEntity(entity).Where(x => x.Language == language);
         }
 
-        //private Translation FindTranslationsByLanguage(TE entity, string property, string language)
-        //{
-        //    return FindAllTranslationsOfAnEntity(entity).FirstOrDefault(x => x.Property == property && x.Language == language);
-        //}
-
         [Propagate]
         public override TE Update(TE entity)
         {
             RunTheContextValidation();
-            var persistedEntity = Find(entity);
-            var persistedLanguage = persistedEntity.Language;
 
-            TransactionObjects.Session.Entry(persistedEntity).CurrentValues.SetValues(entity);
+            var persistentEntity = Find(entity);
 
-            if (entity.IsDefaultLanguage)
+            TransactionObjects.Session.Entry(persistentEntity).CurrentValues.SetValues(entity);
+
+            if (!entity.IsDefaultLanguage)
             {
-                if (entity.Language == persistedLanguage)
-                {
-                    return persistedEntity;
-                }
+                DoNotAllowChangeGlobalizedProperties(entity, persistentEntity);
+            }
+
+            var translations = ExtractTranslactionsOfEntity(entity);
+            var existentsTranslactions = FindTranslationsByLanguage(entity, entity.Language).ToList();
+            if (existentsTranslactions.Any())
+            {
+                existentsTranslactions.ForEach(x => x.Value = translations.FirstOrDefault(y => y.Property == x.Property)?.Value);
             }
             else
             {
-                DoNotAllowChangeGlobalizedProperties(entity, persistedEntity);
+                AddTranslation(entity);
             }
 
-
-            var translactionByLanguage = FindTranslationsByLanguage(entity, entity.Language);
-            TranslactionInput.RemoveRange(translactionByLanguage);
-
-            AddTranslation(entity);
-
-            return persistedEntity;
+            return persistentEntity;
         }
 
         [Propagate]
@@ -125,32 +126,23 @@ namespace Fluent.Architecture.Repository
 
             if (persistedEntity.Language != language)
             {
-                var translations = FindTranslationsByLanguage(persistedEntity, language).ToList();
-                var entityType = persistedEntity.GetType();
-                translations.ForEach(translation => entityType.GetProperty(translation.Property)?.SetValue(persistedEntity, translation.Value));
+                UpdateTranslateOfEntity(persistedEntity, language);
             }
 
             return persistedEntity;
         }
 
-        //public override TE Find(TE entity)
-        //{
-        //    var persistedEntity = base.Find(entity);
-        //    if (persistedEntity.Language != entity.Language)
-        //    {
-        //        var translations = FindTranslationsByLanguage(persistedEntity, entity.Language).ToList();
-        //        var entityType = persistedEntity.GetType();
-        //        translations.ForEach(translation => entityType.GetProperty(translation.Property)?.SetValue(persistedEntity, translation.Value));
-        //    }
-
-        //    return persistedEntity;
-        //}
+        private void UpdateTranslateOfEntity(TE entity, string language)
+        {
+            var entityType = entity.GetType();
+            var translations = FindTranslationsByLanguage(entity, language).ToList();
+            translations.ForEach(translation => entityType.GetProperty(translation.Property)?.SetValue(entity, translation.Value));
+        }
 
         [Propagate]
         public override TE Remove(TE entity)
         {
             TranslactionInput.RemoveRange(FindAllTranslationsOfAnEntity(entity));
-
             return base.Remove(entity);
         }
 
@@ -161,7 +153,6 @@ namespace Fluent.Architecture.Repository
             properties.ForEach(property => Session.Entry(persistedEntity).Property(property.Name).IsModified = false);
             Session.Entry(persistedEntity).Property(x => x.Language).IsModified = false;
         }
-
     }
 }
 #endif

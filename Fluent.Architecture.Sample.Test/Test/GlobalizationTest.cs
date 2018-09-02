@@ -13,98 +13,171 @@ namespace Fluent.Architecture.Sample.Test.Test
     [ComVisible(true)]
     public class GlobalizationTest : FluentInternalTest
     {
+        #region CONST
+
+        private const string DescriptionEnAdd = "Description English Add";
+        private const string TitleEnAdd = "Title English Add";
+
+        private const string DescriptionEn = "Description English";
+        private const string TitleEn = "Title English";
+
+        private const string DescriptionPtBr = "Descrição de idioma portugês.";
+        private const string TitlePtBr = "Título de idioma portugês.";
+
+        private const string DescriptionPtBr2 = "Descrição de idioma portugês 2.";
+        private const string TitlePtBr2 = "Título de idioma portugês 2.";
+
+        private const string DescriptionEs = "Descripción de idioma español.";
+        private const string TitleEs = "Título de idioma español.";
+
+        #endregion
+
+        #region INTERNAL
+
+        /// <summary>
+        /// Cadastra um curso com idioma padrão inglês
+        /// </summary>
+        private Course AddNewCurse()
+        {
+            //Add en-US (default)
+            var course = InternalTestUtil.GetNewCourse();
+            course.Id = 0;
+            course.Description = DescriptionEnAdd;
+            course.Title = "Title English Add";
+            course = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Add), course);
+            Assert.NotNull(course);
+            Assert.AreNotEqual(0, course.Id);
+            Assert.AreEqual(DescriptionEnAdd, course.Description);
+            Assert.AreEqual(TitleEnAdd, course.Title);
+
+            return course;
+        }
+
+        /// <summary>
+        /// Atualiza o texto do idioma padrão inglês para um novo texto.
+        /// </summary>
+        private Course UpdateForCurrentLanguage(Course course)
+        {
+            //Update default language
+            course.Description = DescriptionEn;
+            course.Title = TitleEn;
+            course = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Update), course);
+            Assert.NotNull(course);
+            Assert.AreNotEqual(0, course.Id);
+            Assert.AreEqual(DescriptionEn, course.Description);
+            Assert.AreEqual(TitleEn, course.Title);
+
+            return course;
+        }
+
+        /// <summary>
+        /// Atualiza o idioma para portugês, sem definir como padrão, fazendo com que dessa forma, um novo idioma seja adicionado, mantendo o antigo como padrão.
+        /// </summary>
+        private Course UpdateForAnotherLanguagePtBr(Course course)
+        {
+            //Add another language (pt-BR)
+            course.Description = DescriptionPtBr;
+            course.Title = TitlePtBr;
+            course.IsDefaultLanguage = false;
+            course.Language = Language.PT_BR;
+
+            course = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Update), course);
+            var coursePtBr = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.PT_BR });
+            Assert.NotNull(course);
+            Assert.AreNotEqual(0, course.Id);
+            Assert.AreEqual(DescriptionEn, course.Description);
+            Assert.AreEqual(TitleEn, course.Title);
+
+            Assert.NotNull(coursePtBr);
+            Assert.AreEqual(DescriptionPtBr, coursePtBr.Description);
+            Assert.AreEqual(TitlePtBr, coursePtBr.Title);
+
+            return course;
+        }
+
+        /// <summary>
+        /// Atualiza o idioma para espenhol, definindo como padrão. Dessa forma, espanhol passa a ser o idioma padrão e o idioma anterior (inglês),
+        /// passa a ser um idioma secundário, contento ainda o textos antigos.
+        /// </summary>
+        private Course UpdateForAnotherLanguageEs(Course course)
+        {
+            //Update default to es and Add es
+            course.Description = DescriptionEs;
+            course.Title = TitleEs;
+            course.IsDefaultLanguage = true;
+            course.Language = Language.ES;
+
+            course = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Update), course);
+            var courseEn = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.EN_US });
+            Assert.NotNull(course);
+            Assert.AreNotEqual(0, course.Id);
+            Assert.AreEqual(DescriptionEs, course.Description);
+            Assert.AreEqual(TitleEs, course.Title);
+
+            Assert.NotNull(courseEn);
+            Assert.AreEqual(DescriptionEn, courseEn.Description);
+            Assert.AreEqual(TitleEn, courseEn.Title);
+
+            return course;
+        }
+
+        /// <summary>
+        /// Atualiza os textos do idioma secundário portugês, sem afetar o idioma original (espanhol) e o outro idioma secundário (inglês).
+        /// </summary>
+        /// <param name="course"></param>
+        /// <returns></returns>
+        private Course UpdateLanguagePtBr(Course course)
+        {
+            //Update another language (pt-BR)
+            course.Description = DescriptionPtBr2;
+            course.Title = TitlePtBr2;
+            course.IsDefaultLanguage = false;
+            course.Language = Language.PT_BR;
+
+            course = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Update), course);
+            Assert.NotNull(course);
+            Assert.AreNotEqual(0, course.Id);
+            Assert.AreEqual(DescriptionEs, course.Description);
+            Assert.AreEqual(TitleEs, course.Title);
+
+            return course;
+        }
+
+        #endregion
+
         [Test]
         public void GlobalizationTestTraduction()
         {
-            var course = InternalTestUtil.GetNewCourse();
-            course.Id = 0;
+            var course = AddNewCurse();
+            course = UpdateForCurrentLanguage(course);
+            course = UpdateForAnotherLanguagePtBr(course);
+            course = UpdateForAnotherLanguageEs(course);
+            course = UpdateLanguagePtBr(course);
 
-            {
-                //Add en-US (default)
-                course.Description = "Description English Add";
-                course.Title = "Title English Add";
-                course = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Add), course);
-                Assert.NotNull(course);
-                Assert.AreNotEqual(0, course.Id);
-                Assert.AreEqual("Description English Add", course.Description);
-            }
+            var courseDefault = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), course);
+            var coursePtBr = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.PT_BR });
+            var courseEs = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.ES });
+            var courseEn = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.EN_US });
 
-            {
-                //Update default language
-                course.Description = "Description English";
-                course.Title = "Title English";
-                course = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Update), course);
-                Assert.NotNull(course);
-                Assert.AreNotEqual(0, course.Id);
-                Assert.AreEqual("Description English", course.Description);
-                Assert.AreEqual("Title English", course.Title);
-            }
+            Assert.NotNull(courseDefault);
+            Assert.NotNull(coursePtBr);
+            Assert.NotNull(courseEs);
+            Assert.NotNull(courseEn);
 
-            {
-                //Add another language (pt-BR)
-                course.Description = "Descrição de idioma portugês.";
-                course.Title = "Título de idioma portugês.";
-                course.IsDefaultLanguage = false;
-                course.Language = Language.PT_BR;
+            Assert.AreEqual(DescriptionEs, courseDefault.Description);
+            Assert.AreEqual(TitleEs, courseDefault.Title);
 
-                course = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Update), course);
-                Assert.NotNull(course);
-                Assert.AreNotEqual(0, course.Id);
-                Assert.AreEqual("Description English", course.Description);
-                Assert.AreEqual("Title English", course.Title);
-            }
+            Assert.AreEqual(DescriptionPtBr2, coursePtBr.Description);
+            Assert.AreEqual(TitlePtBr2, coursePtBr.Title);
 
-            {
-                //Update default to es and Add es
-                course.Description = "Descripción de idioma español.";
-                course.Title = "Título de idioma español.";
-                course.IsDefaultLanguage = true;
-                course.Language = Language.ES;
+            Assert.AreEqual(DescriptionEs, courseEs.Description);
+            Assert.AreEqual(TitleEs, courseEs.Title);
 
-                course = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Update), course);
-                Assert.NotNull(course);
-                Assert.AreNotEqual(0, course.Id);
-                Assert.AreEqual("Descripción de idioma español.", course.Description);
-                Assert.AreEqual("Título de idioma español.", course.Title);
-            }
-
-
-            {
-                //Update another language (pt-BR)
-                course.Description = "Descrição de idioma portugês 2.";
-                course.Title = "Título de idioma portugês 2.";
-                course.IsDefaultLanguage = false;
-                course.Language = Language.PT_BR;
-
-                course = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Update), course);
-                Assert.NotNull(course);
-                Assert.AreNotEqual(0, course.Id);
-                Assert.AreEqual("Descripción de idioma español.", course.Description);
-                Assert.AreEqual("Título de idioma español.", course.Title);
-            }
-
-            {
-                // Find in pt-BR
-                course.Language = Language.PT_BR;
-                course = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.PT_BR });
-                Assert.AreNotEqual(0, course.Id);
-                Assert.AreEqual("Descrição de idioma portugês 2.", course.Description);
-                Assert.AreEqual("Título de idioma portugês 2.", course.Title);
-            }
-            {
-                // Find default
-                course = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), course);
-                Assert.NotNull(course);
-                Assert.AreNotEqual(0, course.Id);
-                Assert.AreEqual("Descripción de idioma español.", course.Description);
-                Assert.AreEqual("Título de idioma español.", course.Title);
-            }
-
-            //var course2 = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(UserController.Find), course);
+            Assert.AreEqual(DescriptionEn, courseEn.Description);
+            Assert.AreEqual(TitleEn, courseEn.Title);
 
             ////Remove
             TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Remove), course);
         }
     }
-
 }
