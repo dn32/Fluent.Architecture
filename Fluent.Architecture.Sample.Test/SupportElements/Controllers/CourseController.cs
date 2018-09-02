@@ -4,7 +4,7 @@ using Fluent.Architecture.Sample.Test.SupportElements.Model;
 
 namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
 {
-    public class CourseController : FluentController<Course>
+    public class CourseController : FluentGlobalizedController<Course>
     {
         public JsonResult Add(Course entity)
         {

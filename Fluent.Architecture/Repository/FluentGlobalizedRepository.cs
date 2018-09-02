@@ -124,19 +124,28 @@ namespace Fluent.Architecture.Repository
             var persistedEntity = base.Find(entity);
             Session.Entry(persistedEntity).State = EntityState.Detached;
 
-            if (persistedEntity.Language != language)
+            if (persistedEntity.Language == language)
             {
-                UpdateTranslateOfEntity(persistedEntity, language);
+                return persistedEntity;
             }
+
+            if (!UpdateTranslateOfEntity(persistedEntity, language))
+            {
+                return persistedEntity;
+            }
+
+            persistedEntity.Language = language;
+            persistedEntity.IsDefaultLanguage = false;
 
             return persistedEntity;
         }
 
-        private void UpdateTranslateOfEntity(TE entity, string language)
+        private bool UpdateTranslateOfEntity(TE entity, string language)
         {
             var entityType = entity.GetType();
             var translations = FindTranslationsByLanguage(entity, language).ToList();
             translations.ForEach(translation => entityType.GetProperty(translation.Property)?.SetValue(entity, translation.Value));
+            return translations.Any();
         }
 
         [Propagate]

@@ -25,11 +25,6 @@ namespace Fluent.Architecture.Factory
         /// </returns>
         internal static TransactionalService Create(Type serviceType, Guid sessionId)
         {
-            // if (serviceType.IsAssignableFrom(typeof(IFluentDynamicProxy)))
-            // {
-            // // Todo "IFluentDynamicProxy ainda não está sendo usado
-            // serviceType = serviceType.BaseType;
-            // }
             return ServiceLazyClassBuilder.CreateObject(serviceType, sessionId) as TransactionalService;
         }
     }

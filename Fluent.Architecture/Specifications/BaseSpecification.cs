@@ -27,7 +27,7 @@ namespace Fluent.Architecture.Specifications
             this.Service = service;
         }
 
-        // Todo doc
+        // Todo Documentar
         protected BaseSpecification(FluentController<T> controller)
         {
             this.Controller = controller;

@@ -9,8 +9,7 @@ namespace Fluent.Architecture.Exceptions.ValidationException
     {
         public bool ValidationError => true;
 
-        public FluentValidationException(string message)
-            : base(message)
+        public FluentValidationException(string message): base(message)
         {
         }
     }

@@ -4,11 +4,9 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Reflection;
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Model;
-using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
 
@@ -52,10 +50,9 @@ namespace Fluent.Architecture.Repository
             this.Service.SessionRequest.ContextFluentValidationException.Validate();
         }
 
-#if NET461
 
         /// <summary>
-        /// Todo - Muito cuidado, pois se definir esse método como público, pode permitir vilnerabilidades no sistema.
+        /// Todo - Muito cuidado, pois se definir esse método como público, pode permitir vilnerabilidades no sistema por ser string sql.
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
@@ -65,26 +62,12 @@ namespace Fluent.Architecture.Repository
             return this.Input.SqlQuery(sql).Any();
         }
 
-        // Todo - Codumentar
+        // Todo - Documentar
         [Propagate]
         internal TE FindSingleOrDefaultSql(string sql)
         {
             return this.Input.SqlQuery(sql).SingleOrDefault();
         }
-
-#else
-        [PropagateMethod]
-        internal bool ExistsSql(string sql)
-        {
-            throw new NotImplementedException();
-        }
-
-        [PropagateMethod]
-        internal TE FindSingleOrDefaultSql(string sql)
-        {
-            throw new NotImplementedException();
-        }
-#endif
 
         /// <summary>
         /// Executa uma solicitação baseada em uma especificação e retorna uma lista paginada de resultados.

@@ -1,10 +1,12 @@
 ﻿using System.Runtime.InteropServices;
+using System.Threading;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Sample.Test.SupportElements;
 using Fluent.Architecture.Sample.Test.SupportElements.Controllers;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Sample.Test.TestTools;
 using Fluent.Architecture.Test;
+using Fluent.Architecture.Test.Mock;
 using NUnit.Framework;
 
 namespace Fluent.Architecture.Sample.Test.Test
@@ -31,6 +33,22 @@ namespace Fluent.Architecture.Sample.Test.Test
         private const string TitleEs = "Título de idioma español.";
 
         #endregion
+
+
+
+        [Test]
+        public void StressTest()
+        {
+            var courseController = MockUtil.GetMockController<CourseController>();
+            for (var j = 0; j < 10000; j++)
+            {
+                {
+                    var course = InternalTestUtil.GetNewCourse();
+                    course.Id = 0;
+                    TestUtil.Execute<Course>(courseController, nameof(CourseController.Add), course);
+                }
+            }
+        }
 
         #region INTERNAL
 
@@ -158,6 +176,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             var coursePtBr = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.PT_BR });
             var courseEs = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.ES });
             var courseEn = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.EN_US });
+            var courseAnother = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.AA_DJ });
 
             Assert.NotNull(courseDefault);
             Assert.NotNull(coursePtBr);
@@ -166,15 +185,28 @@ namespace Fluent.Architecture.Sample.Test.Test
 
             Assert.AreEqual(DescriptionEs, courseDefault.Description);
             Assert.AreEqual(TitleEs, courseDefault.Title);
+            Assert.AreEqual(Language.ES, courseAnother.Language);
+            Assert.True(courseDefault.IsDefaultLanguage);
 
             Assert.AreEqual(DescriptionPtBr2, coursePtBr.Description);
             Assert.AreEqual(TitlePtBr2, coursePtBr.Title);
+            Assert.AreEqual(Language.PT_BR, coursePtBr.Language);
+            Assert.False(coursePtBr.IsDefaultLanguage);
 
             Assert.AreEqual(DescriptionEs, courseEs.Description);
             Assert.AreEqual(TitleEs, courseEs.Title);
+            Assert.AreEqual(Language.ES, courseEs.Language);
+            Assert.True(courseEs.IsDefaultLanguage);
 
             Assert.AreEqual(DescriptionEn, courseEn.Description);
             Assert.AreEqual(TitleEn, courseEn.Title);
+            Assert.AreEqual(Language.EN_US, courseEn.Language);
+            Assert.False(courseEn.IsDefaultLanguage);
+
+            Assert.AreEqual(DescriptionEs, courseAnother.Description);
+            Assert.AreEqual(TitleEs, courseAnother.Title);
+            Assert.AreEqual(Language.ES, courseAnother.Language);
+            Assert.True(courseAnother.IsDefaultLanguage);
 
             ////Remove
             TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Remove), course);

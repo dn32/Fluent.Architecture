@@ -1,20 +1,12 @@
 ﻿// ReSharper disable CommentTypo
 #if NET461
 using System.Web.Mvc;
-using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
 
-#else
-using System;
-using Microsoft.AspNetCore.Mvc.Filters;
-#endif
-
 namespace Fluent.Architecture.Filters
 {
-#if NET461
-
     /// <inheritdoc />
     public class FluentExceptionHandlerAttribute : HandleErrorAttribute
     {
@@ -55,23 +47,6 @@ namespace Fluent.Architecture.Filters
             }
         }
     }
-#else
-
-    // public class FluentExceptionHandlerAttribute 
-
-    // {
-
-    // public void OnException(ExceptionContext filterContext)
-
-    // {
-
-    // throw new NotImplementedException();
-
-    // }
-
-    // }
-#endif
-
-    // Todo Implementar para net core
 }
+#endif
 

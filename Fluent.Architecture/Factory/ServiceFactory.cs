@@ -74,18 +74,6 @@ namespace Fluent.Architecture.Factory
             return ServiceFactoryLazy.Create(serviceType, sessionId);
         }
 
-        private static Type GetSpecializedService(BaseService service)
-        {
-            var serviceType = service.GetType();
-
-            //// if (serviceType.IsAssignableFrom(typeof(IFluentDynamicProxy)))
-            //// {
-            //// // Todo "IFluentDynamicProxy ainda não está sendo usado
-            //// serviceType = service.GetType().BaseType;
-            //// }
-            return GetSpecializedService(serviceType);
-        }
-
         private static Type GetSpecializedService(Type serviceType)
         {
             var args = serviceType.GetGenericArguments();
@@ -113,7 +101,8 @@ namespace Fluent.Architecture.Factory
         {
             var transactionObjects = TransactionObjects.Create(); 
 
-            var serviceType = GetSpecializedService(service);
+            var serviceType = GetSpecializedService(service.GetType());
+
             var userSession = new UserSessionRequest
             {
                 TransactionObjects = transactionObjects,

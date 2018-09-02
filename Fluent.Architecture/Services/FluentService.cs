@@ -49,6 +49,7 @@ namespace Fluent.Architecture.Services
         #region PROPAGATION
 
         // Todo Documenta após a organização desses itens.
+        // Todo Melhorar a complexidade ciclomática
         public virtual object PropagateService(string methodName, object[] parameters)
         {
             this.Validation.PropagateService(methodName, parameters);

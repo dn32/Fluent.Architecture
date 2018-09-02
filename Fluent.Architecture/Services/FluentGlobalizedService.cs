@@ -1,6 +1,7 @@
 ﻿using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
+using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Validation;
 
 namespace Fluent.Architecture.Services
@@ -15,6 +16,17 @@ namespace Fluent.Architecture.Services
         {
             Validation.Find(entity, language);
             return Repository.Find(entity, language);
+        }
+
+        [Propagate]
+        public override T Add(T entity)
+        {
+            if (string.IsNullOrWhiteSpace(entity.Language))
+            {
+                entity.Language = Language.DefaultLanguage;
+            }
+
+            return base.Add(entity);
         }
     }
 }

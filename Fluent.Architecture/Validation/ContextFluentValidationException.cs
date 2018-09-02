@@ -1,9 +1,7 @@
 ﻿// ReSharper disable CommentTypo
-
 using System.Collections.Generic;
 using System.Linq;
 using Fluent.Architecture.Exceptions.ValidationException;
-using Newtonsoft.Json;
 
 namespace Fluent.Architecture.Validation
 {
@@ -39,7 +37,7 @@ namespace Fluent.Architecture.Validation
         /// </param>
         public void AddInconsistency(FluentValidationException exception)
         {
-            this.Inconsistencies.Add(exception);
+            Inconsistencies.Add(exception);
         }
 
         /// <summary>
@@ -48,7 +46,7 @@ namespace Fluent.Architecture.Validation
         /// </summary>
         public ContextFluentValidationException() : base(string.Empty)
         {
-            this.Inconsistencies = new List<FluentValidationException>();
+            Inconsistencies = new List<FluentValidationException>();
         }
 
         /// <summary>
@@ -56,7 +54,7 @@ namespace Fluent.Architecture.Validation
         /// </summary>
         public void Validate()
         {
-            if (this.IsInvalid)
+            if (IsInvalid)
             {
                 throw this;
             }
