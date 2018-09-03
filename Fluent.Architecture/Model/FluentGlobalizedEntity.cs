@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Fluent.Architecture.Model
 {
     /// <inheritdoc />
-    public abstract class FluentGlobalizedEntity : FluentEntity
+    public abstract class FluentGlobalizedEntity : FluentIdEntity
     {
         [MaxLength(5)]
         public string Language { get; set; }
