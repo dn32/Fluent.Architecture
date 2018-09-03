@@ -148,9 +148,9 @@ namespace Fluent.Architecture.Services
         /// A lista paginada de resultados.
         /// </returns>
         [Propagate]
-        public virtual List<TO> Spec<TO>(FluentSelectSpecification<T, TO> spec, FluentPagination pagination = null)
+        public virtual List<TO> List<TO>(FluentSelectSpecification<T, TO> spec, FluentPagination pagination = null)
         {
-            return this.Repository.SpecSelect(spec, pagination);
+            return this.Repository.List(spec, pagination);
         }
 
         /// <summary>
@@ -166,9 +166,9 @@ namespace Fluent.Architecture.Services
         /// A lista paginada de resultados.
         /// </returns>
         [Propagate]
-        public virtual List<T> Spec(FluentSpecification<T> spec, FluentPagination pagination = null)
+        public virtual List<T> List(FluentSpecification<T> spec, FluentPagination pagination = null)
         {
-            return this.Repository.Spec(spec, pagination);
+            return this.Repository.List(spec, pagination);
         }
 
         /// <summary>
@@ -184,9 +184,9 @@ namespace Fluent.Architecture.Services
         /// O item referente à consulta ou nulo.
         /// </returns>
         [Propagate]
-        public virtual TO SpecOne<TO>(FluentSelectSpecification<T, TO> spec)
+        public virtual TO FirstOrDefault<TO>(FluentSelectSpecification<T, TO> spec)
         {
-            return this.Repository.SpecOne(spec);
+            return this.Repository.FirstOrDefault(spec);
         }
 
         /// <summary>
@@ -199,9 +199,9 @@ namespace Fluent.Architecture.Services
         /// O item referente à consulta ou nulo.
         /// </returns>
         [Propagate]
-        public virtual T SpecOne(FluentSpecification<T> spec)
+        public virtual T FirstOrDefault(FluentSpecification<T> spec)
         {
-            return this.Repository.SpecOne(spec);
+            return this.Repository.FirstOrDefault(spec);
         }
 
         /// <summary>

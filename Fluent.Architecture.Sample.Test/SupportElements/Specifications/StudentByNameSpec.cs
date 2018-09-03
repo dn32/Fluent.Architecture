@@ -16,7 +16,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
             this._name = name;
         }
 
-        public override IQueryable<Student> Spec(IQueryable<Student> query)
+        public override IQueryable<Student> Where(IQueryable<Student> query)
         {
             return query.Where(x => x.Name.Equals(this._name, StringComparison.CurrentCultureIgnoreCase));
         }

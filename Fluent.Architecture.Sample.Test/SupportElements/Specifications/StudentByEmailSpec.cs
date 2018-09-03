@@ -22,7 +22,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
             this._email = email;
         }
 
-        public override IQueryable<Student> Spec(IQueryable<Student> query)
+        public override IQueryable<Student> Where(IQueryable<Student> query)
         {
             return query.Where(x => x.Email.Equals(this._email, StringComparison.CurrentCultureIgnoreCase));
         }

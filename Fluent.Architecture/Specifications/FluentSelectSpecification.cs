@@ -25,11 +25,11 @@ namespace Fluent.Architecture.Specifications
         /// <returns>
         /// A especificação criada.
         /// </returns>
-        public abstract IQueryable<TO> Spec(IQueryable<TE> query);
+        public abstract IQueryable<TO> Where(IQueryable<TE> query);
 
         internal IQueryable<TO> ToIQueryable(IQueryable<TE> query)
         {
-            return this.Spec(query);
+            return this.Where(query);
         }
 
         /// <inheritdoc />

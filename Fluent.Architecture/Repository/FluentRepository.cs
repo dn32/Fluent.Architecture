@@ -85,7 +85,7 @@ namespace Fluent.Architecture.Repository
         /// A lista paginada de resultados.
         /// </returns>
         [Propagate]
-        public virtual List<TO> SpecSelect<TO>(FluentSelectSpecification<TE, TO> spec, FluentPagination pagination = null)
+        public virtual List<TO> List<TO>(FluentSelectSpecification<TE, TO> spec, FluentPagination pagination = null)
         {
             return FluentPaginate(spec.ToIQueryable(this.Query), pagination).ToList();
         }
@@ -103,7 +103,7 @@ namespace Fluent.Architecture.Repository
         /// A lista paginada de resultados.
         /// </returns>
         [Propagate]
-        public virtual List<TE> Spec(FluentSpecification<TE> spec, FluentPagination pagination = null)
+        public virtual List<TE> List(FluentSpecification<TE> spec, FluentPagination pagination = null)
         {
             return FluentPaginate(spec.ToIQueryable(this.Query), pagination).ToList();
         }
@@ -121,9 +121,9 @@ namespace Fluent.Architecture.Repository
         /// O item referente à consulta ou nulo.
         /// </returns>
         [Propagate]
-        public virtual TO SpecOne<TO>(FluentSelectSpecification<TE, TO> spec)
+        public virtual TO FirstOrDefault<TO>(FluentSelectSpecification<TE, TO> spec)
         {
-            return spec.Spec(this.Query).FirstOrDefault();
+            return spec.Where(this.Query).FirstOrDefault();
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace Fluent.Architecture.Repository
         /// O item referente à consulta ou nulo.
         /// </returns>
         [Propagate]
-        public virtual TE SpecOne(FluentSpecification<TE> spec)
+        public virtual TE FirstOrDefault(FluentSpecification<TE> spec)
         {
             return spec.ToIQueryable(this.Query).FirstOrDefault();
         }
@@ -322,7 +322,7 @@ namespace Fluent.Architecture.Repository
             return sql;
         }
 
-        private static IQueryable<TX> FluentPaginate<TX>(IQueryable<TX> query, FluentPagination pagination)
+        protected static IQueryable<TX> FluentPaginate<TX>(IQueryable<TX> query, FluentPagination pagination)
         {
             if (pagination == null)
             {

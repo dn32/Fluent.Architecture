@@ -15,7 +15,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
             this._email = email;
         }
 
-        public override IQueryable<UserStudent> Spec(IQueryable<User> query)
+        public override IQueryable<UserStudent> Where(IQueryable<User> query)
         {
             var students = this.Get<Student>();
 

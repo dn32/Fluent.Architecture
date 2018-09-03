@@ -69,7 +69,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
 
         public JsonResult UserByEmail(string email)
         {
-            var user = this.Service.SpecOne(new UserByEmail(this, email));
+            var user = this.Service.FirstOrDefault(new UserByEmail(this, email));
             return this.Json(user);
         }
 
@@ -90,19 +90,19 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
         // }
         public JsonResult SpecOne(FluentSpecification<User> spec)
         {
-            var user = this.Service.SpecOne(spec);
+            var user = this.Service.FirstOrDefault(spec);
             return this.Json(user);
         }
 
         public JsonResult SpecOne(FluentSelectSpecification<User, int> spec)
         {
-            var userId = this.Service.SpecOne(spec);
+            var userId = this.Service.FirstOrDefault(spec);
             return this.Json(userId);
         }
 
         public JsonResult SpecOne(FluentSelectSpecification<User, UserStudent> spec)
         {
-            var userStudent = this.Service.SpecOne(spec);
+            var userStudent = this.Service.FirstOrDefault(spec);
             return this.Json(userStudent);
         }
 
@@ -130,21 +130,21 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
             return this.Json(user);
         }
 
-        public JsonResult Spec(FluentSpecification<User> spec)
+        public JsonResult List(FluentSpecification<User> spec)
         {
-            var user = this.Service.Spec(spec);
+            var user = this.Service.List(spec);
             return this.Json(user);
         }
 
-        public JsonResult Spec(FluentSelectSpecification<User, int> spec)
+        public JsonResult List(FluentSelectSpecification<User, int> spec)
         {
-            var userId = this.Service.Spec(spec);
+            var userId = this.Service.List(spec);
             return this.Json(userId);
         }
 
-        public JsonResult Spec(FluentSpecification<User> spec, FluentPagination pagination)
+        public JsonResult List(FluentSpecification<User> spec, FluentPagination pagination)
         {
-            var user = this.Service.Spec(spec, pagination);
+            var user = this.Service.List(spec, pagination);
             return this.Json(user);
         }
 
@@ -213,7 +213,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
 
         public void ParameterCountFail()
         {
-            this.PropagateMethod("Spec", 1, 2, 3);
+            this.PropagateMethod("List", 1, 2, 3);
         }
     }
 }

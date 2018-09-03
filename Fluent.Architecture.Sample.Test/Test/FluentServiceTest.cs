@@ -85,7 +85,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Add), user2);
 
             //List
-            var userIds = TestUtil.Execute<List<int>>(this.UserControllerInstance, nameof(UserController.Spec), spec);
+            var userIds = TestUtil.Execute<List<int>>(this.UserControllerInstance, nameof(UserController.List), spec);
 
             Assert.NotNull(userIds);
             Assert.IsNotEmpty(userIds);
@@ -242,7 +242,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             Assert.AreEqual(count, countFound);
 
             //Test SpecSelect
-            var usersReturn = TestUtil.Execute<List<User>>(this.UserControllerInstance, nameof(UserController.Spec), spec);
+            var usersReturn = TestUtil.Execute<List<User>>(this.UserControllerInstance, nameof(UserController.List), spec);
             Assert.NotNull(usersReturn);
             Assert.AreEqual(count, usersReturn.Count);
 
@@ -303,7 +303,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             var pagination = new FluentPagination(currentPage, itemsPerPage);
 
             //SpecSelect
-            var fount = TestUtil.Execute<List<User>>(this.UserControllerInstance, nameof(UserController.Spec), new object[] { spec, pagination });
+            var fount = TestUtil.Execute<List<User>>(this.UserControllerInstance, nameof(UserController.List), new object[] { spec, pagination });
             Assert.NotNull(fount);
             Assert.AreEqual(expectedCount, fount.Count);
             Assert.AreEqual(users.Count, pagination.TotalQuantityOfItems);

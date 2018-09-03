@@ -10,6 +10,7 @@ using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
+using Fluent.Architecture.Specifications;
 
 namespace Fluent.Architecture.Repository
 {
@@ -72,6 +73,15 @@ namespace Fluent.Architecture.Repository
             return entityAdded;
         }
 
+        [Propagate]
+        public override void AddRange(params TE[] entities)
+        {
+            foreach (var entity in entities)
+            {
+                Add(entity);
+            }
+        }
+
         private IQueryable<Translation> FindAllTranslationsOfAnEntity(TE entity)
         {
             if (entity.GetKeyValue() == 0)
@@ -118,16 +128,41 @@ namespace Fluent.Architecture.Repository
             return persistentEntity;
         }
 
+      
+
+
+        [Propagate]
+        public virtual List<TE> List(FluentSpecification<TE> spec, FluentPagination pagination, string language)
+        {
+            var list = base.List(spec, pagination);
+
+            list.ForEach(x => UpdateTranslationForFoundEntity(x, language));
+
+            return list;
+        }
+
+        [Propagate]
+        public virtual TE FirstOrDefault(FluentSpecification<TE> spec, string language)
+        {
+            var persistedEntity = base.FirstOrDefault(spec);
+            return UpdateTranslationForFoundEntity(persistedEntity, language);
+        }
+
         [Propagate]
         public virtual TE Find(TE entity, string language)
         {
             var persistedEntity = base.Find(entity);
-            Session.Entry(persistedEntity).State = EntityState.Detached;
+            return UpdateTranslationForFoundEntity(persistedEntity, language);
+        }
 
+        private TE UpdateTranslationForFoundEntity(TE persistedEntity, string language)
+        {
             if (persistedEntity.Language == language)
             {
                 return persistedEntity;
             }
+
+            Session.Entry(persistedEntity).State = EntityState.Detached;
 
             if (!UpdateTranslateOfEntity(persistedEntity, language))
             {

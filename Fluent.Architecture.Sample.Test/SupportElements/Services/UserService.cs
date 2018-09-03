@@ -15,9 +15,9 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Services
             var userSpec = new UserByEmail(this, email);
             var studentSpec = new StudentByEmailSpec(this, email);
 
-            var user = this.SpecOne(userSpec);
-            var student = this.StudentService.SpecOne(studentSpec);
-            var student2 = this.StudentService2.SpecOne(studentSpec); // Para o teste de reutilização de serviço na injeção
+            var user = this.FirstOrDefault(userSpec);
+            var student = this.StudentService.FirstOrDefault(studentSpec);
+            var student2 = this.StudentService2.FirstOrDefault(studentSpec); // Para o teste de reutilização de serviço na injeção
 
             return new UserStudent
             {

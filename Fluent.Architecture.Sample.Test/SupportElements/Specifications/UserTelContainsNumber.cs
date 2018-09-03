@@ -16,7 +16,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
             this._number = number;
         }
 
-        public override IQueryable<User> Spec(IQueryable<User> query)
+        public override IQueryable<User> Where(IQueryable<User> query)
         {
             return query.Where(x => x.Tel.Contains(this._number));
         }

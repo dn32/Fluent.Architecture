@@ -39,14 +39,22 @@ namespace Fluent.Architecture.Sample.Test.Test
         [Test]
         public void StressTest()
         {
-            var courseController = MockUtil.GetMockController<CourseController>();
-            for (var j = 0; j < 10000; j++)
+            for (var i = 0; i < 100; i++)
             {
-                {
-                    var course = InternalTestUtil.GetNewCourse();
-                    course.Id = 0;
-                    TestUtil.Execute<Course>(courseController, nameof(CourseController.Add), course);
-                }
+                //new Thread(() =>
+                //{
+
+                    var courseController = MockUtil.GetMockController<CourseController>();
+                    var list = new List();
+                    for (var j = 0; j < 10000; j++)
+                    {
+                        {
+                            var course = InternalTestUtil.GetNewCourse();
+                            course.Id = 0;
+                            TestUtil.Execute<Course>(courseController, nameof(CourseController.Add), course);
+                        }
+                    }
+                //}).Start();
             }
         }
 

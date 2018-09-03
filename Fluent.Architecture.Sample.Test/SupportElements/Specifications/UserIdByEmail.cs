@@ -15,7 +15,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
             this._email = email;
         }
 
-        public override IQueryable<int> Spec(IQueryable<User> query)
+        public override IQueryable<int> Where(IQueryable<User> query)
         {
             return query.Where(x => x.Email.Equals(this._email, StringComparison.CurrentCultureIgnoreCase)).Select(x => x.Id);
         }

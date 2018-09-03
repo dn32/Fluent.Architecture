@@ -12,7 +12,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
     {
         public JsonResult SpecOne(FluentSpecification<Student> spec)
         {
-            var student = this.Service.SpecOne(spec);
+            var student = this.Service.FirstOrDefault(spec);
             return this.Json(student);
         }
 
@@ -31,14 +31,14 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
             return this.Json(this.PropagateMethod(nameof(FluentService<Student>.Add), student));
         }
 
-        public virtual JsonResult Spec(FluentSpecification<Student> spec)
+        public virtual JsonResult List(FluentSpecification<Student> spec)
         {
             return this.Json(this.Propagate<List<Student>>(spec));
         }
 
-        public virtual JsonResult Spec2()
+        public virtual JsonResult List2()
         {
-            return this.Json(this.PropagateMethod(nameof(FluentService<Student>.Spec), null));
+            return this.Json(this.PropagateMethod(nameof(FluentService<Student>.List), null));
         }
 
         public JsonResult Find(Student student)

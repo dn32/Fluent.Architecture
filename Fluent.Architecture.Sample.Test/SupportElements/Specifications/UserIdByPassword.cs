@@ -15,7 +15,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
             this._password = password;
         }
 
-        public override IQueryable<int> Spec(IQueryable<User> query)
+        public override IQueryable<int> Where(IQueryable<User> query)
         {
             return query.Where(x => x.Password.Equals(this._password, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Id);
         }
