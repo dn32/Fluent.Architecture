@@ -36,6 +36,7 @@ namespace Fluent.Architecture.Services
             return Repository.Find(entity, language);
         }
 
+        [Propagate]
         public virtual T FirstOrDefault(FluentSpecification<T> spec, string language)
         {
 
@@ -45,6 +46,7 @@ namespace Fluent.Architecture.Services
             }
 
             Validation.FirstOrDefault(spec, language);
+
             return Repository.FirstOrDefault(spec, language);
         }
 

@@ -2,6 +2,7 @@
 using System.Linq;
 using Fluent.Architecture.Exceptions.ValidationException;
 using Fluent.Architecture.Model;
+using Fluent.Architecture.Specifications;
 
 namespace Fluent.Architecture.Validation
 {
@@ -32,6 +33,12 @@ namespace Fluent.Architecture.Validation
             {
                 AddInconsistency(new LanguageValidationException($"{language} is an invalid language."));
             }
+        }
+
+        public void FirstOrDefault(FluentSpecification<T> spec, string language)
+        {
+            LanguageMustBeValid(language);
+            RunTheContextValidation();
         }
     }
 }
