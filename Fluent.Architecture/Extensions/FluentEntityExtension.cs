@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Model;
@@ -85,22 +84,6 @@ namespace Fluent.Architecture.Extensions
             return PropertiesToKeyValueList(entity, properties);
         }
 
-        private static List<KeyValue> PropertiesToKeyValueList(object entity, List<PropertyInfo> properties)
-        {
-            var returnList = new List<KeyValue>();
-
-            foreach (var property in properties)
-            {
-                returnList.Add(new KeyValue
-                {
-                    Property = property, ColumnName = property.GetColumnName(),
-                    Value = property.GetValue(entity).GetDbValue(property)
-                });
-            }
-
-            return returnList;
-        }
-
         public static List<PropertyInfo> GetPropertiesByAttribute<TA>(this Type entityType) where TA : Attribute
         {
             return entityType.GetProperties().Where(x => x.GetCustomAttribute<TA>(true) != null).ToList();
@@ -116,11 +99,22 @@ namespace Fluent.Architecture.Extensions
         // Todo documentar
         public static List<KeyValue> GetKeyValues(this object entity)
         {
-            var returnList = new List<KeyValue>();
             var properties = entity.GetType().GetKeyProperties();
+            return PropertiesToKeyValueList(entity, properties);
+        }
+
+        private static List<KeyValue> PropertiesToKeyValueList(object entity, List<PropertyInfo> properties)
+        {
+            var returnList = new List<KeyValue>();
+
             foreach (var property in properties)
             {
-                returnList.Add(new KeyValue { Property = property, ColumnName = property.GetColumnName(), Value = property.GetValue(entity).GetDbValue(property) });
+                returnList.Add(new KeyValue
+                {
+                    Property = property,
+                    ColumnName = property.GetColumnName(),
+                    Value = property.GetValue(entity).GetDbValue(property)
+                });
             }
 
             return returnList;
