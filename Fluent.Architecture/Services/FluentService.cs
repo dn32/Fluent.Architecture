@@ -17,13 +17,13 @@ using Fluent.Architecture.Validation;
 namespace Fluent.Architecture.Services
 {
     ///<inheritdoc/>
-        /// <summary>
-        /// Serviço base para serviços com relacionamento direto com uma entidade.
-        /// </summary>
-        /// <typeparam name="T">
-        /// A entidade relacionada ao serviço.
-        /// </typeparam>
-        public class FluentService<T> : TransactionalService where T : BaseEntity
+    /// <summary>
+    /// Serviço base para serviços com relacionamento direto com uma entidade.
+    /// </summary>
+    /// <typeparam name="T">
+    /// A entidade relacionada ao serviço.
+    /// </typeparam>
+    public class FluentService<T> : TransactionalService where T : BaseEntity
     {
         ///// <summary>
         ///// O repositório do serviço.
@@ -148,9 +148,9 @@ namespace Fluent.Architecture.Services
         /// A lista paginada de resultados.
         /// </returns>
         [Propagate]
-        public virtual List<TO> List<TO>(FluentSelectSpecification<T, TO> spec, FluentPagination pagination = null)
+        public virtual List<TO> ListSelect<TO>(FluentSelectSpecification<T, TO> spec, FluentPagination pagination = null)
         {
-            return this.Repository.List(spec, pagination);
+            return this.Repository.ListSelect(spec, pagination);
         }
 
         /// <summary>

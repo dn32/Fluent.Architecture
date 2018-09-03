@@ -138,7 +138,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
 
         public JsonResult List(FluentSelectSpecification<User, int> spec)
         {
-            var userId = this.Service.List(spec);
+            var userId = this.Service.ListSelect(spec);
             return this.Json(userId);
         }
 

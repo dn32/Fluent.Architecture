@@ -85,7 +85,7 @@ namespace Fluent.Architecture.Repository
         /// A lista paginada de resultados.
         /// </returns>
         [Propagate]
-        public virtual List<TO> List<TO>(FluentSelectSpecification<TE, TO> spec, FluentPagination pagination = null)
+        public virtual List<TO> ListSelect<TO>(FluentSelectSpecification<TE, TO> spec, FluentPagination pagination = null)
         {
             return FluentPaginate(spec.ToIQueryable(this.Query), pagination).ToList();
         }
