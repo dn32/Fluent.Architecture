@@ -16,10 +16,10 @@ namespace Fluent.Architecture.Services
         [Propagate]
         public virtual List<T> List(FluentSpecification<T> spec, FluentPagination pagination, string language="")
         {
-            if (string.IsNullOrWhiteSpace(language))
-            {
-                language = Language.DefaultLanguage;
-            }
+            //if (string.IsNullOrWhiteSpace(language))
+            //{
+            //    language = Language.DefaultLanguage;
+            //}
 
             return this.Repository.List(spec, pagination, language);
         }
@@ -27,10 +27,10 @@ namespace Fluent.Architecture.Services
         [Propagate]
         public virtual T Find(T entity, string language = "")
         {
-            if (string.IsNullOrWhiteSpace(language))
-            {
-                language = Language.DefaultLanguage;
-            }
+            //if (string.IsNullOrWhiteSpace(language))
+            //{
+            //    language = Language.DefaultLanguage;
+            //}
 
             Validation.Find(entity, language);
             return Repository.Find(entity, language);
@@ -40,10 +40,10 @@ namespace Fluent.Architecture.Services
         public virtual T FirstOrDefault(FluentSpecification<T> spec, string language)
         {
 
-            if (string.IsNullOrWhiteSpace(language))
-            {
-                language = Language.DefaultLanguage;
-            }
+            //if (string.IsNullOrWhiteSpace(language))
+            //{
+            //    language = Language.DefaultLanguage;
+            //}
 
             Validation.FirstOrDefault(spec, language);
 

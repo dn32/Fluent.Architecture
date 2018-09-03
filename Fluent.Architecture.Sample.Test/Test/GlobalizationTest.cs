@@ -36,7 +36,7 @@ namespace Fluent.Architecture.Sample.Test.Test
 
 
 
-        [Test]
+        //[Test]
         public void StressTest()
         {
             for (var i = 0; i < 100; i++)
