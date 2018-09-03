@@ -1,6 +1,9 @@
 ﻿
+using System.Diagnostics.CodeAnalysis;
+
 namespace Fluent.Architecture.Sample.Test.SupportElements.Model
 {
+    [ExcludeFromCodeCoverage]
     public class Language
     {
         public static string DefaultLanguage => EN_US;

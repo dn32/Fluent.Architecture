@@ -81,11 +81,21 @@ namespace Fluent.Architecture.Extensions
 
         public static List<KeyValue> GetKeyAndFluentUniqueKeyValues(this object entity)
         {
-            var returnList = new List<KeyValue>();
             var properties = entity.GetType().GetKeyAndFluentUniqueKeyProperties();
+            return PropertiesToKeyValueList(entity, properties);
+        }
+
+        private static List<KeyValue> PropertiesToKeyValueList(object entity, List<PropertyInfo> properties)
+        {
+            var returnList = new List<KeyValue>();
+
             foreach (var property in properties)
             {
-                returnList.Add(new KeyValue { Property = property, ColumnName = property.GetColumnName(), Value = property.GetValue(entity).GetDbValue(property) });
+                returnList.Add(new KeyValue
+                {
+                    Property = property, ColumnName = property.GetColumnName(),
+                    Value = property.GetValue(entity).GetDbValue(property)
+                });
             }
 
             return returnList;
@@ -99,14 +109,8 @@ namespace Fluent.Architecture.Extensions
         // Todo documentar
         public static List<KeyValue> GetFluentUniqueKeyValues(this object entity)
         {
-            var returnList = new List<KeyValue>();
             var properties = entity.GetType().GetFluentUniqueKeyProperties();
-            foreach (var property in properties)
-            {
-                returnList.Add(new KeyValue { Property = property, ColumnName = property.GetColumnName(), Value = property.GetValue(entity).GetDbValue(property) });
-            }
-
-            return returnList;
+            return PropertiesToKeyValueList(entity, properties);
         }
 
         // Todo documentar
