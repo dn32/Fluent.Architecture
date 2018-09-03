@@ -44,11 +44,11 @@ namespace Fluent.Architecture
 
         #region PUBLIC METHODS
 
-        //// For mock
-        //// public static void SetCustomTypes(Type transactionObjectsType)
-        //// {
-        //// TransactionObjectsType = transactionObjectsType;
-        //// }
+         public static void SetCustomTypes(Type transactionObjectsType)
+        {
+            TransactionObjectsType = transactionObjectsType;
+        }
+
         public static void DbSetup(bool createDatabaseIfNotExists)
         {
             if (createDatabaseIfNotExists)

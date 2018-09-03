@@ -1,11 +1,9 @@
 ﻿// ReSharper disable CommentTypo
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
-using Fluent.Architecture.Sample.Test.SupportElements.Model;
 
 #if NET461
 using System.Data.Entity;
