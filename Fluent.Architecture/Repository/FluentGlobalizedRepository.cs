@@ -1,5 +1,5 @@
 ﻿// ReSharper disable CommentTypo
-#if NET461
+
 
 using System.Collections.Generic;
 using System.Data;
@@ -199,4 +199,4 @@ namespace Fluent.Architecture.Repository
         }
     }
 }
-#endif
+

@@ -30,12 +30,7 @@ namespace Fluent.Architecture.Factory.Proxy
 
         private static TypeBuilder CreateClass(Type parent, AssemblyName assembly)
         {
-
-#if NET461
             var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assembly, AssemblyBuilderAccess.Run);
-#else
-            var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(Guid.NewGuid().ToString()), AssemblyBuilderAccess.Run);
-#endif
             var moduleBuilder = assemblyBuilder.DefineDynamicModule(ModuleName);
             return moduleBuilder.DefineType(assembly.FullName, TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.AutoClass | TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.AutoLayout, parent);
         }

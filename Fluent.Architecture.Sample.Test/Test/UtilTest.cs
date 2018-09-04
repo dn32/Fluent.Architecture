@@ -1,4 +1,4 @@
-﻿#if NET461
+﻿
 
 using System;
 using System.Collections.Generic;
@@ -163,4 +163,4 @@ namespace Fluent.Architecture.Sample.Test.Test
         }
     }
 }
-#endif
+

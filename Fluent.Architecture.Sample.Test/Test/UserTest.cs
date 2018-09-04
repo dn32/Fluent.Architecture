@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Sample.Test.SupportElements;
 using Fluent.Architecture.Sample.Test.SupportElements.Controllers;

@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Test.Mock.ControllerMock;
 
-#if NET461
 namespace Fluent.Architecture.Test.Mock
 {
     public static class MockUtil
@@ -14,15 +14,15 @@ namespace Fluent.Architecture.Test.Mock
             return new HttpContextBaseMock();
         }
 
-        public static TC GetMockController<TC>() where TC : class
+        public static TC GetMockController<TC>(ClaimsPrincipal user = null) where TC : class
         {
-            return GetMockController(typeof(TC)) as TC;
+            return GetMockController(typeof(TC), user) as TC;
         }
 
-        public static BaseController GetMockController(Type controllerType)
+        public static BaseController GetMockController(Type controllerType, ClaimsPrincipal user = null)
         {
             var controller = TestUtil.GetController(controllerType);// typeof(UserController));
-            controller.SetLocalHttpContext(new HttpContextBaseMock());
+            controller.SetLocalHttpContext(new HttpContextBaseMock(user));
             return controller;
         }
 
@@ -41,9 +41,13 @@ namespace Fluent.Architecture.Test.Mock
 
         public static ControllerContext GetMockControllerContext(BaseController controller)
         {
-            controller.SetLocalHttpContext(new HttpContextBaseMock(false));
+            if (controller.HttpContext == null)
+            {
+                controller.SetLocalHttpContext(new HttpContextBaseMock(false));
+            }
+
             return new ControllerContext(controller.HttpContext, new RouteData(), controller);
         }
     }
 }
-#endif
+

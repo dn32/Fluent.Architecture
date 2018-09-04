@@ -1,4 +1,4 @@
-﻿#if NET461
+﻿
 using System.Runtime.InteropServices;
 
 namespace Fluent.Architecture.Test
@@ -14,4 +14,4 @@ namespace Fluent.Architecture.Test
         }
     }
 }
-#endif
+

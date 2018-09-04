@@ -5,11 +5,6 @@ using System.Security.Claims;
 using System.Web;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
-#if NET461
-
-#else
-using Microsoft.AspNetCore.Http;
-#endif
 
 namespace Fluent.Architecture.Services
 {

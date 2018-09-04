@@ -102,7 +102,7 @@ namespace Fluent.Architecture
                     }
 
                     types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentService<BaseEntity>)))
-                        .Where(x => !string.IsNullOrWhiteSpace(x.Item1)).ToList()
+                        .Where(x => !string.IsNullOrWhiteSpace(x.Item1) && x.Item1 != "T").ToList()
                         .ForEach(service => Services.Add(service.Item1, service.Item2));
 
                     var transactionalServices = types.Where(x => x.IsSubclassOf(typeof(TransactionalService))).ToList();

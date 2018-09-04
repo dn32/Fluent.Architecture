@@ -1,4 +1,4 @@
-﻿#if NET461
+﻿
 using System;
 using System.Collections.Specialized;
 using System.Web;
@@ -25,4 +25,4 @@ namespace Fluent.Architecture.Test.Mock.ControllerMock
         }
     }
 }
-#endif
+

@@ -5,11 +5,7 @@ using System.Collections.Generic;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Validation;
-#if NET461
 using System.Web;
-#else
-using Microsoft.AspNetCore.Http;
-#endif
 
 namespace Fluent.Architecture.Model
 {
@@ -29,20 +25,12 @@ namespace Fluent.Architecture.Model
         {
             this.ContextFluentValidationException = new ContextFluentValidationException();
         }
-
-#if NET461
-
+        
         /// <summary>
         /// HttpContext da requisição vinda do controller.
         /// </summary>
         public HttpContextBase LocalHttpContext => this.HttpContext as HttpContextBase;
-#else
 
-        /// <summary>
-        /// HttpContext da requisição vinda do controller.
-        /// </summary>
-        public HttpContext LocalHttpContext => HttpContext as HttpContext;
-#endif
         public void Dispose(bool primaryService)
         {
             Setup.RemoveSession(this.SessionRequestId);

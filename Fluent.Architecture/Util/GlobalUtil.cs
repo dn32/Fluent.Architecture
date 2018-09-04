@@ -89,7 +89,13 @@ namespace Fluent.Architecture.Util
                     type.Name == typeof(FluentController<FluentEntity>).Name ||
                     type.Name == typeof(FluentSpecification<FluentEntity>).Name)
                 {
-                    return type.GetGenericArguments()[0];
+                    var localType = type.GetGenericArguments()[0];
+                    if (!localType.IsSubclassOf(typeof(BaseEntity)))
+                    {
+                        throw new InvalidOperationException();
+                    }
+
+                    return localType;
                 }
 
                 return GetBase(type.BaseType);

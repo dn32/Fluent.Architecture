@@ -62,7 +62,7 @@ namespace Fluent.Architecture.Test
                 }
             }
 
-            controller.SetLocalHttpContext(new HttpContextBaseMock());
+            //controller.SetLocalHttpContext(new HttpContextBaseMock());
 
             var actionExecuting = controllerType.GetMethod("OnActionExecuting", BindingFlags.NonPublic | BindingFlags.Instance);
             if (actionExecuting != null)

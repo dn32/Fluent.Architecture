@@ -1,4 +1,4 @@
-﻿//#if NET461
+﻿//
 //using System;
 //using System.Collections.Concurrent;
 //using System.Web.Mvc;
@@ -64,4 +64,4 @@
 //        }
 //    }
 //}
-//#endif
+//

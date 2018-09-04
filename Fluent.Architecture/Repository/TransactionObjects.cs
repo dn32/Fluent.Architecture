@@ -4,12 +4,7 @@ using System;
 using System.Linq;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
-
-#if NET461
 using System.Data.Entity;
-#else
-using Microsoft.EntityFrameworkCore;
-#endif
 
 namespace Fluent.Architecture.Repository
 {
@@ -69,7 +64,7 @@ namespace Fluent.Architecture.Repository
         /// <summary>
         /// Sessão do EF.
         /// </summary>
-        internal EfContext Session { get; set; }
+        protected internal EfContext Session { get; set; }
 
         ///// <summary>
         ///// String de conexão com o banco de dados.

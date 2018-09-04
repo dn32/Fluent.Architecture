@@ -1,4 +1,4 @@
-﻿#if NET461
+﻿
 using System.Runtime.InteropServices;
 using Fluent.Architecture.Sample.Test.SupportElements;
 using Fluent.Architecture.Test.Mock;
@@ -24,4 +24,4 @@ namespace Fluent.Architecture.Sample.Test.Test
         }
     }
 }
-#endif
+

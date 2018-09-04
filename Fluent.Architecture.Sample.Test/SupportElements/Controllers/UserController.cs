@@ -1,4 +1,4 @@
-﻿#if NET461
+﻿
 using System.Web.Mvc;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Model;
@@ -218,4 +218,4 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
     }
 }
 
-#endif
+

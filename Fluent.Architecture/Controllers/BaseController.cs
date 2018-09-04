@@ -1,12 +1,8 @@
 ﻿// ReSharper disable CommentTypo
-#if NET461
+
+using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
-
-#else
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-#endif
 
 namespace Fluent.Architecture.Controllers
 {
@@ -16,25 +12,15 @@ namespace Fluent.Architecture.Controllers
     /// </summary>
     public abstract class BaseController : Controller
     {
-#if NET461
         private HttpContextBase localHttpContext;
         
         public new HttpContextBase HttpContext => this.localHttpContext ?? base.HttpContext;
+
+        public new IPrincipal User => HttpContext.User;
 
         public void SetLocalHttpContext(HttpContextBase httpContext)
         {
             this.localHttpContext = httpContext;
         }
-
-#else
-        private HttpContext localHttpContext;
-
-        public new HttpContext HttpContext => localHttpContext ?? base.HttpContext;
-
-        public void SetLocalHttpContext(HttpContext httpContext)
-        {
-            localHttpContext = httpContext;
-        }
-#endif
     }
 }

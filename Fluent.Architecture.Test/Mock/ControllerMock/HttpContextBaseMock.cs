@@ -1,4 +1,4 @@
-﻿#if NET461
+﻿
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Web;
@@ -24,11 +24,11 @@ namespace Fluent.Architecture.Test.Mock.ControllerMock
             this.User = new ClaimsPrincipal();
         }
 
-        public HttpContextBaseMock()
+        public HttpContextBaseMock(ClaimsPrincipal user = null)
         {
             this.Request = new HttpRequestBaseMock();
             this.Response = new HttpResponseBaseMock();
-            this.User = new ClaimsPrincipal();
+            this.User = user ?? new ClaimsPrincipal();
         }
 
         public HttpContextBaseMock(bool isCustomErrorEnabled)
@@ -40,4 +40,4 @@ namespace Fluent.Architecture.Test.Mock.ControllerMock
         }
     }
 }
-#endif
+

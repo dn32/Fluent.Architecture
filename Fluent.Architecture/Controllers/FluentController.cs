@@ -1,4 +1,4 @@
-﻿#if NET461
+﻿
 // ReSharper disable CommentTypo
 
 using Fluent.Architecture.Model;
@@ -90,4 +90,4 @@ namespace Fluent.Architecture.Controllers
         }
     }
 }
-#endif
+

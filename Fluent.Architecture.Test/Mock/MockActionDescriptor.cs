@@ -1,4 +1,4 @@
-﻿#if NET461
+﻿
 using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
@@ -35,4 +35,4 @@ namespace Fluent.Architecture.Test.Mock
         public override ControllerDescriptor ControllerDescriptor { get; }
     }
 }
-#endif
+

@@ -1,5 +1,5 @@
 ﻿// ReSharper disable CommentTypo
-#if NET461
+
 using System.Web.Mvc;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Util;
@@ -48,5 +48,5 @@ namespace Fluent.Architecture.Filters
         }
     }
 }
-#endif
+
 

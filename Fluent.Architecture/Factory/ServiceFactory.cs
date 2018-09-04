@@ -6,10 +6,6 @@ using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
-#if NET461
-#else
-using Microsoft.AspNetCore.Http;
-#endif
 
 namespace Fluent.Architecture.Factory
 {
