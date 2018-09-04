@@ -7,6 +7,7 @@ using System.Web;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Services;
 using System.Web.Mvc;
+using Fluent.Architecture.Util;
 
 namespace Fluent.Architecture.Controllers
 {
@@ -51,6 +52,15 @@ namespace Fluent.Architecture.Controllers
 
             this.Service.Dispose(true);
             base.OnActionExecuted(filterContext);
+        }
+
+        protected internal new JsonResult Json(object data)
+        {
+            return new CustomJsonResult
+            {
+                Data = data,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+            };
         }
     }
 }

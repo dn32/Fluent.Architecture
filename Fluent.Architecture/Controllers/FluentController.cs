@@ -4,7 +4,6 @@
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Services;
-using System.Web.Mvc;
 using System;
 
 namespace Fluent.Architecture.Controllers
@@ -78,15 +77,6 @@ namespace Fluent.Architecture.Controllers
             }
 
             return this.Service.PropagateService(methodName, parameters);
-        }
-
-        protected internal new JsonResult Json(object data)
-        {
-            return new CustomJsonResult
-            {
-                Data = data,
-                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-            };
         }
     }
 }
