@@ -33,7 +33,7 @@ namespace Fluent.Architecture.Factory
                 localType = typeof(FluentValidation<T>);
             }
 
-            if (Setup.Validations.TryGetValue(typeof(T).Name, out var validationType))
+            if (Setup.Validations.TryGetValue(typeof(T), out var validationType))
             {
                 localType = validationType;
             }

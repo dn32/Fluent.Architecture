@@ -30,11 +30,11 @@ namespace Fluent.Architecture.Util
         /// <returns>
         /// O tipo.
         /// </returns>
-        internal static Tuple<string, Type> GetFluentEntityType(Type objectTypeToCheck, Type expectedType)
+        internal static Tuple<Type, Type> GetFluentEntityType(Type objectTypeToCheck, Type expectedType)
         {
-            return new Tuple<string, Type>(GetBase(objectTypeToCheck.BaseType), objectTypeToCheck);
+            return new Tuple<Type, Type>(GetBase(objectTypeToCheck.BaseType), objectTypeToCheck);
 
-            string GetBase(Type type)
+            Type GetBase(Type type)
             {
                 if (type == null)
                 {
@@ -49,7 +49,7 @@ namespace Fluent.Architecture.Util
                 if (type.Name == expectedType.Name)
                 {
                     var args = type.GetGenericArguments();
-                    return args.Length == 0 ? type.Name : type.GetGenericArguments()[0].Name;
+                    return args.Length == 0 ? type : type.GetGenericArguments()[0];
                 }
 
                 return GetBase(type.BaseType);

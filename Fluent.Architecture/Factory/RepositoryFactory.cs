@@ -41,7 +41,7 @@ namespace Fluent.Architecture.Factory
                 localType = typeof(FluentRepository<T>);
             }
 
-            if (Setup.Repositories.TryGetValue(typeof(T).Name, out var repositoryType))
+            if (Setup.Repositories.TryGetValue(typeof(T), out var repositoryType))
             {
                 localType = repositoryType;
             }

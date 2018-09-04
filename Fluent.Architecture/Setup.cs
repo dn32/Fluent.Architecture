@@ -26,13 +26,13 @@ namespace Fluent.Architecture
 
         internal static Type TransactionObjectsType { get; set; }
 
-        internal static Dictionary<string, Type> Services { get; set; }
+        internal static Dictionary<Type, Type> Services { get; set; }
 
-        internal static Dictionary<string, Type> Repositories { get; set; }
+        internal static Dictionary<Type, Type> Repositories { get; set; }
 
-        internal static Dictionary<string, Type> Validations { get; set; }
+        internal static Dictionary<Type, Type> Validations { get; set; }
 
-        internal static Dictionary<string, Type> Model { get; set; }
+        internal static Dictionary<Type, Type> Model { get; set; }
 
         internal static Dictionary<Tuple<EPropagateTypes, string>, MethodInfo> Propagators { get; set; }
 
@@ -44,7 +44,7 @@ namespace Fluent.Architecture
 
         #region PUBLIC METHODS
 
-         public static void SetCustomTypes(Type transactionObjectsType)
+        public static void SetCustomTypes(Type transactionObjectsType)
         {
             TransactionObjectsType = transactionObjectsType;
         }
@@ -75,17 +75,17 @@ namespace Fluent.Architecture
                 TransactionObjects.DataBaseConnectionString = connectionString;
 
 
-                Services = new Dictionary<string, Type>();
-                Repositories = new Dictionary<string, Type>();
-                Validations = new Dictionary<string, Type>();
-                Model = new Dictionary<string, Type>();
+                Services = new Dictionary<Type, Type>();
+                Repositories = new Dictionary<Type, Type>();
+                Validations = new Dictionary<Type, Type>();
+                Model = new Dictionary<Type, Type>();
                 Propagators = new Dictionary<Tuple<EPropagateTypes, string>, MethodInfo>();
                 UserSessionList = new Dictionary<Guid, UserSessionRequest>();
                 TransactionObjectsType = typeof(TransactionObjects);
 
-                Services.Add("base", typeof(FluentService<FluentEntity>));
-                Repositories.Add("base", typeof(FluentRepository<FluentEntity>));
-                Validations.Add("base", typeof(FluentValidation<FluentEntity>));
+                Services.Add(typeof(FluentEntity), typeof(FluentService<FluentEntity>));
+                Repositories.Add(typeof(FluentEntity), typeof(FluentRepository<FluentEntity>));
+                Validations.Add(typeof(FluentEntity), typeof(FluentValidation<FluentEntity>));
 
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies().OrderBy(x => x.FullName).ToList();
                 foreach (var assembly in assemblies)
@@ -102,7 +102,7 @@ namespace Fluent.Architecture
                     }
 
                     types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentService<BaseEntity>)))
-                        .Where(x => !string.IsNullOrWhiteSpace(x.Item1) && x.Item1 != "T").ToList()
+                        .Where(x => x.Item1 != null).ToList()
                         .ForEach(service => Services.Add(service.Item1, service.Item2));
 
                     var transactionalServices = types.Where(x => x.IsSubclassOf(typeof(TransactionalService))).ToList();
@@ -112,15 +112,15 @@ namespace Fluent.Architecture
                     ValidateIfAllServicePropertiesHaveDefaultConstructor(transactionalServices);
 
                     types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentRepository<BaseEntity>)))
-                       .Where(x => !string.IsNullOrWhiteSpace(x.Item1)).ToList()
+                       .Where(x => x.Item1 != null).ToList()
                        .ForEach(service => Repositories.Add(service.Item1, service.Item2));
 
                     types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentValidation<BaseEntity>)))
-                       .Where(x => !string.IsNullOrWhiteSpace(x.Item1)).ToList()
+                       .Where(x => x.Item1 != null).ToList()
                        .ForEach(service => Validations.Add(service.Item1, service.Item2));
 
                     types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(BaseEntity)))
-                     .Where(x => !string.IsNullOrWhiteSpace(x.Item1) && x.Item2 != typeof(BaseEntity)).ToList()
+                     .Where(x => x.Item1 != null && x.Item2 != typeof(BaseEntity)).ToList()
                      .ForEach(AddModel);
                 }
 
@@ -244,17 +244,17 @@ namespace Fluent.Architecture
             }
         }
 
-        private static void AddModel(Tuple<string, Type> service)
+        private static void AddModel(Tuple<Type, Type> service)
         {
-            if (Model.ContainsKey(service.Item2.Name))
+            if (Model.ContainsKey(service.Item2))
             {
                 throw new IncorrectDevelopmentException($"There are two entity classes with the same name {service.Item2.Name}. This is not allowed.");
             }
 
-            Model.Add(service.Item2.Name, service.Item2);
+            Model.Add(service.Item2, service.Item2);
         }
 
-        private static void FindPropagators(Dictionary<string, Type> elements, EPropagateTypes type)
+        private static void FindPropagators(Dictionary<Type, Type> elements, EPropagateTypes type)
         {
             foreach (var item in elements)
             {
@@ -264,7 +264,13 @@ namespace Fluent.Architecture
                 foreach (var method in propagators)
                 {
                     var key = new Tuple<EPropagateTypes, string>(type, $"{item.Key} {method.GetFriendlyName()}");
-                    Propagators.Add(key, method);
+                    lock (Propagators)
+                    {
+                        if (!Propagators.ContainsKey(key))
+                        {
+                            Propagators.Add(key, method);
+                        }
+                    }
                 }
             }
         }

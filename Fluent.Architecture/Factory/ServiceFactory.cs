@@ -77,7 +77,7 @@ namespace Fluent.Architecture.Factory
             if (args.Any())
             {
                 var entityType = args.First();
-                if (!Setup.Services.TryGetValue(entityType.Name, out serviceType))
+                if (!Setup.Services.TryGetValue(entityType, out serviceType))
                 {
                     if (entityType.IsSubclassOf(typeof(FluentGlobalizedEntity)))
                     {
