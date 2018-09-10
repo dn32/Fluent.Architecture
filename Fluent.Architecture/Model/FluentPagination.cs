@@ -31,6 +31,24 @@ namespace Fluent.Architecture.Model
         }
 
         /// <summary>
+        /// Quantidade de páginas.
+        /// Todo - Testar
+        /// </summary>
+        public virtual int NumberOfPages
+        {
+            get
+            {
+                var number = TotalQuantityOfItems / ItemsPerPage;
+                if (TotalQuantityOfItems % ItemsPerPage > 0)
+                {
+                    number++;
+                }
+
+                return number;
+            }
+        }
+
+        /// <summary>
         /// Inicializa uma nova paginação.
         /// </summary>
         /// <param name="currentPage">
@@ -42,7 +60,7 @@ namespace Fluent.Architecture.Model
         public FluentPagination(int currentPage, int? itemsPerPage)
         {
             this.CurrentPage = currentPage;
-            this._itemsPerPage = itemsPerPage ?? ItemsPerPageDefault;
+            this._itemsPerPage = (itemsPerPage == null || itemsPerPage == 0) ? ItemsPerPageDefault : itemsPerPage.Value;
         }
     }
 }
