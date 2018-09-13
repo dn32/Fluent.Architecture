@@ -361,12 +361,12 @@ namespace Fluent.Architecture.Repository
         {
             if (pagination == null)
             {
-                pagination = new FluentPagination(0, 255);
+                pagination = new FluentPagination(1, false, 255);
             }
 
             pagination.TotalQuantityOfItems = query.Count();
             query = query
-                .Skip(pagination.ItemsPerPage * (pagination.CurrentPage - 1))
+                .Skip(pagination.Skip)
                 .Take(pagination.ItemsPerPage);
 
             return query;

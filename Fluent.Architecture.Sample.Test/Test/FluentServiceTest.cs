@@ -351,7 +351,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             var countFound = TestUtil.Execute<int>(this.UserControllerInstance, nameof(UserController.Count), spec);
             Assert.AreEqual(users.Count, countFound);
 
-            var pagination = new FluentPagination(currentPage, itemsPerPage);
+            var pagination = new FluentPagination(currentPage, false, itemsPerPage);
 
             //SpecSelect
             var fount = TestUtil.Execute<List<User>>(this.UserControllerInstance, nameof(UserController.List), new object[] { spec, pagination });

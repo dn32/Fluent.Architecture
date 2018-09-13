@@ -128,7 +128,7 @@ namespace Fluent.Architecture.Sample.Test.Test
         {
             var course = AddNewCurse();
 
-            var pagination = new FluentPagination(0, 20);
+            var pagination = new FluentPagination(0, false, 20);
 
             var courses = TestUtil.Execute<List<Course>>(this.CourseControllerInstance, nameof(CourseController.List), new object[] { pagination, "pt-BR" });
 
