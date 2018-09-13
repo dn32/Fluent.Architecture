@@ -50,12 +50,13 @@ namespace Fluent.Architecture.Extensions
 
         public static PropertyInfo GetKeyProperty(this Type entityType)
         {
-            return entityType.GetProperties().Where(x => x.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || x.GetCustomAttribute<KeyAttribute>(true) != null)?.First();
+            var properties = entityType.GetProperties();
+            return properties.Length == 0 ? null : properties.Where(x => x.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || x.GetCustomAttribute<KeyAttribute>(true) != null)?.First();
         }
 
         public static int GetKeyValue(this object entity)
         {
-            if (int.TryParse(entity.GetType().GetKeyProperty().GetValue(entity).ToString(), out var id))
+            if (int.TryParse(entity.GetType().GetKeyProperty()?.GetValue(entity).ToString(), out var id))
             {
                 return id;
             }

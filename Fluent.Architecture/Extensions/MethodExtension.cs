@@ -1,4 +1,6 @@
 ﻿// ReSharper disable CommentTypo
+
+using System;
 using System.Linq;
 using System.Reflection;
 
@@ -25,6 +27,54 @@ namespace Fluent.Architecture.Extensions
         public static object[] GetAllParameters(this MethodBase method)
         {
             return method.GetParameters().Select(x => x.DefaultValue).ToArray();
+        }
+
+        // Todo doc
+        public static MethodInfo GetMethodWithoutAmbiguity(this Type classType, string methodName, object[] parameters, params Type[] generics)
+        {
+
+            var methods = classType.GetMethods().Where(x =>
+                x.Name == methodName &&
+                parameters.Length <= x.GetParameters().Length &&
+                parameters.Length >= x.GetParameters().Count(y => !y.IsOptional) &&
+                parameters.Length + x.GetParameters().Count(y => y.IsOptional) >= x.GetParameters().Length
+            );
+
+            foreach (var method in methods)
+            {
+                var currentMethod = method.IsGenericMethod ? method.MakeGenericMethod(generics) : method;
+                var parametersOfMethodType = currentMethod.GetParameters().Select(x => x.ParameterType).ToList();
+                var parametersListType = parameters.Select(x => x.GetType()).ToList();
+
+                if (parameters.All(x => parametersListType.Next().Is(parametersOfMethodType.Next())))
+                {
+                    return method;
+                }
+            }
+
+            return null;
+        }
+
+        // Todo doc
+        public static object FluenInvoke(this MethodBase method, object obj, object[] parameters)
+        {
+            var localParameters = method.GetAllParameters();
+            for (var i = 0; i < parameters.Length; i++)
+            {
+                if (parameters[i] != null)
+                {
+                    localParameters[i] = parameters[i];
+                }
+            }
+
+            try
+            {
+                return method.Invoke(obj, localParameters);
+            }
+            catch (Exception ex)
+            {
+                throw ex.InnerException ?? throw ex;
+            }
         }
     }
 }

@@ -5,6 +5,9 @@ using Fluent.Architecture.Model;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Services;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Fluent.Architecture.Extensions;
 
 namespace Fluent.Architecture.Controllers
 {
@@ -44,7 +47,22 @@ namespace Fluent.Architecture.Controllers
 
         protected T Propagate()
         {
-            return this.PropagateInternal(string.Empty, Array.Empty<object>()) as T;
+            return PropagateInternal(string.Empty, Array.Empty<object>()) as T;
+        }
+
+        protected TX Propagate<TX>() 
+        {
+            return (TX)PropagateInternal(string.Empty, Array.Empty<object>());
+        }
+
+        protected List<T> PropagateList()
+        {
+            return PropagateInternal(string.Empty, Array.Empty<object>()) as List<T>;
+        }
+
+        protected List<T> PropagateList(object[] parameters)
+        {
+            return PropagateInternal(string.Empty, parameters) as List<T>;
         }
 
         protected T Propagate(object[] parameters)

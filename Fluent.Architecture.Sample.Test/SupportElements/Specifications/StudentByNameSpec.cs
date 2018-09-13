@@ -7,9 +7,9 @@ using Fluent.Architecture.Specifications;
 
 namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
 {
-    public class StudentByNameSpec: FluentSpecification<Student>
-   {
-       private readonly string _name;
+    public class StudentByNameSpec : FluentSpecification<Student>
+    {
+        private readonly string _name;
 
         public StudentByNameSpec(FluentController<Student> controller, string name) : base(controller)
         {
@@ -21,9 +21,9 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
             return query.Where(x => x.Name.Equals(this._name, StringComparison.CurrentCultureIgnoreCase));
         }
 
-        public override Expression<Func<Student, object>> Order()
+        public override IOrderedQueryable<Student> Order(IQueryable<Student> query)
         {
-            return x => x.Name;
+            return query.OrderBy(x => x.Name);
         }
     }
 }

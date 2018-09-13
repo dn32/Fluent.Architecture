@@ -12,15 +12,15 @@ namespace Fluent.Architecture.Controllers
     /// </summary>
     public abstract class BaseController : Controller
     {
-        private HttpContextBase localHttpContext;
+        private HttpContextBase _localHttpContext;
         
-        public new HttpContextBase HttpContext => this.localHttpContext ?? base.HttpContext;
+        public new HttpContextBase HttpContext => this._localHttpContext ?? base.HttpContext;
 
         public new IPrincipal User => HttpContext.User;
 
         public void SetLocalHttpContext(HttpContextBase httpContext)
         {
-            this.localHttpContext = httpContext;
+            this._localHttpContext = httpContext;
         }
     }
 }

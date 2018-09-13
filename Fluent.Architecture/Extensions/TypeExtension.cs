@@ -1,6 +1,7 @@
 ﻿// ReSharper disable CommentTypo
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Fluent.Architecture.Extensions
@@ -10,8 +11,7 @@ namespace Fluent.Architecture.Extensions
     /// </summary>
     public static class TypeExtension
     {
-        private static readonly ConcurrentDictionary<Type, object> TypeDefaults =
-            new ConcurrentDictionary<Type, object>();
+        private static readonly ConcurrentDictionary<Type, object> TypeDefaults = new ConcurrentDictionary<Type, object>();
 
         /// <summary>
         /// Obtem o valor padrão de um tipo.
@@ -22,6 +22,31 @@ namespace Fluent.Architecture.Extensions
         public static object GetDefaultValue(this Type type)
         {
             return type.IsValueType ? TypeDefaults.GetOrAdd(type, Activator.CreateInstance) : null;
+        }
+
+        //Todo doc
+        public static TX GetDefaultValue<TX>()
+        {
+            return (TX)typeof(TX).GetDefaultValue();
+        }
+
+        //Todo doc
+        public static TX Next<TX>(this List<TX> list)
+        {
+            if (list.Count == 0)
+            {
+                return GetDefaultValue<TX>();
+            }
+
+            var el = list.First();
+            list.RemoveAt(0);
+            return el;
+        }
+
+        //Todo doc
+        public static bool Is(this Type t1, Type t2)
+        {
+            return t1 == t2 || t1.IsSubclassOf(t2) || t2.IsAssignableFrom(t1);
         }
 
         // Todo - Documentar

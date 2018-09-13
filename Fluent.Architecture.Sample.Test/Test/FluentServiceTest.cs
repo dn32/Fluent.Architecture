@@ -161,6 +161,57 @@ namespace Fluent.Architecture.Sample.Test.Test
 
             var serviceUser = TestUtil.Execute(this.UserControllerInstance, null, null, PropagateMethodTestB);
             Assert.NotNull(serviceUser);
+            Assert.NotNull(UserControllerInstance.User);
+        }
+
+        [Test, Ignore("Quando list sem spec estiver ok")]
+        public void ListTest()
+        {
+            var user1 = InternalTestUtil.GetNewUser();
+            var password = $"{TestUtil.NextRandom()}{TestUtil.NextRandom()}{TestUtil.NextRandom()}";
+            user1.Password = password;
+
+            //Add
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Add), user1);
+
+            var users = TestUtil.Execute<List<User>>(this.UserControllerInstance, nameof(UserControllerInstance.List), null);
+            Assert.NotNull(users);
+
+            var user = users.First(x => x.Password.Equals(password));
+            Assert.NotNull(user);
+            Assert.AreEqual(user1.Id, user.Id);
+
+            //Remove
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Remove), user1);
+        }
+
+        [Test]
+        public void CountTest()
+        {
+            var user1 = InternalTestUtil.GetNewUser();
+
+            //Add
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Add), user1);
+
+            var count = TestUtil.Execute<int>(this.UserControllerInstance, nameof(UserControllerInstance.Count), null);
+            FluentAssert.IsNotNullOrEmpty(count);
+
+            //Remove
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Remove), user1);
+        }
+
+        [Test]
+        public void FirstOrDefaultTest()
+        {
+            //Add
+            var user1 = InternalTestUtil.GetNewUser();
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Add), user1);
+
+            var user = TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserControllerInstance.FirstOrDefault), null);
+            Assert.NotNull(user);
+
+            //Remove
+            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Remove), user1);
         }
 
         [Test]

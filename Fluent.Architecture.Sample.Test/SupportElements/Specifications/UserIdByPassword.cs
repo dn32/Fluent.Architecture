@@ -19,5 +19,10 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
         {
             return query.Where(x => x.Password.Equals(this._password, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Id);
         }
+
+        public override IOrderedQueryable<int> Order(IQueryable<int> query)
+        {
+            return query.OrderBy(x => x);
+        }
     }
 }

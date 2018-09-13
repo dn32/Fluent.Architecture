@@ -2,19 +2,19 @@
 
 using System.Linq;
 using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Services;
 
 namespace Fluent.Architecture.Specifications
 {
-    /// <inheritdoc />
     /// <summary>
     /// Especificação base para todas as especificações do sistema que tiverem a saida diferente da entrada.
     /// Geralmente o SpecSelect possui em Select nesse caso.
     /// </summary>
     /// <typeparam name="TE">Tipo de entidade da especificação.</typeparam>
     /// <typeparam name="TO">Tipo de objeto de saida da especificação.</typeparam>
-    public abstract class FluentSelectSpecification<TE, TO> : BaseSpecification<TE> where TE : BaseEntity
+    public abstract class FluentSelectSpecification<TE, TO> :  BaseSpecification<TE>, IFluentSpecificationOut where TE : BaseEntity
     {
         /// <summary>
         /// A especificação.
@@ -27,9 +27,13 @@ namespace Fluent.Architecture.Specifications
         /// </returns>
         public abstract IQueryable<TO> Where(IQueryable<TE> query);
 
-        internal IQueryable<TO> ToIQueryable(IQueryable<TE> query)
+        // Todo doc
+        public abstract IOrderedQueryable<TO> Order(IQueryable<TO> query);
+
+        // Todo doc
+        internal IOrderedQueryable<TO> ToIQueryable(IQueryable<TE> query)
         {
-            return this.Where(query);
+            return Order(Where(query));
         }
 
         /// <inheritdoc />

@@ -19,5 +19,10 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
         {
             return query.Where(x => x.Email.Equals(this._email, StringComparison.CurrentCultureIgnoreCase)).Select(x => x.Id);
         }
+
+        public override IOrderedQueryable<int> Order(IQueryable<int> query)
+        {
+            return query.OrderBy(x => x);
+        }
     }
 }

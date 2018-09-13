@@ -1,8 +1,8 @@
 ﻿using System.Globalization;
 using System.Linq;
 using Fluent.Architecture.Exceptions.ValidationException;
+using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Model;
-using Fluent.Architecture.Specifications;
 
 namespace Fluent.Architecture.Validation
 {
@@ -26,7 +26,7 @@ namespace Fluent.Architecture.Validation
         {
             if (string.IsNullOrWhiteSpace(language))
             {
-                AddInconsistency(new LanguageValidationException("The language should be informed"));
+                AddInconsistency(new LanguageValidationException("The language should be informed."));
             }
 
             if (CultureInfo.GetCultures(CultureTypes.AllCultures).All(x => x.Name != language))
@@ -35,7 +35,17 @@ namespace Fluent.Architecture.Validation
             }
         }
 
-        public void FirstOrDefault(FluentSpecification<T> spec, string language)
+        public void FirstOrDefault(IFluentSpecification spec, string language)
+        {
+            LanguageValidate(language);
+        }
+
+        public void FirstOrDefault(string language)
+        {
+            LanguageValidate(language);
+        }
+
+        public void LanguageValidate(string language)
         {
             LanguageMustBeValid(language);
             RunTheContextValidation();

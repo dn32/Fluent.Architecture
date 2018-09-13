@@ -83,9 +83,7 @@ namespace Fluent.Architecture.Sample.Test.Test
                 return true;
             }
 
-            var ex = Assert.Throws<IncorrectDevelopmentException>(() => TestUtil.Execute(this.UserControllerInstance, null, null, Spec));
-            Assert.NotNull(ex);
-            Assert.AreEqual("There are two or more methods of propagation in Fluent.Architecture.Sample.Test.SupportElements.UserRepository with the same name Test. This causes an ambiguity, please change the name of one of them.", ex.Message);
+            TestUtil.Execute(UserControllerInstance, null, null, Spec);
         }
 
         [Test]
@@ -99,16 +97,17 @@ namespace Fluent.Architecture.Sample.Test.Test
 
             var ex = Assert.Throws<IncorrectDevelopmentException>(() => TestUtil.Execute(this.UserControllerInstance, null, null, Spec));
             Assert.NotNull(ex);
-            Assert.AreEqual("There are two or more methods of propagation in  with the same name Test2. This causes an ambiguity, please change the name of one of them.", ex.Message);
+            Assert.AreEqual("The Test2 method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User", ex.Message);
         }
 
-        // [Test]
-        // public void PropagationMethodNotFound2FailTest()
-        // {
-        // var ex = Assert.Throws<IncorrectDevelopmentException>(() => TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.NotFound2), null));
-        // Assert.NotNull(ex);
-        // Assert.AreEqual($"The InvokeMethod method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User", ex.Message);
-        // }
+        [Test]
+        public void PropagationMethodNotFound2FailTest()
+        {
+            var ex = Assert.Throws<IncorrectDevelopmentException>(() => TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.NotFound2), null));
+            Assert.NotNull(ex);
+            Assert.AreEqual($"The NotFound2 method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User", ex.Message);
+        }
+
         [Theory]
         [TestCase(true, true)]
         [TestCase(true, false)]
@@ -171,7 +170,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             var error = TestUtil.Execute(this.UserControllerInstance, null, null, ParameterCountFail);
 
             Assert.NotNull(error);
-            Assert.AreEqual("The amount of parameters passed is greater than the amount expected by the method.", error.Message);
+            Assert.AreEqual("The List method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User", error.Message);
         }
 
         [Test]

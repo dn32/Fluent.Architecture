@@ -21,7 +21,12 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
 
             return query.Where(x => x.Email.Equals(this._email, StringComparison.CurrentCultureIgnoreCase))
                 .Join(students, user => user.Email, student => student.Email, (user, student) => new { user, student })
-                .Select(x => new UserStudent{User = x.user , Student = x.student });
+                .Select(x => new UserStudent { User = x.user, Student = x.student });
+        }
+
+        public override IOrderedQueryable<UserStudent> Order(IQueryable<UserStudent> query)
+        {
+            return query.OrderBy(x => x.User.Name);
         }
     }
 }

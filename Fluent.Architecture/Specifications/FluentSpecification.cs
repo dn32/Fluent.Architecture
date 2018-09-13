@@ -1,20 +1,18 @@
 ﻿// ReSharper disable CommentTypo
 
-using System;
 using System.Linq;
-using System.Linq.Expressions;
 using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Services;
 
 namespace Fluent.Architecture.Specifications
 {
-    /// <inheritdoc />
     /// <summary>
     /// Especificação base para todas as especificações do sistema.
     /// </summary>
     /// <typeparam name="TE">Tipo de entidade da especificação.</typeparam>
-    public abstract class FluentSpecification<TE> : BaseSpecification<TE> where TE : BaseEntity
+    public abstract class FluentSpecification<TE> : BaseSpecification<TE>, IFluentSpecification where TE : BaseEntity
     {
         /// <summary>
         /// A especificação.
@@ -27,8 +25,8 @@ namespace Fluent.Architecture.Specifications
         /// </returns>
         public abstract IQueryable<TE> Where(IQueryable<TE> query);
 
-        // Todo documentar
-        public abstract Expression<Func<TE, object>> Order();
+        // Todo doc
+        public abstract IOrderedQueryable<TE> Order(IQueryable<TE> query);
 
         /// <inheritdoc />
         protected FluentSpecification(TransactionalService service) : base(service) { }
@@ -36,9 +34,9 @@ namespace Fluent.Architecture.Specifications
         /// <inheritdoc />
         protected FluentSpecification(FluentController<TE> controller) : base(controller) { }
 
-        internal IQueryable<TE> ToIQueryable(IQueryable<TE> query)
+        internal IOrderedQueryable<TE> ToIQueryable(IQueryable<TE> query)
         {
-            return this.Where(query).OrderBy(this.Order());
+            return Order(Where(query));
         }
     }
 }

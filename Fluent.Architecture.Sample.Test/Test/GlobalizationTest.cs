@@ -1,12 +1,14 @@
-﻿using System.Runtime.InteropServices;
-using System.Threading;
-using Fluent.Architecture.Controllers;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using Fluent.Architecture.Model;
 using Fluent.Architecture.Sample.Test.SupportElements;
 using Fluent.Architecture.Sample.Test.SupportElements.Controllers;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Sample.Test.TestTools;
 using Fluent.Architecture.Test;
 using Fluent.Architecture.Test.Mock;
+using Fluent.Architecture.Validation;
 using NUnit.Framework;
 
 namespace Fluent.Architecture.Sample.Test.Test
@@ -34,8 +36,6 @@ namespace Fluent.Architecture.Sample.Test.Test
 
         #endregion
 
-
-
         //[Test]
         public void StressTest()
         {
@@ -44,18 +44,146 @@ namespace Fluent.Architecture.Sample.Test.Test
                 //new Thread(() =>
                 //{
 
-                    var courseController = MockUtil.GetMockController<CourseController>();
-                    var list = new List();
-                    for (var j = 0; j < 10000; j++)
+                var courseController = MockUtil.GetMockController<CourseController>();
+                var list = new List();
+                for (var j = 0; j < 10000; j++)
+                {
                     {
-                        {
-                            var course = InternalTestUtil.GetNewCourse();
-                            course.Id = 0;
-                            TestUtil.Execute<Course>(courseController, nameof(CourseController.Add), course);
-                        }
+                        var course = InternalTestUtil.GetNewCourse();
+                        course.Id = 0;
+                        TestUtil.Execute<Course>(courseController, nameof(CourseController.Add), course);
                     }
+                }
                 //}).Start();
             }
+        }
+
+        [Test]
+        public void LanguageMustBeValidOnFindFail()
+        {
+            var course = AddNewCurse();
+            var error = TestUtil.Execute<ContextFluentValidationException>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, string.Empty });
+
+            Assert.NotNull(error);
+            Assert.AreEqual("The language should be informed.", error.Inconsistencies.First().Message);
+        }
+
+        [Test]
+        public void LanguageMustBeValidOnFindFail2()
+        {
+            var course = AddNewCurse();
+            var error = TestUtil.Execute<ContextFluentValidationException>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, "xpto-lang" });
+
+            Assert.NotNull(error);
+            Assert.AreEqual("xpto-lang is an invalid language.", error.Inconsistencies.First().Message);
+        }
+
+        [Test]
+        public void LanguageMustBeValidOnFirstOrDefaultFail()
+        {
+            var error = TestUtil.Execute<ContextFluentValidationException>(this.CourseControllerInstance, nameof(CourseController.FirstOrDefaultSpec), new object[] { "xpto-lang" });
+
+            Assert.NotNull(error);
+            Assert.AreEqual("xpto-lang is an invalid language.", error.Inconsistencies.First().Message);
+        }
+
+        [Test]
+        public void LanguageMustBeValidOnFirstOrDefaultOk()
+        {
+            AddNewCurse();
+
+            var course = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.FirstOrDefaultSpec), new object[] { "pt-BR" });
+
+            Assert.NotNull(course);
+
+            TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Remove), course);
+        }
+
+        [Test]
+        public void LanguageMustBeValidOnFindOk()
+        {
+            AddNewCurse();
+
+            var course = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.FirstOrDefault), new object[] { "pt-BR" });
+
+            Assert.NotNull(course);
+
+            TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Remove), course);
+        }
+
+        [Test, Ignore("Está carregnado o banco todo")]
+        public void ListOk()
+        {
+            var course = AddNewCurse();
+
+            var courses = TestUtil.Execute<List<Course>>(this.CourseControllerInstance, nameof(CourseController.List), new object[] { "pt-BR" });
+
+            Assert.NotNull(courses);
+
+            TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Remove), course);
+        }
+
+        [Test]
+        public void ListPaginationOk()
+        {
+            var course = AddNewCurse();
+
+            var pagination = new FluentPagination(0, 20);
+
+            var courses = TestUtil.Execute<List<Course>>(this.CourseControllerInstance, nameof(CourseController.List), new object[] { pagination, "pt-BR" });
+
+            Assert.NotNull(courses);
+
+            TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Remove), course);
+        }
+
+        [Test]
+        public void GlobalizationTestTraduction()
+        {
+            var course = AddNewCurse();
+            course = UpdateForCurrentLanguage(course);
+            course = UpdateForAnotherLanguagePtBr(course);
+            course = UpdateForAnotherLanguageEs(course);
+            course = UpdateLanguagePtBr(course);
+
+            var courseDefault = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), course);
+            var coursePtBr = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.PT_BR });
+            var courseEs = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.ES });
+            var courseEn = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.EN_US });
+            var courseAnother = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.AA_DJ });
+
+            Assert.NotNull(courseDefault);
+            Assert.NotNull(coursePtBr);
+            Assert.NotNull(courseEs);
+            Assert.NotNull(courseEn);
+
+            Assert.AreEqual(DescriptionEs, courseDefault.Description);
+            Assert.AreEqual(TitleEs, courseDefault.Title);
+            Assert.AreEqual(Language.ES, courseAnother.Language);
+            Assert.True(courseDefault.IsDefaultLanguage);
+
+            Assert.AreEqual(DescriptionPtBr2, coursePtBr.Description);
+            Assert.AreEqual(TitlePtBr2, coursePtBr.Title);
+            Assert.AreEqual(Language.PT_BR, coursePtBr.Language);
+            Assert.False(coursePtBr.IsDefaultLanguage);
+
+            Assert.AreEqual(DescriptionEs, courseEs.Description);
+            Assert.AreEqual(TitleEs, courseEs.Title);
+            Assert.AreEqual(Language.ES, courseEs.Language);
+            Assert.True(courseEs.IsDefaultLanguage);
+
+            Assert.AreEqual(DescriptionEn, courseEn.Description);
+            Assert.AreEqual(TitleEn, courseEn.Title);
+            Assert.AreEqual(Language.EN_US, courseEn.Language);
+            Assert.False(courseEn.IsDefaultLanguage);
+
+            Assert.AreEqual(DescriptionEs, courseAnother.Description);
+            Assert.AreEqual(TitleEs, courseAnother.Title);
+            Assert.AreEqual(Language.ES, courseAnother.Language);
+            Assert.True(courseAnother.IsDefaultLanguage);
+
+            ////Remove
+            TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Remove), course);
         }
 
         #region INTERNAL
@@ -171,53 +299,5 @@ namespace Fluent.Architecture.Sample.Test.Test
 
         #endregion
 
-        [Test]
-        public void GlobalizationTestTraduction()
-        {
-            var course = AddNewCurse();
-            course = UpdateForCurrentLanguage(course);
-            course = UpdateForAnotherLanguagePtBr(course);
-            course = UpdateForAnotherLanguageEs(course);
-            course = UpdateLanguagePtBr(course);
-
-            var courseDefault = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), course);
-            var coursePtBr = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.PT_BR });
-            var courseEs = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.ES });
-            var courseEn = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.EN_US });
-            var courseAnother = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.AA_DJ });
-
-            Assert.NotNull(courseDefault);
-            Assert.NotNull(coursePtBr);
-            Assert.NotNull(courseEs);
-            Assert.NotNull(courseEn);
-
-            Assert.AreEqual(DescriptionEs, courseDefault.Description);
-            Assert.AreEqual(TitleEs, courseDefault.Title);
-            Assert.AreEqual(Language.ES, courseAnother.Language);
-            Assert.True(courseDefault.IsDefaultLanguage);
-
-            Assert.AreEqual(DescriptionPtBr2, coursePtBr.Description);
-            Assert.AreEqual(TitlePtBr2, coursePtBr.Title);
-            Assert.AreEqual(Language.PT_BR, coursePtBr.Language);
-            Assert.False(coursePtBr.IsDefaultLanguage);
-
-            Assert.AreEqual(DescriptionEs, courseEs.Description);
-            Assert.AreEqual(TitleEs, courseEs.Title);
-            Assert.AreEqual(Language.ES, courseEs.Language);
-            Assert.True(courseEs.IsDefaultLanguage);
-
-            Assert.AreEqual(DescriptionEn, courseEn.Description);
-            Assert.AreEqual(TitleEn, courseEn.Title);
-            Assert.AreEqual(Language.EN_US, courseEn.Language);
-            Assert.False(courseEn.IsDefaultLanguage);
-
-            Assert.AreEqual(DescriptionEs, courseAnother.Description);
-            Assert.AreEqual(TitleEs, courseAnother.Title);
-            Assert.AreEqual(Language.ES, courseAnother.Language);
-            Assert.True(courseAnother.IsDefaultLanguage);
-
-            ////Remove
-            TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Remove), course);
-        }
     }
 }

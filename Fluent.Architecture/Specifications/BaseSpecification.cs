@@ -2,6 +2,7 @@
 
 using System.Linq;
 using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Services;
 
@@ -44,7 +45,7 @@ namespace Fluent.Architecture.Specifications
         /// </returns>
         protected IQueryable<TX> Get<TX>() where TX : BaseEntity
         {
-            var transactionObjects = this.Service == null ?this.Controller.Service.TransactionObjects :this.Service.TransactionObjects;
+            var transactionObjects = this.Service == null ? this.Controller.Service.TransactionObjects : this.Service.TransactionObjects;
             return transactionObjects.GetObjectQueryInternal<TX>();
         }
     }

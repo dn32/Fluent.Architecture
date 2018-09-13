@@ -13,5 +13,13 @@ namespace Fluent.Architecture.Test
                 throw new ValidationException("The objects are different");
             }
         }
+
+        public static void IsNotNullOrEmpty(object obj)
+        {
+            if (obj.IsFluentNull())
+            {
+                throw new ValidationException("The text is empty, null or space");
+            }
+        }
     }
 }

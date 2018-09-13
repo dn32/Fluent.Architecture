@@ -27,9 +27,9 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
             return query.Where(x => x.Email.Equals(this._email, StringComparison.CurrentCultureIgnoreCase));
         }
 
-        public override Expression<Func<User, object>> Order()
+        public override IOrderedQueryable<User> Order(IQueryable<User> query)
         {
-            return x => x.Name;
+            return query.OrderBy(x => x.Name);
         }
     }
 }

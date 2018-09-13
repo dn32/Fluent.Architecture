@@ -19,11 +19,19 @@ namespace Fluent.Architecture.Sample.Test.SupportElements
         [SuppressMessage("StyleCop.CSharp.LayoutRules", "SA1502:ElementMustNotBeOnSingleLine", Justification = "Reviewed. Suppression is OK here.")]
         [Propagate]
         public void Test(string data) { }
-     
+
         // For ambiguity test
         [SuppressMessage("StyleCop.CSharp.LayoutRules", "SA1502:ElementMustNotBeOnSingleLine", Justification = "Reviewed. Suppression is OK here.")]
         [Propagate]
         public void Test(int data) { }
+
+        // For ambiguity test
+        [SuppressMessage("StyleCop.CSharp.LayoutRules", "SA1502:ElementMustNotBeOnSingleLine", Justification =
+            "Reviewed. Suppression is OK here.")]
+        [Propagate]
+        public void Test()
+        {
+        }
 
         [Propagate]
         public User PropagateMethodTestA()

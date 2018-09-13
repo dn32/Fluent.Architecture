@@ -65,24 +65,24 @@ namespace Fluent.Architecture.Sample.Test.Test
         public void GetMethodNameByCallerTypeIQueryableTest()
         {
             var entity = new List<TestEntity>().AsQueryable().GetAllDataOfObject();
-            const string ExpectedJson = "[]";
-            Assert.AreEqual(ExpectedJson, entity);
+            const string expectedJson = "[]";
+            Assert.AreEqual(expectedJson, entity);
         }
 
         [Test]
         public void GetMethodNameByCallerTypeNullTest()
         {
             var entity = ObjectExtension.GetAllDataOfObject(null);
-            const string ExpectedJson = "[]";
-            Assert.AreEqual(ExpectedJson, entity);
+            const string expectedJson = "[]";
+            Assert.AreEqual(expectedJson, entity);
         }
 
         [Test]
         public void GetMethodNameByCallerTypeListTest()
         {
             var entity = new List<TestEntity> { new TestEntity() }.GetAllDataOfObject();
-            const string ExpectedJson = "[{\"Name\":\"<Id>\",\"Value\":0},{\"Name\":\"_internalString\",\"Value\":\"my value\"},{\"Name\":\"<Id>\",\"Value\":0}]";
-            Assert.AreEqual(ExpectedJson, entity);
+            const string expectedJson = "[{\"Name\":\"<Id>\",\"Value\":0},{\"Name\":\"_internalString\",\"Value\":\"my value\"},{\"Name\":\"<Id>\",\"Value\":0}]";
+            Assert.AreEqual(expectedJson, entity);
         }
 
         [Test]
@@ -160,6 +160,22 @@ namespace Fluent.Architecture.Sample.Test.Test
             var ex = Assert.Throws<IncorrectDevelopmentException>(() => GlobalUtil.GetMethodForPropagation());
             Assert.NotNull(ex);
             Assert.AreEqual("The propagation call could not be traced. Only BaseController child controllers can make propagation call.", ex.Message);
+        }
+
+        [Test]
+        public void ListNext()
+        {
+            var list = new[] { 1, 2, 3 }.ToList();
+            Assert.AreEqual(1, list.Next());
+            Assert.AreEqual(2, list.Next());
+            Assert.AreEqual(3, list.Next());
+            Assert.AreEqual(0, list.Next());
+        }
+
+        [Test]
+        public void GetKeyValueFail()
+        {
+            Assert.Throws<InvalidOperationException>(() => new object().GetKeyValue());
         }
     }
 }

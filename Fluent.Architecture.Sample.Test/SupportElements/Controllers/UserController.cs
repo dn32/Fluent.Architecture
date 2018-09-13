@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using System.Web.Mvc;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Model;
@@ -84,10 +85,11 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
             this.PropagateMethod(nameof(this.NotFound));
         }
 
-        // public void NotFound2()
-        // {
-        // Propagate();
-        // }
+        public void NotFound2()
+        {
+            Propagate();
+        }
+
         public JsonResult SpecOne(FluentSpecification<User> spec)
         {
             var user = this.Service.FirstOrDefault(spec);
@@ -96,13 +98,13 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
 
         public JsonResult SpecOne(FluentSelectSpecification<User, int> spec)
         {
-            var userId = this.Service.FirstOrDefault(spec);
+            var userId = this.Service.FirstOrDefault<int>(spec);
             return this.Json(userId);
         }
 
         public JsonResult SpecOne(FluentSelectSpecification<User, UserStudent> spec)
         {
-            var userStudent = this.Service.FirstOrDefault(spec);
+            var userStudent = this.Service.FirstOrDefault<UserStudent>(spec);
             return this.Json(userStudent);
         }
 
@@ -118,15 +120,26 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
             return this.Json(user);
         }
 
+        public JsonResult FirstOrDefault()
+        {
+            var user = this.Service.FirstOrDefault();
+            return this.Json(user);
+        }
+
+        public JsonResult Count()
+        {
+            return Json(Propagate<int>());
+        }
+
         public JsonResult Exists(FluentSelectSpecification<User, int> spec)
         {
-            var user = this.Service.Exists(spec);
+            var user = this.Service.Exists<int>(spec);
             return this.Json(user);
         }
 
         public JsonResult Count(FluentSelectSpecification<User, int> spec)
         {
-            var user = this.Service.Count(spec);
+            var user = this.Service.Count<int>(spec);
             return this.Json(user);
         }
 
@@ -136,9 +149,15 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
             return this.Json(user);
         }
 
+        public JsonResult List()
+        {
+            var users = PropagateList();
+            return this.Json(users);
+        }
+
         public JsonResult List(FluentSelectSpecification<User, int> spec)
         {
-            var userId = this.Service.ListSelect(spec);
+            var userId = this.Service.List<int>(spec);
             return this.Json(userId);
         }
 

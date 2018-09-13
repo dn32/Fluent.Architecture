@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Exceptions.ValidationException;
+using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Test.Mock;
 using Fluent.Architecture.Test.Mock.ControllerMock;
 using NUnit.Framework;
@@ -48,7 +49,8 @@ namespace Fluent.Architecture.Test
             {
                 if (parameters == null || (parameters.Length == 1 && parameters.First() == null))
                 {
-                    method = controllerType.GetMethod(methodName);
+                    parameters = new object[] {};
+                    method = controllerType.GetMethodWithoutAmbiguity(methodName, parameters);
                 }
                 else
                 {
