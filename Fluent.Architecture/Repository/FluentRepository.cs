@@ -1,7 +1,5 @@
 ﻿// ReSharper disable CommentTypo
 
-
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -23,11 +21,16 @@ namespace Fluent.Architecture.Repository
     /// </typeparam>
     public class FluentRepository<TE> : BaseRepository where TE : BaseEntity
     {
+        #region PROPERTIES
+
         /// <summary>
         /// Os objetos de transação do repositório.
         /// </summary>
         internal TransactionObjects TransactionObjects { get; set; }
 
+        /// <summary>
+        /// A referência da sessão do EF.
+        /// </summary>
         protected internal EfContext Session => TransactionObjects.Session;
 
         /// <summary>
@@ -40,6 +43,9 @@ namespace Fluent.Architecture.Repository
         /// </summary>
         internal DbSet<TE> Input => this.TransactionObjects.GetObjectInputDataInternal<TE>();
 
+        /// <summary>
+        /// A referência de um Input de tradução.
+        /// </summary>
         internal DbSet<Translation> TranslactionInput => this.TransactionObjects.GetObjectInputDataInternal<Translation>();
 
         /// <summary>
@@ -47,29 +53,31 @@ namespace Fluent.Architecture.Repository
         /// </summary>
         internal FluentService<TE> Service { get; set; }
 
-        protected void RunTheContextValidation()
-        {
-            this.Service.SessionRequest.ContextFluentValidationException.Validate();
-        }
+        protected void RunTheContextValidation() => Service.SessionRequest.ContextFluentValidationException.Validate();
 
+        #endregion
+
+        #region SPEC TE
 
         /// <summary>
-        /// Todo - Muito cuidado, pois se definir esse método como público, pode permitir vilnerabilidades no sistema por ser string sql.
+        /// Executa uma solicitação baseada em uma especificação e retorna um resultado ou nulo quando a consulta não é satisfeita.
         /// </summary>
-        /// <param name="sql"></param>
-        /// <returns></returns>
+        /// <param name="spec">
+        /// A especificação de requisição.
+        /// </param>
+        /// <returns>
+        /// O item referente à consulta ou nulo.
+        /// </returns>
         [Propagate]
-        internal bool ExistsSql(string sql)
+        //public virtual TE FirstOrDefault(IFluentSpecification spec)
+        public virtual TE FirstOrDefault(IFluentSpecification spec)
         {
-            return this.Input.SqlQuery(sql).Any();
+            return GetSpec(spec).ToIQueryable(Query).FirstOrDefault();
         }
 
-        // Todo - Documentar
-        [Propagate]
-        internal TE FindSingleOrDefaultSql(string sql)
-        {
-            return this.Input.SqlQuery(sql).SingleOrDefault();
-        }
+        #endregion
+
+        #region SPEC OUT
 
         /// <summary>
         /// Executa uma solicitação baseada em uma especificação e retorna uma lista paginada de resultados.
@@ -86,11 +94,91 @@ namespace Fluent.Architecture.Repository
         /// <returns>
         /// A lista paginada de resultados.
         /// </returns>
+
         [Propagate]
-        public virtual List<TO> List<TO>(IFluentSpecificationOut spec, FluentPagination pagination = null)
+        public virtual List<TO> List<TO>(IFluentSpecification<TO> spec, FluentPagination pagination = null)
         {
-            return FluentPaginate(GetSpec<TO>(spec).ToIQueryable(this.Query), pagination).ToList();
+            return FluentPaginate(GetSpec(spec).ToIQueryable(Query), pagination).ToList();
         }
+
+        /// <summary>
+        /// Executa uma solicitação baseada em uma especificação e retorna um resultado ou nulo quando a consulta não é satisfeita.
+        /// </summary>
+        /// <typeparam name="TO">
+        /// O tipo de saida desejada. Deve ser o mesmo definido na saida da especificação.
+        /// </typeparam>
+        /// <param name="spec">
+        /// A especificação de requisição.
+        /// </param>
+        /// <returns>
+        /// O item referente à consulta ou nulo.
+        /// </returns>
+        [Propagate]
+        public virtual TO FirstOrDefault<TO>(IFluentSpecification<TO> spec)
+        {
+            return GetSpec(spec).ToIQueryable(Query).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Avalia se um item existe no banco de dados, baseado em uma especificação.
+        /// </summary>
+        /// <typeparam name="TO">
+        /// O tipo de saida desejada. Deve ser o mesmo definido na saida da especificação.
+        /// </typeparam>
+        /// <param name="spec">
+        /// A especificação de requisição.
+        /// </param>
+        /// <returns>
+        /// Se o item existe ou não.
+        /// </returns>
+        [Propagate]
+        public virtual bool Exists<TO>(IFluentSpecification<TO> spec)
+        {
+            return GetSpec(spec).ToIQueryable(Query).Any();
+        }
+
+        /// <summary>
+        /// Retorna a quantidade de itens existentes que satisfaçam a uma especificação
+        /// </summary>
+        /// <typeparam name="TO">
+        /// O tipo de saida desejada. Deve ser o mesmo definido na saida da especificação.
+        /// </typeparam>
+        /// <param name="spec">
+        /// A especificação de requisição.
+        /// </param>
+        /// <returns>
+        /// A quantidade de itens.
+        /// </returns>
+        [Propagate]
+        public virtual int Count<TO>(IFluentSpecification<TO> spec)
+        {
+            return GetSpec(spec).ToIQueryable(Query).Count();
+        }
+
+        #endregion
+
+        #region SQL
+
+        /// <summary>
+        /// Todo - Muito cuidado, pois se definir esse método como público, pode permitir vilnerabilidades no sistema por ser string sql.
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        [Propagate]
+        internal bool ExistsSql(string sql)
+        {
+            return this.Input.SqlQuery(sql).Any();
+        }
+
+        [Propagate]
+        internal TE FindSingleOrDefaultSql(string sql)
+        {
+            return this.Input.SqlQuery(sql).SingleOrDefault();
+        }
+
+        #endregion
+
+        #region ENTITY ITEMS
 
         /// <summary>
         /// Executa uma solicitação baseada em uma especificação e retorna uma lista paginada de resultados.
@@ -118,55 +206,11 @@ namespace Fluent.Architecture.Repository
         //    return FluentPaginate(Query.ToIQueryable(Query), pagination).ToList();
         //}
 
-        /// <summary>
-        /// Executa uma solicitação baseada em uma especificação e retorna um resultado ou nulo quando a consulta não é satisfeita.
-        /// </summary>
-        /// <typeparam name="TO">
-        /// O tipo de saida desejada. Deve ser o mesmo definido na saida da especificação.
-        /// </typeparam>
-        /// <param name="spec">
-        /// A especificação de requisição.
-        /// </param>
-        /// <returns>
-        /// O item referente à consulta ou nulo.
-        /// </returns>
-        [Propagate]
-        public virtual TO FirstOrDefault<TO>(IFluentSpecificationOut spec)
-        {
-            return GetSpec<TO>(spec).Where(this.Query).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Executa uma solicitação baseada em uma especificação e retorna um resultado ou nulo quando a consulta não é satisfeita.
-        /// </summary>
-        /// <param name="spec">
-        /// A especificação de requisição.
-        /// </param>
-        /// <returns>
-        /// O item referente à consulta ou nulo.
-        /// </returns>
-        [Propagate]
-        //public virtual TE FirstOrDefault(IFluentSpecification spec)
-        public virtual TE FirstOrDefault(IFluentSpecification spec)
-        {
-            return GetSpec(spec).ToIQueryable(this.Query).FirstOrDefault();
-        }
-
-        private FluentSpecification<TE> GetSpec(IFluentSpecification spec)
-        {
-            return spec as FluentSpecification<TE>;
-        }
-
-        private FluentSelectSpecification<TE, TO> GetSpec<TO>(IFluentSpecificationOut spec)
-        {
-            return spec as FluentSelectSpecification<TE, TO>;
-        }
-
         //Todo doc
         [Propagate]
         public virtual TE FirstOrDefault()
         {
-            return this.Query.FirstOrDefault();
+            return Query.FirstOrDefault();
         }
 
         /// <summary>
@@ -181,43 +225,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual bool Exists(IFluentSpecification spec)
         {
-            return GetSpec(spec).ToIQueryable(this.Query).Any();
-        }
-
-        /// <summary>
-        /// Avalia se um item existe no banco de dados, baseado em uma especificação.
-        /// </summary>
-        /// <typeparam name="TO">
-        /// O tipo de saida desejada. Deve ser o mesmo definido na saida da especificação.
-        /// </typeparam>
-        /// <param name="spec">
-        /// A especificação de requisição.
-        /// </param>
-        /// <returns>
-        /// Se o item existe ou não.
-        /// </returns>
-        [Propagate]
-        public virtual bool Exists<TO>(IFluentSpecificationOut spec)
-        {
-            return GetSpec<TO>(spec).ToIQueryable(this.Query).Any();
-        }
-
-        /// <summary>
-        /// Retorna a quantidade de itens existentes que satisfaçam a uma especificação
-        /// </summary>
-        /// <typeparam name="TO">
-        /// O tipo de saida desejada. Deve ser o mesmo definido na saida da especificação.
-        /// </typeparam>
-        /// <param name="spec">
-        /// A especificação de requisição.
-        /// </param>
-        /// <returns>
-        /// A quantidade de itens.
-        /// </returns>
-        [Propagate]
-        public virtual int Count<TO>(IFluentSpecificationOut spec)
-        {
-            return GetSpec<TO>(spec).ToIQueryable(this.Query).Count();
+            return GetSpec(spec).ToIQueryable(Query).Any();
         }
 
         /// <summary>
@@ -232,7 +240,7 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual int Count(IFluentSpecification spec)
         {
-            return GetSpec(spec).ToIQueryable(this.Query).Count();
+            return GetSpec(spec).ToIQueryable(Query).Count();
         }
 
         //Todo doc
@@ -254,12 +262,13 @@ namespace Fluent.Architecture.Repository
         // [PropagateMethod]
         // public virtual TE Find(int id)
         // {
-        // return Input.Find(id);
+        //     return Input.Find(id);
         // }
+
         public virtual TE Find(TE entity)
         {
             var sql = CreateSqlFromKeyAndFluentUniqueKeys(entity);
-            return this.FindSingleOrDefaultSql(sql);
+            return FindSingleOrDefaultSql(sql);
         }
 
         public virtual bool Exists(TE entity)
@@ -277,14 +286,16 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual void AddRange(params TE[] entities)
         {
-            this.RunTheContextValidation();
-            entities.ToList().ForEach(x => this.Input.Add(x));
+            RunTheContextValidation();
+
+            entities.ToList().ForEach(x => Input.Add(x));
         }
 
         [Propagate]
         public virtual TE Add(TE entity)
         {
             RunTheContextValidation();
+
             return Input.Add(entity);
         }
 
@@ -297,10 +308,10 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual TE Update(TE entity)
         {
-            this.RunTheContextValidation();
+            RunTheContextValidation();
 
             var currentEntity = this.Find(entity);
-            this.TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
+            TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
             return currentEntity;
         }
 
@@ -320,7 +331,7 @@ namespace Fluent.Architecture.Repository
 
         public virtual void RemoveRange(IFluentSpecification spec)
         {
-            var list = GetSpec(spec).ToIQueryable(this.Query);
+            var list = GetSpec(spec).ToIQueryable(Query);
             this.Input.RemoveRange(list);
         }
 
@@ -330,7 +341,19 @@ namespace Fluent.Architecture.Repository
             entities.ToList().ForEach(x => this.Remove(x));
         }
 
+        #endregion
+
         #region INTERNAL
+
+        private FluentSelectSpecification<TE, TO> GetSpec<TO>(IFluentSpecification<TO> spec)
+        {
+            return spec as FluentSelectSpecification<TE, TO>;
+        }
+
+        private FluentSpecification<TE> GetSpec(IFluentSpecification spec)
+        {
+            return spec as FluentSpecification<TE>;
+        }
 
         // private static string CreateSqlFromKeys(TE entity)
         // {
@@ -340,6 +363,7 @@ namespace Fluent.Architecture.Repository
         // sql += string.Join(" and ", keyValues);
         // return sql;
         // }
+
         private static string CreateSqlFromKeyAndFluentUniqueKeys(TE entity)
         {
             var tableName = entity.GetTableName();

@@ -3,4 +3,8 @@
     public interface IFluentSpecificationOut
     {
     }
+
+    public interface IFluentSpecification<TO> : IFluentSpecificationOut
+    {
+    }
 }

@@ -94,8 +94,8 @@ namespace Fluent.Architecture.Repository
             list.ForEach(x => UpdateTranslationForFoundEntity(x, language));
 
             return list;
-        }   
-        
+        }
+
         // Tradução ok
         //[Propagate]
         //public virtual List<TE> List(string language)
@@ -113,8 +113,8 @@ namespace Fluent.Architecture.Repository
         {
             var persistedEntity = base.FirstOrDefault(spec);
             return UpdateTranslationForFoundEntity(persistedEntity, language);
-        } 
-        
+        }
+
         // Tradução ok
         [Propagate]
         public virtual TE FirstOrDefault(string language)

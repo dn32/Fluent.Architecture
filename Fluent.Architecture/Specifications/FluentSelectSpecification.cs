@@ -14,7 +14,7 @@ namespace Fluent.Architecture.Specifications
     /// </summary>
     /// <typeparam name="TE">Tipo de entidade da especificação.</typeparam>
     /// <typeparam name="TO">Tipo de objeto de saida da especificação.</typeparam>
-    public abstract class FluentSelectSpecification<TE, TO> :  BaseSpecification<TE>, IFluentSpecificationOut where TE : BaseEntity
+    public abstract class FluentSelectSpecification<TE, TO> : BaseSpecification<TE>, IFluentSpecification<TO> where TE : BaseEntity
     {
         /// <summary>
         /// A especificação.
@@ -37,7 +37,7 @@ namespace Fluent.Architecture.Specifications
         }
 
         /// <inheritdoc />
-        protected FluentSelectSpecification(FluentController<TE> controller) : base(controller){}
+        protected FluentSelectSpecification(FluentController<TE> controller) : base(controller) { }
 
         /// <inheritdoc />
         protected FluentSelectSpecification(TransactionalService service) : base(service) { }
