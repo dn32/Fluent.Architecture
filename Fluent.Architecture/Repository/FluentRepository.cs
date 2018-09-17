@@ -19,7 +19,7 @@ namespace Fluent.Architecture.Repository
     /// <typeparam name="TE">
     /// O tipo de entidade do repositório.
     /// </typeparam>
-    public class FluentRepository<TE> : BaseRepository where TE : BaseEntity
+    public class FluentRepository<TE> : TransactionlRepository where TE : BaseEntity
     {
         #region PROPERTIES
 

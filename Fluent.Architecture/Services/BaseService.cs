@@ -5,6 +5,8 @@ using System.Security.Claims;
 using System.Web;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
+using Fluent.Architecture.Repository;
+using Fluent.Architecture.Validation;
 
 namespace Fluent.Architecture.Services
 {
@@ -13,6 +15,10 @@ namespace Fluent.Architecture.Services
     /// </summary>
     public abstract class BaseService
     {
+        public virtual BaseValidation Validation { get; set; }
+      
+        public virtual BaseRepository Repository { get; set; }
+
         /// <summary>
         /// Entidade organizadora da injeção de dependência e do contexto da requisição do usuário.
         /// </summary>

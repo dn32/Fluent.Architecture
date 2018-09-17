@@ -2,7 +2,6 @@
 
 using System.Linq;
 using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Services;
 

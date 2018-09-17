@@ -26,13 +26,20 @@ namespace Fluent.Architecture.Services
         ///// <summary>
         ///// O repositório do serviço.
         ///// </summary>
-        //// protected internal FluentRepository<T> Repository { get; set; }
-        protected internal virtual FluentRepository<T> Repository { get; set; }
+        protected internal new FluentRepository<T> Repository
+        {
+            get => base.Repository as FluentRepository<T>;
+            set => base.Repository = value;
+        }
 
         /// <summary>
         /// A validação do serviço.
         /// </summary>
-        protected internal FluentValidation<T> Validation { get; set; }
+        protected internal new FluentValidation<T> Validation
+        {
+            get => base.Validation as FluentValidation<T>;
+            set => base.Validation = value;
+        }
 
         protected internal override void SetUserSession(UserSessionRequest sessionRequest)
         {
@@ -49,6 +56,8 @@ namespace Fluent.Architecture.Services
         // Todo Documenta após a organização desses itens.
         public virtual object PropagateService(string methodName, object[] parameters)
         {
+          //  base.Repository = null;
+
             Validation.PropagateService(methodName, parameters);
 
             var validationMethod = Validation.GetType().GetMethodWithoutAmbiguity(methodName, parameters, new[] { typeof(T) });

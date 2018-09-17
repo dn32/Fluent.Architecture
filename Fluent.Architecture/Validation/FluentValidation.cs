@@ -14,25 +14,33 @@ namespace Fluent.Architecture.Validation
     /// A classe de validação base de todas as validações com entidade do sistema.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class FluentValidation<T> where T : BaseEntity
+    public class FluentValidation<T> : TransactionalValidation where T : BaseEntity
     {
         #region INTERNAL
+
+        ///// <summary>
+        ///// O repositório do serviço.
+        ///// </summary>
+        protected internal new FluentRepository<T> Repository
+        {
+            get => base.Repository as FluentRepository<T>;
+            set => base.Repository = value;
+        }
+
+        /// <summary>
+        /// A validação do serviço.
+        /// </summary>
+        protected internal new FluentService<T> Service
+        {
+            get => base.Service as FluentService<T>;
+            set => base.Service = value;
+        }
 
         // Todo documentar
         public bool NullParameterOk { get; set; } = true;
 
         // Todo documentar
         public bool KeyValuesOk { get; set; } = true;
-
-        /// <summary>
-        /// O repositório referente a entidade em validação.
-        /// </summary>
-        protected FluentRepository<T> Repository { get; set; }
-
-        /// <summary>
-        /// O serviço referente a entidade em validação.
-        /// </summary>
-        protected FluentService<T> Service { get; set; }
 
         /// <summary>
         /// Adiciona uma nova inconsistência ao contexto da requisição.

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
-using Fluent.Architecture.Sample.Test.SupportElements.Model;
+using Fluent.Architecture.Validation;
 
 namespace Fluent.Architecture.Services
 {
@@ -14,11 +14,22 @@ namespace Fluent.Architecture.Services
     /// </summary>
     public class TransactionalService : BaseService
     {
+        protected internal new TransactionalValidation Validation
+        {
+            get => base.Validation as TransactionalValidation;
+            set => base.Validation = value;
+        }
+
+        protected internal new TransactionlRepository Repository
+        {
+            get => base.Repository as TransactionlRepository;
+            set => base.Repository = value;
+        }
+
         /// <summary>
         /// Objetos de transação do serviço.
         /// </summary>
         internal TransactionObjects TransactionObjects => this.SessionRequest.TransactionObjects;
-
 
         internal List<Interaction> Interactions { get; set; }
 
