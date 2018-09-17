@@ -94,7 +94,7 @@ namespace Fluent.Architecture.Services
         /// A lista paginada de resultados.
         /// </returns>
         [Propagate]
-        public virtual List<TO> List<TO>(IFluentSpecificationOut spec, FluentPagination pagination = null)
+        public virtual List<TO> List<TO>(IFluentSpecification<TO> spec, FluentPagination pagination = null)
         {
             return this.Repository.List<TO>(spec, pagination);
         }
@@ -137,9 +137,9 @@ namespace Fluent.Architecture.Services
         /// O item referente à consulta ou nulo.
         /// </returns>
         [Propagate]
-        public virtual TO FirstOrDefault<TO>(IFluentSpecificationOut spec)
+        public virtual TO FirstOrDefault<TO>(IFluentSpecification<TO> spec)
         {
-            return this.Repository.FirstOrDefault<TO>(spec);
+            return this.Repository.FirstOrDefault(spec);
         }
 
         /// <summary>
@@ -177,9 +177,9 @@ namespace Fluent.Architecture.Services
         /// A quantidade de itens.
         /// </returns>
         [Propagate]
-        public virtual int Count<TO>(IFluentSpecificationOut spec)
+        public virtual int Count<TO>(IFluentSpecification<TO> spec)
         {
-            return this.Repository.Count<TO>(spec);
+            return this.Repository.Count(spec);
         }
 
         /// <summary>
@@ -236,9 +236,9 @@ namespace Fluent.Architecture.Services
         /// Se o item existe ou não.
         /// </returns>
         [Propagate]
-        public virtual bool Exists<TO>(IFluentSpecificationOut spec)
+        public virtual bool Exists<TO>(IFluentSpecification<TO> spec)
         {
-            return this.Repository.Exists<TO>(spec);
+            return this.Repository.Exists(spec);
         }
 
         /// <summary>
