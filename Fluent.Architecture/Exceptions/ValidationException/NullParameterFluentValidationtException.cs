@@ -2,9 +2,9 @@
 namespace Fluent.Architecture.Exceptions.ValidationException
 {
     /// <inheritdoc />
-    public class NullParameterFluentValidationException : FluentValidationException
+    public class NullFluentValidationException : NullValueFluentValidationException
     {
-        public NullParameterFluentValidationException(string parameter)
+        public NullFluentValidationException(string parameter)
             : base($"The parameter {parameter} can not be null.")
         {
         }

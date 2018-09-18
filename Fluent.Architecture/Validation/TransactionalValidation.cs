@@ -1,9 +1,11 @@
-﻿using Fluent.Architecture.Repository;
+﻿using System;
+using Fluent.Architecture.Exceptions.ValidationException;
+using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
 
 namespace Fluent.Architecture.Validation
 {
-    public class TransactionalValidation : BaseValidation
+    public abstract class TransactionalValidation : BaseValidation
     {
         ///// <summary>
         ///// O repositório do serviço.
@@ -21,6 +23,49 @@ namespace Fluent.Architecture.Validation
         {
             get => base.Service as TransactionalService;
             set => base.Service = value;
+        }
+
+        /// <summary>
+        /// Inicializa a classe preenchendo suas dependências.
+        /// </summary>
+        /// <param name="service">
+        /// O serviço que a validação representa.
+        /// </param>
+        /// <param name="repository">
+        /// O repositório que a validação representa.
+        /// </param>
+        protected internal virtual void Init(TransactionalService service, TransactionlRepository repository)
+        {
+            Service = service;
+            Repository = repository;
+        }
+
+        /// <summary>
+        /// Adiciona uma nova inconsistência ao contexto da requisição.
+        /// </summary>
+        /// <param name="ex">
+        /// A inconsitência.
+        /// </param>
+        protected void AddInconsistency(FluentValidationException ex)
+        {
+            this.Service.SessionRequest.ContextFluentValidationException.AddInconsistency(ex);
+        }
+
+        protected void RunTheContextValidation()
+        {
+            this.Service.SessionRequest.ContextFluentValidationException.Validate();
+        }
+
+        public void ValueMustBeInformed(object value, string message = "")
+        {
+            if (value != null)
+            {
+                return;
+            }
+
+            message = string.IsNullOrWhiteSpace(message) ? "Value can not be null" : message;
+            AddInconsistency(new NullValueFluentValidationException(message));
+            RunTheContextValidation();
         }
     }
 }

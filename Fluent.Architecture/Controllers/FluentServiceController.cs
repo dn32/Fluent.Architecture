@@ -21,16 +21,15 @@ namespace Fluent.Architecture.Controllers
     {
         protected internal TS Service { get; set; }
 
-        public Guid SessionRequestId => this.Service.SessionRequestId;
+        protected internal Guid SessionRequestId => Service.SessionRequestId;
 
-        public ClaimsPrincipal ServiceUser => this.Service.User;
+        protected internal ClaimsPrincipal ServiceUser => Service.User;
 
-        public HttpContextBase ServiceHttpContext => this.Service.LocalHttpContext;
-
+        protected internal HttpContextBase ServiceHttpContext => Service.LocalHttpContext;
 
         protected override void OnActionExecuting(ActionExecutingContext context)
         {
-            this.Service = ServiceFactory.Create<TS>(this.HttpContext);
+            Service = ServiceFactory.Create<TS>(HttpContext);
             base.OnActionExecuting(context);
         }
 

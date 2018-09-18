@@ -1,9 +1,10 @@
-﻿using Fluent.Architecture.Repository;
+﻿using System;
+using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
 
 namespace Fluent.Architecture.Validation
 {
-    public class BaseValidation
+    public abstract class BaseValidation
     {
         ///// <summary>
         ///// O repositório do serviço.

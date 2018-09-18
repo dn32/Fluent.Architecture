@@ -15,14 +15,18 @@ namespace Fluent.Architecture.Services
     /// </summary>
     public abstract class BaseService
     {
-        public virtual BaseValidation Validation { get; set; }
-      
-        public virtual BaseRepository Repository { get; set; }
+        protected internal virtual Type RepositoryType => null;
+
+        protected internal virtual Type ValidationType => null;
+
+        protected virtual BaseValidation Validation { get; set; }
+
+        protected virtual BaseRepository Repository { get; set; }
 
         /// <summary>
         /// Entidade organizadora da injeção de dependência e do contexto da requisição do usuário.
         /// </summary>
-        public UserSessionRequest SessionRequest { get; private set; }
+        protected internal UserSessionRequest SessionRequest { get; private set; }
 
         /// <summary>
         /// Obtem o identificador da sessão da requisição atual.
@@ -32,12 +36,12 @@ namespace Fluent.Architecture.Services
         /// <summary>
         /// HttpContext da requisição vinda do controller.
         /// </summary>
-        public HttpContextBase LocalHttpContext => this.SessionRequest.LocalHttpContext;
+        protected internal HttpContextBase LocalHttpContext => this.SessionRequest.LocalHttpContext;
 
         /// <summary>
         /// Usuário do sistema.
         /// </summary>
-        public ClaimsPrincipal User => this.SessionRequest.LocalHttpContext.User as ClaimsPrincipal;
+        protected internal ClaimsPrincipal User => this.SessionRequest.LocalHttpContext.User as ClaimsPrincipal;
 
         private bool Disposed { get; set; }
 

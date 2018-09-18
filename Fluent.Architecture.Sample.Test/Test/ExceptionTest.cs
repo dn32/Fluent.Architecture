@@ -35,7 +35,7 @@ namespace Fluent.Architecture.Sample.Test.Test
         [TestCase(false, typeof(UniqueKeyFluentValidationException))]
         [TestCase(false, typeof(EntityNotFoundFluentValidationException))]
         [TestCase(false, typeof(FluentValidationException))]
-        [TestCase(false, typeof(NullParameterFluentValidationException))]
+        [TestCase(false, typeof(NullFluentValidationException))]
         [TestCase(false, typeof(PropertyRequiredFluentValidationException))]
         [TestCase(true, typeof(EntityExistsFluentValidationException))]
         [TestCase(true, typeof(MethodNotFoundException))]

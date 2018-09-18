@@ -42,37 +42,6 @@ namespace Fluent.Architecture.Validation
         // Todo documentar
         public bool KeyValuesOk { get; set; } = true;
 
-        /// <summary>
-        /// Adiciona uma nova inconsistência ao contexto da requisição.
-        /// </summary>
-        /// <param name="ex">
-        /// A inconsitência.
-        /// </param>
-        protected void AddInconsistency(FluentValidationException ex)
-        {
-            this.Service.SessionRequest.ContextFluentValidationException.AddInconsistency(ex);
-        }
-
-        /// <summary>
-        /// Inicializa a classe preenchendo suas dependências.
-        /// </summary>
-        /// <param name="service">
-        /// O serviço que a validação representa.
-        /// </param>
-        /// <param name="repository">
-        /// O repositório que a validação representa.
-        /// </param>
-        internal void Init(FluentService<T> service, FluentRepository<T> repository)
-        {
-            this.Service = service;
-            this.Repository = repository;
-        }
-
-        protected void RunTheContextValidation()
-        {
-            this.Service.SessionRequest.ContextFluentValidationException.Validate();
-        }
-
         #endregion
 
         /// <summary>
@@ -160,7 +129,7 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
         {
             if (entity == null)
             {
-                this.AddInconsistency(new NullParameterFluentValidationException(nameof(entity)));
+                this.AddInconsistency(new NullFluentValidationException(nameof(entity)));
                 this.NullParameterOk = false;
                 return;
             }

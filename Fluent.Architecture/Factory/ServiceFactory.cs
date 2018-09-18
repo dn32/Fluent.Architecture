@@ -34,9 +34,18 @@ namespace Fluent.Architecture.Factory
             var sessionId = Guid.NewGuid();
             var service = InternalCreate<TS>(sessionId);
             var userSession = CreateUserSession(httpContext, sessionId, service);
+            //InternalCreateValidation(service);
             service.SetUserSession(userSession);
             return service;
         }
+
+        //private static void InternalCreateValidation(TransactionalService service)
+        //{
+        //    if (service.ValidationType != null)
+        //    {
+        //        service.Validation = ValidationFactory.CreateNotEntity(service.ValidationType);
+        //    }
+        //}
 
         /// <summary>
         /// Cria um serviço em tempo de execução por meio de um processo de lazy-loading, à partir de um serviço original criado pelo <see cref="FluentController{T}"/>.

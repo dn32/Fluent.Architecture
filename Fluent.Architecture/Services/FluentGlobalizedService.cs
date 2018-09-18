@@ -4,7 +4,6 @@ using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
-using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Validation;
 
 namespace Fluent.Architecture.Services
@@ -26,7 +25,7 @@ namespace Fluent.Architecture.Services
         public virtual List<T> List(IFluentSpecification spec, FluentPagination pagination, string language)
         {
             Validation.LanguageValidate(language);
-            return this.Repository.List(spec, pagination, language);
+            return Repository.List(spec, pagination, language);
         }
 
         [Propagate]

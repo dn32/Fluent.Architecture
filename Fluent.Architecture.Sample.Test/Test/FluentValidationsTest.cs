@@ -30,7 +30,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             Assert.NotNull(error);
             Assert.AreEqual(2, error.Inconsistencies.Count);
             Assert.IsAssignableFrom<FluentPropertyValidationException>(error.Inconsistencies.First());
-            Assert.IsAssignableFrom<NullParameterFluentValidationException>(error.Inconsistencies.Last());
+            Assert.IsAssignableFrom<NullFluentValidationException>(error.Inconsistencies.Last());
         }
 
         [Theory]

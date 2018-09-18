@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Validation;
@@ -12,7 +13,7 @@ namespace Fluent.Architecture.Services
     /// <summary>
     /// Serviço base para serviços sem relacionamento direto com uma entidade.
     /// </summary>
-    public class TransactionalService : BaseService
+    public abstract class TransactionalService : BaseService
     {
         protected internal new TransactionalValidation Validation
         {
@@ -24,6 +25,17 @@ namespace Fluent.Architecture.Services
         {
             get => base.Repository as TransactionlRepository;
             set => base.Repository = value;
+        }
+        protected internal override void SetUserSession(UserSessionRequest sessionRequest)
+        {
+            base.SetUserSession(sessionRequest);
+
+            //Repository = RepositoryFactory.Create(this.TransactionObjects, this);
+            if (ValidationType != null)
+            {
+                Validation = ValidationFactory.Create(ValidationType);
+                Validation.Init(this, this.Repository);
+            }
         }
 
         /// <summary>

@@ -46,7 +46,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             var error = TestUtil.Execute<ContextFluentValidationException>(this.StudentControllerInstance, nameof(StudentController.List2), null);
             Assert.NotNull(error);
             Assert.AreEqual(1, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<NullParameterFluentValidationException>(error.Inconsistencies.First());
+            Assert.IsAssignableFrom<NullFluentValidationException>(error.Inconsistencies.First());
         }
 
         [Test]

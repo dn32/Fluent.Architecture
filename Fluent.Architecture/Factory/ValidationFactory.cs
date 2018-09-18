@@ -1,6 +1,7 @@
 ﻿// ReSharper disable CommentTypo
 using System;
 using Fluent.Architecture.Model;
+using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
 
 namespace Fluent.Architecture.Factory
@@ -22,23 +23,34 @@ namespace Fluent.Architecture.Factory
         /// </returns>
         public static FluentValidation<T> Create<T>() where T : BaseEntity
         {
-            Type localType;
-
-            if (typeof(T).IsSubclassOf(typeof(FluentGlobalizedEntity)))
-            {
-                localType = typeof(FluentGlobalizedValidation<>).MakeGenericType(typeof(T));
-            }
-            else
-            {
-                localType = typeof(FluentValidation<T>);
-            }
-
-            if (Setup.Validations.TryGetValue(typeof(T), out var validationType))
-            {
-                localType = validationType;
-            }
-
-            return Activator.CreateInstance(localType) as FluentValidation<T>;
+            return Create(typeof(FluentValidation<T>)) as FluentValidation<T>;
         }
+
+        public static TransactionalValidation CreateNotEntity(Type validationType)
+        {
+            return Create(validationType);
+        }
+
+        public static TransactionalValidation Create(Type validationType)
+        {
+            var localType = validationType;
+            var entityType = validationType.GetFluentEntityType();
+
+            if (entityType != null)
+            {
+                if (entityType.IsSubclassOf(typeof(FluentGlobalizedEntity)))
+                {
+                    localType = typeof(FluentGlobalizedValidation<>).MakeGenericType(entityType);
+                }
+
+                if (Setup.Validations.TryGetValue(entityType, out var validationTypeOut))
+                {
+                    localType = validationTypeOut;
+                }
+            }
+
+            return Activator.CreateInstance(localType) as TransactionalValidation;
+        }
+
     }
 }
