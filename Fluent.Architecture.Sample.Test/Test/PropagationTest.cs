@@ -71,7 +71,7 @@ namespace Fluent.Architecture.Sample.Test.Test
         {
             var ex = Assert.Throws<IncorrectDevelopmentException>(() => TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.NotFound), null));
             Assert.NotNull(ex);
-            Assert.AreEqual("The NotFound method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User", ex.Message);
+            Assert.AreEqual("The NotFound method was not found in the service Fluent.Architecture.Sample.Test.SupportElements.Services.UserService and repository Fluent.Architecture.Sample.Test.SupportElements.UserRepository", ex.Message);
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace Fluent.Architecture.Sample.Test.Test
 
             var ex = Assert.Throws<IncorrectDevelopmentException>(() => TestUtil.Execute(this.UserControllerInstance, null, null, Spec));
             Assert.NotNull(ex);
-            Assert.AreEqual("The Test2 method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User", ex.Message);
+            Assert.AreEqual("The Test2 method was not found in the service Fluent.Architecture.Sample.Test.SupportElements.Services.UserService and repository Fluent.Architecture.Sample.Test.SupportElements.UserRepository", ex.Message);
         }
 
         [Test]
@@ -105,7 +105,7 @@ namespace Fluent.Architecture.Sample.Test.Test
         {
             var ex = Assert.Throws<IncorrectDevelopmentException>(() => TestUtil.Execute<User>(UserControllerInstance, nameof(UserController.NotFound2), null));
             Assert.NotNull(ex);
-            Assert.AreEqual($"The NotFound2 method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User", ex.Message);
+            Assert.AreEqual("The NotFound2 method was not found in the service Fluent.Architecture.Sample.Test.SupportElements.Services.UserService and repository Fluent.Architecture.Sample.Test.SupportElements.UserRepository", ex.Message);
         }
 
         [Theory]
@@ -170,7 +170,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             var error = TestUtil.Execute(this.UserControllerInstance, null, null, ParameterCountFail);
 
             Assert.NotNull(error);
-            Assert.AreEqual("The List method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User", error.Message);
+            Assert.AreEqual("The List method was not found in the service Fluent.Architecture.Sample.Test.SupportElements.Services.UserService and repository Fluent.Architecture.Sample.Test.SupportElements.UserRepository", error.Message);
         }
 
         [Test]

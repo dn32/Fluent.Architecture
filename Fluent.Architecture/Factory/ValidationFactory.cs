@@ -21,17 +21,12 @@ namespace Fluent.Architecture.Factory
         /// <returns>
         /// A validação criada.
         /// </returns>
-        public static FluentValidation<T> Create<T>() where T : BaseEntity
+        internal static FluentValidation<T> Create<T>() where T : BaseEntity
         {
             return Create(typeof(FluentValidation<T>)) as FluentValidation<T>;
         }
 
-        public static TransactionalValidation CreateNotEntity(Type validationType)
-        {
-            return Create(validationType);
-        }
-
-        public static TransactionalValidation Create(Type validationType)
+        internal static TransactionalValidation Create(Type validationType)
         {
             var localType = validationType;
             var entityType = validationType.GetFluentEntityType();

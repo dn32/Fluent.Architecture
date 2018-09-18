@@ -381,7 +381,7 @@ namespace Fluent.Architecture.Repository
             return sql;
         }
 
-        protected static IQueryable<TX> FluentPaginate<TX>(IQueryable<TX> query, FluentPagination pagination)
+        protected static IQueryable<TX> FluentPaginate<TX>(IQueryable<TX> query, FluentPagination pagination = null)
         {
             if (pagination == null)
             {

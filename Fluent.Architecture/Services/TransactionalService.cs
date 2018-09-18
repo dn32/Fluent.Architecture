@@ -30,12 +30,13 @@ namespace Fluent.Architecture.Services
         {
             base.SetUserSession(sessionRequest);
 
-            //Repository = RepositoryFactory.Create(this.TransactionObjects, this);
-            if (ValidationType != null)
+            if (ValidationType == null)
             {
-                Validation = ValidationFactory.Create(ValidationType);
-                Validation.Init(this, this.Repository);
+                return;
             }
+
+            Validation = ValidationFactory.Create(ValidationType);
+            Validation.Init(this, this.Repository);
         }
 
         /// <summary>

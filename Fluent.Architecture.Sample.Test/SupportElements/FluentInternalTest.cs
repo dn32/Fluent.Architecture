@@ -12,6 +12,8 @@ namespace Fluent.Architecture.Sample.Test.SupportElements
 
         public CourseController CourseControllerInstance { get; set; }
 
+        public ReportController ReportControllerInstance { get; set; }
+
         public FluentInternalTest()
         {
             var connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
@@ -20,6 +22,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements
             this.UserControllerInstance = MockUtil.GetMockController<UserController>();
             this.StudentControllerInstance = MockUtil.GetMockController<StudentController>();
             this.CourseControllerInstance = MockUtil.GetMockController<CourseController>();
+            this.ReportControllerInstance = MockUtil.GetMockController<ReportController>();
         }
     }
 }

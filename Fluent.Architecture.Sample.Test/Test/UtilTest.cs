@@ -22,7 +22,6 @@ using Fluent.Architecture.Test.Mock;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
 using NUnit.Framework;
-using BaseServiceTest = Fluent.Architecture.Sample.Test.SupportElements.Services.BaseServiceTest;
 
 namespace Fluent.Architecture.Sample.Test.Test
 {
@@ -88,7 +87,7 @@ namespace Fluent.Architecture.Sample.Test.Test
         [Test]
         public void InitializeServiceFail()
         {
-            var service = new BaseServiceTest.LocalTestService();
+            var service = new LocalTestService();
             var ex = Assert.Throws<IncorrectDevelopmentException>(() => service.SetUserSessionForTest(new UserSessionRequest()));
             Assert.AreEqual("You can not initialize the FluentService", ex.Message);
         }

@@ -55,11 +55,6 @@ namespace Fluent.Architecture.Controllers
             return (TX)PropagateInternal(string.Empty, Array.Empty<object>());
         }
 
-        protected List<T> PropagateList()
-        {
-            return PropagateInternal(string.Empty, Array.Empty<object>()) as List<T>;
-        }
-
         protected List<T> PropagateList(object[] parameters)
         {
             return PropagateInternal(string.Empty, parameters) as List<T>;

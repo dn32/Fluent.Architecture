@@ -44,6 +44,13 @@ namespace Fluent.Architecture
 
         #region PUBLIC METHODS
 
+        /// <summary>
+        /// Permite definir um tipo para TransactionObjectsType que é o contexto da aplicação referente ao banco de dados.
+        /// Muito útil para o controle de mock de testes automatizados.
+        /// </summary>
+        /// <param name="transactionObjectsType">
+        /// O tipo a ser definido.
+        /// </param>
         public static void SetCustomTypes(Type transactionObjectsType)
         {
             TransactionObjectsType = transactionObjectsType;

@@ -111,18 +111,6 @@ namespace Fluent.Architecture.Sample.Test.Test
             TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Remove), course);
         }
 
-        [Test, Ignore("Está carregnado o banco todo")]
-        public void ListOk()
-        {
-            var course = AddNewCurse();
-
-            var courses = TestUtil.Execute<List<Course>>(this.CourseControllerInstance, nameof(CourseController.List), new object[] { "pt-BR" });
-
-            Assert.NotNull(courses);
-
-            TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Remove), course);
-        }
-
         [Test]
         public void ListPaginationOk()
         {

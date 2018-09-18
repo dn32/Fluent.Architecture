@@ -1,5 +1,6 @@
 ﻿// ReSharper disable CommentTypo
 
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -143,11 +144,6 @@ namespace Fluent.Architecture.Repository
 
         private IQueryable<Translation> FindAllTranslationsOfAnEntity(TE entity)
         {
-            if (entity.GetKeyValue() == 0)
-            {
-                throw new InvalidExpressionException();
-            }
-
             var entityType = entity.GetTypeName();
             var entityId = entity.GetKeyValue();
 

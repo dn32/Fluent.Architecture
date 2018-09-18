@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security.Claims;
 using System.Web;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Extensions;
@@ -113,28 +116,36 @@ namespace Fluent.Architecture.Sample.Test.Test
             Assert.Null(user2);
         }
 
-        [Test, Ignore("Não tenho acesso ao recurso")]
+        [Test]
         public void SessionRequestIdTest()
         {
-            //Guid PropagateMethodTestB(BaseController controller)
-            //{
-            //    return ((UserController)controller).SessionRequestId;
-            //}
+            Guid PropagateMethodTestB(BaseController controller)
+            {
+                var usercontroller = (UserController)controller;
+                var id = usercontroller?.GetType().GetProperty("SessionRequestId", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)?.GetValue(usercontroller);
+                if (id != null)
+                {
+                    return (Guid)id;
+                }
 
-            //var sessionId = TestUtil.Execute(this.UserControllerInstance, null, null, PropagateMethodTestB);
-            //Assert.AreNotEqual(Guid.Empty, sessionId);
+                return default(Guid);
+            }
+
+            var sessionId = TestUtil.Execute(this.UserControllerInstance, null, null, PropagateMethodTestB);
+            Assert.AreNotEqual(Guid.Empty, sessionId);
         }
 
-        [Test, Ignore("Não tenho acesso ao recurso")]
+        [Test]
         public void UserTest()
         {
-            //object PropagateMethodTestB(BaseController controller)
-            //{
-            //    return ((UserController)controller).ServiceUser;
-            //}
+            object PropagateMethodTestB(BaseController controller)
+            {
+                var usercontroller = (UserController)controller;
+                return usercontroller?.GetType().GetProperty("ServiceUser", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)?.GetValue(usercontroller) as ClaimsPrincipal;
+            }
 
-            //var serviceUser = TestUtil.Execute(this.UserControllerInstance, null, null, PropagateMethodTestB);
-            //Assert.NotNull(serviceUser);
+            var serviceUser = TestUtil.Execute(this.UserControllerInstance, null, null, PropagateMethodTestB);
+            Assert.NotNull(serviceUser);
         }
 
         [Test]
@@ -149,40 +160,20 @@ namespace Fluent.Architecture.Sample.Test.Test
             Assert.NotNull(httpContextBase);
         }
 
-        [Test, Ignore("Não tenho acesso ao recurso")]
+        [Test]
         public void ServiceHttpContextTest()
         {
-            //object PropagateMethodTestB(BaseController controller)
-            //{
-            //    return ((UserController)controller).ServiceHttpContext;
-            //}
+            object PropagateMethodTestB(BaseController controller)
+            {
+                var usercontroller = (UserController)controller;
+                return usercontroller?.GetType().GetProperty("ServiceHttpContext", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)?.GetValue(usercontroller) as HttpContextBase;
+            }
 
-            //var serviceUser = TestUtil.Execute(this.UserControllerInstance, null, null, PropagateMethodTestB);
-            //Assert.NotNull(serviceUser);
-            //Assert.NotNull(UserControllerInstance.User);
+            var serviceUser = TestUtil.Execute(this.UserControllerInstance, null, null, PropagateMethodTestB);
+            Assert.NotNull(serviceUser);
+            Assert.NotNull(UserControllerInstance.User);
         }
-
-        [Test, Ignore("Quando list sem spec estiver ok")]
-        public void ListTest()
-        {
-            var user1 = InternalTestUtil.GetNewUser();
-            var password = $"{TestUtil.NextRandom()}{TestUtil.NextRandom()}{TestUtil.NextRandom()}";
-            user1.Password = password;
-
-            //Add
-            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Add), user1);
-
-            var users = TestUtil.Execute<List<User>>(this.UserControllerInstance, nameof(UserControllerInstance.List), null);
-            Assert.NotNull(users);
-
-            var user = users.First(x => x.Password.Equals(password));
-            Assert.NotNull(user);
-            Assert.AreEqual(user1.Id, user.Id);
-
-            //Remove
-            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Remove), user1);
-        }
-
+        
         [Test]
         public void CountTest()
         {

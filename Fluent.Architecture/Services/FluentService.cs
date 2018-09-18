@@ -80,7 +80,7 @@ namespace Fluent.Architecture.Services
                 return repositoryMethod.FluenInvoke(Repository, parameters);
             }
 
-            throw new IncorrectDevelopmentException($"The {methodName} method was not found in the service Fluent.Architecture.Test.SupportElements.User and repository Fluent.Architecture.Test.SupportElements.User");
+            throw new IncorrectDevelopmentException($"The {methodName} method was not found in the service {this.GetType().BaseType} and repository {Repository.GetType()}");
         }
 
         #endregion
@@ -126,13 +126,6 @@ namespace Fluent.Architecture.Services
         {
             return this.Repository.List(spec, pagination);
         }
-
-        //Todo doc
-        //[Propagate]
-        //public virtual List<T> List(FluentPagination pagination = null)
-        //{
-        //    return this.Repository.List(pagination);
-        //}
 
         /// <summary>
         /// Executa uma solicitação baseada em uma especificação e retorna um resultado ou nulo quando a consulta não é satisfeita.

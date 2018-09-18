@@ -15,7 +15,8 @@ namespace Fluent.Architecture.Services
     /// </summary>
     public abstract class BaseService
     {
-        protected internal virtual Type RepositoryType => null;
+        //Temporariamente fora do escopo
+        //protected internal virtual Type RepositoryType => null;
 
         protected internal virtual Type ValidationType => null;
 

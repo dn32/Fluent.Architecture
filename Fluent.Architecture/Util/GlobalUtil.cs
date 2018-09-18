@@ -1,7 +1,9 @@
 ﻿// ReSharper disable CommentTypo
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Model;
@@ -56,6 +58,16 @@ namespace Fluent.Architecture.Util
             }
         }
 
+        private static string[] FluentEntityNames => new[]
+        {
+            typeof(FluentController<FluentEntity>).Name,
+            typeof(FluentService<FluentEntity>).Name,
+            typeof(FluentRepository<FluentEntity>).Name,
+            typeof(FluentValidation<FluentEntity>).Name,
+            typeof(FluentController<FluentEntity>).Name,
+            typeof(FluentSpecification<FluentEntity>).Name
+        };
+
         /// <summary>
         /// Obtem o tipo da entidade de um tipo Fluent. Ex <see cref="FluentService{T}"/>. O tipo a ser encontrado é o tipo de T.
         /// </summary>
@@ -71,34 +83,23 @@ namespace Fluent.Architecture.Util
 
             Type GetBase(Type type)
             {
-                if (type == null)
+                if (type == null || type == typeof(object))
                 {
                     return null;
                 }
 
-                if (type == typeof(object))
+                if (!FluentEntityNames.Contains(type.Name))
                 {
-                    return null;
+                    return GetBase(type.BaseType);
                 }
 
-                if (
-                    type.Name == typeof(FluentController<FluentEntity>).Name ||
-                    type.Name == typeof(FluentService<FluentEntity>).Name ||
-                    type.Name == typeof(FluentRepository<FluentEntity>).Name ||
-                    type.Name == typeof(FluentValidation<FluentEntity>).Name ||
-                    type.Name == typeof(FluentController<FluentEntity>).Name ||
-                    type.Name == typeof(FluentSpecification<FluentEntity>).Name)
+                var localType = type.GetGenericArguments().First();
+                if (!localType.IsSubclassOf(typeof(BaseEntity)))
                 {
-                    var localType = type.GetGenericArguments()[0];
-                    if (!localType.IsSubclassOf(typeof(BaseEntity)))
-                    {
-                        throw new InvalidOperationException();
-                    }
-
-                    return localType;
+                    throw new InvalidOperationException();
                 }
 
-                return GetBase(type.BaseType);
+                return localType;
             }
         }
 

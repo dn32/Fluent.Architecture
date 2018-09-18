@@ -149,12 +149,6 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
             return this.Json(user);
         }
 
-        public JsonResult List()
-        {
-            var users = PropagateList();
-            return this.Json(users);
-        }
-
         public JsonResult List(FluentSelectSpecification<User, int> spec)
         {
             var userId = this.Service.List<int>(spec);
