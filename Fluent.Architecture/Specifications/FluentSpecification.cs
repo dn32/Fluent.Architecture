@@ -1,5 +1,6 @@
 ﻿// ReSharper disable CommentTypo
 
+using System;
 using System.Linq;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Interfaces;
@@ -14,6 +15,8 @@ namespace Fluent.Architecture.Specifications
     /// <typeparam name="TE">Tipo de entidade da especificação.</typeparam>
     public abstract class FluentSpecification<TE> : BaseSpecification<TE>, IFluentSpecification where TE : BaseEntity
     {
+        public Type FluentEntityType => typeof(TE);
+
         /// <summary>
         /// A especificação.
         /// </summary>

@@ -106,7 +106,7 @@ namespace Fluent.Architecture.Services
         [Propagate]
         public virtual List<TO> List<TO>(IFluentSpecification<TO> spec, FluentPagination pagination = null)
         {
-            return this.Repository.List<TO>(spec, pagination);
+            return Repository.List(spec, pagination);
         }
 
         /// <summary>

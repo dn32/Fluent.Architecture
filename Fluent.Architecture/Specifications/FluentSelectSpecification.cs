@@ -1,5 +1,6 @@
 ﻿// ReSharper disable CommentTypo
 
+using System;
 using System.Linq;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Interfaces;
@@ -41,5 +42,9 @@ namespace Fluent.Architecture.Specifications
 
         /// <inheritdoc />
         protected FluentSelectSpecification(TransactionalService service) : base(service) { }
+
+        public Type FluentEntityType => typeof(TE);
+
+        public Type FluentEntityOutType => typeof(TO);
     }
 }

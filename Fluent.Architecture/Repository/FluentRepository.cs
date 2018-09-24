@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Fluent.Architecture.Attributes;
+using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Model;
@@ -85,7 +86,7 @@ namespace Fluent.Architecture.Repository
         /// <typeparam name="TO">
         /// O tipo de saida desejada. Deve ser o mesmo definido na saida da especificação.
         /// </typeparam>
-        /// <param name="spec">
+        /// <param name="ispec">
         /// A especificação de requisição.
         /// </param>
         /// <param name="pagination">
@@ -94,11 +95,12 @@ namespace Fluent.Architecture.Repository
         /// <returns>
         /// A lista paginada de resultados.
         /// </returns>
-
         [Propagate]
-        public virtual List<TO> List<TO>(IFluentSpecification<TO> spec, FluentPagination pagination = null)
+        public virtual List<TO> List<TO>(IFluentSpecification<TO> ispec, FluentPagination pagination = null)
         {
-            return FluentPaginate(GetSpec(spec).ToIQueryable(Query), pagination).ToList();
+            var spec = GetSpec(ispec);
+            var fluentPagination = FluentPaginate(spec.ToIQueryable(Query), pagination);
+            return fluentPagination.ToList();
         }
 
         /// <summary>
@@ -347,6 +349,18 @@ namespace Fluent.Architecture.Repository
 
         private FluentSelectSpecification<TE, TO> GetSpec<TO>(IFluentSpecification<TO> spec)
         {
+            if (spec.FluentEntityType != typeof(TE))
+            {
+                var serviceName = $"{spec.FluentEntityType.Name}Service";
+                throw new IncorrectDevelopmentException($"The type of input reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.FluentEntityType}.\r\nRequisition Type: {typeof(TE)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
+            }
+
+            if (spec.FluentEntityOutType != typeof(TO))
+            {
+                var serviceName = $"{typeof(TE).Name}Service";
+                throw new IncorrectDevelopmentException($"The type of output reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.FluentEntityType}.\r\nRequisition Type: {typeof(TO)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
+            }
+
             return spec as FluentSelectSpecification<TE, TO>;
         }
 

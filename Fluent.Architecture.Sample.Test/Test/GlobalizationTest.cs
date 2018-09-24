@@ -125,6 +125,21 @@ namespace Fluent.Architecture.Sample.Test.Test
             TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Remove), course);
         }
 
+
+        [Test]
+        public void LanguageDefaultAddTestOk()
+        {
+        //    var course = AddNewCurse();
+
+        //    var pagination = new FluentPagination(0, false, 20);
+
+        //    var courses = TestUtil.Execute<List<Course>>(this.CourseControllerInstance, nameof(CourseController.List), new object[] { pagination, "pt-BR" });
+
+        //    Assert.NotNull(courses);
+
+        //    TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Remove), course);
+        }
+
         [Test]
         public void GlobalizationTestTraduction()
         {
