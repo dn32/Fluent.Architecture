@@ -99,7 +99,8 @@ namespace Fluent.Architecture.Repository
         public virtual List<TO> List<TO>(IFluentSpecification<TO> ispec, FluentPagination pagination = null)
         {
             var spec = GetSpec(ispec);
-            var fluentPagination = FluentPaginate(spec.ToIQueryable(Query), pagination);
+            var query = spec.ToIQueryable(Query);
+            var fluentPagination = FluentPaginate(query, pagination);
             return fluentPagination.ToList();
         }
 
@@ -109,16 +110,18 @@ namespace Fluent.Architecture.Repository
         /// <typeparam name="TO">
         /// O tipo de saida desejada. Deve ser o mesmo definido na saida da especificação.
         /// </typeparam>
-        /// <param name="spec">
+        /// <param name="ispec">
         /// A especificação de requisição.
         /// </param>
         /// <returns>
         /// O item referente à consulta ou nulo.
         /// </returns>
         [Propagate]
-        public virtual TO FirstOrDefault<TO>(IFluentSpecification<TO> spec)
+        public virtual TO FirstOrDefault<TO>(IFluentSpecification<TO> ispec)
         {
-            return GetSpec(spec).ToIQueryable(Query).FirstOrDefault();
+            var spec = GetSpec(ispec);
+            var iquerie = spec.ToIQueryable(Query);
+            return iquerie.FirstOrDefault();
         }
 
         /// <summary>
@@ -154,6 +157,12 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         public virtual int Count<TO>(IFluentSpecification<TO> spec)
         {
+            if (spec.FluentEntityType != typeof(TE))
+            {
+                var serviceName = $"{spec.FluentEntityType.Name}Service";
+                throw new IncorrectDevelopmentException($"The type of input reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.FluentEntityType}.\r\nRequisition Type: {typeof(TE)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
+            }
+
             return GetSpec(spec).ToIQueryable(Query).Count();
         }
 
@@ -185,7 +194,7 @@ namespace Fluent.Architecture.Repository
         /// <summary>
         /// Executa uma solicitação baseada em uma especificação e retorna uma lista paginada de resultados.
         /// </summary>
-        /// <param name="spec">
+        /// <param name="ispec">
         /// A especificação de requisição.
         /// </param>
         /// <param name="pagination">
@@ -195,9 +204,11 @@ namespace Fluent.Architecture.Repository
         /// A lista paginada de resultados.
         /// </returns>
         [Propagate]
-        public virtual List<TE> List(IFluentSpecification spec, FluentPagination pagination = null)
+        public virtual List<TE> List(IFluentSpecification ispec, FluentPagination pagination = null)
         {
-            return FluentPaginate(GetSpec(spec).ToIQueryable(Query), pagination).ToList();
+            var spec = GetSpec(ispec);
+            var query = spec.ToIQueryable(Query);
+            return FluentPaginate(query, pagination).ToList();
         }
 
         //Todo não é ´permitido listar sem spec, pois sem spec não tem como ordenar pra paginar. Sem paginação pode ter sobrecarga.
@@ -405,7 +416,7 @@ namespace Fluent.Architecture.Repository
             pagination.TotalQuantityOfItems = query.Count();
             query = query
                 .Skip(pagination.Skip)
-                .Take(pagination.ItemsPerPage);
+                .Take(pagination.ItemsPerPage); 
 
             return query;
         }
