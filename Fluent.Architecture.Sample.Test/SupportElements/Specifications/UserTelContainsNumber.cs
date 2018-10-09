@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using Fluent.Architecture.Controllers;
@@ -16,7 +17,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
             this._number = number;
         }
 
-        public override IQueryable<User> Where(IQueryable<User> query)
+        public override IQueryable<User> Where(DbSet<User> query)
         {
             return query.Where(x => x.Tel.Contains(this._number));
         }

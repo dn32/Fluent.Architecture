@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
@@ -13,7 +14,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
         {
         }
 
-        public override IQueryable<User> Where(IQueryable<User> query)
+        public override IQueryable<User> Where(DbSet<User> query)
         {
             return query.Where(x => true);
         }

@@ -1,6 +1,7 @@
 ﻿// ReSharper disable CommentTypo
 
 using System;
+using System.Data.Entity;
 using System.Linq;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Interfaces;
@@ -26,15 +27,15 @@ namespace Fluent.Architecture.Specifications
         /// <returns>
         /// A especificação criada.
         /// </returns>
-        public abstract IQueryable<TO> Where(IQueryable<TE> query);
+        public abstract IQueryable<TO> Where(DbSet<TE> query);
 
         // Todo doc
         public abstract IOrderedQueryable<TO>  Order(IQueryable<TO> query);
 
         // Todo doc
-        internal IOrderedQueryable<TO> ToIQueryable(IQueryable<TE> query)
+        internal IOrderedQueryable<TO> ToIQueryable(DbSet<TE> query)
         {
-            return Order(Where(query));
+            return Order(Where(query).AsNoTracking() as IQueryable<TO>);
         }
 
         /// <inheritdoc />

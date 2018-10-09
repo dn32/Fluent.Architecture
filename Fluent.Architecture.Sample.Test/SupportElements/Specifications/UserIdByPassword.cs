@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
@@ -15,7 +16,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
             this._password = password;
         }
 
-        public override IQueryable<int> Where(IQueryable<User> query)
+        public override IQueryable<int> Where(DbSet<User> query)
         {
             return query.Where(x => x.Password.Equals(this._password, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Id);
         }

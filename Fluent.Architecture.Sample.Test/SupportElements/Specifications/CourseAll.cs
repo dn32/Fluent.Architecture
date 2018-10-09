@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Data.Entity;
+using System.Linq;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Specifications;
@@ -12,7 +13,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
 
         }
 
-        public override IQueryable<Course> Where(IQueryable<Course> query)
+        public override IQueryable<Course> Where(DbSet<Course> query)
         {
             return query.Where(x => true);
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
@@ -15,7 +16,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
             this._email = email;
         }
 
-        public override IQueryable<UserStudent> Where(IQueryable<User> query)
+        public override IQueryable<UserStudent> Where(DbSet<User> query)
         {
             var students = this.Get<Student>();
 

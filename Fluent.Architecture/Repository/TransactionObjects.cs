@@ -56,7 +56,7 @@ namespace Fluent.Architecture.Repository
         /// <returns>
         /// A referência da tabela do banco de dados.
         /// </returns>
-        protected internal virtual IQueryable<TX> GetObjectQueryInternal<TX>() where TX : BaseEntity
+        protected internal virtual DbSet<TX> GetObjectQueryInternal<TX>() where TX : BaseEntity
         {
             return this.Session.Set<TX>();
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using Fluent.Architecture.Controllers;
@@ -16,7 +17,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
             this._name = name;
         }
 
-        public override IQueryable<Student> Where(IQueryable<Student> query)
+        public override IQueryable<Student> Where(DbSet<Student> query)
         {
             return query.Where(x => x.Name.Equals(this._name, StringComparison.CurrentCultureIgnoreCase));
         }
