@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Fluent.Architecture.Sample.Core
 {
-    public class Course: FluentIdEntity
+    public class Course : FluentIdEntity
     {
         public string Name { get; set; }
     }
@@ -18,7 +18,7 @@ namespace Fluent.Architecture.Sample.Core
         {
             var connectionString = "Data Source=localhost\\SQLEXPRESS; Database=test_db_core; Integrated Security=True";
 
-                 Fluent.Architecture.Setup.Initialize(connectionString, createDatabaseIfNotExists: true);
+            Fluent.Architecture.Setup.Initialize(connectionString, createDatabaseIfNotExists: true);
 
             Configuration = configuration;
         }
@@ -41,8 +41,6 @@ namespace Fluent.Architecture.Sample.Core
 
             app.UseMvc(routes =>
             {
-               // routes.MapRoute("default", "api/[controller]/[action]");
-              //  routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Fluent.Architecture.Sample.Core.Controllers
 {
-   // [Route("api/[controller]")]
-    [Route("[controller]/[action]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class DepartamentoController: FluentController<Departamento>
     {
