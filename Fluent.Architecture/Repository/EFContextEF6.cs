@@ -1,9 +1,10 @@
 ﻿// ReSharper disable CommentTypo
 
+#if !NETCOREAPP2_1
 
-using System;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System;
 using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Attributes;
@@ -51,3 +52,4 @@ namespace Fluent.Architecture.Repository
     }
 }
 
+#endif

@@ -1,7 +1,17 @@
 ﻿// ReSharper disable CommentTypo
 
-using System.Collections.Generic;
+#if NETCOREAPP2_1
+
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+
+#else
+
 using System.Data.Entity;
+
+#endif
+
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Attributes;

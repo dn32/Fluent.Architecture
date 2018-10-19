@@ -1,7 +1,15 @@
 ﻿// ReSharper disable CommentTypo
+#if NETCOREAPP2_1
+
+using Microsoft.EntityFrameworkCore;
+
+#else
+
+using System.Data.Entity;
+
+#endif
 
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Exceptions;
@@ -339,7 +347,7 @@ namespace Fluent.Architecture.Repository
         {
             this.RunTheContextValidation();
 
-            return this.Input.Remove(this.Find(entity));
+            return Input.Remove(this.Find(entity));
         }
 
         public virtual void RemoveRange(IFluentSpecification spec)

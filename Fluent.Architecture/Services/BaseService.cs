@@ -1,5 +1,13 @@
 // ReSharper disable CommentTypo
 
+#if NETCOREAPP2_1
+
+using Microsoft.AspNetCore.Http;
+
+#else
+
+#endif
+
 using System;
 using System.Security.Claims;
 using System.Web;
@@ -34,10 +42,19 @@ namespace Fluent.Architecture.Services
         /// </summary>
         public Guid SessionRequestId => this.SessionRequest.SessionRequestId;
 
+#if NETCOREAPP2_1
+        /// <summary>
+        /// HttpContext da requisição vinda do controller.
+        /// </summary>
+        protected internal HttpContext LocalHttpContext => this.SessionRequest.LocalHttpContext;
+
+#else
         /// <summary>
         /// HttpContext da requisição vinda do controller.
         /// </summary>
         protected internal HttpContextBase LocalHttpContext => this.SessionRequest.LocalHttpContext;
+
+#endif
 
         /// <summary>
         /// Usuário do sistema.

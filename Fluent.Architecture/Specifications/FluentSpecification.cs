@@ -1,7 +1,16 @@
 ﻿// ReSharper disable CommentTypo
 
-using System;
+#if NETCOREAPP2_1
+
+using Microsoft.EntityFrameworkCore;
+
+#else
+
 using System.Data.Entity;
+
+#endif
+
+using System;
 using System.Linq;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Interfaces;

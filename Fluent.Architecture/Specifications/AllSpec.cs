@@ -1,6 +1,16 @@
-﻿using Fluent.Architecture.Model;
-using Fluent.Architecture.Services;
+﻿
+#if NETCOREAPP2_1
+
+using Microsoft.EntityFrameworkCore;
+
+#else
+
 using System.Data.Entity;
+
+#endif
+
+using Fluent.Architecture.Model;
+using Fluent.Architecture.Services;
 using System.Linq;
 
 namespace Fluent.Architecture.Specifications

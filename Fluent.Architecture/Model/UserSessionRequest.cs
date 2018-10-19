@@ -1,11 +1,21 @@
 ﻿// ReSharper disable CommentTypo
 
+#if NETCOREAPP2_1
+
+using Microsoft.AspNetCore.Http;
+
+
+#else
+
+using System.Web;
+
+#endif
+
 using System;
 using System.Collections.Generic;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Validation;
-using System.Web;
 
 namespace Fluent.Architecture.Model
 {
@@ -25,11 +35,20 @@ namespace Fluent.Architecture.Model
         {
             this.ContextFluentValidationException = new ContextFluentValidationException();
         }
-        
+
+#if NETCOREAPP2_1
+       /// <summary>
+        /// HttpContext da requisição vinda do controller.
+        /// </summary>
+        public HttpContext LocalHttpContext => this.HttpContext as HttpContext;
+
+
+#else
         /// <summary>
         /// HttpContext da requisição vinda do controller.
         /// </summary>
         public HttpContextBase LocalHttpContext => this.HttpContext as HttpContextBase;
+#endif
 
         public void Dispose(bool primaryService)
         {

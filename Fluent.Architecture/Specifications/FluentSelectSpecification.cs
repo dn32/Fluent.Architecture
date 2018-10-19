@@ -1,7 +1,16 @@
 ﻿// ReSharper disable CommentTypo
 
-using System;
+#if NETCOREAPP2_1
+
+using Microsoft.EntityFrameworkCore;
+
+#else
+
 using System.Data.Entity;
+
+#endif
+
+using System;
 using System.Linq;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Interfaces;
@@ -30,12 +39,29 @@ namespace Fluent.Architecture.Specifications
         public abstract IQueryable<TO> Where(DbSet<TE> query);
 
         // Todo doc
-        public abstract IOrderedQueryable<TO>  Order(IQueryable<TO> query);
+        public abstract IOrderedQueryable<TO> Order(IQueryable<TO> query);
 
         // Todo doc
         internal IOrderedQueryable<TO> ToIQueryable(DbSet<TE> query)
         {
-            return Order(Where(query).AsNoTracking() as IQueryable<TO>);
+            var queryWhere = Where(query);
+
+#if NETCOREAPP2_1
+
+            if (typeof(TO).IsClass)
+            {
+                //Todo - Testar esse método
+                queryWhere = typeof(EntityFrameworkQueryableExtensions)
+                                .GetMethod(nameof(EntityFrameworkQueryableExtensions.AsNoTracking))
+                                .MakeGenericMethod(typeof(TO))
+                                .Invoke(null, new object[] { queryWhere }) as IQueryable<TO>;
+            }
+
+#else
+            queryWhere = queryWhere.AsNoTracking() as IQueryable<TO>;
+#endif
+
+            return Order(queryWhere);
         }
 
         /// <inheritdoc />

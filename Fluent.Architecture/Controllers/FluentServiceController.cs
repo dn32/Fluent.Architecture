@@ -56,11 +56,7 @@ namespace Fluent.Architecture.Controllers
 
         protected internal new JsonResult Json(object data)
         {
-            return new CustomJsonResult
-            {
-                Data = data,
-                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-            };
+            return new CustomJsonResult(data);
         }
     }
 }

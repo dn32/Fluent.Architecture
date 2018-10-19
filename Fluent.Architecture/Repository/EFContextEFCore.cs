@@ -1,58 +1,61 @@
 ﻿//// ReSharper disable CommentTypo
 
-//#if !NET461
-//using System;
-//using System.Linq;
-//using System.Reflection;
-//using Fluent.Architecture.Attributes;
-//using Fluent.Architecture.Model;
-//using Microsoft.EntityFrameworkCore;
+#if NETCOREAPP2_1
 
-//namespace Fluent.Architecture.Repository
-//{
-//    /// <inheritdoc />
-//    /// <summary>
-//    /// Contexto do EF no net Core
-//    /// </summary>
-//    public class EfContext : DbContext
-//    {
-//        internal string ConnectionString { get; set; }
+using System;
+using System.Linq;
+using System.Reflection;
+using Fluent.Architecture.Attributes;
+using Fluent.Architecture.Model;
+using Microsoft.EntityFrameworkCore;
 
-//        public EfContext(string connectionString)
-//        {
-//            ConnectionString = connectionString;
-//        }
+namespace Fluent.Architecture.Repository
+{
+    /// <inheritdoc />
+    /// <summary>
+    /// Contexto do EF no net Core
+    /// </summary>
+    public class EfContext : DbContext
+    {
+        internal string ConnectionString { get; set; }
 
-//        /// <summary>
-//        /// Todas as entidades de banco de dados são adicionados automaticamente.
-//        /// Use <see cref="NotDbEntityAttribute"/> se não desejar que uma entidade seja adicionada.
-//        /// </summary>
-//        /// <param name="modelBuilder">
-//        /// O model builder do EF.
-//        /// </param>
-//        protected override void OnModelCreating(ModelBuilder modelBuilder)
-//        {
-//            var entityMethod = typeof(ModelBuilder).GetMethod("Entity", new Type[] { });
-//            var exportedTypes = Setup.Model.Values.ToList();
-//            foreach (var type in exportedTypes)
-//            {
-//                if (type.GetCustomAttribute<NotDbEntityAttribute>(false) != null)
-//                {
-//                    continue;
-//                }
+        public EfContext(string connectionString)
+        {
+            ConnectionString = connectionString;
+        }
 
-//                if (type.IsSubclassOf(typeof(FluentEntity)))
-//                {
-//                    if (entityMethod != null) entityMethod.MakeGenericMethod(type).Invoke(modelBuilder, new object[] { });
-//                }
-//            }
+        /// <summary>
+        /// Todas as entidades de banco de dados são adicionados automaticamente.
+        /// Use <see cref="NotDbEntityAttribute"/> se não desejar que uma entidade seja adicionada.
+        /// </summary>
+        /// <param name="modelBuilder">
+        /// O model builder do EF.
+        /// </param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            var entityMethod = typeof(ModelBuilder).GetMethod("Entity", Array.Empty<Type>());
+            var exportedTypes = Setup.Model.Values.ToList();
+            foreach (var type in exportedTypes)
+            {
+                if (type.GetCustomAttribute<NotDbEntityAttribute>(false) != null)
+                {
+                    continue;
+                }
 
-//            base.OnModelCreating(modelBuilder);
-//        }
+                if (type.IsSubclassOf(typeof(FluentEntity)))
+                {
+                    if (entityMethod != null) entityMethod.MakeGenericMethod(type).Invoke(modelBuilder, Array.Empty<object>());
+                }
+            }
 
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-//            optionsBuilder.UseSqlServer(ConnectionString);
-//        }
-//    }
-//}
+            base.OnModelCreating(modelBuilder);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(ConnectionString);
+        }
+    }
+}
+
+#endif

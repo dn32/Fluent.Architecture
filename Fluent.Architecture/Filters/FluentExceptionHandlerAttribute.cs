@@ -1,6 +1,11 @@
 ﻿// ReSharper disable CommentTypo
 
+#if NETCOREAPP2_1
+// Todo desenvolver o tratamento de exceções para o net core
+#else
+
 using System.Web.Mvc;
+
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
@@ -16,27 +21,19 @@ namespace Fluent.Architecture.Filters
             {
                 if (filterContext.Exception is ContextFluentValidationException exception)
                 {
-                    filterContext.Result = new CustomJsonResult
+                    filterContext.Result = new CustomJsonResult(new ValidationReturn
                     {
-                        JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                        Data = new ValidationReturn
-                        {
-                            Message= exception.Message,
-                            ValidationError = true
-                        }
-                    };
+                        Message = exception.Message,
+                        ValidationError = true
+                    });
                 }
                 else
                 {
-                    filterContext.Result = new CustomJsonResult
+                    filterContext.Result = new CustomJsonResult(new
                     {
-                        JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                        Data = new
-                        {
-                            Error = true,
-                            filterContext.Exception.Message
-                        }
-                    };
+                        Error = true,
+                        filterContext.Exception.Message
+                    });
                 }
 
                 // Todo implementar o log de erros aqui posteriormente
@@ -49,4 +46,4 @@ namespace Fluent.Architecture.Filters
     }
 }
 
-
+#endif

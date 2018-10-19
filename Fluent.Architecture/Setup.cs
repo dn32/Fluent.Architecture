@@ -1,8 +1,17 @@
 ﻿// ReSharper disable CommentTypo
+#if NETCOREAPP2_1
+
+using Microsoft.EntityFrameworkCore;
+
+#else
+
+using System.Data.Entity;
+using System.Management.Instrumentation;
+
+#endif
 
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Attributes;
@@ -13,7 +22,6 @@ using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
-using System.Management.Instrumentation;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Specifications;
 
@@ -67,6 +75,18 @@ namespace Fluent.Architecture
 
         public static void DbSetup(bool createDatabaseIfNotExists)
         {
+#if NETCOREAPP2_1
+
+            // Testar essa inicialização do banco
+            if (createDatabaseIfNotExists)
+            {
+                new EfContext(TransactionObjects.DataBaseConnectionString).Database.EnsureDeleted();
+            }
+            else
+            {
+                new EfContext(TransactionObjects.DataBaseConnectionString).Database.IsSqlServer();
+            }
+#else
             if (createDatabaseIfNotExists)
             {
                 Database.SetInitializer(new CreateDatabaseIfNotExists<EfContext>());
@@ -75,6 +95,7 @@ namespace Fluent.Architecture
             {
                 Database.SetInitializer<EfContext>(null);
             }
+#endif
         }
 
         public static void Initialize(string connectionString, bool createDatabaseIfNotExists = true)
@@ -166,7 +187,7 @@ namespace Fluent.Architecture
         {
             if (!UserSessionList.TryGetValue(sessionIdGuid, out var userSession))
             {
-                throw new InstanceNotFoundException("UserSessionRequest not fount!");
+                throw new InvalidOperationException("UserSessionRequest not fount!");
             }
 
             return userSession;
