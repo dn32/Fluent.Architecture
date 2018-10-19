@@ -39,7 +39,11 @@ namespace Fluent.Architecture.Sample.Core
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMvc();
+            app.UseMvc(routes =>
+            {
+               // routes.MapRoute("default", "api/[controller]/[action]");
+              //  routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
+            });
         }
     }
 }

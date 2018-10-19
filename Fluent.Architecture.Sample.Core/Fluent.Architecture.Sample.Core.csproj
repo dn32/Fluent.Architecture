@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Escopos\Departamentos\Cadastro\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
