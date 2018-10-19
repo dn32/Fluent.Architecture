@@ -76,15 +76,16 @@ namespace Fluent.Architecture
         public static void DbSetup(bool createDatabaseIfNotExists)
         {
 #if NETCOREAPP2_1
-
             // Testar essa inicialização do banco
+            var context = new EfContext(TransactionObjects.DataBaseConnectionString);
+            context.Database.IsSqlServer();
+
             if (createDatabaseIfNotExists)
             {
-                new EfContext(TransactionObjects.DataBaseConnectionString).Database.EnsureDeleted();
+                context.Database.EnsureCreated();
             }
             else
             {
-                new EfContext(TransactionObjects.DataBaseConnectionString).Database.IsSqlServer();
             }
 #else
             if (createDatabaseIfNotExists)

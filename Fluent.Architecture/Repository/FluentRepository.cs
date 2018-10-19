@@ -186,13 +186,24 @@ namespace Fluent.Architecture.Repository
         [Propagate]
         internal bool ExistsSql(string sql)
         {
-            return this.Input.SqlQuery(sql).Any();
+#if NETCOREAPP2_1
+            return this.Input.FromSql(sql).AsNoTracking().Any();
+#else
+
+            return this.Input.SqlQuery(sql).AsNoTracking().Any();
+#endif
         }
 
         [Propagate]
         internal TE FindSingleOrDefaultSql(string sql)
         {
-            return this.Input.SqlQuery(sql).SingleOrDefault();
+#if NETCOREAPP2_1
+            return this.Input.FromSql(sql).AsNoTracking().SingleOrDefault();
+#else
+
+          return this.Input.SqlQuery(sql).AsNoTracking().SingleOrDefault();
+#endif
+
         }
 
         #endregion
@@ -317,7 +328,11 @@ namespace Fluent.Architecture.Repository
         {
             RunTheContextValidation();
 
+#if NETCOREAPP2_1
+            return Input.Add(entity).Entity;
+#else
             return Input.Add(entity);
+#endif
         }
 
         /// <summary>
@@ -347,7 +362,11 @@ namespace Fluent.Architecture.Repository
         {
             this.RunTheContextValidation();
 
+#if NETCOREAPP2_1
+            return Input.Remove(this.Find(entity)).Entity;
+#else
             return Input.Remove(this.Find(entity));
+#endif
         }
 
         public virtual void RemoveRange(IFluentSpecification spec)
@@ -424,7 +443,7 @@ namespace Fluent.Architecture.Repository
             pagination.TotalQuantityOfItems = query.Count();
             query = query
                 .Skip(pagination.Skip)
-                .Take(pagination.ItemsPerPage); 
+                .Take(pagination.ItemsPerPage);
 
             return query;
         }

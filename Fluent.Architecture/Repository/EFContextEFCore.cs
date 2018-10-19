@@ -37,7 +37,7 @@ namespace Fluent.Architecture.Repository
             var exportedTypes = Setup.Model.Values.ToList();
             foreach (var type in exportedTypes)
             {
-                if (type.GetCustomAttribute<NotDbEntityAttribute>(false) != null)
+                if (type.GetCustomAttribute<NotDbEntityAttribute>(false) != null || type.IsAbstract)
                 {
                     continue;
                 }
@@ -47,6 +47,8 @@ namespace Fluent.Architecture.Repository
                     if (entityMethod != null) entityMethod.MakeGenericMethod(type).Invoke(modelBuilder, Array.Empty<object>());
                 }
             }
+
+            modelBuilder.Entity<Translation>().HasKey(c => new { c.Language, c.EntityType, c.EntityId, c.Property });
 
             base.OnModelCreating(modelBuilder);
         }

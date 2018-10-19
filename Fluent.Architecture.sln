@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture", "Flue
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.Sample.Test", "Fluent.Architecture.Sample.Test\Fluent.Architecture.Sample.Test.csproj", "{7F240F59-97AC-4794-894E-EAA7E472C91C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent.Architecture.Test", "Fluent.Architecture.Test\Fluent.Architecture.Test.csproj", "{AB51F7C9-E955-404F-B808-9D6C211950A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.Test", "Fluent.Architecture.Test\Fluent.Architecture.Test.csproj", "{AB51F7C9-E955-404F-B808-9D6C211950A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent.Architecture.Sample.Core", "Fluent.Architecture.Sample.Core\Fluent.Architecture.Sample.Core.csproj", "{65860EF8-4169-4053-94EC-506D57A69BDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{AB51F7C9-E955-404F-B808-9D6C211950A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB51F7C9-E955-404F-B808-9D6C211950A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB51F7C9-E955-404F-B808-9D6C211950A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65860EF8-4169-4053-94EC-506D57A69BDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65860EF8-4169-4053-94EC-506D57A69BDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65860EF8-4169-4053-94EC-506D57A69BDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65860EF8-4169-4053-94EC-506D57A69BDF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -30,7 +30,14 @@ namespace Fluent.Architecture.Factory.Proxy
 
         private static TypeBuilder CreateClass(Type parent, AssemblyName assembly)
         {
+
+#if NETCOREAPP2_1
+            var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assembly, AssemblyBuilderAccess.Run);
+#else
             var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assembly, AssemblyBuilderAccess.Run);
+#endif
+
+
             var moduleBuilder = assemblyBuilder.DefineDynamicModule(ModuleName);
             return moduleBuilder.DefineType(assembly.FullName, TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.AutoClass | TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.AutoLayout, parent);
         }
