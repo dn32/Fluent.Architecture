@@ -1,23 +1,21 @@
 ﻿
-#if NETCOREAPP2_1
-
-using System;
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Util;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
-namespace Fluent.Architecture.Controllers
+namespace Fluent.Architecture.Sample.Core.Escopos.Usuario.Autenticacao
 {
     [Route("api/[controller]")]
     public class TokenController : Controller
     {
         [FluentAllowAnonymous]
         [HttpPost]
-        public string Post(string username, string password)
+        public JsonResult Post(string username, string password)
         {
             if (CheckUser(username, password))
             {
-                return AutenticationUtil.GenerateToken(username);
+                return Json( new { token = AutenticationUtil.GenerateToken(username) });
             }
 
             throw new UnauthorizedAccessException();
@@ -35,5 +33,3 @@ namespace Fluent.Architecture.Controllers
         }
     }
 }
-
-#endif
