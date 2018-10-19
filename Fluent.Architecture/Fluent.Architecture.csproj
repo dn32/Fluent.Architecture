@@ -1,11 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461</TargetFrameworks>
-    <!--<TargetFrameworks>net461;netcoreapp2.1</TargetFrameworks>-->
+    <TargetFrameworks>net461;netcoreapp2.1</TargetFrameworks>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Fluent.Architecture.snk</AssemblyOriginatorKeyFile>
-    <Version>1.0.1-Beta05</Version>
+    <Version>1.1.0-Beta01</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
@@ -20,7 +19,6 @@
     <StyleCopTreatErrors>true</StyleCopTreatErrors>
   </PropertyGroup>
 
-
   <ItemGroup>
     <Compile Remove="Repository\FluentRepositoryRavenDB.cs" />
   </ItemGroup>
@@ -29,7 +27,6 @@
     <PackageReference Include="EntityFramework" Version="6.2.0" />
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.3" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
-    <Reference Include="System.Web" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
@@ -46,17 +43,17 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-<!--
-  <ItemGroup>
-    <PackageReference Include="StyleCop.MSBuild" Version="5.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+    <Reference Include="System.Web" />
+    <Reference Include="System.Activities" />
   </ItemGroup>
--->
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
+  </ItemGroup>
+  
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Activities" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Transactions" />

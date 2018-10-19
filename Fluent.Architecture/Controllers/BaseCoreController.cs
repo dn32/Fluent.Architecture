@@ -1,10 +1,10 @@
 ﻿// ReSharper disable CommentTypo
 
-#if !NETCOREAPP2_1
+#if NETCOREAPP2_1
 
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Principal;
-using System.Web;
-using System.Web.Mvc;
 
 namespace Fluent.Architecture.Controllers
 {
@@ -14,13 +14,13 @@ namespace Fluent.Architecture.Controllers
     /// </summary>
     public abstract class BaseController : Controller
     {
-        private HttpContextBase _localHttpContext;
+        private HttpContext _localHttpContext;
         
-        public new HttpContextBase HttpContext => this._localHttpContext ?? base.HttpContext;
+        public new HttpContext HttpContext => this._localHttpContext ?? base.HttpContext;
 
         public new IPrincipal User => HttpContext.User;
 
-        public void SetLocalHttpContext(HttpContextBase httpContext)
+        public void SetLocalHttpContext(HttpContext httpContext)
         {
             this._localHttpContext = httpContext;
         }

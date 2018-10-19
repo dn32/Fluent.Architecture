@@ -1,14 +1,15 @@
 ﻿// ReSharper disable CommentTypo
 
-#if !NETCOREAPP2_1
+#if NETCOREAPP2_1
 
 using System;
 using System.Security.Claims;
-using System.Web;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Services;
-using System.Web.Mvc;
 using Fluent.Architecture.Util;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Http;
 
 namespace Fluent.Architecture.Controllers
 {
@@ -26,15 +27,15 @@ namespace Fluent.Architecture.Controllers
 
         protected internal ClaimsPrincipal ServiceUser => Service.User;
 
-        protected internal HttpContextBase ServiceHttpContext => Service.LocalHttpContext;
+        protected internal HttpContext ServiceHttpContext => Service.LocalHttpContext;
 
-        protected override void OnActionExecuting(ActionExecutingContext context)
+        public override void OnActionExecuting(ActionExecutingContext context)
         {
             Service = ServiceFactory.Create<TS>(HttpContext);
             base.OnActionExecuting(context);
         }
 
-        protected override void OnActionExecuted(ActionExecutedContext filterContext)
+        public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             var session = Service.TransactionObjects.Session;
 
@@ -56,11 +57,7 @@ namespace Fluent.Architecture.Controllers
 
         protected internal new JsonResult Json(object data)
         {
-            return new CustomJsonResult
-            {
-                Data = data,
-                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-            };
+            return new CustomJsonResult(data);
         }
     }
 }

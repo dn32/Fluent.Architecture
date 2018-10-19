@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !NETCOREAPP2_1
+
+using System;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 
@@ -9,8 +11,14 @@ namespace Fluent.Architecture.Util
         private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
             Formatting = Formatting.Indented,
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
         };
+
+        public CustomJsonResult(object data)
+        {
+            JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            Data = data;
+        }
 
         public override void ExecuteResult(ControllerContext context)
         {
@@ -37,3 +45,5 @@ namespace Fluent.Architecture.Util
         }
     }
 }
+
+#endif
