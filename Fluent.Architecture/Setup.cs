@@ -15,6 +15,7 @@ using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
 using System.Management.Instrumentation;
 using Fluent.Architecture.Exceptions;
+using Fluent.Architecture.Specifications;
 
 namespace Fluent.Architecture
 {
@@ -34,6 +35,8 @@ namespace Fluent.Architecture
 
         internal static Dictionary<Type, Type> Model { get; set; }
 
+        internal static Dictionary<string, Type> Specifications { get; set; }
+
         internal static Dictionary<Tuple<EPropagateTypes, string>, MethodInfo> Propagators { get; set; }
 
         public static bool Initialized { get; set; }
@@ -43,6 +46,12 @@ namespace Fluent.Architecture
         #endregion
 
         #region PUBLIC METHODS
+
+        public static Type GetSpecificationByName(string name)
+        {
+            Specifications.TryGetValue(name, out var spec);
+            return spec;
+        }
 
         /// <summary>
         /// Permite definir um tipo para TransactionObjectsType que é o contexto da aplicação referente ao banco de dados.
@@ -89,6 +98,7 @@ namespace Fluent.Architecture
                 Propagators = new Dictionary<Tuple<EPropagateTypes, string>, MethodInfo>();
                 UserSessionList = new Dictionary<Guid, UserSessionRequest>();
                 TransactionObjectsType = typeof(TransactionObjects);
+                Specifications = new Dictionary<string, Type>();
 
                 Services.Add(typeof(FluentEntity), typeof(FluentService<FluentEntity>));
                 Repositories.Add(typeof(FluentEntity), typeof(FluentRepository<FluentEntity>));
@@ -129,6 +139,10 @@ namespace Fluent.Architecture
                     types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(BaseEntity)))
                      .Where(x => x.Item1 != null && x.Item2 != typeof(BaseEntity)).ToList()
                      .ForEach(AddModel);
+
+                    types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentSpecification<BaseEntity>)))
+                      .Where(x => x.Item1 != null).ToList()
+                      .ForEach(service => Specifications.Add(service.Item2.Name, service.Item2));
                 }
 
                 // ValidateIfAllMethodsAreVirtual(Services.Values.ToList()); // To intercept
