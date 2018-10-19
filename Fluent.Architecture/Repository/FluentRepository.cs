@@ -189,19 +189,27 @@ namespace Fluent.Architecture.Repository
 #if NETCOREAPP2_1
             return this.Input.FromSql(sql).AsNoTracking().Any();
 #else
-
             return this.Input.SqlQuery(sql).AsNoTracking().Any();
 #endif
         }
 
         [Propagate]
-        internal TE FindSingleOrDefaultSql(string sql)
+        internal TE FindSingleOrDefaultSql(string sql, bool AsTracking = false)
         {
 #if NETCOREAPP2_1
+            if (AsTracking)
+            {
+                return this.Input.FromSql(sql).SingleOrDefault();
+            }
+
             return this.Input.FromSql(sql).AsNoTracking().SingleOrDefault();
 #else
+            if (AsTracking)
+            {
+                return this.Input.SqlQuery(sql).SingleOrDefault();
+            }
 
-          return this.Input.SqlQuery(sql).AsNoTracking().SingleOrDefault();
+            return this.Input.SqlQuery(sql).AsNoTracking().SingleOrDefault();
 #endif
 
         }
@@ -297,10 +305,10 @@ namespace Fluent.Architecture.Repository
         //     return Input.Find(id);
         // }
 
-        public virtual TE Find(TE entity)
+        public virtual TE Find(TE entity, bool AsTracking = false)
         {
             var sql = CreateSqlFromKeyAndFluentUniqueKeys(entity);
-            return FindSingleOrDefaultSql(sql);
+            return FindSingleOrDefaultSql(sql, AsTracking);
         }
 
         public virtual bool Exists(TE entity)
@@ -346,7 +354,7 @@ namespace Fluent.Architecture.Repository
         {
             RunTheContextValidation();
 
-            var currentEntity = this.Find(entity);
+            var currentEntity = this.Find(entity, true);
             TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
             return currentEntity;
         }
