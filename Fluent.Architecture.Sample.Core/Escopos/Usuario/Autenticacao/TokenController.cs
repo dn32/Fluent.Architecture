@@ -1,5 +1,6 @@
 ﻿
 using Fluent.Architecture.Attributes;
+using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Util;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -7,7 +8,7 @@ using System;
 namespace Fluent.Architecture.Sample.Core.Escopos.Usuario.Autenticacao
 {
     [Route("api/[controller]")]
-    public class TokenController : Controller
+    public class TokenController : FluentController<User>
     {
         [FluentAllowAnonymous]
         [HttpPost]
@@ -15,7 +16,11 @@ namespace Fluent.Architecture.Sample.Core.Escopos.Usuario.Autenticacao
         {
             if (CheckUser(username, password))
             {
-                return Json( new { token = AutenticationUtil.GenerateToken(username) });
+                return Json(
+                    new
+                    {
+                        token = AutenticationUtil.GenerateToken(username)
+                    });
             }
 
             throw new UnauthorizedAccessException();

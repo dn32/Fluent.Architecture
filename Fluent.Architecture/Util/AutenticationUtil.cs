@@ -2,12 +2,9 @@
 
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Security.Principal;
-using System.Threading.Tasks;
 
 namespace Fluent.Architecture.Util
 {
@@ -72,13 +69,17 @@ namespace Fluent.Architecture.Util
             {
                 return tokenHandler.ValidateToken(token, validationParameters, out SecurityToken securityToken);
             }
+            catch (SecurityTokenExpiredException)
+            {
+                throw new TimeoutException();
+            }
             catch (SecurityTokenInvalidSignatureException)
             {
                 throw new AccessViolationException();
             }
         }
 
-        public static string GenerateToken(string username, int expireMinutes = 20)
+        public static string GenerateToken(int id, int expireMinutes = 20)
         {
             var symmetricKey = Convert.FromBase64String(Secret);
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -89,10 +90,7 @@ namespace Fluent.Architecture.Util
                 Subject = new ClaimsIdentity(
                     new[] 
                     {
-                        new Claim(ClaimTypes.Name, username),
-                        new Claim(ClaimTypes.NameIdentifier, "54"),
-                        new Claim(ClaimTypes.Email, "dn@dn32.com.br"),
-                        new Claim("admin", "true")
+                        new Claim("id", id.ToString()),
                     }),
 
                 Expires = now.AddMinutes(Convert.ToInt32(expireMinutes)),

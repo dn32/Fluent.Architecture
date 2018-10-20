@@ -19,7 +19,6 @@ namespace Fluent.Architecture.Filters
                 return;
             }
 
-
             var token = context.HttpContext.Request.Headers["token"];
             context.HttpContext.User = AutenticationUtil.GetPrincipal(token);
         }
