@@ -10,7 +10,7 @@ namespace Fluent.Architecture.Util
 {
     public static class AutenticationUtil
     {
-        private static string Secret { get; set; }
+        internal static string Secret { get; set; }
 
         internal static void Initialize()
         {
@@ -56,6 +56,40 @@ namespace Fluent.Architecture.Util
             }
 
             var symmetricKey = Convert.FromBase64String(Secret);
+
+            var validationParameters = new TokenValidationParameters()
+            {
+                RequireExpirationTime = true,
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                IssuerSigningKey = new SymmetricSecurityKey(symmetricKey)
+            };
+
+            try
+            {
+                return tokenHandler.ValidateToken(token, validationParameters, out SecurityToken securityToken);
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                throw new TimeoutException();
+            }
+            catch (SecurityTokenInvalidSignatureException)
+            {
+                throw new AccessViolationException();
+            }
+        }
+
+        internal static ClaimsPrincipal GetPrincipal2(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            if (!(tokenHandler.ReadToken(token) is JwtSecurityToken jwtToken))
+            {
+                throw new AccessViolationException();
+            }
+
+            var key = Secret;
+            var symmetricKey = Convert.FromBase64String(key);
 
             var validationParameters = new TokenValidationParameters()
             {

@@ -1,6 +1,7 @@
 ﻿
 #if NETCOREAPP2_1
 
+using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Specifications;
 using Microsoft.AspNetCore.Authorization;
@@ -26,6 +27,7 @@ namespace Fluent.Architecture.Controllers
     {
         // GET api/controller
         [HttpGet]
+        [FluentAllowAnonymous]
         public JsonResult Get()
         {
             return Json(Service.List(new AllSpec<T>(Service)));
