@@ -10,44 +10,50 @@ namespace Fluent.Architecture.Util
 {
     public static class AutenticationUtil
     {
-        internal static string Secret { get; set; }
+        private static string Secret { get; set; }
 
         internal static void Initialize()
         {
             var hmac = new HMACSHA256();
+            //Secret = "KipzNHM2NUxLSElUWVJTNDY1NzY4NzAtOTBAIyQlKiomQClOTEtUTHM1c25iSkhHQ1tdeyE5NGFAQHNvaSlVSlNETEpLSMOib3AoQCMkJcKoJipqTTIzNDU2aEU1Vw==";
             Secret = Convert.ToBase64String(hmac.Key);
         }
 
-        internal static bool ValidateToken(string token, out string username)
+        //internal static bool ValidateToken(string token, out string username)
+        //{
+        //    username = null;
+
+        //    var simplePrinciple = GetPrincipal(token);
+
+        //    if (!(simplePrinciple?.Identity is ClaimsIdentity identity))
+        //    {
+        //        return false;
+        //    }
+
+        //    if (!identity.IsAuthenticated)
+        //    {
+        //        return false;
+        //    }
+
+        //    username = identity?.FindFirst(ClaimTypes.Name)?.Value;
+
+        //    if (string.IsNullOrEmpty(username))
+        //    {
+        //        return false;
+        //    }
+
+        //    More validate to check whether username exists in system
+
+        //        return true;
+        //}
+
+        public static ClaimsPrincipal GetPrincipal(string token)
         {
-            username = null;
-
-            var simplePrinciple = GetPrincipal(token);
-
-            if (!(simplePrinciple?.Identity is ClaimsIdentity identity))
+            if (string.IsNullOrWhiteSpace(token))
             {
-                return false;
+                throw new AccessViolationException("Token não informado");
             }
 
-            if (!identity.IsAuthenticated)
-            {
-                return false;
-            }
-
-            username = identity?.FindFirst(ClaimTypes.Name)?.Value;
-
-            if (string.IsNullOrEmpty(username))
-            {
-                return false;
-            }
-
-            // More validate to check whether username exists in system
-
-            return true;
-        }
-
-        internal static ClaimsPrincipal GetPrincipal(string token)
-        {
             var tokenHandler = new JwtSecurityTokenHandler();
 
             if (!(tokenHandler.ReadToken(token) is JwtSecurityToken jwtToken))
@@ -71,45 +77,12 @@ namespace Fluent.Architecture.Util
             }
             catch (SecurityTokenExpiredException)
             {
-                throw new TimeoutException();
+                throw new TimeoutException("Token expirado");
             }
-            catch (SecurityTokenInvalidSignatureException)
+            catch (SecurityTokenInvalidSignatureException ex)
             {
-                throw new AccessViolationException();
-            }
-        }
-
-        internal static ClaimsPrincipal GetPrincipal2(string token)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            if (!(tokenHandler.ReadToken(token) is JwtSecurityToken jwtToken))
-            {
-                throw new AccessViolationException();
-            }
-
-            var key = Secret;
-            var symmetricKey = Convert.FromBase64String(key);
-
-            var validationParameters = new TokenValidationParameters()
-            {
-                RequireExpirationTime = true,
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                IssuerSigningKey = new SymmetricSecurityKey(symmetricKey)
-            };
-
-            try
-            {
-                return tokenHandler.ValidateToken(token, validationParameters, out SecurityToken securityToken);
-            }
-            catch (SecurityTokenExpiredException)
-            {
-                throw new TimeoutException();
-            }
-            catch (SecurityTokenInvalidSignatureException)
-            {
-                throw new AccessViolationException();
+                //throw new AccessViolationException(ex.Message);
+                throw new AccessViolationException("Token inválido");
             }
         }
 
@@ -122,20 +95,18 @@ namespace Fluent.Architecture.Util
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(
-                    new[] 
+                    new[]
                     {
-                        new Claim("id", id.ToString()),
+                            new Claim("id", id.ToString()),
                     }),
 
-                Expires = now.AddMinutes(Convert.ToInt32(expireMinutes)),
+                Expires = now.AddMinutes(expireMinutes),
 
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(symmetricKey), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var stoken = tokenHandler.CreateToken(tokenDescriptor);
-            var token = tokenHandler.WriteToken(stoken);
-
-            return token;
+            return tokenHandler.WriteToken(stoken);
         }
     }
 }
