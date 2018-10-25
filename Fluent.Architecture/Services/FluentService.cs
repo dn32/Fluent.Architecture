@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Extensions;
@@ -57,7 +58,7 @@ namespace Fluent.Architecture.Services
         // Todo Documenta após a organização desses itens.
         public virtual object PropagateService(string methodName, object[] parameters)
         {
-          //  base.Repository = null;
+            //  base.Repository = null;
 
             Validation.PropagateService(methodName, parameters);
 
@@ -81,6 +82,21 @@ namespace Fluent.Architecture.Services
             }
 
             throw new IncorrectDevelopmentException($"The {methodName} method was not found in the service {this.GetType().BaseType} and repository {Repository.GetType()}");
+        }
+
+        protected virtual void CalledEvent(BaseEvent _event)
+        {
+
+        }
+
+        public void AddEvent(Expression<Func<T, T, bool>> condition, string eventName)
+        {
+            Setup.EventList.Add(new FluentEvent<T> { EventName = eventName, EventCondition = condition });
+        }
+
+        public void AddEvent(FluentEvent<T> fluentEvent)
+        {
+            Setup.EventList.Add(fluentEvent);
         }
 
         #endregion
