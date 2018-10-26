@@ -1,6 +1,5 @@
 ﻿using Fluent.Architecture.Model;
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Fluent.Architecture.Interfaces
@@ -11,5 +10,4 @@ namespace Fluent.Architecture.Interfaces
 
         Expression<Func<T, T, bool>> EventCondition();
     }
-
 }

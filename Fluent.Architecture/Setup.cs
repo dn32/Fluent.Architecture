@@ -115,7 +115,7 @@ namespace Fluent.Architecture
                 TransactionObjects.DataBaseConnectionString = connectionString;
 
 #if NETCOREAPP2_1
-                AutenticationUtil.Initialize();
+            //    AutenticationUtil.Initialize();
 #endif
                 Services = new Dictionary<Type, Type>();
                 Repositories = new Dictionary<Type, Type>();

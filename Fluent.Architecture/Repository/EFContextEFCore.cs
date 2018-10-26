@@ -8,6 +8,8 @@ using System.Reflection;
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Fluent.Architecture.Repository
 {
@@ -56,6 +58,34 @@ namespace Fluent.Architecture.Repository
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(ConnectionString);
+        }
+
+        public override int SaveChanges()
+        {
+            var changedEntities = ChangeTracker.Entries().Where(e => e.State == EntityState.Added || e.State == EntityState.Deleted || e.State == EntityState.Modified).ToList();
+            changedEntities.ForEach(ChangedEvent);
+            return base.SaveChanges();
+        }
+
+        private void ChangedEvent(EntityEntry entityChanged)
+        {
+            //var state = entityChanged.State;
+            //var entity = entityChanged.Entity;
+            var currentValues = entityChanged.CurrentValues;
+            var originalValues = entityChanged.OriginalValues;
+
+            var properties = originalValues.Properties.Select(x =>
+                {
+                    return new FluentEntityProperty
+                    {
+                        CurrentValue = currentValues.GetType().GetMethod("GetValue", new[] { typeof(IProperty) }).MakeGenericMethod(x.ClrType).Invoke(currentValues, new object[] { x }),
+                        OriginalValue = originalValues.GetType().GetMethod("GetValue", new[] { typeof(IProperty) }).MakeGenericMethod(x.ClrType).Invoke(originalValues, new object[] { x }),
+                        PropertyBane = x.Name
+                    };
+                }).ToList();
+
+
+            //Disparar evento aqui!
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Fluent.Architecture.Sample.Core
         {
             services.AddMvc(options =>
             {
-                options.Filters.Add(typeof(AutenticationActionFilterAttribute));
+               // options.Filters.Add(typeof(AutenticationActionFilterAttribute));
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
