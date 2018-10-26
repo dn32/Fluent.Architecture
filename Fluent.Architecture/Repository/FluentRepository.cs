@@ -18,6 +18,9 @@ using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
+using static Fluent.Architecture.Repository.EfContext;
+using System.Threading;
+using System;
 
 namespace Fluent.Architecture.Repository
 {
@@ -392,6 +395,25 @@ namespace Fluent.Architecture.Repository
         #endregion
 
         #region INTERNAL
+
+        internal void InitEvents()
+        {
+#if NETCOREAPP2_1
+            Session.EntityChangingEventEvent += new EntityChangeEventHandler(EntityChanging);
+            Session.EntityChangedEventEvent += new EntityChangeEventHandler(EntityChanged);
+#endif
+        }
+
+        private void EntityChanging(FluentEventEntity fluentEventEntity)
+        {
+            Service.ChangingEvent(fluentEventEntity);
+        }
+
+        private void EntityChanged(FluentEventEntity fluentEventEntity)
+        {
+            new Thread(() => Service.ChangedAsyncEvent(fluentEventEntity)).Start();
+            Service.ChangedEvent(fluentEventEntity);
+        }
 
         private FluentSelectSpecification<TE, TO> GetSpec<TO>(IFluentSpecification<TO> spec)
         {

@@ -1,6 +1,6 @@
-﻿namespace Fluent.Architecture.Interfaces
-{
-    public interface IBaseEvent
-    {
-    }
-}
+﻿//namespace Fluent.Architecture.Interfaces
+//{
+//    public interface IBaseEvent
+//    {
+//    }
+//}

@@ -51,8 +51,6 @@ namespace Fluent.Architecture
 
         internal static Dictionary<Guid, UserSessionRequest> UserSessionList { get; set; }
 
-        internal static List<BaseEvent> EventList { get; set; }
-
         #endregion
 
         #region PUBLIC METHODS
@@ -125,7 +123,6 @@ namespace Fluent.Architecture
                 UserSessionList = new Dictionary<Guid, UserSessionRequest>();
                 TransactionObjectsType = typeof(TransactionObjects);
                 Specifications = new Dictionary<string, Type>();
-                EventList = new List<BaseEvent>();
 
                 Services.Add(typeof(FluentEntity), typeof(FluentService<FluentEntity>));
                 Repositories.Add(typeof(FluentEntity), typeof(FluentRepository<FluentEntity>));

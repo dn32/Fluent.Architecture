@@ -1,7 +1,7 @@
 ﻿
 namespace Fluent.Architecture.Model
 {
-    public class FluentEntityProperty
+    public class FluentEventEntityProperty
     {
         public string PropertyBane { get; set; }
         public object OriginalValue { get; set; }

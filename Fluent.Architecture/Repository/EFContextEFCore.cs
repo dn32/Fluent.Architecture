@@ -3,9 +3,11 @@
 #if NETCOREAPP2_1
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Attributes;
+using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -19,6 +21,10 @@ namespace Fluent.Architecture.Repository
     /// </summary>
     public class EfContext : DbContext
     {
+        internal delegate void EntityChangeEventHandler(FluentEventEntity fluentEventEntity);
+        internal event EntityChangeEventHandler EntityChangingEventEvent;
+        internal event EntityChangeEventHandler EntityChangedEventEvent;
+
         internal string ConnectionString { get; set; }
 
         public EfContext(string connectionString)
@@ -62,30 +68,64 @@ namespace Fluent.Architecture.Repository
 
         public override int SaveChanges()
         {
-            var changedEntities = ChangeTracker.Entries().Where(e => e.State == EntityState.Added || e.State == EntityState.Deleted || e.State == EntityState.Modified).ToList();
-            changedEntities.ForEach(ChangedEvent);
-            return base.SaveChanges();
+            BeforeSave(out var changedEntities, out var eventChange);
+
+            var ret = base.SaveChanges();
+
+            AfterSave(changedEntities, eventChange);
+
+            return ret;
         }
 
-        private void ChangedEvent(EntityEntry entityChanged)
+        private void AfterSave(List<EntityEntry> changedEntities, List<FluentEventEntity> eventChange)
         {
-            //var state = entityChanged.State;
-            //var entity = entityChanged.Entity;
-            var currentValues = entityChanged.CurrentValues;
-            var originalValues = entityChanged.OriginalValues;
+            changedEntities.ForEach(x =>
+            {
+                var fluentEventEntity = eventChange.Next();
+                SetEventChangeCurrentValue(x, fluentEventEntity);
+                EntityChangedEventEvent(fluentEventEntity);
+            });
+        }
 
-            var properties = originalValues.Properties.Select(x =>
+        private void BeforeSave(out List<EntityEntry> changedEntities, out List<FluentEventEntity> eventChange)
+        {
+            changedEntities = ChangeTracker.Entries().Where(e => e.State == EntityState.Added || e.State == EntityState.Deleted || e.State == EntityState.Modified).ToList();
+            eventChange = changedEntities.Select(GetEventChange).ToList();
+            eventChange.ForEach(x => EntityChangingEventEvent(x));
+        }
+
+        private void SetEventChangeCurrentValue(EntityEntry entityChanged, FluentEventEntity fluentEventEntity)
+        {
+            var currentValuesGetValue = entityChanged.CurrentValues.GetType().GetMethod("GetValue", new[] { typeof(IProperty) });
+            var properties = entityChanged.CurrentValues.Properties.ToList();
+
+            fluentEventEntity.Properties.ForEach(x =>
+            {
+                var property = properties.Next();
+                x.CurrentValue = currentValuesGetValue.MakeGenericMethod(property.ClrType).Invoke(entityChanged.CurrentValues, new[] { property });
+            });
+        }
+
+        private FluentEventEntity GetEventChange(EntityEntry entityChanged)
+        {
+            var currentValuesGetValue = entityChanged.CurrentValues.GetType().GetMethod("GetValue", new[] { typeof(IProperty) });
+            var originalValuesGetValue = entityChanged.OriginalValues.GetType().GetMethod("GetValue", new[] { typeof(IProperty) });
+
+            var properties = entityChanged.OriginalValues.Properties.Select(x =>
+            {
+                return new FluentEventEntityProperty
                 {
-                    return new FluentEntityProperty
-                    {
-                        CurrentValue = currentValues.GetType().GetMethod("GetValue", new[] { typeof(IProperty) }).MakeGenericMethod(x.ClrType).Invoke(currentValues, new object[] { x }),
-                        OriginalValue = originalValues.GetType().GetMethod("GetValue", new[] { typeof(IProperty) }).MakeGenericMethod(x.ClrType).Invoke(originalValues, new object[] { x }),
-                        PropertyBane = x.Name
-                    };
-                }).ToList();
+                    CurrentValue = currentValuesGetValue.MakeGenericMethod(x.ClrType).Invoke(entityChanged.CurrentValues, new[] { x }),
+                    OriginalValue = originalValuesGetValue.MakeGenericMethod(x.ClrType).Invoke(entityChanged.OriginalValues, new[] { x }),
+                    PropertyBane = x.Name
+                };
+            }).ToList();
 
-
-            //Disparar evento aqui!
+            return new FluentEventEntity
+            {
+                Properties = properties,
+                CurrentEntity = entityChanged.Entity
+            };
         }
     }
 }

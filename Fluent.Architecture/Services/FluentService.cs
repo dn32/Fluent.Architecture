@@ -1,10 +1,8 @@
 ﻿// ReSharper disable CommentTypo
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Extensions;
@@ -84,20 +82,11 @@ namespace Fluent.Architecture.Services
             throw new IncorrectDevelopmentException($"The {methodName} method was not found in the service {this.GetType().BaseType} and repository {Repository.GetType()}");
         }
 
-        protected virtual void CalledEvent(BaseEvent _event)
-        {
+        protected internal virtual void ChangingEvent(FluentEventEntity eventEntity) { }
 
-        }
+        protected internal virtual void ChangedEvent(FluentEventEntity eventEntity) { }
 
-        public void AddEvent(Expression<Func<T, T, bool>> condition, string eventName)
-        {
-            Setup.EventList.Add(new FluentEvent<T> { EventName = eventName, EventCondition = condition });
-        }
-
-        public void AddEvent(FluentEvent<T> fluentEvent)
-        {
-            Setup.EventList.Add(fluentEvent);
-        }
+        protected internal virtual void ChangedAsyncEvent(FluentEventEntity eventEntity) { }
 
         #endregion
 

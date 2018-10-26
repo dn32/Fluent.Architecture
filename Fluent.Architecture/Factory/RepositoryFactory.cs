@@ -49,6 +49,7 @@ namespace Fluent.Architecture.Factory
             var repository = Create(localType);
             repository.TransactionObjects = transactionObjects;
             repository.Service = service;
+            repository.InitEvents();
             return repository;
         }
 
