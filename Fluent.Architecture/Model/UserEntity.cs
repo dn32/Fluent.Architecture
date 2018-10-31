@@ -1,0 +1,5 @@
+﻿
+namespace Fluent.Architecture.Model
+{
+  
+}
