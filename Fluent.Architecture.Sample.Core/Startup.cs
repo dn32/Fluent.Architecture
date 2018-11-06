@@ -1,6 +1,4 @@
-﻿using Fluent.Architecture.Filters;
-using Fluent.Architecture.Model;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -8,11 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Fluent.Architecture.Sample.Core
 {
-    public class Course : FluentIdEntity
-    {
-        public string Name { get; set; }
-    }
-
     public class Startup
     {
         public Startup(IConfiguration configuration)

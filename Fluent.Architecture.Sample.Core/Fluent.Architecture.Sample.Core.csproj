@@ -5,7 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Escopos\Departamentos\Cadastro\" />
+    <Compile Remove="Escopos\Departamentos\Cadastro\**" />
+    <Content Remove="Escopos\Departamentos\Cadastro\**" />
+    <EmbeddedResource Remove="Escopos\Departamentos\Cadastro\**" />
+    <None Remove="Escopos\Departamentos\Cadastro\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

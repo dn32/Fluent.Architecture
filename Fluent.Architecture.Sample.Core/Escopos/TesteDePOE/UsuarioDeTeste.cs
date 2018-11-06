@@ -6,6 +6,8 @@ namespace Fluent.Architecture.Sample.Core.Escopos
 {
     public class UsuarioDeTeste : FluentEntity
     {
+        public int Id { get; set; }
+
         [MaxLength(100), Required]
         public string Nome { get; set; }
 

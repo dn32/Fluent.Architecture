@@ -51,7 +51,7 @@ namespace Fluent.Architecture.Validation
             this.Service.SessionRequest.ContextFluentValidationException.AddInconsistency(ex);
         }
 
-        protected void RunTheContextValidation()
+        protected internal void RunTheContextValidation()
         {
             this.Service.SessionRequest.ContextFluentValidationException.Validate();
         }

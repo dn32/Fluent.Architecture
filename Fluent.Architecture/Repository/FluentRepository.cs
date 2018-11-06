@@ -406,13 +406,13 @@ namespace Fluent.Architecture.Repository
 
         private void EntityChanging(FluentEventEntity fluentEventEntity)
         {
-            Service.ChangingEvent(fluentEventEntity);
+            Service.ChangingEventInternal(fluentEventEntity);
         }
 
         private void EntityChanged(FluentEventEntity fluentEventEntity)
         {
-            new Thread(() => Service.ChangedAsyncEvent(fluentEventEntity)).Start();
-            Service.ChangedEvent(fluentEventEntity);
+            new Thread(() => Service.ChangedAsyncEventInternal(fluentEventEntity)).Start();
+            Service.ChangedEventInternal(fluentEventEntity);
         }
 
         private FluentSelectSpecification<TE, TO> GetSpec<TO>(IFluentSpecification<TO> spec)

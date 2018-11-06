@@ -7,6 +7,7 @@ using Fluent.Architecture.Repository;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Exceptions.ValidationException;
+using System;
 
 namespace Fluent.Architecture.Validation
 {
@@ -112,6 +113,21 @@ namespace Fluent.Architecture.Validation
             }
 
             this.RunTheContextValidation();
+        }
+
+        internal void ChangedAsyncEvent(FluentEventEntity eventEntity)
+        {
+            //Todo adicionar validação para esse caso se necessário
+        }
+
+        internal void ChangedEvent(FluentEventEntity eventEntity)
+        {
+            //Todo adicionar validação para esse caso se necessário
+        }
+
+        internal void ChangingEvent(FluentEventEntity eventEntity)
+        {
+            //Todo adicionar validação para esse caso se necessário
         }
 
         /*

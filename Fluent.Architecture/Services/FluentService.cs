@@ -82,6 +82,27 @@ namespace Fluent.Architecture.Services
             throw new IncorrectDevelopmentException($"The {methodName} method was not found in the service {this.GetType().BaseType} and repository {Repository.GetType()}");
         }
 
+        internal void ChangingEventInternal(FluentEventEntity eventEntity)
+        {
+            Validation.ChangingEvent(eventEntity);
+            Validation.RunTheContextValidation();
+            ChangingEvent(eventEntity);
+        }
+
+        internal void ChangedEventInternal(FluentEventEntity eventEntity)
+        {
+            Validation.ChangedEvent(eventEntity);
+            Validation.RunTheContextValidation();
+            ChangedEvent(eventEntity);
+        }
+
+        internal void ChangedAsyncEventInternal(FluentEventEntity eventEntity)
+        {
+            Validation.ChangedAsyncEvent(eventEntity);
+            Validation.RunTheContextValidation();
+            ChangedAsyncEvent(eventEntity);
+        }
+
         protected internal virtual void ChangingEvent(FluentEventEntity eventEntity) { }
 
         protected internal virtual void ChangedEvent(FluentEventEntity eventEntity) { }
