@@ -8,17 +8,14 @@ namespace Fluent.Architecture.Sample.Core.Escopos.Usuario
     {
         protected override void ChangingEvent(FluentEventEntity eventEntity)
         {
-            base.ChangingEvent(eventEntity);
         }
 
         protected override void ChangedEvent(FluentEventEntity eventEntity)
         {
-            base.ChangedEvent(eventEntity);
         }
 
         protected override void ChangedAsyncEvent(FluentEventEntity eventEntity)
         {
-            base.ChangedAsyncEvent(eventEntity);
         }
     }
 }

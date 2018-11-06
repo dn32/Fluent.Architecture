@@ -399,21 +399,31 @@ namespace Fluent.Architecture.Repository
         internal void InitEvents()
         {
 #if NETCOREAPP2_1
-            Session.EntityChangingEventEvent += new EntityChangeEventHandler(EntityChanging);
-            Session.EntityChangedEventEvent += new EntityChangeEventHandler(EntityChanged);
+            Session.EntityChangingEventEvent += new EntityChangeEventHandler(ChangingEventInternal);
+            Session.EntityChangedEventEvent += new EntityChangeEventHandler(ChangedEventInternal);
 #endif
         }
 
-        private void EntityChanging(FluentEventEntity fluentEventEntity)
+        private void ChangingEventInternal(FluentEventEntity fluentEventEntity)
         {
             Service.ChangingEventInternal(fluentEventEntity);
+            ChangingEvent(fluentEventEntity);
         }
 
-        private void EntityChanged(FluentEventEntity fluentEventEntity)
+        private void ChangedEventInternal(FluentEventEntity fluentEventEntity)
         {
             new Thread(() => Service.ChangedAsyncEventInternal(fluentEventEntity)).Start();
             Service.ChangedEventInternal(fluentEventEntity);
+
+            new Thread(() => ChangedAsyncEvent(fluentEventEntity)).Start();
+            ChangedEvent(fluentEventEntity);
         }
+
+        protected virtual void ChangingEvent(FluentEventEntity fluentEventEntity) { }
+
+        protected virtual void ChangedEvent(FluentEventEntity fluentEventEntity) { }
+
+        protected virtual void ChangedAsyncEvent(FluentEventEntity fluentEventEntity) { }
 
         private FluentSelectSpecification<TE, TO> GetSpec<TO>(IFluentSpecification<TO> spec)
         {
