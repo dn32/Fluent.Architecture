@@ -1,7 +1,16 @@
-﻿// ReSharper disable CommentTypo
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+// ReSharper disable CommentTypo
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Fluent.Architecture.Exceptions.ValidationException;
+using Newtonsoft.Json;
 
 namespace Fluent.Architecture.Validation
 {
@@ -9,9 +18,12 @@ namespace Fluent.Architecture.Validation
     /// <summary>
     /// Retorno de validação padrão do sistema.
     /// </summary>
-    public class ContextFluentValidationException : FluentValidationException
+    public class ContextFluentValidationException : Exception
     {
-        public ICollection<FluentValidationException> Inconsistencies { get; }
+        public bool ValidationError => true;
+
+        [JsonProperty("inconsistencies")]
+        public List<FluentValidationException> Inconsistencies { get; }
 
         /// <summary>
         /// Se a validação retornou sucesso.
@@ -27,7 +39,7 @@ namespace Fluent.Architecture.Validation
         /// <summary>
         /// A mensagem de erro da falidação em caso de falha,
         /// </summary>
-        public override string Message => string.Join("\n", this.Inconsistencies.Select(x => x.Message).ToArray());
+        public override string Message => string.Join("\n", this.Inconsistencies.Select(x => "* " + x.GlobalizedMessage).ToArray());
 
         /// <summary>
         /// Adiciona uma nova inconsistência ao contexto.

@@ -1,4 +1,11 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using Fluent.Architecture.Exceptions.ValidationException;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
@@ -7,15 +14,6 @@ namespace Fluent.Architecture.Validation
 {
     public abstract class TransactionalValidation : BaseValidation
     {
-        ///// <summary>
-        ///// O repositório do serviço.
-        ///// </summary>
-        protected internal new TransactionlRepository Repository
-        {
-            get => base.Repository as TransactionlRepository;
-            set => base.Repository = value;
-        }
-
         /// <summary>
         /// A validação do serviço.
         /// </summary>
@@ -34,10 +32,9 @@ namespace Fluent.Architecture.Validation
         /// <param name="repository">
         /// O repositório que a validação representa.
         /// </param>
-        protected internal virtual void Init(TransactionalService service, TransactionlRepository repository)
+        protected internal virtual void Init(TransactionalService service)
         {
             Service = service;
-            Repository = repository;
         }
 
         /// <summary>

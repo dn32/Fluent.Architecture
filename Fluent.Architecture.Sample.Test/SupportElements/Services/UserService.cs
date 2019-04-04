@@ -1,4 +1,11 @@
-﻿using Fluent.Architecture.Sample.Test.SupportElements.Model;
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Sample.Test.SupportElements.Specifications;
 using Fluent.Architecture.Services;
 
@@ -12,8 +19,9 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Services
 
         public UserStudent GetUserByEmail(string email)
         {
-            var userSpec = new UserByEmail(this, email);
-            var studentSpec = new StudentByEmailSpec(this, email);
+            var userSpec = CreateSpec<UserByEmailSpec>().DefineParams(email);
+            var studentSpec = CreateSpec<StudentByEmailSpec>().DefineParams(email);
+            //var studentSpec = new StudentByEmailSpec(this, email);
 
             var user = this.FirstOrDefault(userSpec);
             var student = this.StudentService.FirstOrDefault(studentSpec);

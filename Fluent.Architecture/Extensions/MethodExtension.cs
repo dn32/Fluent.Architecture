@@ -1,4 +1,11 @@
-﻿// ReSharper disable CommentTypo
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+// ReSharper disable CommentTypo
 
 using System;
 using System.Linq;
@@ -42,13 +49,19 @@ namespace Fluent.Architecture.Extensions
 
             foreach (var method in methods)
             {
-                var currentMethod = method.IsGenericMethod ? method.MakeGenericMethod(generics) : method;
+                if (method.IsGenericMethod == true && (generics == null || generics.Length == 0) ||
+                    method.IsGenericMethod == false && (generics != null && generics.Length > 0))
+                {
+                    continue;
+                }
+
+                var currentMethod = method.IsGenericMethod && (generics == null || generics.Length == 0) ? method.MakeGenericMethod(generics) : method;
                 var parametersOfMethodType = currentMethod.GetParameters().Select(x => x.ParameterType).ToList();
                 var parametersListType = parameters.Select(x => x.GetType()).ToList();
 
                 if (parameters.All(x => parametersListType.Next().Is(parametersOfMethodType.Next())))
                 {
-                    return method;
+                    return currentMethod;
                 }
             }
 
@@ -56,8 +69,10 @@ namespace Fluent.Architecture.Extensions
         }
 
         // Todo doc
-        public static object FluenInvoke(this MethodBase method, object obj, object[] parameters)
+        public static object FluentInvoke(this MethodInfo method, object obj, object[] parameters)//, params Type[] generics)
         {
+            //method = generics == null ? method : method.MakeGenericMethod(generics);
+
             var localParameters = method.GetAllParameters();
             for (var i = 0; i < parameters.Length; i++)
             {

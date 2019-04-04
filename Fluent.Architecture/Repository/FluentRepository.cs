@@ -1,4 +1,11 @@
-﻿// ReSharper disable CommentTypo
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+// ReSharper disable CommentTypo
 
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -23,6 +30,7 @@ namespace Fluent.Architecture.Repository
     public class FluentRepository<TE> : TransactionlRepository where TE : BaseEntity
     {
         #region PROPERTIES
+        public UserSessionRequest SessionRequest => Service.SessionRequest;
 
         /// <summary>
         /// Os objetos de transação do repositório.
@@ -37,7 +45,7 @@ namespace Fluent.Architecture.Repository
         /// <summary>
         /// A query contem a referência de todas as tabelas/documentos do banco de dados.
         /// </summary>
-        protected internal DbSet<TE> Query => TransactionObjects.GetObjectQueryInternal<TE>();
+        protected internal IQueryable<TE> Query => this.TransactionObjects.GetObjectQueryInternal<TE>();
 
         /// <summary>
         /// A referência de input de dados para o banco de dados.
@@ -69,7 +77,7 @@ namespace Fluent.Architecture.Repository
         /// <returns>
         /// O item referente à consulta ou nulo.
         /// </returns>
-        [Propagate]
+
         //public virtual TE FirstOrDefault(IFluentSpecification spec)
         public virtual TE FirstOrDefault(IFluentSpecification spec)
         {
@@ -95,10 +103,10 @@ namespace Fluent.Architecture.Repository
         /// <returns>
         /// A lista paginada de resultados.
         /// </returns>
-        [Propagate]
-        public virtual List<TO> List<TO>(IFluentSpecification<TO> ispec, FluentPagination pagination = null)
+
+        public virtual List<TO> ListSelect<TO>(IFluentSpecification<TO> ispec, FluentPagination pagination = null)
         {
-            var spec = GetSpec(ispec);
+            var spec = GetSpecSelect<TO>(ispec);
             var query = spec.ToIQueryable(Query);
             var fluentPagination = FluentPaginate(query, pagination);
             return fluentPagination.ToList();
@@ -116,30 +124,12 @@ namespace Fluent.Architecture.Repository
         /// <returns>
         /// O item referente à consulta ou nulo.
         /// </returns>
-        [Propagate]
-        public virtual TO FirstOrDefault<TO>(IFluentSpecification<TO> ispec)
+
+        public virtual TO FirstOrDefaultSelect<TO>(IFluentSpecification<TO> ispec)
         {
-            var spec = GetSpec(ispec);
+            var spec = GetSpecSelect<TO>(ispec);
             var iquerie = spec.ToIQueryable(Query);
             return iquerie.FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Avalia se um item existe no banco de dados, baseado em uma especificação.
-        /// </summary>
-        /// <typeparam name="TO">
-        /// O tipo de saida desejada. Deve ser o mesmo definido na saida da especificação.
-        /// </typeparam>
-        /// <param name="spec">
-        /// A especificação de requisição.
-        /// </param>
-        /// <returns>
-        /// Se o item existe ou não.
-        /// </returns>
-        [Propagate]
-        public virtual bool Exists<TO>(IFluentSpecification<TO> spec)
-        {
-            return GetSpec(spec).ToIQueryable(Query).Any();
         }
 
         /// <summary>
@@ -154,8 +144,8 @@ namespace Fluent.Architecture.Repository
         /// <returns>
         /// A quantidade de itens.
         /// </returns>
-        [Propagate]
-        public virtual int Count<TO>(IFluentSpecification<TO> spec)
+
+        public virtual int CountSelect<TO>(IFluentSpecification<TO> spec)
         {
             if (spec.FluentEntityType != typeof(TE))
             {
@@ -163,7 +153,7 @@ namespace Fluent.Architecture.Repository
                 throw new IncorrectDevelopmentException($"The type of input reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.FluentEntityType}.\r\nRequisition Type: {typeof(TE)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
             }
 
-            return GetSpec(spec).ToIQueryable(Query).Count();
+            return GetSpecSelect<TO>(spec).ToIQueryable(Query).Count();
         }
 
         #endregion
@@ -175,13 +165,12 @@ namespace Fluent.Architecture.Repository
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
-        [Propagate]
+
         internal bool ExistsSql(string sql)
         {
             return this.Input.SqlQuery(sql).Any();
         }
 
-        [Propagate]
         internal TE FindSingleOrDefaultSql(string sql)
         {
             return this.Input.SqlQuery(sql).SingleOrDefault();
@@ -203,7 +192,7 @@ namespace Fluent.Architecture.Repository
         /// <returns>
         /// A lista paginada de resultados.
         /// </returns>
-        [Propagate]
+
         public virtual List<TE> List(IFluentSpecification ispec, FluentPagination pagination = null)
         {
             var spec = GetSpec(ispec);
@@ -213,14 +202,14 @@ namespace Fluent.Architecture.Repository
 
         //Todo não é ´permitido listar sem spec, pois sem spec não tem como ordenar pra paginar. Sem paginação pode ter sobrecarga.
         //Todo doc
-        //[Propagate]
+        //
         //public virtual List<TE> List(FluentPagination pagination = null)
         //{
         //    return FluentPaginate(Query.ToIQueryable(Query), pagination).ToList();
         //}
 
         //Todo doc
-        [Propagate]
+
         public virtual TE FirstOrDefault()
         {
             return Query.FirstOrDefault();
@@ -235,10 +224,28 @@ namespace Fluent.Architecture.Repository
         /// <returns>
         /// Se o item existe ou não.
         /// </returns>
-        [Propagate]
-        public virtual bool Exists(IFluentSpecification spec)
+
+        public virtual bool Exists(ISpec spec)
         {
             return GetSpec(spec).ToIQueryable(Query).Any();
+        }
+
+        /// <summary>
+        /// Avalia se um item existe no banco de dados, baseado em uma especificação.
+        /// </summary>
+        /// <typeparam name="TO">
+        /// O tipo de saida desejada. Deve ser o mesmo definido na saida da especificação.
+        /// </typeparam>
+        /// <param name="spec">
+        /// A especificação de requisição.
+        /// </param>
+        /// <returns>
+        /// Se o item existe ou não.
+        /// </returns>
+
+        public virtual bool ExistsSelect<TO>(ISpec spec)
+        {
+            return GetSpecSelect<TO>(spec).ToIQueryable(Query).Any();
         }
 
         /// <summary>
@@ -250,33 +257,18 @@ namespace Fluent.Architecture.Repository
         /// <returns>
         /// A quantidade de itens.
         /// </returns>
-        [Propagate]
+
         public virtual int Count(IFluentSpecification spec)
         {
             return GetSpec(spec).ToIQueryable(Query).Count();
         }
 
         //Todo doc
-        [Propagate]
+
         public virtual int Count()
         {
             return Query.Count();
         }
-
-        ///// <summary>
-        ///// Consulta um item no banco de dados com base em seu id.
-        ///// </summary>
-        ///// <param name="id">
-        ///// Id da consulta.
-        ///// </param>
-        ///// <returns>
-        ///// Item encontrado ou nulo.
-        ///// </returns>
-        // [PropagateMethod]
-        // public virtual TE Find(int id)
-        // {
-        //     return Input.Find(id);
-        // }
 
         public virtual TE Find(TE entity)
         {
@@ -296,7 +288,7 @@ namespace Fluent.Architecture.Repository
         /// <param name="entities">
         /// Itens a serem adicionados.
         /// </param>
-        [Propagate]
+
         public virtual void AddRange(params TE[] entities)
         {
             RunTheContextValidation();
@@ -304,7 +296,7 @@ namespace Fluent.Architecture.Repository
             entities.ToList().ForEach(x => Input.Add(x));
         }
 
-        [Propagate]
+
         public virtual TE Add(TE entity)
         {
             RunTheContextValidation();
@@ -318,14 +310,16 @@ namespace Fluent.Architecture.Repository
         /// <param name="entity">
         /// Entidade a ser atualizada com o identificador preenchido.
         /// </param>
-        [Propagate]
+
         public virtual TE Update(TE entity)
         {
             RunTheContextValidation();
 
-            var currentEntity = this.Find(entity);
+            var currentEntity = Service.Find(entity);
+            //Input.Attach(currentEntity);
+            //TransactionObjects.Session.Entry(currentEntity).State = EntityState.Modified;
             TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
-            return currentEntity;
+            return entity;
         }
 
         /// <summary>
@@ -334,21 +328,21 @@ namespace Fluent.Architecture.Repository
         /// <param name="entity">
         /// Entidate a ser removida.
         /// </param>
-        [Propagate]
+
         public virtual TE Remove(TE entity)
         {
             this.RunTheContextValidation();
 
-            return this.Input.Remove(this.Find(entity));
+            return this.Input.Remove(Service.Find(entity));
         }
 
         public virtual void RemoveRange(IFluentSpecification spec)
         {
-            var list = GetSpec(spec).ToIQueryable(Query);
+            var list = GetSpec(spec).ToIQueryable(Query).ToList();
             this.Input.RemoveRange(list);
         }
 
-        [Propagate]
+
         public virtual void RemoveRange(params TE[] entities)
         {
             entities.ToList().ForEach(x => this.Remove(x));
@@ -358,26 +352,36 @@ namespace Fluent.Architecture.Repository
 
         #region INTERNAL
 
-        private FluentSelectSpecification<TE, TO> GetSpec<TO>(IFluentSpecification<TO> spec)
+        private FluentSelectSpecification<TE, TO> GetSpecSelect<TO>(ISpec spec1)
         {
-            if (spec.FluentEntityType != typeof(TE))
+            if (spec1 is IFluentSpecification<TO> spec)
             {
-                var serviceName = $"{spec.FluentEntityType.Name}Service";
-                throw new IncorrectDevelopmentException($"The type of input reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.FluentEntityType}.\r\nRequisition Type: {typeof(TE)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
+                if (spec.FluentEntityType != typeof(TE))
+                {
+                    var serviceName = $"{spec.FluentEntityType.Name}Service";
+                    throw new IncorrectDevelopmentException($"The type of input reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.FluentEntityType}.\r\nRequisition Type: {typeof(TE)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
+                }
+
+                if (spec.FluentEntityOutType != typeof(TO))
+                {
+                    var serviceName = $"{typeof(TE).Name}Service";
+                    throw new IncorrectDevelopmentException($"The type of output reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.FluentEntityType}.\r\nRequisition Type: {typeof(TO)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
+                }
+
+                return spec as FluentSelectSpecification<TE, TO>;
             }
 
-            if (spec.FluentEntityOutType != typeof(TO))
-            {
-                var serviceName = $"{typeof(TE).Name}Service";
-                throw new IncorrectDevelopmentException($"The type of output reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.FluentEntityType}.\r\nRequisition Type: {typeof(TO)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
-            }
-
-            return spec as FluentSelectSpecification<TE, TO>;
+            throw new IncorrectDevelopmentException("The specification is of a different type than expected");
         }
 
-        private FluentSpecification<TE> GetSpec(IFluentSpecification spec)
+        private FluentSpecification<TE> GetSpec(ISpec spec1)
         {
-            return spec as FluentSpecification<TE>;
+            if (spec1 is FluentSpecification<TE> spec)
+            {
+                return spec as FluentSpecification<TE>;
+            }
+
+            throw new IncorrectDevelopmentException("The specification is of a different type than expected");
         }
 
         // private static string CreateSqlFromKeys(TE entity)
@@ -388,6 +392,20 @@ namespace Fluent.Architecture.Repository
         // sql += string.Join(" and ", keyValues);
         // return sql;
         // }
+
+        private FluentPagination GetPagination()
+        {
+            var currentPageInt = int.TryParse(GetParameter("CurrentPage"), out var currentPageInt_) ? currentPageInt_ : 0;
+            var itemsPerPageInt = int.TryParse(GetParameter("ItemsPerPage"), out var itemsPerPageInt_) ? itemsPerPageInt_ : 20;
+            var startAtZeroBool = !bool.TryParse(GetParameter("StartAtZero"), out var startAtZeroBool_) || startAtZeroBool_;
+
+            return new FluentPagination(currentPageInt, startAtZeroBool, itemsPerPageInt);
+        }
+
+        private string GetParameter(string key)
+        {
+            return Service.SessionRequest.LocalHttpContext.Request.Params.Get(key);
+        }
 
         private static string CreateSqlFromKeyAndFluentUniqueKeys(TE entity)
         {
@@ -406,17 +424,19 @@ namespace Fluent.Architecture.Repository
             return sql;
         }
 
-        protected static IQueryable<TX> FluentPaginate<TX>(IQueryable<TX> query, FluentPagination pagination = null)
+        protected IQueryable<TX> FluentPaginate<TX>(IQueryable<TX> query, FluentPagination pagination = null)
         {
             if (pagination == null)
             {
-                pagination = new FluentPagination(1, false, 255);
+                pagination = GetPagination() ?? new FluentPagination(1, false, 255);
             }
 
             pagination.TotalQuantityOfItems = query.Count();
             query = query
                 .Skip(pagination.Skip)
-                .Take(pagination.ItemsPerPage); 
+                .Take(pagination.ItemsPerPage);
+
+            SessionRequest.Pagination = pagination;
 
             return query;
         }

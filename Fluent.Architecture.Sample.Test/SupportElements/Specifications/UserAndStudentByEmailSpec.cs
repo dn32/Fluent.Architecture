@@ -1,5 +1,11 @@
-﻿using System;
-using System.Data.Entity;
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Linq;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
@@ -7,16 +13,18 @@ using Fluent.Architecture.Specifications;
 
 namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
 {
-    public class UserAndStudentByEmail : FluentSelectSpecification<User, UserStudent>
+    public class UserAndStudentByEmailSpec : FluentSelectSpecification<User, UserStudent>
     {
-        private readonly string _email;
+        private string _email;
 
-        public UserAndStudentByEmail(FluentController<User> controller, string email) : base(controller)
+        public UserAndStudentByEmailSpec DefineParams(string email)
         {
             this._email = email;
+
+            return this;
         }
 
-        public override IQueryable<UserStudent> Where(DbSet<User> query)
+        public override IQueryable<UserStudent> Where(IQueryable<User> query)
         {
             var students = this.Get<Student>();
 

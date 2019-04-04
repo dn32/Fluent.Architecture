@@ -1,4 +1,11 @@
-﻿
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using Microsoft.Owin;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Web;
@@ -23,6 +30,21 @@ namespace Fluent.Architecture.Test.Mock.ControllerMock
             this.Response = response;
             this.User = new ClaimsPrincipal();
         }
+
+        //public static IOwinContext GetOwinContext(this HttpContextBase context)
+        //{
+        //    var o = context.GetOwinContext();
+        //    o.Authentication
+        //}
+
+
+
+        //httpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties
+        //    {
+        //        IsPersistent = false,
+        //        ExpiresUtc = false ? (DateTimeOffset?)null : DateTimeOffset.Now.AddMinutes(10)
+        //    },
+        //    identity);
 
         public HttpContextBaseMock(ClaimsPrincipal user = null)
         {

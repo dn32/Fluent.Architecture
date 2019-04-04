@@ -1,4 +1,10 @@
-﻿
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
 using System.Runtime.InteropServices;
 using Fluent.Architecture.Sample.Test.SupportElements;
 using Fluent.Architecture.Test.Mock;

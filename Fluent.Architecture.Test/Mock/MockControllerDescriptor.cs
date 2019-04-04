@@ -1,4 +1,10 @@
-﻿
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
 using System;
 using System.Web.Mvc;
 
@@ -24,4 +30,3 @@ namespace Fluent.Architecture.Test.Mock
         public override Type ControllerType { get; }
     }
 }
-

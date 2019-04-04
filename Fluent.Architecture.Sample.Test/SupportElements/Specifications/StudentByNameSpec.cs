@@ -1,8 +1,12 @@
-﻿using System;
-using System.Data.Entity;
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Linq;
-using System.Linq.Expressions;
-using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Specifications;
 
@@ -10,14 +14,15 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
 {
     public class StudentByNameSpec : FluentSpecification<Student>
     {
-        private readonly string _name;
+        private  string _name;
 
-        public StudentByNameSpec(FluentController<Student> controller, string name) : base(controller)
+        public StudentByNameSpec DefineParams(string name)
         {
             this._name = name;
+            return this;
         }
 
-        public override IQueryable<Student> Where(DbSet<Student> query)
+        public override IQueryable<Student> Where(IQueryable<Student> query)
         {
             return query.Where(x => x.Name.Equals(this._name, StringComparison.CurrentCultureIgnoreCase));
         }

@@ -1,4 +1,11 @@
-﻿using Fluent.Architecture.Attributes;
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Exceptions.ValidationException;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Validation;
@@ -23,11 +30,11 @@ public class UserValidation : FluentValidation<User>
     {
         if (string.IsNullOrWhiteSpace(user?.Name) || !user.Name.Trim().Contains(" "))
         {
-            AddInconsistency(new FluentPropertyValidationException(nameof(user.Name), "User must have full name"));
+            AddInconsistency(new UiFieldRequiredFluentValidationException(user.GetType().GetProperty(nameof(user.Name))));
         }
     }
 
-    [Propagate]
+    
     public void FindById(int id)
     {
         if (id == 0)
@@ -39,11 +46,11 @@ public class UserValidation : FluentValidation<User>
     }
 
         // For ambiguity test
-        [Propagate]
+        
         public void Test2(string data) { }
 
         // For ambiguity test
-        [Propagate]
+        
         public void Test2(int data) { }
     }
 }

@@ -1,4 +1,11 @@
-﻿// ReSharper disable CommentTypo
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+// ReSharper disable CommentTypo
 using Fluent.Architecture.Attributes;
 using System;
 using System.Collections.Generic;
@@ -7,6 +14,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Model;
+using Newtonsoft.Json;
 
 namespace Fluent.Architecture.Extensions
 {
@@ -40,6 +48,17 @@ namespace Fluent.Architecture.Extensions
         public static string GetColumnName(this PropertyInfo property)
         {
             var name = property.GetCustomAttribute<ColumnAttribute>()?.Name;
+            if (string.IsNullOrEmpty(name))
+            {
+                name = property.Name;
+            }
+
+            return name;
+        }
+
+        public static string GetJsonPropertyName(this PropertyInfo property)
+        {
+            var name = property.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName;
             if (string.IsNullOrEmpty(name))
             {
                 name = property.Name;

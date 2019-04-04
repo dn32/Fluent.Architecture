@@ -1,4 +1,14 @@
-﻿// ReSharper disable CommentTypo
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+// ReSharper disable CommentTypo
+using Fluent.Architecture.Factory.Interface;
+using Fluent.Architecture.Model;
+using Fluent.Architecture.Services;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -46,7 +56,9 @@ namespace Fluent.Architecture.Extensions
         //Todo doc
         public static bool Is(this Type t1, Type t2)
         {
-            return t1 == t2 || t1.IsSubclassOf(t2) || t2.IsAssignableFrom(t1);
+            return t1.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == t2) ||
+                   t2.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == t1) ||
+                   t1 == t2 || t1.IsSubclassOf(t2) || t2.IsAssignableFrom(t1) || t2.IsSubclassOf(t1) || t1.IsAssignableFrom(t2);
         }
 
         // Todo - Documentar
@@ -83,6 +95,34 @@ namespace Fluent.Architecture.Extensions
 
             friendlyName += ">";
             return friendlyName;
+        }
+
+        public static Type GetSpecializedService(this Type serviceType)
+        {
+            if (serviceType.Name == "FluentDynamicProxy")
+            {
+                serviceType = serviceType.BaseType;
+            }
+
+            var args = serviceType.GetGenericArguments();
+
+            if (args.Any())
+            {
+                var entityType = args.First();
+                if (!Setup.Services.TryGetValue(entityType, out serviceType))
+                {
+                    if (entityType.IsSubclassOf(typeof(FluentGlobalizedEntity)))
+                    {
+                        serviceType = typeof(FluentGlobalizedService<>).MakeGenericType(entityType);
+                    }
+                    else
+                    {
+                        serviceType = typeof(FluentService<>).MakeGenericType(entityType);
+                    }
+                }
+            }
+
+            return serviceType;
         }
     }
 }

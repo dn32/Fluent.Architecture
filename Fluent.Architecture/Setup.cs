@@ -1,21 +1,27 @@
-﻿// ReSharper disable CommentTypo
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+// ReSharper disable CommentTypo
 
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
-using Fluent.Architecture.Attributes;
-using Fluent.Architecture.Enum;
-using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
 using System.Management.Instrumentation;
+using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Specifications;
+using Fluent.Architecture.Factory;
 
 namespace Fluent.Architecture
 {
@@ -27,6 +33,8 @@ namespace Fluent.Architecture
 
         internal static Type TransactionObjectsType { get; set; }
 
+        internal static GlobalizationService GlobalizationService { get; set; }
+
         internal static Dictionary<Type, Type> Services { get; set; }
 
         internal static Dictionary<Type, Type> Repositories { get; set; }
@@ -35,10 +43,6 @@ namespace Fluent.Architecture
 
         internal static Dictionary<Type, Type> Model { get; set; }
 
-        internal static Dictionary<string, Type> Specifications { get; set; }
-
-        internal static Dictionary<Tuple<EPropagateTypes, string>, MethodInfo> Propagators { get; set; }
-
         public static bool Initialized { get; set; }
 
         internal static Dictionary<Guid, UserSessionRequest> UserSessionList { get; set; }
@@ -46,12 +50,6 @@ namespace Fluent.Architecture
         #endregion
 
         #region PUBLIC METHODS
-
-        public static Type GetSpecificationByName(string name)
-        {
-            Specifications.TryGetValue(name, out var spec);
-            return spec;
-        }
 
         /// <summary>
         /// Permite definir um tipo para TransactionObjectsType que é o contexto da aplicação referente ao banco de dados.
@@ -63,6 +61,11 @@ namespace Fluent.Architecture
         public static void SetCustomTypes(Type transactionObjectsType)
         {
             TransactionObjectsType = transactionObjectsType;
+        }
+
+        public static void SetGlobalizationServiceType<TS>(object httpContext) where TS : GlobalizationService, new()
+        {
+            GlobalizationService = ServiceFactory.Create<TS>(httpContext);
         }
 
         public static void DbSetup(bool createDatabaseIfNotExists)
@@ -90,15 +93,12 @@ namespace Fluent.Architecture
 
                 TransactionObjects.DataBaseConnectionString = connectionString;
 
-
                 Services = new Dictionary<Type, Type>();
                 Repositories = new Dictionary<Type, Type>();
                 Validations = new Dictionary<Type, Type>();
                 Model = new Dictionary<Type, Type>();
-                Propagators = new Dictionary<Tuple<EPropagateTypes, string>, MethodInfo>();
                 UserSessionList = new Dictionary<Guid, UserSessionRequest>();
                 TransactionObjectsType = typeof(TransactionObjects);
-                Specifications = new Dictionary<string, Type>();
 
                 Services.Add(typeof(FluentEntity), typeof(FluentService<FluentEntity>));
                 Repositories.Add(typeof(FluentEntity), typeof(FluentRepository<FluentEntity>));
@@ -118,31 +118,31 @@ namespace Fluent.Architecture
                         continue;
                     }
 
-                    types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentService<BaseEntity>)))
-                        .Where(x => x.Item1 != null).ToList()
-                        .ForEach(service => Services.Add(service.Item1, service.Item2));
-
                     var transactionalServices = types.Where(x => x.IsSubclassOf(typeof(TransactionalService))).ToList();
+
                     ValidateIfAllServicePropertiesNotHaveTheSetMethod(transactionalServices);
                     ValidateIfAllServicePropertiesAreVirtual(transactionalServices);
                     ValidateIfAllServicePropertiesNotHavePublic(transactionalServices);
                     ValidateIfAllServicePropertiesHaveDefaultConstructor(transactionalServices);
 
+                    ValidateSpecifications(types.Where(x => x.IsSubclassOf(typeof(BaseSpecification))).ToList());
+                    ValidateController(types.Where(x => x.IsSubclassOf(typeof(BaseController))).ToList());
+
+                    types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentService<BaseEntity>)))
+                        .Where(x => x.Item1 != null).ToList()
+                        .ForEach(AddService);
+
                     types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentRepository<BaseEntity>)))
                        .Where(x => x.Item1 != null).ToList()
-                       .ForEach(service => Repositories.Add(service.Item1, service.Item2));
+                       .ForEach(AddRepository);
 
                     types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentValidation<BaseEntity>)))
                        .Where(x => x.Item1 != null).ToList()
-                       .ForEach(service => Validations.Add(service.Item1, service.Item2));
+                       .ForEach(AddValidation);
 
                     types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(BaseEntity)))
-                     .Where(x => x.Item1 != null && x.Item2 != typeof(BaseEntity)).ToList()
-                     .ForEach(AddModel);
-
-                    types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentSpecification<BaseEntity>)))
-                      .Where(x => x.Item1 != null).ToList()
-                      .ForEach(service => Specifications.Add(service.Item2.Name, service.Item2));
+                        .Where(x => x.Item1 != null && x.Item2 != typeof(BaseEntity)).ToList()
+                        .ForEach(AddModel);
                 }
 
                 // ValidateIfAllMethodsAreVirtual(Services.Values.ToList()); // To intercept
@@ -150,12 +150,32 @@ namespace Fluent.Architecture
                 // ValidateIfAllMethodsAreVirtual(Validations.Values.ToList()); //It is not necessary
                 CheckErrorInTheRepository(Repositories.Values.ToList());
 
-                FindPropagators(Repositories, EPropagateTypes.Repository);
-                FindPropagators(Services, EPropagateTypes.Service);
-                FindPropagators(Validations, EPropagateTypes.Validation);
-
                 DbSetup(createDatabaseIfNotExists);
             }
+        }
+
+        //Todo testar
+        private static void ValidateSpecifications(List<Type> specs)
+        {
+            specs.ForEach(type =>
+            {
+                if (type.GetConstructors().Any(x => x.GetParameters().Any()))
+                {
+                    throw new IncorrectDevelopmentException($"A specification can not have a parameterized constructor {type}");
+                }
+            });
+        }
+
+        //Todo testar
+        private static void ValidateController(List<Type> controllers)
+        {
+            controllers.ForEach(type =>
+            {
+                if (type.GetMethods().Any(x => x.IsPublic && x.GetParameters().Any(y => y.ParameterType.IsSubclassOf(typeof(BaseSpecification)))))
+                {
+                    throw new IncorrectDevelopmentException($"A controller can not have public methods that receive specifications as a parameter {type}");
+                }
+            });
         }
 
         #endregion
@@ -166,7 +186,7 @@ namespace Fluent.Architecture
         {
             if (!UserSessionList.TryGetValue(sessionIdGuid, out var userSession))
             {
-                throw new InstanceNotFoundException("UserSessionRequest not fount!");
+                throw new InstanceNotFoundException("UserSessionRequest not found!");
             }
 
             return userSession;
@@ -210,7 +230,7 @@ namespace Fluent.Architecture
                 var defaultConstructor = type.GetConstructors().Any(x => !x.GetParameters().Any());
                 if (!defaultConstructor)
                 {
-                    throw new IncorrectDevelopmentException($"Every service must have an empty constructor. {type}");
+                    throw new IncorrectDevelopmentException($"Every repository must have an empty constructor. {type}");
                 }
             }
         }
@@ -260,7 +280,7 @@ namespace Fluent.Architecture
 
                 if (serviceProperties != null && serviceProperties.Any())
                 {
-                    throw new IncorrectDevelopmentException($"All service properties must be protected virtual.{type}.{serviceProperties.First().Name}");
+                    throw new IncorrectDevelopmentException($"All repository properties must be protected virtual.{type}.{serviceProperties.First().Name}");
                 }
             }
         }
@@ -275,25 +295,35 @@ namespace Fluent.Architecture
             Model.Add(service.Item2, service.Item2);
         }
 
-        private static void FindPropagators(Dictionary<Type, Type> elements, EPropagateTypes type)
+        private static void AddService(Tuple<Type, Type> service)
         {
-            foreach (var item in elements)
+            if (Model.ContainsKey(service.Item1))
             {
-                var methods = item.Value.GetMethods(BindingFlags.Instance | BindingFlags.Public);
-                var propagators = methods.Where(x => x.GetCustomAttribute<PropagateAttribute>() != null);
-
-                foreach (var method in propagators)
-                {
-                    var key = new Tuple<EPropagateTypes, string>(type, $"{item.Key} {method.GetFriendlyName()}");
-                    lock (Propagators)
-                    {
-                        if (!Propagators.ContainsKey(key))
-                        {
-                            Propagators.Add(key, method);
-                        }
-                    }
-                }
+                throw new IncorrectDevelopmentException($"There are two service classes with the same name {service.Item1} -  {service.Item2}. This is not allowed.");
             }
+
+            Services.Add(service.Item1, service.Item2);
+        }
+
+
+        private static void AddValidation(Tuple<Type, Type> validation)
+        {
+            if (Model.ContainsKey(validation.Item1))
+            {
+                throw new IncorrectDevelopmentException($"There are two validation classes with the same name {validation.Item1} - {validation.Item2}. This is not allowed.");
+            }
+
+            Validations.Add(validation.Item1, validation.Item2);
+        }
+
+        private static void AddRepository(Tuple<Type, Type> repository)
+        {
+            if (Model.ContainsKey(repository.Item1))
+            {
+                throw new IncorrectDevelopmentException($"There are two entity repository with the same name {repository.Item1} - {repository.Item2}. This is not allowed.");
+            }
+
+            Repositories.Add(repository.Item1, repository.Item2);
         }
 
         private static void CheckErrorInTheRepository(IEnumerable<Type> types)
@@ -321,20 +351,6 @@ namespace Fluent.Architecture
             }
         }
 
-        // private static void ValidateIfAllMethodsAreVirtual(IEnumerable<Type> types)
-        // {
-        // foreach (var item in types)
-        // {
-        // var methods = item.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-        // foreach (var method in methods)
-        // {
-        // if ((!method.IsPrivate) && !method.IsVirtual && !method.IsFamily && !method.IsSpecialName && !(new[] { "GetType" }.Contains(method.Name)))
-        // {
-        // throw new IncorrectDevelopmentException($"The {method.ReflectedType.Name}.{method.Name} method must be set to virtual, or private.");
-        // }
-        // }
-        // }
-        // }
         #endregion
     }
 }

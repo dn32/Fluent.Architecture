@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture", "Fluent.Architecture\Fluent.Architecture.csproj", "{BFABD6C5-8AFD-4D50-9127-6CAA35CF23A4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.Sample.Test", "Fluent.Architecture.Sample.Test\Fluent.Architecture.Sample.Test.csproj", "{7F240F59-97AC-4794-894E-EAA7E472C91C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent.Architecture.Test", "Fluent.Architecture.Test\Fluent.Architecture.Test.csproj", "{AB51F7C9-E955-404F-B808-9D6C211950A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.Test", "Fluent.Architecture.Test\Fluent.Architecture.Test.csproj", "{AB51F7C9-E955-404F-B808-9D6C211950A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

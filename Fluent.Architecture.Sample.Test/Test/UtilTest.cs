@@ -1,4 +1,9 @@
-﻿
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
@@ -32,9 +37,8 @@ namespace Fluent.Architecture.Sample.Test.Test
         [Theory]
         [TestCase(typeof(UserController), typeof(User))]
         [TestCase(typeof(UserService), typeof(User))]
-        [TestCase(typeof(UserByEmail), typeof(User))]
+        [TestCase(typeof(UserByEmailSpec), typeof(User))]
         [TestCase(typeof(UserValidation), typeof(User))]
-        [TestCase(typeof(UserRepository), typeof(User))]
 
         [TestCase(typeof(FluentController<User>), typeof(User))]
         [TestCase(typeof(FluentService<User>), typeof(User))]
@@ -151,14 +155,6 @@ namespace Fluent.Architecture.Sample.Test.Test
             Assert.AreEqual(17, date.Day);
             Assert.AreEqual(11, date.Month);
             Assert.AreEqual(1985, date.Year);
-        }
-
-        [Test]
-        public void GetMethodForPropagationFail()
-        {
-            var ex = Assert.Throws<IncorrectDevelopmentException>(() => GlobalUtil.GetMethodForPropagation());
-            Assert.NotNull(ex);
-            Assert.AreEqual("The propagation call could not be traced. Only BaseController child controllers can make propagation call.", ex.Message);
         }
 
         [Test]

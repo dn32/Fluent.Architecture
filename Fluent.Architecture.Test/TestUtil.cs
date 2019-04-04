@@ -1,4 +1,11 @@
-﻿// ReSharper disable CommentTypo
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+// ReSharper disable CommentTypo
 
 using System;
 using System.Linq;
@@ -9,8 +16,9 @@ using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Exceptions.ValidationException;
 using Fluent.Architecture.Extensions;
+using Fluent.Architecture.Services;
 using Fluent.Architecture.Test.Mock;
-using Fluent.Architecture.Test.Mock.ControllerMock;
+using Fluent.Architecture.Validation;
 using NUnit.Framework;
 
 namespace Fluent.Architecture.Test
@@ -40,16 +48,16 @@ namespace Fluent.Architecture.Test
             return Execute<TR>(controller, methodName, new object[] { parameter });
         }
 
-        public static TR Execute<TR>(BaseController controller, string methodName, object[] parameters, Func<BaseController, TR> action = null)
+        public static TR Execute<TR>(BaseController controller, string methodName, object[] parameters, Func<BaseController, TR> action = null, Func<TransactionalService, TR> actionService = null)
         {
             var controllerType = controller.GetType();
             MethodInfo method = null;
 
-            if (action == null)
+            if (action == null && actionService == null)
             {
                 if (parameters == null || (parameters.Length == 1 && parameters.First() == null))
                 {
-                    parameters = new object[] {};
+                    parameters = new object[] { };
                     method = controllerType.GetMethodWithoutAmbiguity(methodName, parameters);
                 }
                 else
@@ -64,8 +72,6 @@ namespace Fluent.Architecture.Test
                 }
             }
 
-            //controller.SetLocalHttpContext(new HttpContextBaseMock());
-
             var actionExecuting = controllerType.GetMethod("OnActionExecuting", BindingFlags.NonPublic | BindingFlags.Instance);
             if (actionExecuting != null)
             {
@@ -75,10 +81,15 @@ namespace Fluent.Architecture.Test
 
             try
             {
-                object returnObj;
-                if (action == null)
+                object returnObj = null;
+                if (action == null && actionService == null)
                 {
                     returnObj = method.Invoke(controller, parameters);
+                }
+                else if (action == null)
+                {
+                    var service = controller.GetType().GetProperty("Service", BindingFlags.NonPublic).GetValue(controller) as TransactionalService;
+                    returnObj = new JsonResult { Data = actionService(service) };
                 }
                 else
                 {
@@ -108,7 +119,7 @@ namespace Fluent.Architecture.Test
 
                     return jsonResult.Data as dynamic;
                 }
-                
+
                 Assert.True(returnObj is TR);
 
                 return returnObj as dynamic;
@@ -120,7 +131,7 @@ namespace Fluent.Architecture.Test
                     return ex as dynamic;
                 }
 
-                if (ex.InnerException is FluentValidationException validationError)
+                if (ex.InnerException is ContextFluentValidationException validationError)
                 {
                     return validationError as dynamic;
                 }

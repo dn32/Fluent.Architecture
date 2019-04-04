@@ -1,12 +1,16 @@
-﻿// ReSharper disable CommentTypo
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
 
-using System;
+// ReSharper disable CommentTypo
+
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Exceptions;
-using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Model;
@@ -49,41 +53,14 @@ namespace Fluent.Architecture.Services
             ValidateInit();
             this.Repository = RepositoryFactory<T>.Create(this.TransactionObjects, this);
             this.Validation = ValidationFactory.Create<T>();
-            this.Validation.Init(this, this.Repository);
+            this.Validation.Init(this);
         }
 
-        #region PROPAGATION
-
-        // Todo Documenta após a organização desses itens.
-        public virtual object PropagateService(string methodName, object[] parameters)
+        //Todo - ATENÇÃO! AO USAR ESSE MÉTODO, A OPERAÇÃO NÃO É MAIS TRANSACIONADA. REMOVER ISSO DEPOIS DE IMPLEMENTAR O MODELO DE COMPOSIÇÃO ENTRE AS ENTIDADES
+        protected void SaveChanges()
         {
-          //  base.Repository = null;
-
-            Validation.PropagateService(methodName, parameters);
-
-            var validationMethod = Validation.GetType().GetMethodWithoutAmbiguity(methodName, parameters, new[] { typeof(T) });
-            var serviceMethod = GetType().GetMethodWithoutAmbiguity(methodName, parameters, new[] { typeof(T) });
-
-            if (validationMethod != null)
-            {
-                validationMethod.FluenInvoke(Validation, parameters);
-            }
-
-            if (serviceMethod != null)
-            {
-                return serviceMethod.FluenInvoke(this, parameters);
-            }
-
-            var repositoryMethod = Repository.GetType().GetMethodWithoutAmbiguity(methodName, parameters, new[] { typeof(T) });
-            if (repositoryMethod != null)
-            {
-                return repositoryMethod.FluenInvoke(Repository, parameters);
-            }
-
-            throw new IncorrectDevelopmentException($"The {methodName} method was not found in the service {this.GetType().BaseType} and repository {Repository.GetType()}");
+            TransactionObjects.Session.SaveChanges();
         }
-
-        #endregion
 
         #region PASSAGEM DIRETA PARA O REPOSITÓRIO
 
@@ -102,11 +79,10 @@ namespace Fluent.Architecture.Services
         /// </param>
         /// <returns>
         /// A lista paginada de resultados.
-        /// </returns>
-        [Propagate]
-        public virtual List<TO> List<TO>(IFluentSpecification<TO> spec, FluentPagination pagination = null)
+        /// </returns>    
+        public virtual List<TO> ListSelect<TO>(IFluentSpecification<TO> spec, FluentPagination pagination = null)
         {
-            return Repository.List(spec, pagination);
+            return Repository.ListSelect(spec, pagination);
         }
 
         /// <summary>
@@ -121,7 +97,6 @@ namespace Fluent.Architecture.Services
         /// <returns>
         /// A lista paginada de resultados.
         /// </returns>
-        [Propagate]
         public virtual List<T> List(IFluentSpecification spec, FluentPagination pagination = null)
         {
             return this.Repository.List(spec, pagination);
@@ -139,10 +114,9 @@ namespace Fluent.Architecture.Services
         /// <returns>
         /// O item referente à consulta ou nulo.
         /// </returns>
-        [Propagate]
-        public virtual TO FirstOrDefault<TO>(IFluentSpecification<TO> spec)
+        public virtual TO FirstOrDefaultSelect<TO>(IFluentSpecification<TO> spec)
         {
-            return this.Repository.FirstOrDefault(spec);
+            return this.Repository.FirstOrDefaultSelect(spec);
         }
 
         /// <summary>
@@ -154,14 +128,14 @@ namespace Fluent.Architecture.Services
         /// <returns>
         /// O item referente à consulta ou nulo.
         /// </returns>
-        [Propagate]
+
         public virtual T FirstOrDefault(IFluentSpecification spec)
         {
             return this.Repository.FirstOrDefault(spec);
         }
 
         //Todo Doc
-        [Propagate]
+
         public virtual T FirstOrDefault()
         {
             return this.Repository.FirstOrDefault();
@@ -179,10 +153,9 @@ namespace Fluent.Architecture.Services
         /// <returns>
         /// A quantidade de itens.
         /// </returns>
-        [Propagate]
-        public virtual int Count<TO>(IFluentSpecification<TO> spec)
+        public virtual int CountSelect<TO>(IFluentSpecification<TO> spec)
         {
-            return this.Repository.Count(spec);
+            return this.Repository.CountSelect(spec);
         }
 
         /// <summary>
@@ -194,21 +167,18 @@ namespace Fluent.Architecture.Services
         /// <returns>
         /// A quantidade de itens.
         /// </returns>
-        [Propagate]
         public virtual int Count(IFluentSpecification spec)
         {
             return this.Repository.Count(spec);
         }
 
         // Todo documentar
-        [Propagate]
         public virtual int Count()
         {
             return Repository.Count();
         }
 
         // Todo documentar
-        [Propagate]
         public virtual void RemoveRange(IFluentSpecification spec)
         {
             this.Repository.RemoveRange(spec);
@@ -223,25 +193,19 @@ namespace Fluent.Architecture.Services
         /// <returns>
         /// Se o item existe ou não.
         /// </returns>
-        [Propagate]
-        public virtual bool Exists(IFluentSpecification spec)
+        public virtual bool Exists(ISpec spec)
         {
             return this.Repository.Exists(spec);
         }
 
-        /// <summary>
-        /// Avalia se um item existe no banco de dados, baseado em uma especificação.
-        /// </summary>
-        /// <param name="spec">
-        /// A especificação de requisição.
-        /// </param>
-        /// <returns>
-        /// Se o item existe ou não.
-        /// </returns>
-        [Propagate]
-        public virtual bool Exists<TO>(IFluentSpecification<TO> spec)
+        public virtual bool Exists(T entity,bool checkId = true)
         {
-            return this.Repository.Exists(spec);
+            return this.Find(entity, checkId) != null;
+        }
+
+        public virtual bool ExistsSelect<TO>(ISpec spec)
+        {
+            return this.Repository.ExistsSelect<TO>(spec);
         }
 
         /// <summary>
@@ -250,10 +214,10 @@ namespace Fluent.Architecture.Services
         /// <param name="entities">
         /// Itens a serem adicionados.
         /// </param>
-        [Propagate]
+
         public virtual void AddRange(params T[] entities)
         {
-            entities.ToList().ForEach(this.Validation.Add);
+            entities.ToList().ForEach(Validation.Add);
             this.Repository.AddRange(entities);
         }
 
@@ -263,7 +227,7 @@ namespace Fluent.Architecture.Services
         /// <param name="entity">
         /// Item a ser adicionado.
         /// </param>
-        [Propagate]
+
         public virtual T Add(T entity)
         {
             this.Validation.Add(entity);
@@ -271,10 +235,10 @@ namespace Fluent.Architecture.Services
         }
 
         // Todo documentar
-        [Propagate]
-        public virtual T Find(T entity)
+
+        public virtual T Find(T entity, bool checkId = true)
         {
-            this.Validation.Find(entity);
+            this.Validation.Find(entity, checkId);
             return this.Repository.Find(entity);
         }
 
@@ -284,7 +248,7 @@ namespace Fluent.Architecture.Services
         /// <param name="entity">
         /// Entidade a ser atualizada com o identificador preenchido.
         /// </param>
-        [Propagate]
+
         public virtual T Update(T entity)
         {
             this.Validation.Update(entity);
@@ -297,7 +261,7 @@ namespace Fluent.Architecture.Services
         /// <param name="entity">
         /// Entidade a ser removida.
         /// </param>
-        [Propagate]
+
         public virtual T Remove(T entity)
         {
             this.Validation.Remove(entity);
@@ -305,7 +269,7 @@ namespace Fluent.Architecture.Services
         }
 
         // Todo documentar
-        [Propagate]
+
         public virtual void RemoveRange(params T[] entities)
         {
             foreach (var entity in entities)

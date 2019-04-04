@@ -1,4 +1,11 @@
-﻿// ReSharper disable CommentTypo
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+// ReSharper disable CommentTypo
 
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -28,7 +35,7 @@ namespace Fluent.Architecture.Repository
         /// <param name="entity">
         /// Item a ser adicionado.
         /// </param>
-        [Propagate]
+        
         public override TE Add(TE entity)
         {
             if (string.IsNullOrWhiteSpace(entity.Language))
@@ -46,7 +53,7 @@ namespace Fluent.Architecture.Repository
         }
 
         // Tradução ok
-        [Propagate]
+        
         public override void AddRange(params TE[] entities)
         {
             foreach (var entity in entities)
@@ -56,7 +63,7 @@ namespace Fluent.Architecture.Repository
         }
 
         // Tradução ok
-        [Propagate]
+        
         public override TE Update(TE entity)
         {
             RunTheContextValidation();
@@ -85,7 +92,7 @@ namespace Fluent.Architecture.Repository
         }
 
         // Tradução ok
-        [Propagate]
+        
         public virtual List<TE> List(IFluentSpecification spec, FluentPagination pagination, string language)
         {
             var list = base.List(spec, pagination);
@@ -96,7 +103,7 @@ namespace Fluent.Architecture.Repository
         }
 
         // Tradução ok
-        //[Propagate]
+        //
         //public virtual List<TE> List(string language)
         //{
         //    var list = base.List();
@@ -107,7 +114,7 @@ namespace Fluent.Architecture.Repository
         //}
 
         // Tradução ok
-        [Propagate]
+        
         public virtual TE FirstOrDefault(IFluentSpecification spec, string language)
         {
             var persistedEntity = base.FirstOrDefault(spec);
@@ -115,7 +122,7 @@ namespace Fluent.Architecture.Repository
         }
 
         // Tradução ok
-        [Propagate]
+        
         public virtual TE FirstOrDefault(string language)
         {
             var persistedEntity = base.FirstOrDefault();
@@ -123,7 +130,7 @@ namespace Fluent.Architecture.Repository
         }
 
         // Tradução ok
-        [Propagate]
+        
         public virtual TE Find(TE entity, string language)
         {
             var persistedEntity = base.Find(entity);
@@ -131,7 +138,7 @@ namespace Fluent.Architecture.Repository
         }
 
         // Tradução ok
-        [Propagate]
+        
         public override TE Remove(TE entity)
         {
             TranslactionInput.RemoveRange(FindAllTranslationsOfAnEntity(entity));

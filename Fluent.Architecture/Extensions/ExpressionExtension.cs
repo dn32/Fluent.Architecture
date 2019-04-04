@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fluent.Architecture.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -6,101 +7,106 @@ using System.Reflection;
 
 namespace Fluent.Architecture.Extensions
 {
-    public static class ExpressionExtension
+    public static class UtilitarioDeExpression
     {
-        public static PropertyInfo GetPropertyInfo<TSource, TProperty>(this Expression<Func<TSource, TProperty>> propertyLambda)
+        public static PropertyInfo GetPropertyInfo<TSource, TProperty>(Expression<Func<TSource, TProperty>> propertyLambda)
         {
-            var type = typeof(TSource);
+            Type type = typeof(TSource);
 
-            if (!(propertyLambda.Body is MemberExpression member))
-            {
-                throw new ArgumentException($"Expression '{propertyLambda.ToString()}' refers to a method, not a property.");
-            }
+            MemberExpression member = propertyLambda.Body as MemberExpression;
+            if (member == null)
+                throw new ArgumentException(string.Format(
+                    "Expression '{0}' refers to a method, not a property.",
+                    propertyLambda.ToString()));
 
-            var propInfo = member.Member as PropertyInfo;
+            PropertyInfo propInfo = member.Member as PropertyInfo;
             if (propInfo == null)
-            {
-                throw new ArgumentException($"Expression '{propertyLambda.ToString()}' refers to a field, not a property.");
-            }
+                throw new ArgumentException(string.Format(
+                    "Expression '{0}' refers to a field, not a property.",
+                    propertyLambda.ToString()));
 
-            if (type != propInfo.ReflectedType && !type.IsSubclassOf(propInfo.ReflectedType))
-            {
-                throw new ArgumentException($"Expresion '{propertyLambda.ToString()}' refers to a property that is not from type {type}.");
-            }
+            if (type != propInfo.ReflectedType &&
+                !type.IsSubclassOf(propInfo.ReflectedType))
+                throw new ArgumentException(string.Format(
+                    "Expresion '{0}' refers to a property that is not from type {1}.",
+                    propertyLambda.ToString(),
+                    type));
 
             return propInfo;
         }
 
-        public static List<Tuple<string, Type>> ValideExpression<T>(this Expression<Func<T, object>> par, bool valide = true)
+        public static List<Tuple<string, Type>> ValideExpression<T>(Expression<Func<T, object>> par, bool valide = true) where T : BaseEntity, new()
         {
-            var propertiesList = new List<Tuple<string, Type>>();
-            var members = ((NewExpression)par.Body).Members as IReadOnlyCollection<MemberInfo>;
-            var originalType = typeof(T);
+            var listaDepropriedades = new List<Tuple<string, Type>>();
+            var membros = ((NewExpression)par.Body).Members as IReadOnlyCollection<MemberInfo>;
+            var tipoOriginal = typeof(T);
 
-            foreach (PropertyInfo member in members)
+            foreach (PropertyInfo membro in membros)
             {
-                var propertyType = member.PropertyType;
-                var parameterName = member.Name;
-                var properties = parameterName.Split('_');
+                var tipoInformado = membro.PropertyType;
+                var nomeDoParametro = membro.Name;
+                var propriedades = nomeDoParametro.Split('_');
 
-                var stringName = string.Empty;
+                var nomeConcatenadoDasPropriedades = string.Empty;
 
-                for (int i = 0; i < properties.Count(); i++)
+                for (int i = 0; i < propriedades.Count(); i++)
                 {
-                    var name = properties[i];
-                    stringName += string.IsNullOrWhiteSpace(stringName) ? name : "." + name;
-                    var property = originalType.GetProperty(name);
-                    if (property == null)
+                    var nome = propriedades[i];
+                    nomeConcatenadoDasPropriedades += nomeConcatenadoDasPropriedades == string.Empty ? nome : "." + nome;
+                    var propriedade = tipoOriginal.GetProperty(nome);
+                    if (propriedade == null)
                     {
                         if (!valide)
                         {
                             continue;
                         }
 
-                        throw new Exception($"Could not find a property with path {stringName} in type {originalType.Name}. Check the {parameterName} element as it is likely to be spelled incorrectly.");
+                        throw new Exception($"Não foi encontrado uma property com caminho {nomeConcatenadoDasPropriedades} no tipo {tipoOriginal.Name}. Confira o elemento {nomeDoParametro}, pois é provável que esteja escrito incorretamente.");
                     }
-                    if (properties.Count() == i + 1)
+                    if (propriedades.Count() == i + 1)
                     {
-                        if (property.PropertyType != propertyType)
+                        if (propriedade.PropertyType != tipoInformado)
                         {
-                            throw new Exception($"The type found in the {originalType.Name} property was not found in the path {stringName}. the type informed is {propertyType} and the type found was {property.PropertyType}");
+                            throw new Exception($"O tipo encontrado na propriedade {tipoOriginal.Name} não foi encontrado no caminho {nomeConcatenadoDasPropriedades}. o tipo informado é {tipoInformado} e o tipo encontrado foi {propriedade.PropertyType}");
                         }
                     }
 
-                    originalType = property.PropertyType;
+                    tipoOriginal = propriedade.PropertyType;
                 }
 
-                propertiesList.Add(new Tuple<string, Type>(stringName, propertyType));
+                listaDepropriedades.Add(new Tuple<string, Type>(nomeConcatenadoDasPropriedades, tipoInformado));
             }
 
-            return propertiesList;
+            return listaDepropriedades;
         }
 
-        public static object GetPropertyValue(this string propertyName, object obj, out Type propertyType)
+        public static object ObtenhaValorPorPropriedade(string propriedadeInformada, object p, out Type tipoDaPropriedade)
         {
-            propertyType = null;
-            if (propertyName == null)
+            tipoDaPropriedade = null;
+            if (propriedadeInformada == null)
             {
                 return null;
             }
 
-            var properties = propertyName.Split('.');
-            var originalType = obj.GetType();
-            var originalValue = obj;
+            var propriedades = propriedadeInformada.Split('.');
+            var tipoOriginal = p.GetType();
+            var valorOriginal = p;
+            var nomeConcatenadoDaspropriedades = string.Empty;
 
-            for (int i = 0; i < properties.Count(); i++)
+            for (int i = 0; i < propriedades.Count(); i++)
             {
-                var nome = properties[i];
-                var propriedade = originalType.GetProperty(nome);
-                originalValue = propriedade.GetValue(originalValue);
+                var nome = propriedades[i];
+                nomeConcatenadoDaspropriedades += nomeConcatenadoDaspropriedades == string.Empty ? nome : "." + nome;
+                var propriedade = tipoOriginal.GetProperty(nome);
+                valorOriginal = propriedade.GetValue(valorOriginal);
 
-                if (properties.Count() == i + 1)
+                if (propriedades.Count() == i + 1)
                 {
-                    propertyType = propriedade.PropertyType;
-                    return originalValue;
+                    tipoDaPropriedade = propriedade.PropertyType;
+                    return valorOriginal;
                 }
 
-                originalType = propriedade.PropertyType;
+                tipoOriginal = propriedade.PropertyType;
             }
 
             return null;
@@ -116,6 +122,11 @@ namespace Fluent.Architecture.Extensions
 
         public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> a, Expression<Func<T, bool>> b)
         {
+            if(a == null)
+            {
+                return b;
+            }
+
             var p = a.Parameters[0];
             var visitor = new SubstExpressionVisitor { Subst = { [b.Parameters[0]] = p } };
             Expression body = Expression.OrElse(a.Body, visitor.Visit(b.Body));
@@ -128,7 +139,8 @@ namespace Fluent.Architecture.Extensions
 
             protected override Expression VisitParameter(ParameterExpression node)
             {
-                return Subst.TryGetValue(node, out Expression newValue) ? newValue : node;
+                Expression newValue;
+                return Subst.TryGetValue(node, out newValue) ? newValue : node;
             }
         }
 
@@ -161,7 +173,7 @@ namespace Fluent.Architecture.Extensions
             }
         }
 
-        public static Expression<Func<T, bool>> Igual<T>(string nomePropriedade, object valor)
+        public static Expression<Func<T, bool>> Equals<T>(string nomePropriedade, object valor)
         {
             var conditions = ToExpression<T>("and", nomePropriedade, "==", valor);
             return conditions;

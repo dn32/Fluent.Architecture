@@ -1,4 +1,11 @@
-﻿// ReSharper disable CommentTypo
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+// ReSharper disable CommentTypo
 
 using System;
 using System.Linq;
@@ -56,7 +63,7 @@ namespace Fluent.Architecture.Repository
         /// <returns>
         /// A referência da tabela do banco de dados.
         /// </returns>
-        protected internal virtual DbSet<TX> GetObjectQueryInternal<TX>() where TX : BaseEntity
+        protected internal virtual IQueryable<TX> GetObjectQueryInternal<TX>() where TX : BaseEntity
         {
             return this.Session.Set<TX>();
         }

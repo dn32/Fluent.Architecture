@@ -1,4 +1,11 @@
-﻿// ReSharper disable CommentTypo
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+// ReSharper disable CommentTypo
 
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,6 +14,7 @@ using Fluent.Architecture.Repository;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Exceptions.ValidationException;
+using System.Reflection;
 
 namespace Fluent.Architecture.Validation
 {
@@ -18,15 +26,6 @@ namespace Fluent.Architecture.Validation
     {
         #region INTERNAL
 
-        ///// <summary>
-        ///// O repositório do serviço.
-        ///// </summary>
-        protected internal new FluentRepository<T> Repository
-        {
-            get => base.Repository as FluentRepository<T>;
-            set => base.Repository = value;
-        }
-
         /// <summary>
         /// A validação do serviço.
         /// </summary>
@@ -35,6 +34,8 @@ namespace Fluent.Architecture.Validation
             get => base.Service as FluentService<T>;
             set => base.Service = value;
         }
+
+        public UserSessionRequest SessionRequest => Service.SessionRequest;
 
         // Todo documentar
         public bool NullParameterOk { get; set; } = true;
@@ -54,8 +55,9 @@ namespace Fluent.Architecture.Validation
         {
             this.ParameterMustBeInformed(entity);
             this.RequiredPropertyMustBeInformed(entity);
+            this.MaxLenghtPropertyMustBeInformed(entity);
             this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
-            this.EntityShouldNotExistInDatabaseBasedOnKeys(entity);
+            this.EntityShouldNotExistInDatabaseBasedOnKeys(entity, false);
 
             this.RunTheContextValidation();
         }
@@ -68,6 +70,7 @@ namespace Fluent.Architecture.Validation
         {
             this.ParameterMustBeInformed(entity);
             this.RequiredPropertyMustBeInformed(entity);
+            this.MaxLenghtPropertyMustBeInformed(entity);
             this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, isUpdate: true);
             this.EntityMustExistInDatabase(entity);
 
@@ -88,27 +91,17 @@ namespace Fluent.Architecture.Validation
         }
 
         // Todo Documentar
-        public virtual void Find(T entity)
+        public virtual void Find(T entity, bool checkId = true)
         {
             this.ParameterMustBeInformed(entity);
-            this.AllKeysMustBeInformed(entity);
 
-            this.RunTheContextValidation();
-        }
-
-        public virtual void PropagateService(string methodName, object[] parameters)
-        {
-            this.ParameterMustBeInformed(parameters);
-
-            if (this.NullParameterOk)
+            if (checkId)
             {
-                foreach (var parameter in parameters)
-                {
-                    if (parameter == null)
-                    {
-                        this.AddInconsistency(new FluentParameterValidationException(nameof(parameters), "No propagation parameter can be null."));
-                    }
-                }
+                this.AllKeysMustBeInformed(entity);
+            }
+            else
+            {
+                this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
             }
 
             this.RunTheContextValidation();
@@ -137,6 +130,30 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
             this.NullParameterOk = true;
         }
 
+        private void MaxLenghtPropertyMustBeInformed(T entity)
+        {
+            if (!this.NullParameterOk)
+            {
+                return;
+            }
+
+            var properties = typeof(T).GetPropertiesByAttribute<RequiredAttribute>();
+            foreach (var property in properties)
+            {
+                var attr = property.GetCustomAttribute<MaxLengthAttribute>();
+                if (attr == null)
+                {
+                    continue;
+                }
+
+                var value = property.GetValue(entity);
+                if (!attr.IsValid(value))
+                {
+                    this.AddInconsistency(new UiFieldMaxLenghtFluentValidationException(property));
+                }
+            }
+        }
+
         private void RequiredPropertyMustBeInformed(T entity)
         {
             if (!this.NullParameterOk)
@@ -149,7 +166,7 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
             {
                 if (property.GetValue(entity).IsFluentNull())
                 {
-                    this.AddInconsistency(new PropertyRequiredFluentValidationException(property.Name));
+                    this.AddInconsistency(new UiFieldRequiredFluentValidationException(property));
                 }
             }
         }
@@ -163,7 +180,7 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
             {
                 if (property.GetValue(entity).IsFluentNull())
                 {
-                    this.AddInconsistency(new PropertyRequiredFluentValidationException(property.Name));
+                    this.AddInconsistency(new DbFieldRequiredFluentValidationException(property));
                     this.KeyValuesOk = false;
                 }
             }
@@ -192,7 +209,7 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
                         return;
                     }
 
-                    this.AddInconsistency(new PropertyRequiredFluentValidationException(property.Name));
+                    this.AddInconsistency(new DbFieldRequiredFluentValidationException(property));
                     this.KeyValuesOk = false;
                 }
                 else
@@ -202,7 +219,7 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
                         return;
                     }
 
-                    this.AddInconsistency(new FluentPropertyValidationException(property.Name, "The key must not be entered for this operation."));
+                    this.AddInconsistency(new DbFieldNotRequiredFluentValidationException(property));
                     this.KeyValuesOk = false;
                 }
             }
@@ -215,7 +232,7 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
                 return;
             }
 
-            if (!this.Repository.Exists(entity))
+            if (!this.Service.Exists(entity))
             {
                 var keys = entity.GetKeyValues().Select(x => $"{{{x.Property.Name}:{x.Value}}}").ToArray();
                 var keyValues = string.Join(", ", keys);
@@ -223,14 +240,14 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
             }
         }
 
-        private void EntityShouldNotExistInDatabaseBasedOnKeys(T entity)
+        private void EntityShouldNotExistInDatabaseBasedOnKeys(T entity, bool checkId)
         {
             if (!this.NullParameterOk || !this.KeyValuesOk)
             {
                 return;
             }
 
-            if (this.Repository.Exists(entity))
+            if (this.Service.Exists(entity, checkId))
             {
                 var keys = entity.GetKeyAndFluentUniqueKeyValues().Select(x => $"{{{x.Property.Name}:{x.Value}}}").ToArray();
                 var keyValues = string.Join(", ", keys);

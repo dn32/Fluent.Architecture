@@ -1,7 +1,13 @@
-﻿// ReSharper disable CommentTypo
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+// ReSharper disable CommentTypo
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -21,13 +27,13 @@ namespace Fluent.Architecture.Util
     public static class GlobalUtil
     {
         /// <summary>
-        /// Obtem o tipo da entidade de um objeto baseado em um tipo esperado de Fluent. Ex <see cref="FluentService{T}"/>, <see cref="FluentRepository{T}"/>, etc. O retorno será o tipo de T.
+        /// Obtem o tipo da entidade de um objeto baseado em um tipo esperado. Ex <see cref="FluentService{T}"/>, <see cref="FluentRepository{TE}"/>, etc. O retorno será o tipo de T.
         /// </summary>
         /// <param name="objectTypeToCheck">
         /// Objeto a ser avaliado.
         /// </param>
         /// <param name="expectedType">
-        /// Tipo esperado. Exemplo:  <see cref="FluentService{T}"/>, <see cref="FluentRepository{T}"/>
+        /// Tipo esperado. Exemplo:  <see cref="FluentService{T}"/>, <see cref="FluentRepository{TE}"/>
         /// </param>
         /// <returns>
         /// O tipo.
@@ -69,7 +75,7 @@ namespace Fluent.Architecture.Util
         };
 
         /// <summary>
-        /// Obtem o tipo da entidade de um tipo Fluent. Ex <see cref="FluentService{T}"/>. O tipo a ser encontrado é o tipo de T.
+        /// Obtem o tipo da entidade de um tipo. Ex <see cref="FluentService{T}"/>. O tipo a ser encontrado é o tipo de T.
         /// </summary>
         /// <param name="currentType">
         /// Objeto a ser avaliado.
@@ -101,28 +107,6 @@ namespace Fluent.Architecture.Util
 
                 return localType;
             }
-        }
-
-        // Todo Documentar
-        public static MethodBase GetMethodForPropagation()
-        {
-            var frames = new StackTrace().GetFrames();
-            //if (frames == null)
-            //{
-            //    throw new NullParameterException(nameof(frames));
-            //}
-
-            foreach (var frame in frames)
-            {
-                var method = frame.GetMethod();
-                var type = method.ReflectedType;
-                if (type != null && !type.IsAbstract && type.IsSubclassOf(typeof(BaseController)))
-                {
-                    return method;
-                }
-            }
-
-            throw new IncorrectDevelopmentException("The propagation call could not be traced. Only BaseController child controllers can make propagation call.");
         }
     }
 }

@@ -1,4 +1,11 @@
-﻿using System.Web.Mvc;
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System.Web.Mvc;
 using Fluent.Architecture.Controllers;
 
 namespace Fluent.Architecture.Test.Mock

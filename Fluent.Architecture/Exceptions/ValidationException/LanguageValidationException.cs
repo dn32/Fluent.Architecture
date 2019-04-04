@@ -1,4 +1,11 @@
-﻿namespace Fluent.Architecture.Exceptions.ValidationException
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+namespace Fluent.Architecture.Exceptions.ValidationException
 {
     public class LanguageValidationException : FluentValidationException
     {

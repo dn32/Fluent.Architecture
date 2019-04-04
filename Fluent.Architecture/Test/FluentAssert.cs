@@ -1,9 +1,15 @@
-﻿using Fluent.Architecture.Extensions;
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using Fluent.Architecture.Extensions;
+using System.ComponentModel.DataAnnotations;
 
 namespace Fluent.Architecture.Test
 {
-    using System.ComponentModel.DataAnnotations;
-
     public static class FluentAssert
     {
         public static void Equal(object obj1, object obj2)

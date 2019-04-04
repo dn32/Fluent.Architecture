@@ -1,4 +1,11 @@
-﻿// ReSharper disable CommentTypo
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+// ReSharper disable CommentTypo
 
 using System.Web.Mvc;
 using Fluent.Architecture.Model;
@@ -21,7 +28,7 @@ namespace Fluent.Architecture.Filters
                         JsonRequestBehavior = JsonRequestBehavior.AllowGet,
                         Data = new ValidationReturn
                         {
-                            Message= exception.Message,
+                            Message = exception.Message,
                             ValidationError = true
                         }
                     };

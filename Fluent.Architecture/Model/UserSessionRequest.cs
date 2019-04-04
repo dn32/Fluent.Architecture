@@ -1,4 +1,11 @@
-﻿// ReSharper disable CommentTypo
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+// ReSharper disable CommentTypo
 
 using System;
 using System.Collections.Generic;
@@ -18,6 +25,7 @@ namespace Fluent.Architecture.Model
         internal TransactionObjects TransactionObjects { get; set; }
         internal Guid SessionRequestId { get; set; }
         public ContextFluentValidationException ContextFluentValidationException { get; set; }
+        public FluentPagination Pagination { get; set; }
 
         internal object HttpContext;
 

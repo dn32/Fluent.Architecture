@@ -1,4 +1,11 @@
-﻿using System.Globalization;
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System.Globalization;
 using System.Linq;
 using Fluent.Architecture.Exceptions.ValidationException;
 using Fluent.Architecture.Interfaces;
@@ -11,8 +18,8 @@ namespace Fluent.Architecture.Validation
         //Todo testar
         public virtual void Find(T entity, string language)
         {
-            base.Find(entity);
             LanguageMustBeValid(language);
+            base.Find(entity);
         }
 
         //Todo testar

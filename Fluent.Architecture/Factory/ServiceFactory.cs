@@ -1,8 +1,17 @@
-﻿// ReSharper disable CommentTypo
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+// ReSharper disable CommentTypo
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
@@ -13,7 +22,7 @@ namespace Fluent.Architecture.Factory
     /// Classe interna.
     /// Fábrica de serviços.
     /// </summary>
-    internal class ServiceFactory
+    public class ServiceFactory
     {
         /// <summary>
         /// Cria um serviço que terá controle de transação.
@@ -30,13 +39,45 @@ namespace Fluent.Architecture.Factory
         /// </returns>
         internal static TS Create<TS>(object httpContext) where TS : TransactionalService, new()
         {
-            // Todo IMPORTANTE checar quem está chamando e barrar chamas externas
+            return Create(typeof(TS), httpContext) as TS;
+        }
+
+        internal static TransactionalService Create(Type serviceType, UserSessionRequest sessionRequest)
+        {
+            return Create(serviceType, sessionRequest.HttpContext, sessionRequest);
+        }
+
+        internal static TransactionalService Create(Type serviceType, object httpContext, UserSessionRequest sessionRequest = null)
+        {
             var sessionId = Guid.NewGuid();
-            var service = InternalCreate<TS>(sessionId);
-            var userSession = CreateUserSession(httpContext, sessionId, service);
-            //InternalCreateValidation(service);
+            serviceType = GetSpecializedService(serviceType);
+            var service = InternalCreate(serviceType, sessionId);
+            var userSession = sessionRequest ?? CreateUserSession(httpContext, sessionId, service);
             service.SetUserSession(userSession);
             return service;
+        }
+
+        /// <summary>
+        /// MUITO CUIDADO!!!! Esse método só deve ser utilizado se você estiver muito certo do que está fazendo.
+        /// </summary>
+        /// <typeparam name="TS">
+        /// O tipo de serviço a ser criado.
+        /// </typeparam>
+        /// <param name="httpContext">
+        /// O contexto do controller.
+        /// </param>
+        /// <param name="justification">
+        /// Explique por que você está fazendo uso desse método.
+        /// </param>
+        /// <returns></returns>
+        public static TS Create<TS>(object httpContext, string justification) where TS : TransactionalService, new()
+        {
+            if (string.IsNullOrWhiteSpace(justification))
+            {
+                throw new IncorrectDevelopmentException("Report the justification");
+            }
+
+            return Create<TS>(httpContext);
         }
 
         //private static void InternalCreateValidation(TransactionalService service)
@@ -104,7 +145,7 @@ namespace Fluent.Architecture.Factory
 
         private static UserSessionRequest CreateUserSession(object httpContext, Guid sessionId, BaseService service)
         {
-            var transactionObjects = TransactionObjects.Create(); 
+            var transactionObjects = TransactionObjects.Create();
 
             var serviceType = GetSpecializedService(service.GetType());
 

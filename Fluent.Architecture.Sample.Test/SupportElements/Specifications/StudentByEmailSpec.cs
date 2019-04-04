@@ -1,23 +1,28 @@
-﻿using System;
-using System.Data.Entity;
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Linq;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
-using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
 
 namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
 {
     public class StudentByEmailSpec : FluentSpecification<Student>
     {
-        private readonly string _email;
+        private string _email;
 
-
-        public StudentByEmailSpec(TransactionalService service, string email) : base(service)
+        public StudentByEmailSpec DefineParams(string email)
         {
             this._email = email;
+            return this;
         }
 
-        public override IQueryable<Student> Where(DbSet<Student> query)
+        public override IQueryable<Student> Where(IQueryable<Student> query)
         {
             return query.Where(x => x.Email.Equals(this._email, StringComparison.CurrentCultureIgnoreCase));
         }

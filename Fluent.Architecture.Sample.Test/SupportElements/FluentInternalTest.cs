@@ -1,5 +1,14 @@
-﻿using System.Configuration;
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System.Configuration;
 using Fluent.Architecture.Sample.Test.SupportElements.Controllers;
+using Fluent.Architecture.Sample.Test.SupportElements.Services;
+using Fluent.Architecture.Services;
 using Fluent.Architecture.Test.Mock;
 
 namespace Fluent.Architecture.Sample.Test.SupportElements
@@ -18,7 +27,9 @@ namespace Fluent.Architecture.Sample.Test.SupportElements
         {
             var connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
-            Architecture.Test.Setup.Initialize(connectionString);
+            Fluent.Architecture.Test.Setup.Initialize(connectionString);
+            Fluent.Architecture.Setup.SetGlobalizationServiceType<FluentGlobalizationService>(null);
+
             this.UserControllerInstance = MockUtil.GetMockController<UserController>();
             this.StudentControllerInstance = MockUtil.GetMockController<StudentController>();
             this.CourseControllerInstance = MockUtil.GetMockController<CourseController>();

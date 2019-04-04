@@ -1,4 +1,11 @@
-﻿// ReSharper disable CommentTypo
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+// ReSharper disable CommentTypo
 
 
 using System;
@@ -7,6 +14,7 @@ using System.Web;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Services;
 using System.Web.Mvc;
+using Fluent.Architecture.Model;
 using Fluent.Architecture.Util;
 
 namespace Fluent.Architecture.Controllers
@@ -19,7 +27,9 @@ namespace Fluent.Architecture.Controllers
     /// <typeparam name="TS">O serviço a ser usado pelo controlador.</typeparam>
     public abstract class FluentServiceController<TS> : BaseController where TS : TransactionalService, new()
     {
-        protected internal TS Service { get; set; }
+        public virtual FluentPagination LastRequestPagination => Service.SessionRequest.Pagination;
+
+        protected internal  new TS Service { get; set; }
 
         protected internal Guid SessionRequestId => Service.SessionRequestId;
 
@@ -39,20 +49,27 @@ namespace Fluent.Architecture.Controllers
 
             using (var transaction = session.Database.BeginTransaction())
             {
-                session.SaveChanges();
-
-                if (Service.ExecuteInteractions())
+                if (Service.SessionRequest.ContextFluentValidationException.IsValid)
                 {
                     session.SaveChanges();
-                }
 
-                transaction.Commit();
+                    if (Service.ExecuteInteractions())
+                    {
+                        session.SaveChanges();
+                    }
+
+                    transaction.Commit();
+                }
+                else
+                {
+                    transaction.Rollback();
+                }
             }
 
-            this.Service.Dispose(true);
+            Service.Dispose(true);
             base.OnActionExecuted(filterContext);
         }
-
+        
         protected internal new JsonResult Json(object data)
         {
             return new CustomJsonResult

@@ -1,4 +1,11 @@
-﻿// ReSharper disable CommentTypo
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+// ReSharper disable CommentTypo
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +21,12 @@ namespace Fluent.Architecture.Extensions
     /// </summary>
     public static class ObjectExtension
     {
+        public static T FluentClone<T>(this object obj1)
+        {
+            var json = JsonConvert.SerializeObject(obj1);
+            return JsonConvert.DeserializeObject<T>(json);
+        }
+
         /// <summary>
         /// Verifica se dois objetos são iguais comparando os valores e não a referência.
         /// </summary>
@@ -128,6 +141,12 @@ namespace Fluent.Architecture.Extensions
             return JsonConvert.SerializeObject(propertyData, Formatting.None);
         }
 
+        private static List<FieldInfo> GetFields(Type objectType)
+        {
+            var items = objectType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            return items.ToList();
+        }
+
         /// <summary>
         /// Obtem todos o nome e valor de todos os campos de um objeto.
         /// </summary>
@@ -154,7 +173,16 @@ namespace Fluent.Architecture.Extensions
             }
             else
             {
-                foreach (var item in objectType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                var items = objectType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).ToList();
+                var type = objectType;
+
+                while (type.Is(typeof(object)) && type != typeof(object))
+                {
+                    type = type.BaseType;
+                    items.AddRange(type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic));
+                }
+
+                foreach (var item in items)
                 {
                     if (item.FieldType.IsPrimitive || item.FieldType.IsValueType || item.FieldType == typeof(string))
                     {

@@ -1,5 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
 using System.Web.Mvc;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Model;
@@ -19,7 +24,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
 
         public JsonResult AddRange(Course[] entities)
         {
-            this.Propagate(new object[] { entities });
+            Service.AddRange(entities);
             return this.Json(entities);
         }
 
@@ -46,32 +51,32 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
 
         public JsonResult Find(Course entity, string language)
         {
-            var entityFinded = Propagate(new object[] { entity, language });
+            var entityFinded = Service.Find(entity, language);
             return this.Json(entityFinded);
         }
 
         public JsonResult FirstOrDefault(string language)
         {
-            var entityFinded = Propagate(new object[] { language });
+            var entityFinded = Service.FirstOrDefault(language);
             return this.Json(entityFinded);
         }
 
         public JsonResult List(string language)
         {
-            var entityFinded = PropagateList(new object[] { language });
+            var entityFinded = Service.List(language);
             return this.Json(entityFinded);
         }
 
         public JsonResult List(FluentPagination pagination, string language)
         {
-            var spec = new CourseAllSpec(this);
-            var entityFinded = PropagateList(new object[] {spec, pagination, language });
+            var spec = CreateSpec<AllSpec<Course>>();
+            var entityFinded = Service.List(spec, pagination, language);
             return this.Json(entityFinded);
         }
 
         public JsonResult FirstOrDefaultSpec(string language)
         {
-            var entityFinded = PropagateMethod("FirstOrDefault", new object[] {new CourseAllSpec(this), language });
+            var entityFinded = Service.FirstOrDefault(language);
             return this.Json(entityFinded);
         }
     }

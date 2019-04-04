@@ -1,4 +1,11 @@
-﻿using Fluent.Architecture.Model;
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using Fluent.Architecture.Model;
 
 namespace Fluent.Architecture.Sample.Test.SupportElements.Model
 {

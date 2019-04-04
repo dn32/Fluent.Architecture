@@ -1,4 +1,11 @@
-﻿using System.Runtime.InteropServices;
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System.Runtime.InteropServices;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Sample.Test.SupportElements;
 using Fluent.Architecture.Sample.Test.SupportElements.Controllers;
@@ -48,8 +55,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             user = TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Add), user);
             student = TestUtil.Execute<Student>(this.StudentControllerInstance, nameof(UserController.Add), student);
 
-            var spec = new UserAndStudentByEmail(this.UserControllerInstance, email);
-            var userStudent = TestUtil.Execute<UserStudent>(this.UserControllerInstance, nameof(UserController.SpecOne), spec);
+            var userStudent = TestUtil.Execute<UserStudent>(this.UserControllerInstance, nameof(UserController.SpecOneUserAndStudent), email);
 
             Assert.NotNull(userStudent);
             FluentAssert.Equal(user, userStudent.User);

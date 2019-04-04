@@ -1,10 +1,19 @@
-﻿// ReSharper disable CommentTypo
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+// ReSharper disable CommentTypo
 
 using System;
 using System.Collections.Generic;
+using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
+using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Validation;
 
 namespace Fluent.Architecture.Services
@@ -26,6 +35,7 @@ namespace Fluent.Architecture.Services
             get => base.Repository as TransactionlRepository;
             set => base.Repository = value;
         }
+
         protected internal override void SetUserSession(UserSessionRequest sessionRequest)
         {
             base.SetUserSession(sessionRequest);
@@ -36,7 +46,7 @@ namespace Fluent.Architecture.Services
             }
 
             Validation = ValidationFactory.Create(ValidationType);
-            Validation.Init(this, this.Repository);
+            Validation.Init(this);
         }
 
         /// <summary>
@@ -73,6 +83,11 @@ namespace Fluent.Architecture.Services
                 Action = action,
                 Entity = entity,
             });
+        }
+
+        protected T CreateSpec<T>() where T : BaseSpecification
+        {
+            return SpecFactory.Create<T>(this);
         }
 
         internal class Interaction

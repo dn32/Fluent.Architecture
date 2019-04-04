@@ -1,4 +1,10 @@
-﻿
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
@@ -7,7 +13,6 @@ namespace Fluent.Architecture.Test.Mock
 {
     public class MockActionDescriptor : ActionDescriptor
     {
-
         public MockActionDescriptor(string actionName, Type controllerType)
         {
             this.ActionName = actionName;

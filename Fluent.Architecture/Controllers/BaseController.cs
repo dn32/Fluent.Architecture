@@ -1,4 +1,11 @@
-﻿// ReSharper disable CommentTypo
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
+// ReSharper disable CommentTypo
 
 using System.Security.Principal;
 using System.Web;
@@ -17,6 +24,8 @@ namespace Fluent.Architecture.Controllers
         public new HttpContextBase HttpContext => this._localHttpContext ?? base.HttpContext;
 
         public new IPrincipal User => HttpContext.User;
+
+        protected internal object Service { get; set; }
 
         public void SetLocalHttpContext(HttpContextBase httpContext)
         {

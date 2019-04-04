@@ -1,4 +1,10 @@
-﻿
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
+
 using System.Runtime.InteropServices;
 using Fluent.Architecture.Sample.Test.SupportElements;
 using Fluent.Architecture.Sample.Test.SupportElements.Controllers;
@@ -17,7 +23,7 @@ namespace Fluent.Architecture.Sample.Test.Test
         {
             var error = TestUtil.Execute<ContextFluentValidationException>(ReportControllerInstance, nameof(ReportController.GenerateError), null);
             Assert.NotNull(error);
-            Assert.AreEqual("Value can not be null", error.Message);
+            Assert.AreEqual("* Value Can Not Be Null", error.Message);
         }
     }
 }

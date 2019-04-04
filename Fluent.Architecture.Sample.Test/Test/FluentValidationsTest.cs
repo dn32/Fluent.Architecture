@@ -1,9 +1,13 @@
-﻿
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fluent System">
+//     Copyright © Fluent System. All rights reserved.
+//     TODOS OS DIREITOS RESERVADOS.
+// </copyright>
+// -----------------------------------------------------------------------
 
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Exceptions.ValidationException;
 using Fluent.Architecture.Sample.Test.SupportElements;
 using Fluent.Architecture.Sample.Test.SupportElements.Controllers;
@@ -20,19 +24,6 @@ namespace Fluent.Architecture.Sample.Test.Test
     [ComVisible(true)]
     public class FluentValidationsTest : FluentInternalTest
     {
-        [Theory, Ignore("Até resolver outros problemas")]
-        [TestCase(nameof(UserController.Add))]
-        [TestCase(nameof(UserController.Update))]
-        public void NullParameterTestFail(string method)
-        {
-            var error = TestUtil.Execute<ContextFluentValidationException>(this.UserControllerInstance, method, new object[] { null });
-
-            Assert.NotNull(error);
-            Assert.AreEqual(2, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<FluentPropertyValidationException>(error.Inconsistencies.First());
-            Assert.IsAssignableFrom<NullFluentValidationException>(error.Inconsistencies.Last());
-        }
-
         [Theory]
         [TestCase(nameof(UserController.Add))]
         [TestCase(nameof(UserController.Update))]
@@ -44,7 +35,7 @@ namespace Fluent.Architecture.Sample.Test.Test
 
             Assert.NotNull(error);
             Assert.AreEqual(1, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(error.Inconsistencies.First());
+            Assert.IsAssignableFrom<DbFieldRequiredFluentValidationException>(error.Inconsistencies.First());
         }
 
         [Theory]
@@ -57,8 +48,8 @@ namespace Fluent.Architecture.Sample.Test.Test
 
             Assert.NotNull(error);
             Assert.AreEqual(1, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<FluentPropertyValidationException>(error.Inconsistencies.First());
-            Assert.AreEqual("The key must not be entered for this operation.", error.Inconsistencies.First().Message);
+            Assert.IsAssignableFrom<DbFieldNotRequiredFluentValidationException>(error.Inconsistencies.First());
+            Assert.AreEqual("The Id field should not have a value for this operation.", error.Inconsistencies.First().Message);
         }
 
         [Theory]
@@ -71,8 +62,8 @@ namespace Fluent.Architecture.Sample.Test.Test
 
             Assert.NotNull(error);
             Assert.AreEqual(1, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(error.Inconsistencies.First());
-            Assert.AreEqual($"The property {nameof(Student.Id)} must have a value for this operation.", error.Inconsistencies.First().Message);
+            Assert.IsAssignableFrom<DbFieldRequiredFluentValidationException>(error.Inconsistencies.First());
+            Assert.AreEqual($"The field {nameof(Student.Id)} must have a value for this operation.", error.Inconsistencies.First().Message);
         }
 
         [Test]
@@ -128,8 +119,8 @@ namespace Fluent.Architecture.Sample.Test.Test
 
             Assert.NotNull(error);
             Assert.AreEqual(2, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<FluentPropertyValidationException>(error.Inconsistencies.First());
-            Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(error.Inconsistencies.Last());
+            Assert.IsAssignableFrom<UiFieldRequiredFluentValidationException>(error.Inconsistencies.First());
+            Assert.IsAssignableFrom<UiFieldRequiredFluentValidationException>(error.Inconsistencies.Last());
 
             if (method == nameof(UserController.Update))
             {
@@ -150,9 +141,8 @@ namespace Fluent.Architecture.Sample.Test.Test
 
             var error = TestUtil.Execute<ContextFluentValidationException>(this.UserControllerInstance, method, user);
             Assert.NotNull(error);
-            Assert.AreEqual(2, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<FluentPropertyValidationException>(error.Inconsistencies.First());
-            Assert.IsAssignableFrom<EntityNotFoundFluentValidationException>(error.Inconsistencies.Last());
+            Assert.AreEqual(1, error.Inconsistencies.Count);
+            Assert.IsAssignableFrom<UiFieldRequiredFluentValidationException>(error.Inconsistencies.First());
             Assert.True(error.ValidationError);
         }
 
@@ -187,8 +177,8 @@ namespace Fluent.Architecture.Sample.Test.Test
             var objectReturn = TestUtil.Execute<ContextFluentValidationException>(this.UserControllerInstance, method, user);
             Assert.NotNull(objectReturn);
             Assert.AreEqual(2, objectReturn.Inconsistencies.Count);
-            Assert.IsAssignableFrom<FluentPropertyValidationException>(objectReturn.Inconsistencies.First());
-            Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(objectReturn.Inconsistencies.Last());
+            Assert.IsAssignableFrom<UiFieldRequiredFluentValidationException>(objectReturn.Inconsistencies.First());
+            Assert.IsAssignableFrom<DbFieldRequiredFluentValidationException>(objectReturn.Inconsistencies.Last());
 
             objectReturn.Inconsistencies.Clear();
         }
@@ -206,7 +196,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             var objectReturn = TestUtil.Execute<ContextFluentValidationException>(this.UserControllerInstance, method, user);
             Assert.NotNull(objectReturn);
             Assert.AreEqual(1, objectReturn.Inconsistencies.Count);
-            Assert.IsAssignableFrom<PropertyRequiredFluentValidationException>(objectReturn.Inconsistencies.Last());
+            Assert.IsAssignableFrom<DbFieldRequiredFluentValidationException>(objectReturn.Inconsistencies.Last());
 
             objectReturn.Inconsistencies.Clear();
         }
@@ -243,8 +233,9 @@ namespace Fluent.Architecture.Sample.Test.Test
             var error = TestUtil.Execute<ContextFluentValidationException>(this.UserControllerInstance, nameof(UserController.Add), user);
             Assert.NotNull(error);
             Assert.AreEqual(1, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<FluentPropertyValidationException>(error.Inconsistencies.First());
-            Assert.AreEqual(nameof(User.Name), ((FluentPropertyValidationException)error.Inconsistencies.First()).Property);
+            Assert.IsAssignableFrom<UiFieldRequiredFluentValidationException>(error.Inconsistencies.First());
+            var validationError = (FluentPropertyValidationException)error.Inconsistencies.First();
+            Assert.AreEqual("Full Name", validationError.Values.First());
         }
 
         [Test]
@@ -262,8 +253,9 @@ namespace Fluent.Architecture.Sample.Test.Test
             var error = TestUtil.Execute<ContextFluentValidationException>(this.UserControllerInstance, nameof(UserController.Update), user);
             Assert.NotNull(error);
             Assert.AreEqual(1, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<FluentPropertyValidationException>(error.Inconsistencies.First());
-            Assert.AreEqual(nameof(User.Name), ((FluentPropertyValidationException)error.Inconsistencies.First()).Property);
+            Assert.IsAssignableFrom<UiFieldRequiredFluentValidationException>(error.Inconsistencies.First());
+            var validationError = (FluentPropertyValidationException)error.Inconsistencies.First();
+            Assert.AreEqual("Full Name", validationError.Values.First());
 
             // Remove
             TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Remove), user);
