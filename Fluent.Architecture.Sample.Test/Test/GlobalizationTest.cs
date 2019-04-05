@@ -157,10 +157,10 @@ namespace Fluent.Architecture.Sample.Test.Test
             course = UpdateLanguagePtBr(course);
 
             var courseDefault = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), course);
-            var coursePtBr = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.PT_BR });
-            var courseEs = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.ES });
-            var courseEn = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.EN_US });
-            var courseAnother = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.AA_DJ });
+            var coursePtBr = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, FluentLanguage.PT_BR });
+            var courseEs = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, FluentLanguage.ES });
+            var courseEn = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, FluentLanguage.EN_US });
+            var courseAnother = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, FluentLanguage.AA_DJ });
 
             Assert.NotNull(courseDefault);
             Assert.NotNull(coursePtBr);
@@ -169,27 +169,27 @@ namespace Fluent.Architecture.Sample.Test.Test
 
             Assert.AreEqual(DescriptionEs, courseDefault.Description);
             Assert.AreEqual(TitleEs, courseDefault.Title);
-            Assert.AreEqual(Language.ES, courseAnother.Language);
+            Assert.AreEqual(FluentLanguage.ES, courseAnother.Language);
             Assert.True(courseDefault.IsDefaultLanguage);
 
             Assert.AreEqual(DescriptionPtBr2, coursePtBr.Description);
             Assert.AreEqual(TitlePtBr2, coursePtBr.Title);
-            Assert.AreEqual(Language.PT_BR, coursePtBr.Language);
+            Assert.AreEqual(FluentLanguage.PT_BR, coursePtBr.Language);
             Assert.False(coursePtBr.IsDefaultLanguage);
 
             Assert.AreEqual(DescriptionEs, courseEs.Description);
             Assert.AreEqual(TitleEs, courseEs.Title);
-            Assert.AreEqual(Language.ES, courseEs.Language);
+            Assert.AreEqual(FluentLanguage.ES, courseEs.Language);
             Assert.True(courseEs.IsDefaultLanguage);
 
             Assert.AreEqual(DescriptionEn, courseEn.Description);
             Assert.AreEqual(TitleEn, courseEn.Title);
-            Assert.AreEqual(Language.EN_US, courseEn.Language);
+            Assert.AreEqual(FluentLanguage.EN_US, courseEn.Language);
             Assert.False(courseEn.IsDefaultLanguage);
 
             Assert.AreEqual(DescriptionEs, courseAnother.Description);
             Assert.AreEqual(TitleEs, courseAnother.Title);
-            Assert.AreEqual(Language.ES, courseAnother.Language);
+            Assert.AreEqual(FluentLanguage.ES, courseAnother.Language);
             Assert.True(courseAnother.IsDefaultLanguage);
 
             ////Remove
@@ -243,10 +243,10 @@ namespace Fluent.Architecture.Sample.Test.Test
             course.Description = DescriptionPtBr;
             course.Title = TitlePtBr;
             course.IsDefaultLanguage = false;
-            course.Language = Language.PT_BR;
+            course.Language = FluentLanguage.PT_BR;
 
             course = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Update), course);
-            var coursePtBr = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.PT_BR });
+            var coursePtBr = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, FluentLanguage.PT_BR });
             Assert.NotNull(course);
             Assert.AreNotEqual(0, course.Id);
             Assert.AreEqual(DescriptionEn, course.Description);
@@ -269,10 +269,10 @@ namespace Fluent.Architecture.Sample.Test.Test
             course.Description = DescriptionEs;
             course.Title = TitleEs;
             course.IsDefaultLanguage = true;
-            course.Language = Language.ES;
+            course.Language = FluentLanguage.ES;
 
             course = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Update), course);
-            var courseEn = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, Language.EN_US });
+            var courseEn = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Find), new object[] { course, FluentLanguage.EN_US });
             Assert.NotNull(course);
             Assert.AreNotEqual(0, course.Id);
             Assert.AreEqual(DescriptionEs, course.Description);
@@ -296,7 +296,7 @@ namespace Fluent.Architecture.Sample.Test.Test
             course.Description = DescriptionPtBr2;
             course.Title = TitlePtBr2;
             course.IsDefaultLanguage = false;
-            course.Language = Language.PT_BR;
+            course.Language = FluentLanguage.PT_BR;
 
             course = TestUtil.Execute<Course>(this.CourseControllerInstance, nameof(CourseController.Update), course);
             Assert.NotNull(course);

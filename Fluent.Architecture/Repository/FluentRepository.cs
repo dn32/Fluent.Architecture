@@ -6,9 +6,15 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
+#if NET461
+using System.Data.Entity;
+
+#else
+using Microsoft.EntityFrameworkCore;
+
+#endif
 
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Exceptions;
@@ -29,7 +35,7 @@ namespace Fluent.Architecture.Repository
     /// </typeparam>
     public class FluentRepository<TE> : TransactionlRepository where TE : BaseEntity
     {
-        #region PROPERTIES
+#region PROPERTIES
         public UserSessionRequest SessionRequest => Service.SessionRequest;
 
         /// <summary>
@@ -64,9 +70,9 @@ namespace Fluent.Architecture.Repository
 
         protected void RunTheContextValidation() => Service.SessionRequest.ContextFluentValidationException.Validate();
 
-        #endregion
+#endregion
 
-        #region SPEC TE
+#region SPEC TE
 
         /// <summary>
         /// Executa uma solicitação baseada em uma especificação e retorna um resultado ou nulo quando a consulta não é satisfeita.
@@ -84,9 +90,9 @@ namespace Fluent.Architecture.Repository
             return GetSpec(spec).ToIQueryable(Query).FirstOrDefault();
         }
 
-        #endregion
+#endregion
 
-        #region SPEC OUT
+#region SPEC OUT
 
         /// <summary>
         /// Executa uma solicitação baseada em uma especificação e retorna uma lista paginada de resultados.
@@ -166,14 +172,24 @@ namespace Fluent.Architecture.Repository
         /// <param name="sql"></param>
         /// <returns></returns>
 
+
         internal bool ExistsSql(string sql)
         {
+#if NET461
             return this.Input.SqlQuery(sql).Any();
+#else
+            return this.Input.FromSql(sql).Any();
+#endif
         }
 
         internal TE FindSingleOrDefaultSql(string sql)
         {
+#if NET461
             return this.Input.SqlQuery(sql).SingleOrDefault();
+
+#else
+            return this.Input.FromSql(sql).SingleOrDefault();
+#endif
         }
 
         #endregion
@@ -301,7 +317,11 @@ namespace Fluent.Architecture.Repository
         {
             RunTheContextValidation();
 
+#if NET461
             return Input.Add(entity);
+#else
+            return Input.Add(entity).Entity;
+#endif
         }
 
         /// <summary>
@@ -333,7 +353,11 @@ namespace Fluent.Architecture.Repository
         {
             this.RunTheContextValidation();
 
+#if NET461
             return this.Input.Remove(Service.Find(entity));
+#else
+            return this.Input.Remove(Service.Find(entity)).Entity;
+#endif
         }
 
         public virtual void RemoveRange(IFluentSpecification spec)
@@ -348,9 +372,9 @@ namespace Fluent.Architecture.Repository
             entities.ToList().ForEach(x => this.Remove(x));
         }
 
-        #endregion
+#endregion
 
-        #region INTERNAL
+#region INTERNAL
 
         private FluentSelectSpecification<TE, TO> GetSpecSelect<TO>(ISpec spec1)
         {
@@ -404,7 +428,11 @@ namespace Fluent.Architecture.Repository
 
         private string GetParameter(string key)
         {
+#if NET461
             return Service.SessionRequest.LocalHttpContext.Request.Params.Get(key);
+#else
+            return Service.SessionRequest.LocalHttpContext.Request.Form[key];
+#endif
         }
 
         private static string CreateSqlFromKeyAndFluentUniqueKeys(TE entity)
@@ -441,7 +469,7 @@ namespace Fluent.Architecture.Repository
             return query;
         }
 
-        #endregion
+#endregion
     }
 }
 

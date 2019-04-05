@@ -4,6 +4,7 @@
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
+#if NET461
 
 using System;
 using System.Web.Mvc;
@@ -44,3 +45,5 @@ namespace Fluent.Architecture.Util
         }
     }
 }
+
+#endif

@@ -6,6 +6,7 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
+#if NET461
 
 using System.Security.Principal;
 using System.Web;
@@ -33,3 +34,5 @@ namespace Fluent.Architecture.Controllers
         }
     }
 }
+
+#endif

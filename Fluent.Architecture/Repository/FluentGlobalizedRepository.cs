@@ -7,8 +7,15 @@
 
 // ReSharper disable CommentTypo
 
-using System.Collections.Generic;
+#if NET461
 using System.Data.Entity;
+
+#else
+using Microsoft.EntityFrameworkCore;
+
+#endif
+
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Attributes;
@@ -40,7 +47,7 @@ namespace Fluent.Architecture.Repository
         {
             if (string.IsNullOrWhiteSpace(entity.Language))
             {
-                entity.Language = Language.DefaultLanguage;
+                entity.Language = FluentLanguage.DefaultLanguage;
             }
 
             entity.IsDefaultLanguage = true;

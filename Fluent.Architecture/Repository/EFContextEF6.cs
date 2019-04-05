@@ -7,6 +7,7 @@
 
 // ReSharper disable CommentTypo
 
+#if NET461
 
 using System;
 using System.Data.Entity;
@@ -58,3 +59,4 @@ namespace Fluent.Architecture.Repository
     }
 }
 
+#endif

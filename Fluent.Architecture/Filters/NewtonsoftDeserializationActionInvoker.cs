@@ -1,4 +1,6 @@
-﻿using Fluent.Architecture.Attributes;
+﻿#if NET461
+
+using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Exceptions;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -8,6 +10,7 @@ using System.Web.Mvc;
 
 namespace Fluent.Architecture.Filters
 {
+    // Todo - Implementar pra net core
     // Implementar essa classe na dll do seu projeto, pois se não, não será possível interceptar a action de dentro da arquitetura
     public abstract class NewtonsoftDeserializationActionInvoker : ControllerActionInvoker
     {
@@ -37,3 +40,5 @@ namespace Fluent.Architecture.Filters
         }
     }
 }
+
+#endif

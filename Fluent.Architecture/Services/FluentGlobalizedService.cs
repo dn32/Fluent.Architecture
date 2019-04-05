@@ -76,7 +76,7 @@ namespace Fluent.Architecture.Services
         {
             if (string.IsNullOrWhiteSpace(entity.Language))
             {
-                entity.Language = Language.DefaultLanguage;
+                entity.Language = FluentLanguage.DefaultLanguage;
             }
 
             Validation.Add(entity);

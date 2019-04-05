@@ -56,7 +56,7 @@ namespace Fluent.Architecture.Util
 
             var tokenHandler = new JwtSecurityTokenHandler();
 
-            if (!(tokenHandler.ReadToken(token) is JwtSecurityToken jwtToken))
+            if (!(tokenHandler.ReadToken(token) is JwtSecurityToken))
             {
                 throw new AccessViolationException();
             }
@@ -77,12 +77,11 @@ namespace Fluent.Architecture.Util
             }
             catch (SecurityTokenExpiredException)
             {
-                throw new TimeoutException("Token expirado");
+                throw new TimeoutException("Expired token");
             }
-            catch (SecurityTokenInvalidSignatureException ex)
+            catch (SecurityTokenInvalidSignatureException)
             {
-                //throw new AccessViolationException(ex.Message);
-                throw new AccessViolationException("Token inválido");
+                throw new AccessViolationException("Invalid Token");
             }
         }
 

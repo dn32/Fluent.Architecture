@@ -1,6 +1,6 @@
 ﻿// ReSharper disable CommentTypo
 
-#if NETCOREAPP2_1
+#if !NET461
 
 using System;
 using System.Security.Claims;

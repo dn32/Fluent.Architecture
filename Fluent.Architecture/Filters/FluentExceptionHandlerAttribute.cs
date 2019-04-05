@@ -6,14 +6,16 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-
+#if NET461
 using System.Web.Mvc;
+
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
 
 namespace Fluent.Architecture.Filters
 {
+    //Todo - Implementar para net core
     /// <inheritdoc />
     public class FluentExceptionHandlerAttribute : HandleErrorAttribute
     {
@@ -56,4 +58,4 @@ namespace Fluent.Architecture.Filters
     }
 }
 
-
+#endif

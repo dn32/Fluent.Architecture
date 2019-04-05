@@ -1,4 +1,4 @@
-﻿#if NETCOREAPP2_1
+﻿#if !NET461
 
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -7,12 +7,6 @@ namespace Fluent.Architecture.Util
 {
     public class CustomJsonResult : JsonResult
     {
-        private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
-        {
-            Formatting = Formatting.Indented,
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-        };
-
         public CustomJsonResult(object value) : base(value)
         {
         }
@@ -23,6 +17,11 @@ namespace Fluent.Architecture.Util
 
         // Todo - Verificar se teremos necessidade de algum tratamento no core
 
+        //private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
+        //{
+        //    Formatting = Formatting.Indented,
+        //    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        //};
         //public override void ExecuteResult(ControllerContext context)
         //{
         //    if (JsonRequestBehavior == JsonRequestBehavior.DenyGet && string.Equals(context.HttpContext.Request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))

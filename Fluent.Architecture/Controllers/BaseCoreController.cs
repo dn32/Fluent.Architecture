@@ -1,6 +1,6 @@
 ﻿// ReSharper disable CommentTypo
 
-#if NETCOREAPP2_1
+#if !NET461
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

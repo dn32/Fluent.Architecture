@@ -17,14 +17,16 @@ namespace Fluent.Architecture.Controllers
         [FluentAllowAnonymous]
         public JsonResult Get()
         {
-            return Json(Service.List(new AllSpec<T>(Service)));
+            var spec = CreateSpec<AllSpec<T>>();
+            return Json(Service.List(spec));
         }
 
         // GET api/controller/5
         [HttpGet("{id}")]
         public JsonResult Get(int id)
         {
-            return Json(Service.FirstOrDefault(new SpecById<T>(Service, id)));
+            var spec = CreateSpec<SpecById<T>>().SetParameter(id);
+            return Json(Service.FirstOrDefault(spec));
         }
 
         // POST api/controller

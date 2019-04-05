@@ -14,8 +14,6 @@ using Fluent.Architecture.Services;
 
 namespace Fluent.Architecture.Factory.Proxy
 {
-    using Fluent.Architecture.Exceptions;
-
     /// <summary>
     /// Classe interna.
     /// Responsável pela criação do proxi dos serviços de injeção de dependência.
@@ -37,12 +35,18 @@ namespace Fluent.Architecture.Factory.Proxy
 
         private static TypeBuilder CreateClass(Type parent, AssemblyName assembly)
         {
+#if NET461
+
             var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assembly, AssemblyBuilderAccess.Run);
             var moduleBuilder = assemblyBuilder.DefineDynamicModule(ModuleName);
             return moduleBuilder.DefineType(assembly.FullName, TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.AutoClass | TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.AutoLayout, parent);
+#else
+            //Todo Implementar para net core
+            throw new NotImplementedException();
+#endif
         }
 
-        private static void OverwriteProperties(TypeBuilder typeBuilder, Guid sessionId)
+            private static void OverwriteProperties(TypeBuilder typeBuilder, Guid sessionId)
         {
             var serviceProperties = typeBuilder.BaseType?.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).Where(x => x.PropertyType.IsSubclassOf(typeof(BaseService))).ToList();
 

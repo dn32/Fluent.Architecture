@@ -6,10 +6,17 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
+#if NET461
+using System.Data.Entity;
+using System.Management.Instrumentation;
+
+#else
+using Microsoft.EntityFrameworkCore;
+
+#endif
 
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Model;
@@ -17,7 +24,6 @@ using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
-using System.Management.Instrumentation;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Specifications;
@@ -70,6 +76,8 @@ namespace Fluent.Architecture
 
         public static void DbSetup(bool createDatabaseIfNotExists)
         {
+            // Todo - Implementar para net core
+#if NET461
             if (createDatabaseIfNotExists)
             {
                 Database.SetInitializer(new CreateDatabaseIfNotExists<EfContext>());
@@ -78,6 +86,9 @@ namespace Fluent.Architecture
             {
                 Database.SetInitializer<EfContext>(null);
             }
+#else
+
+#endif
         }
 
         public static void Initialize(string connectionString, bool createDatabaseIfNotExists = true)
@@ -188,7 +199,7 @@ namespace Fluent.Architecture
         {
             if (!UserSessionList.TryGetValue(sessionIdGuid, out var userSession))
             {
-                throw new InstanceNotFoundException("UserSessionRequest not found!");
+                throw new Exception("UserSessionRequest not found!");
             }
 
             return userSession;

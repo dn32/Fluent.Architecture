@@ -6,10 +6,16 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
+#if NET461
+using System.Web;
+
+#else
+using Microsoft.AspNetCore.Http;
+
+#endif
 
 using System;
 using System.Security.Claims;
-using System.Web;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
@@ -44,8 +50,13 @@ namespace Fluent.Architecture.Services
         /// <summary>
         /// HttpContext da requisição vinda do controller.
         /// </summary>
+#if NET461
         protected internal HttpContextBase LocalHttpContext => this.SessionRequest.LocalHttpContext;
 
+#else
+        protected internal HttpContext LocalHttpContext => this.SessionRequest.LocalHttpContext;
+
+#endif
         /// <summary>
         /// Usuário do sistema.
         /// </summary>

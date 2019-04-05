@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Fluent.Architecture.Sample.Test.SupportElements.Model
 {
     [ExcludeFromCodeCoverage]
-    public static class Language
+    public static class FluentLanguage
     {
 #pragma warning disable CA1707
         public static string DefaultLanguage => EN_US;
