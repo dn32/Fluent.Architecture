@@ -17,5 +17,18 @@ namespace Fluent.Architecture.Exceptions
         public MethodNotFoundException(string message) : base(message)
         {
         }
+
+        protected MethodNotFoundException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
+        {
+            throw new NotImplementedException();
+        }
+
+        public MethodNotFoundException()
+        {
+        }
+
+        public MethodNotFoundException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
     }
 }

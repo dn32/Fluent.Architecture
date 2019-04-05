@@ -113,10 +113,12 @@ namespace Fluent.Architecture
                     {
                         types = assembly.GetTypes();
                     }
+#pragma warning disable CA1031 // Do not catch general exception types
                     catch
                     {
                         continue;
                     }
+#pragma warning restore CA1031 // Do not catch general exception types
 
                     var transactionalServices = types.Where(x => x.IsSubclassOf(typeof(TransactionalService))).ToList();
 

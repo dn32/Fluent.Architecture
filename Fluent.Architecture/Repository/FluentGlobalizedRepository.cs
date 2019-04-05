@@ -74,7 +74,7 @@ namespace Fluent.Architecture.Repository
 
             if (!entity.IsDefaultLanguage)
             {
-                DoNotAllowChangeGlobalizedProperties(entity, persistentEntity);
+                DoNotAllowChangeGlobalizedProperties(persistentEntity);
             }
 
             var translations = ExtractTranslactionsOfEntity(entity);
@@ -215,7 +215,7 @@ namespace Fluent.Architecture.Repository
             return translations.Any();
         }
 
-        private void DoNotAllowChangeGlobalizedProperties(TE entity, TE persistedEntity)
+        private void DoNotAllowChangeGlobalizedProperties(TE persistedEntity)
         {
             var properties = typeof(TE).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => x.GetCustomAttribute<FluentGlobalizationAttribute>() != null).ToList();
 

@@ -7,11 +7,17 @@ namespace Fluent.Architecture.Factory
 {
     public static class SpecFactory
     {
-        public static Ts Create<Ts>(TransactionalService service) where Ts : BaseSpecification
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T">Tipo de serviço.</typeparam>
+        /// <param name="service"></param>
+        /// <returns></returns>
+        public static T Create<T>(TransactionalService service) where T : BaseSpecification
         {
-            if (!(Activator.CreateInstance(typeof(Ts)) is Ts ts))
+            if (!(Activator.CreateInstance(typeof(T)) is T ts))
             {
-                throw new IncorrectDevelopmentException($"Failed to initialize specification [{typeof(Ts).Name}] type with specified constructor parameters not found.");
+                throw new IncorrectDevelopmentException($"Failed to initialize specification [{typeof(T).Name}] type with specified constructor parameters not found.");
             }
 
             ts.SetService(service);

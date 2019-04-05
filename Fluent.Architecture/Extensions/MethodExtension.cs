@@ -69,7 +69,7 @@ namespace Fluent.Architecture.Extensions
         }
 
         // Todo doc
-        public static object FluentInvoke(this MethodInfo method, object obj, object[] parameters)//, params Type[] generics)
+        public static object FluentInvoke(this MethodInfo method, object entity, object[] parameters)//, params Type[] generics)
         {
             //method = generics == null ? method : method.MakeGenericMethod(generics);
 
@@ -84,12 +84,14 @@ namespace Fluent.Architecture.Extensions
 
             try
             {
-                return method.Invoke(obj, localParameters);
+                return method.Invoke(entity, localParameters);
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception ex)
             {
                 throw ex.InnerException ?? throw ex;
             }
+#pragma warning restore CA1031 // Do not catch general exception types
         }
     }
 }

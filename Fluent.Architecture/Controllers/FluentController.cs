@@ -26,9 +26,9 @@ namespace Fluent.Architecture.Controllers
     /// <typeparam name="T">O tipo da entidade do controller.</typeparam>
     public abstract class FluentController<T> : FluentServiceController<FluentService<T>> where T : BaseEntity
     {
-        protected T CreateSpec<T>() where T : BaseSpecification
+        protected T2 CreateSpec<T2>() where T2 : BaseSpecification
         {
-            return SpecFactory.Create<T>(Service);
+            return SpecFactory.Create<T2>(Service);
         }
     }
 }

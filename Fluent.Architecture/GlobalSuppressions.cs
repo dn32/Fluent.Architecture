@@ -26,4 +26,7 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1018:Mark attributes with AttributeUsageAttribute", Justification = "<Pending>", Scope = "type", Target = "~T:Fluent.Architecture.Filters.FluentExceptionHandlerAttribute")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1813:Avoid unsealed attributes", Justification = "<Pending>", Scope = "type", Target = "~T:Fluent.Architecture.Filters.FluentExceptionHandlerAttribute")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1032:Implement standard exception constructors", Justification = "<Pending>", Scope = "type", Target = "~T:Fluent.Architecture.Exceptions.ValidationException.NullFluentValidationException")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1308:Normalize strings to uppercase", Justification = "<Pending>", Scope = "member", Target = "~M:Fluent.Architecture.Extensions.StringExtension.TitleCase(System.String)~System.String")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1304:Specify CultureInfo", Justification = "<Pending>", Scope = "member", Target = "~P:Fluent.Architecture.Exceptions.ValidationException.FluentValidationException.GlobalizationKey")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "<Pending>", Scope = "member", Target = "~P:Fluent.Architecture.Exceptions.ValidationException.FluentValidationException.Values")]
 

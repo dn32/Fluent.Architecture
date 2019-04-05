@@ -74,10 +74,12 @@ namespace Fluent.Architecture.Extensions
             {
                 return (int)value; // Enum
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch
             {
                 // ignored
             }
+#pragma warning restore CA1031 // Do not catch general exception types
 
             return value;
         }
@@ -119,10 +121,12 @@ namespace Fluent.Architecture.Extensions
             {
                 return (int)value == 0; // Enum
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch
             {
                 // ignored
             }
+#pragma warning restore CA1031 // Do not catch general exception types
 
             return false;
         }
@@ -139,12 +143,6 @@ namespace Fluent.Architecture.Extensions
             var propertyData = new List<NameAndValue>();
             GetAllFieldsDataOfObject(objectToCheck, propertyData);
             return JsonConvert.SerializeObject(propertyData, Formatting.None);
-        }
-
-        private static List<FieldInfo> GetFields(Type objectType)
-        {
-            var items = objectType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            return items.ToList();
         }
 
         /// <summary>

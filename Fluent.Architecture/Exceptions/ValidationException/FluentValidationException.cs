@@ -16,10 +16,12 @@ namespace Fluent.Architecture.Exceptions.ValidationException
     /// <inheritdoc />
     public class FluentValidationException
     {
-        protected string globalizationKey { get; set; }
+        private readonly string globalizationKey;
 
+#pragma warning disable CA1822
         [JsonProperty("validation_error")]
         public bool ValidationError => true;
+#pragma warning restore CA1822
 
         [JsonProperty("message")]
         public virtual string Message { get; set; }
@@ -39,9 +41,9 @@ namespace Fluent.Architecture.Exceptions.ValidationException
         [JsonProperty("exception_type")]
         public string ExceptionType => GetType().Name;
 
-        public FluentValidationException(string message, string _globalizationKey, bool globalizeValues = false, params string[] values)
+        public FluentValidationException(string message, string globalizationKeyParam, bool globalizeValues = false, params string[] values)
         {
-            globalizationKey = _globalizationKey;
+            globalizationKey = globalizationKeyParam;
             Message = message;
             Values = values;
             GlobalizeValues = globalizeValues;

@@ -5,14 +5,14 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-
 using System.Diagnostics.CodeAnalysis;
 
 namespace Fluent.Architecture.Sample.Test.SupportElements.Model
 {
     [ExcludeFromCodeCoverage]
-    public class Language
+    public static class Language
     {
+#pragma warning disable CA1707
         public static string DefaultLanguage => EN_US;
         public static string AA => "aa";
         public static string AA_DJ => "aa-DJ";
@@ -856,5 +856,6 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Model
         public static string ZU_ZA => "zu-ZA";
         public static string ZH_CHS => "zh-CHS";
         public static string ZH_CHT => "zh-CHT";
+#pragma warning restore CA1707
     }
 }

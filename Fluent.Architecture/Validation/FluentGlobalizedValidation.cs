@@ -42,11 +42,6 @@ namespace Fluent.Architecture.Validation
             }
         }
 
-        public void FirstOrDefault(IFluentSpecification spec, string language)
-        {
-            LanguageValidate(language);
-        }
-
         public void FirstOrDefault(string language)
         {
             LanguageValidate(language);

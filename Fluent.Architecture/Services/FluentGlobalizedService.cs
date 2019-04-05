@@ -67,7 +67,7 @@ namespace Fluent.Architecture.Services
         
         public virtual T FirstOrDefault(IFluentSpecification spec, string language)
         {
-            Validation.FirstOrDefault(spec, language);
+            Validation.FirstOrDefault(language);
             return Repository.FirstOrDefault(spec, language);
         }
 

@@ -20,9 +20,9 @@ namespace Fluent.Architecture.Test
             }
         }
 
-        public static void IsNotNullOrEmpty(object obj)
+        public static void IsNotNullOrEmpty(object entity)
         {
-            if (obj.IsFluentNull())
+            if (entity.IsFluentNull())
             {
                 throw new ValidationException("The text is empty, null or space");
             }

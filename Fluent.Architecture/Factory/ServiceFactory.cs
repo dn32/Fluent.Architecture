@@ -22,7 +22,7 @@ namespace Fluent.Architecture.Factory
     /// Classe interna.
     /// Fábrica de serviços.
     /// </summary>
-    public class ServiceFactory
+    public static class ServiceFactory
     {
         /// <summary>
         /// Cria um serviço que terá controle de transação.
@@ -108,12 +108,6 @@ namespace Fluent.Architecture.Factory
         }
 
         #region PRIVATE
-
-        private static TS InternalCreate<TS>(Guid sessionId) where TS : TransactionalService
-        {
-            var serviceType = GetSpecializedService(typeof(TS));
-            return InternalCreate(serviceType, sessionId) as TS;
-        }
 
         private static TransactionalService InternalCreate(Type serviceType, Guid sessionId)
         {

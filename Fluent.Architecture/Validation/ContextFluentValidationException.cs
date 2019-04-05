@@ -18,9 +18,12 @@ namespace Fluent.Architecture.Validation
     /// <summary>
     /// Retorno de validação padrão do sistema.
     /// </summary>
+    [Serializable]
     public class ContextFluentValidationException : Exception
     {
+#pragma warning disable CA1822
         public bool ValidationError => true;
+#pragma warning restore CA1822
 
         [JsonProperty("inconsistencies")]
         public List<FluentValidationException> Inconsistencies { get; }
@@ -70,6 +73,11 @@ namespace Fluent.Architecture.Validation
             {
                 throw this;
             }
+        }
+
+        protected ContextFluentValidationException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
+        {
+            throw new NotImplementedException();
         }
     }
 }

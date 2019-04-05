@@ -13,24 +13,21 @@ namespace Fluent.Architecture.Extensions
         {
             Type type = typeof(TSource);
 
-            MemberExpression member = propertyLambda.Body as MemberExpression;
-            if (member == null)
-                throw new ArgumentException(string.Format(
-                    "Expression '{0}' refers to a method, not a property.",
-                    propertyLambda.ToString()));
+            if (!(propertyLambda.Body is MemberExpression member))
+            {
+                throw new ArgumentException($"Expression '{propertyLambda}' refers to a method, not a property.");
+            }
 
-            PropertyInfo propInfo = member.Member as PropertyInfo;
+            var propInfo = member.Member as PropertyInfo;
             if (propInfo == null)
-                throw new ArgumentException(string.Format(
-                    "Expression '{0}' refers to a field, not a property.",
-                    propertyLambda.ToString()));
+            {
+                throw new ArgumentException($"Expression '{propertyLambda}' refers to a field, not a property.");
+            }
 
-            if (type != propInfo.ReflectedType &&
-                !type.IsSubclassOf(propInfo.ReflectedType))
-                throw new ArgumentException(string.Format(
-                    "Expresion '{0}' refers to a property that is not from type {1}.",
-                    propertyLambda.ToString(),
-                    type));
+            if (type != propInfo.ReflectedType && !type.IsSubclassOf(propInfo.ReflectedType))
+            {
+                throw new ArgumentException($"Expresion '{propertyLambda}' refers to a property that is not from type {type}.");
+            }
 
             return propInfo;
         }
@@ -52,7 +49,7 @@ namespace Fluent.Architecture.Extensions
                 for (int i = 0; i < propriedades.Count(); i++)
                 {
                     var nome = propriedades[i];
-                    nomeConcatenadoDasPropriedades += nomeConcatenadoDasPropriedades == string.Empty ? nome : "." + nome;
+                    nomeConcatenadoDasPropriedades += string.IsNullOrEmpty(nomeConcatenadoDasPropriedades) ? nome : "." + nome;
                     var propriedade = tipoOriginal.GetProperty(nome);
                     if (propriedade == null)
                     {
@@ -96,7 +93,7 @@ namespace Fluent.Architecture.Extensions
             for (int i = 0; i < propriedades.Count(); i++)
             {
                 var nome = propriedades[i];
-                nomeConcatenadoDaspropriedades += nomeConcatenadoDaspropriedades == string.Empty ? nome : "." + nome;
+                nomeConcatenadoDaspropriedades += string.IsNullOrEmpty(nomeConcatenadoDaspropriedades) ? nome : "." + nome;
                 var propriedade = tipoOriginal.GetProperty(nome);
                 valorOriginal = propriedade.GetValue(valorOriginal);
 
@@ -122,7 +119,7 @@ namespace Fluent.Architecture.Extensions
 
         public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> a, Expression<Func<T, bool>> b)
         {
-            if(a == null)
+            if (a == null)
             {
                 return b;
             }
@@ -139,8 +136,7 @@ namespace Fluent.Architecture.Extensions
 
             protected override Expression VisitParameter(ParameterExpression node)
             {
-                Expression newValue;
-                return Subst.TryGetValue(node, out newValue) ? newValue : node;
+                return Subst.TryGetValue(node, out Expression newValue) ? newValue : node;
             }
         }
 
