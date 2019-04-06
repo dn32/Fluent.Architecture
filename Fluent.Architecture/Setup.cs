@@ -12,6 +12,7 @@ using System.Management.Instrumentation;
 
 #else
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 #endif
 
@@ -35,6 +36,10 @@ namespace Fluent.Architecture
     {
         #region PROPERTIES
 
+#if !NET461
+        public static IServiceProvider ServiceProvider { get; set; }
+#endif
+
         private static readonly object LockInitialization = new object();
 
         internal static Type TransactionObjectsType { get; set; }
@@ -53,9 +58,9 @@ namespace Fluent.Architecture
 
         internal static Dictionary<Guid, UserSessionRequest> UserSessionList { get; set; }
 
-        #endregion
+#endregion
 
-        #region PUBLIC METHODS
+#region PUBLIC METHODS
 
         /// <summary>
         /// Permite definir um tipo para TransactionObjectsType que é o contexto da aplicação referente ao banco de dados.
@@ -87,11 +92,29 @@ namespace Fluent.Architecture
                 Database.SetInitializer<EfContext>(null);
             }
 #else
-
+            if (createDatabaseIfNotExists)
+            {
+                    var context = ServiceProvider.GetRequiredService<EfContext>();
+                    context.Database.Migrate();
+            }
 #endif
         }
 
+
+#if NET461
         public static void Initialize(string connectionString, bool createDatabaseIfNotExists = true)
+        {
+            InternalInitialize(connectionString, createDatabaseIfNotExists);
+        }
+#else
+        public static void Initialize(IServiceProvider serviceProvider, string connectionString, bool createDatabaseIfNotExists = true)
+        {
+            ServiceProvider = serviceProvider;
+            InternalInitialize(connectionString, createDatabaseIfNotExists);
+        }
+#endif
+
+        private static void InternalInitialize(string connectionString, bool createDatabaseIfNotExists = true)
         {
             lock (LockInitialization)
             {
@@ -191,9 +214,9 @@ namespace Fluent.Architecture
             });
         }
 
-        #endregion
+#endregion
 
-        #region INTERNAL METHODS
+#region INTERNAL METHODS
 
         internal static UserSessionRequest GetUserRequestSession(Guid sessionIdGuid)
         {
@@ -221,9 +244,9 @@ namespace Fluent.Architecture
             }
         }
 
-        #endregion
+#endregion
 
-        #region PRIVATE
+#region PRIVATE
 
         private static void ValidateIfAllServicePropertiesHaveDefaultConstructor(IEnumerable<Type> types)
         {
@@ -364,6 +387,6 @@ namespace Fluent.Architecture
             }
         }
 
-        #endregion
+#endregion
     }
 }
