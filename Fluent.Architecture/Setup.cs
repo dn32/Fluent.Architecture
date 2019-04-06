@@ -29,6 +29,7 @@ using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Factory;
+using Fluent.Architecture.Core.Interfaces;
 
 namespace Fluent.Architecture
 {
@@ -52,7 +53,7 @@ namespace Fluent.Architecture
 
         internal static Dictionary<Type, Type> Validations { get; set; }
 
-        internal static Dictionary<Type, Type> Model { get; set; }
+        public static Dictionary<Type, Type> Model { get; private set; }
 
         public static bool Initialized { get; set; }
 
@@ -81,22 +82,22 @@ namespace Fluent.Architecture
 
         public static void DbSetup(bool createDatabaseIfNotExists)
         {
-            // Todo - Implementar para net core
+            // Todo - Arrumar essa implementação
 #if NET461
-            if (createDatabaseIfNotExists)
-            {
-                Database.SetInitializer(new CreateDatabaseIfNotExists<EfContext>());
-            }
-            else
-            {
-                Database.SetInitializer<EfContext>(null);
-            }
+            //if (createDatabaseIfNotExists)
+            //{
+            //    Database.SetInitializer(new CreateDatabaseIfNotExists<EfContext>());
+            //}
+            //else
+            //{
+            //    Database.SetInitializer<EfContext>(null);
+            //}
 #else
-            if (createDatabaseIfNotExists)
-            {
-                    var context = ServiceProvider.GetRequiredService<EfContext>();
-                    context.Database.Migrate();
-            }
+            //if (createDatabaseIfNotExists)
+            //{
+            //        var context = ServiceProvider.GetRequiredService<EfContext>();
+            //        context.Database.Migrate();
+            //}
 #endif
         }
 
@@ -125,17 +126,20 @@ namespace Fluent.Architecture
 
                 Initialized = true;
 
-                TransactionObjects.DataBaseConnectionString = connectionString;
+                // Todo - Avaliar impacto de separação de pacote
+               // TransactionObjects.DataBaseConnectionString = connectionString;
 
                 Services = new Dictionary<Type, Type>();
                 Repositories = new Dictionary<Type, Type>();
                 Validations = new Dictionary<Type, Type>();
                 Model = new Dictionary<Type, Type>();
                 UserSessionList = new Dictionary<Guid, UserSessionRequest>();
-                TransactionObjectsType = typeof(TransactionObjects);
+                // Todo - Avaliar impacto de separação de pacote
+               // TransactionObjectsType = typeof(TransactionObjects);
 
                 Services.Add(typeof(FluentEntity), typeof(FluentService<FluentEntity>));
-                Repositories.Add(typeof(FluentEntity), typeof(FluentRepository<FluentEntity>));
+                // Todo - Avaliar impacto de separação de pacote
+               // Repositories.Add(typeof(FluentEntity), typeof(FluentRepository<FluentEntity>));
                 Validations.Add(typeof(FluentEntity), typeof(FluentValidation<FluentEntity>));
 
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies().OrderBy(x => x.FullName).ToList();
@@ -168,7 +172,7 @@ namespace Fluent.Architecture
                         .Where(x => x.Item1 != null).ToList()
                         .ForEach(AddService);
 
-                    types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentRepository<BaseEntity>)))
+                    types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(IFluentRepository<BaseEntity>)))
                        .Where(x => x.Item1 != null).ToList()
                        .ForEach(AddRepository);
 

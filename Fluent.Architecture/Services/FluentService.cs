@@ -10,6 +10,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Interfaces;
@@ -31,9 +32,9 @@ namespace Fluent.Architecture.Services
         ///// <summary>
         ///// O repositório do serviço.
         ///// </summary>
-        protected internal new FluentRepository<T> Repository
+        protected internal new IFluentRepository<T> Repository
         {
-            get => base.Repository as FluentRepository<T>;
+            get => base.Repository as IFluentRepository<T>;
             set => base.Repository = value;
         }
 
@@ -57,10 +58,10 @@ namespace Fluent.Architecture.Services
         }
 
         //Todo - ATENÇÃO! AO USAR ESSE MÉTODO, A OPERAÇÃO NÃO É MAIS TRANSACIONADA. REMOVER ISSO DEPOIS DE IMPLEMENTAR O MODELO DE COMPOSIÇÃO ENTRE AS ENTIDADES
-        protected void SaveChanges()
-        {
-            TransactionObjects.Session.SaveChanges();
-        }
+        //protected void SaveChanges()
+        //{
+        //    TransactionObjects.Session.SaveChanges();
+        //}
 
         #region PASSAGEM DIRETA PARA O REPOSITÓRIO
 
@@ -99,7 +100,7 @@ namespace Fluent.Architecture.Services
         /// </returns>
         public virtual List<T> List(IFluentSpecification spec, FluentPagination pagination = null)
         {
-            return this.Repository.List(spec, pagination);
+            return Repository.List<T>(spec, pagination);
         }
 
         /// <summary>
@@ -131,7 +132,7 @@ namespace Fluent.Architecture.Services
 
         public virtual T FirstOrDefault(IFluentSpecification spec)
         {
-            return this.Repository.FirstOrDefault(spec);
+            return Repository.FirstOrDefault(spec);
         }
 
         //Todo Doc
@@ -181,7 +182,7 @@ namespace Fluent.Architecture.Services
         // Todo documentar
         public virtual void RemoveRange(IFluentSpecification spec)
         {
-            this.Repository.RemoveRange(spec);
+            Repository.RemoveRange(spec);
         }
 
         /// <summary>
@@ -231,7 +232,7 @@ namespace Fluent.Architecture.Services
         public virtual T Add(T entity)
         {
             this.Validation.Add(entity);
-            return this.Repository.Add(entity);
+            return Repository.Add(entity);
         }
 
         // Todo documentar

@@ -20,6 +20,7 @@ using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Validation;
+using Fluent.Architecture.Core.Interfaces;
 
 namespace Fluent.Architecture.Services
 {
@@ -35,7 +36,7 @@ namespace Fluent.Architecture.Services
 
         protected virtual BaseValidation Validation { get; set; }
 
-        protected virtual BaseRepository Repository { get; set; }
+        protected virtual IBaseRepository Repository { get; set; }
 
         /// <summary>
         /// Entidade organizadora da injeção de dependência e do contexto da requisição do usuário.

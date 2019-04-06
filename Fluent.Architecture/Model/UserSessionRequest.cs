@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Validation;
+using Fluent.Architecture.Core.Interfaces;
 
 namespace Fluent.Architecture.Model
 {
@@ -28,7 +29,7 @@ namespace Fluent.Architecture.Model
     public class UserSessionRequest
     {
         internal Dictionary<Type, BaseService> Services { get; set; }
-        internal TransactionObjects TransactionObjects { get; set; }
+        internal ITransactionObjects TransactionObjects { get; set; }
         internal Guid SessionRequestId { get; set; }
         public ContextFluentValidationException ContextFluentValidationException { get; set; }
         public FluentPagination Pagination { get; set; }

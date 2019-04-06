@@ -18,6 +18,7 @@ using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Validation;
 using Fluent.Architecture.Exceptions;
+using Fluent.Architecture.Core.Interfaces;
 
 namespace Fluent.Architecture.Util
 {
@@ -68,7 +69,7 @@ namespace Fluent.Architecture.Util
         {
             typeof(FluentController<FluentEntity>).Name,
             typeof(FluentService<FluentEntity>).Name,
-            typeof(FluentRepository<FluentEntity>).Name,
+            typeof(IFluentRepository<FluentEntity>).Name,
             typeof(FluentValidation<FluentEntity>).Name,
             typeof(FluentController<FluentEntity>).Name,
             typeof(FluentSpecification<FluentEntity>).Name

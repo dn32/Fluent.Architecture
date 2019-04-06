@@ -37,22 +37,23 @@ namespace Fluent.Architecture.Controllers
 
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            var session = Service.TransactionObjects.Session;
+            // Todo Arrumar isso
+            //var session = Service.TransactionObjects.Session;
 
-            using (var transaction = session.Database.BeginTransaction())
-            {
-                session.SaveChanges();
+            //using (var transaction = session.Database.BeginTransaction())
+            //{
+            //    session.SaveChanges();
 
-                if (Service.ExecuteInteractions())
-                {
-                    session.SaveChanges();
-                }
+            //    if (Service.ExecuteInteractions())
+            //    {
+            //        session.SaveChanges();
+            //    }
 
-                transaction.Commit();
-            }
+            //    transaction.Commit();
+            //}
 
-            this.Service.Dispose(true);
-            base.OnActionExecuted(filterContext);
+            //this.Service.Dispose(true);
+            //base.OnActionExecuted(filterContext);
         }
 
         protected internal new JsonResult Json(object data)

@@ -51,7 +51,6 @@
 -->
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Activities" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Transactions" />

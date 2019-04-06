@@ -23,6 +23,7 @@ using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
+using Fluent.Architecture.Core.Interfaces;
 
 namespace Fluent.Architecture.Repository
 {
@@ -35,18 +36,18 @@ namespace Fluent.Architecture.Repository
     /// </typeparam>
     public class FluentRepository<TE> : TransactionlRepository where TE : BaseEntity
     {
-#region PROPERTIES
+        #region PROPERTIES
         public UserSessionRequest SessionRequest => Service.SessionRequest;
 
         /// <summary>
         /// Os objetos de transação do repositório.
         /// </summary>
-        internal TransactionObjects TransactionObjects { get; set; }
+        internal ITransactionObjects TransactionObjects { get; set; }
 
         /// <summary>
         /// A referência da sessão do EF.
         /// </summary>
-        protected internal EfContext Session => TransactionObjects.Session;
+        protected internal EfContext Session => TransactionObjects.Session as EfContext;
 
         /// <summary>
         /// A query contem a referência de todas as tabelas/documentos do banco de dados.
@@ -56,12 +57,12 @@ namespace Fluent.Architecture.Repository
         /// <summary>
         /// A referência de input de dados para o banco de dados.
         /// </summary>
-        internal DbSet<TE> Input => this.TransactionObjects.GetObjectInputDataInternal<TE>();
+        internal DbSet<TE> Input => this.TransactionObjects.GetObjectInputDataInternal<TE>() as DbSet<TE>;
 
         /// <summary>
         /// A referência de um Input de tradução.
         /// </summary>
-        internal DbSet<Translation> TranslactionInput => this.TransactionObjects.GetObjectInputDataInternal<Translation>();
+        internal DbSet<Translation> TranslactionInput => this.TransactionObjects.GetObjectInputDataInternal<Translation>() as DbSet<Translation>;
 
         /// <summary>
         /// O serviço qual esse repositório representa.
@@ -70,9 +71,9 @@ namespace Fluent.Architecture.Repository
 
         protected void RunTheContextValidation() => Service.SessionRequest.ContextFluentValidationException.Validate();
 
-#endregion
+        #endregion
 
-#region SPEC TE
+        #region SPEC TE
 
         /// <summary>
         /// Executa uma solicitação baseada em uma especificação e retorna um resultado ou nulo quando a consulta não é satisfeita.
@@ -90,9 +91,9 @@ namespace Fluent.Architecture.Repository
             return GetSpec(spec).ToIQueryable(Query).FirstOrDefault();
         }
 
-#endregion
+        #endregion
 
-#region SPEC OUT
+        #region SPEC OUT
 
         /// <summary>
         /// Executa uma solicitação baseada em uma especificação e retorna uma lista paginada de resultados.
@@ -338,7 +339,7 @@ namespace Fluent.Architecture.Repository
             var currentEntity = Service.Find(entity);
             //Input.Attach(currentEntity);
             //TransactionObjects.Session.Entry(currentEntity).State = EntityState.Modified;
-            TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
+            ((DbContext)TransactionObjects.Session).Entry(currentEntity).CurrentValues.SetValues(entity);
             return entity;
         }
 
@@ -372,9 +373,9 @@ namespace Fluent.Architecture.Repository
             entities.ToList().ForEach(x => this.Remove(x));
         }
 
-#endregion
+        #endregion
 
-#region INTERNAL
+        #region INTERNAL
 
         private FluentSelectSpecification<TE, TO> GetSpecSelect<TO>(ISpec spec1)
         {
@@ -469,7 +470,7 @@ namespace Fluent.Architecture.Repository
             return query;
         }
 
-#endregion
+        #endregion
     }
 }
 

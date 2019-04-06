@@ -42,7 +42,7 @@ namespace Fluent.Architecture.Repository
         /// <param name="entity">
         /// Item a ser adicionado.
         /// </param>
-        
+
         public override TE Add(TE entity)
         {
             if (string.IsNullOrWhiteSpace(entity.Language))
@@ -60,7 +60,7 @@ namespace Fluent.Architecture.Repository
         }
 
         // Tradução ok
-        
+
         public override void AddRange(params TE[] entities)
         {
             foreach (var entity in entities)
@@ -70,14 +70,14 @@ namespace Fluent.Architecture.Repository
         }
 
         // Tradução ok
-        
+
         public override TE Update(TE entity)
         {
             RunTheContextValidation();
 
             var persistentEntity = Find(entity);
 
-            TransactionObjects.Session.Entry(persistentEntity).CurrentValues.SetValues(entity);
+            ((DbContext)TransactionObjects.Session).Entry(persistentEntity).CurrentValues.SetValues(entity);
 
             if (!entity.IsDefaultLanguage)
             {
@@ -99,7 +99,7 @@ namespace Fluent.Architecture.Repository
         }
 
         // Tradução ok
-        
+
         public virtual List<TE> List(IFluentSpecification spec, FluentPagination pagination, string language)
         {
             var list = base.List(spec, pagination);
@@ -121,7 +121,7 @@ namespace Fluent.Architecture.Repository
         //}
 
         // Tradução ok
-        
+
         public virtual TE FirstOrDefault(IFluentSpecification spec, string language)
         {
             var persistedEntity = base.FirstOrDefault(spec);
@@ -129,7 +129,7 @@ namespace Fluent.Architecture.Repository
         }
 
         // Tradução ok
-        
+
         public virtual TE FirstOrDefault(string language)
         {
             var persistedEntity = base.FirstOrDefault();
@@ -137,7 +137,7 @@ namespace Fluent.Architecture.Repository
         }
 
         // Tradução ok
-        
+
         public virtual TE Find(TE entity, string language)
         {
             var persistedEntity = base.Find(entity);
@@ -145,7 +145,7 @@ namespace Fluent.Architecture.Repository
         }
 
         // Tradução ok
-        
+
         public override TE Remove(TE entity)
         {
             TranslactionInput.RemoveRange(FindAllTranslationsOfAnEntity(entity));

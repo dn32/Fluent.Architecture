@@ -113,7 +113,9 @@ namespace Fluent.Architecture.Extensions
                 {
                     if (entityType.IsSubclassOf(typeof(FluentGlobalizedEntity)))
                     {
-                        serviceType = typeof(FluentGlobalizedService<>).MakeGenericType(entityType);
+                        // Todo cade esse serviço?
+                        throw new NotImplementedException();
+                       // serviceType = typeof(FluentGlobalizedService<>).MakeGenericType(entityType);
                     }
                     else
                     {

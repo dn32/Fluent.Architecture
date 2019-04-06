@@ -47,25 +47,27 @@ namespace Fluent.Architecture.Controllers
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             var session = Service.TransactionObjects.Session;
+            // Todo Arrumar
+            throw new NotImplementedException();
 
-            using (var transaction = session.Database.BeginTransaction())
-            {
-                if (Service.SessionRequest.ContextFluentValidationException.IsValid)
-                {
-                    session.SaveChanges();
+            //using (var transaction = session.Database.BeginTransaction())
+            //{
+            //    if (Service.SessionRequest.ContextFluentValidationException.IsValid)
+            //    {
+            //        session.SaveChanges();
 
-                    if (Service.ExecuteInteractions())
-                    {
-                        session.SaveChanges();
-                    }
+            //        if (Service.ExecuteInteractions())
+            //        {
+            //            session.SaveChanges();
+            //        }
 
-                    transaction.Commit();
-                }
-                else
-                {
-                    transaction.Rollback();
-                }
-            }
+            //        transaction.Commit();
+            //    }
+            //    else
+            //    {
+            //        transaction.Rollback();
+            //    }
+            //}
 
             Service.Dispose(true);
             base.OnActionExecuted(filterContext);

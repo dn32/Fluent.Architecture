@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Model;
@@ -30,9 +31,9 @@ namespace Fluent.Architecture.Services
             set => base.Validation = value;
         }
 
-        protected internal new TransactionlRepository Repository
+        protected internal new ITransactionlRepository Repository
         {
-            get => base.Repository as TransactionlRepository;
+            get => base.Repository as ITransactionlRepository;
             set => base.Repository = value;
         }
 
@@ -52,7 +53,7 @@ namespace Fluent.Architecture.Services
         /// <summary>
         /// Objetos de transação do serviço.
         /// </summary>
-        internal TransactionObjects TransactionObjects => this.SessionRequest.TransactionObjects;
+        internal ITransactionObjects TransactionObjects => this.SessionRequest.TransactionObjects;
 
         internal List<Interaction> Interactions { get; set; }
 

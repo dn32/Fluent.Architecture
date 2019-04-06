@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
@@ -125,7 +126,9 @@ namespace Fluent.Architecture.Factory
                 {
                     if (entityType.IsSubclassOf(typeof(FluentGlobalizedEntity)))
                     {
-                        serviceType = typeof(FluentGlobalizedService<>).MakeGenericType(entityType);
+                        // Todo cade esse serviço?
+                        throw new NotImplementedException();
+                        // serviceType = typeof(FluentGlobalizedService<>).MakeGenericType(entityType);
                     }
                     else
                     {
@@ -139,7 +142,8 @@ namespace Fluent.Architecture.Factory
 
         private static UserSessionRequest CreateUserSession(object httpContext, Guid sessionId, BaseService service)
         {
-            var transactionObjects = TransactionObjects.Create();
+            //Todo arrumar
+            ITransactionObjects transactionObjects = null;// ITransactionObjects.Create();
 
             var serviceType = GetSpecializedService(service.GetType());
 
