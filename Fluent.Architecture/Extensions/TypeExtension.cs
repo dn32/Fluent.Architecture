@@ -34,13 +34,13 @@ namespace Fluent.Architecture.Extensions
             return type.IsValueType ? TypeDefaults.GetOrAdd(type, Activator.CreateInstance) : null;
         }
 
-        //Todo doc
+        //Todo2 doc
         public static TX GetDefaultValue<TX>()
         {
             return (TX)typeof(TX).GetDefaultValue();
         }
 
-        //Todo doc
+        //Todo2 doc
         public static TX Next<TX>(this List<TX> list)
         {
             if (list.Count == 0)
@@ -53,7 +53,7 @@ namespace Fluent.Architecture.Extensions
             return el;
         }
 
-        //Todo doc
+        //Todo2 doc
         public static bool Is(this Type t1, Type t2)
         {
             return t1.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == t2) ||

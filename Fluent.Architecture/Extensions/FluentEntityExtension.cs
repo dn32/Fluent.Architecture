@@ -20,19 +20,19 @@ namespace Fluent.Architecture.Extensions
 {
     public static class FluentEntityExtension
     {
-        // Todo documentar
+        // Todo2 documentar
         public static string GetTypeName(this object entity)
         {
             return entity.GetType().Name;
         }
 
-        // Todo documentar
+        // Todo2 documentar
         public static string GetTableName(this object entity)
         {
             return entity.GetType().GetTableName();
         }
 
-        // Todo documentar
+        // Todo2 documentar
         public static string GetTableName(this Type entityType)
         {
             var name = entityType.GetCustomAttribute<TableAttribute>()?.Name;
@@ -44,7 +44,7 @@ namespace Fluent.Architecture.Extensions
             return name;
         }
 
-        // Todo documentar
+        // Todo2 documentar
         public static string GetColumnName(this PropertyInfo property)
         {
             var name = property.GetCustomAttribute<ColumnAttribute>()?.Name;
@@ -109,14 +109,14 @@ namespace Fluent.Architecture.Extensions
             return entityType.GetProperties().Where(x => x.GetCustomAttribute<TA>(true) != null).ToList();
         }
 
-        // Todo documentar
+        // Todo2 documentar
         public static List<KeyValue> GetFluentUniqueKeyValues(this object entity)
         {
             var properties = entity.GetType().GetFluentUniqueKeyProperties();
             return PropertiesToKeyValueList(entity, properties);
         }
 
-        // Todo documentar
+        // Todo2 documentar
         public static List<KeyValue> GetKeyValues(this object entity)
         {
             var properties = entity.GetType().GetKeyProperties();

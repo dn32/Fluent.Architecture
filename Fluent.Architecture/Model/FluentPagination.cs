@@ -24,10 +24,10 @@ namespace Fluent.Architecture.Model
         /// </summary>
         public virtual int TotalQuantityOfItems { get; set; }
 
-        //Todo - doc
+        //Todo2 - doc
         public virtual bool StartAtZero => _startAtZero;
 
-        //Todo - doc
+        //Todo2 - doc
         public virtual int Skip => ItemsPerPage * (StartAtZero ? CurrentPage : CurrentPage - 1);
 
         /// <summary>

@@ -30,13 +30,13 @@ namespace Fluent.Architecture.Extensions
                 "(" + string.Join(", ", method.GetParameters().Select(x => x.ParameterType.GetFriendlyName(false) + (showParameterName ? " " + x.Name : string.Empty))) + ")";
         }
 
-        // Todo doc
+        // Todo2 doc
         public static object[] GetAllParameters(this MethodBase method)
         {
             return method.GetParameters().Select(x => x.DefaultValue).ToArray();
         }
 
-        // Todo doc
+        // Todo2 doc
         public static MethodInfo GetMethodWithoutAmbiguity(this Type classType, string methodName, object[] parameters, params Type[] generics)
         {
 
@@ -68,7 +68,7 @@ namespace Fluent.Architecture.Extensions
             return null;
         }
 
-        // Todo doc
+        // Todo2 doc
         public static object FluentInvoke(this MethodInfo method, object entity, object[] parameters)//, params Type[] generics)
         {
             //method = generics == null ? method : method.MakeGenericMethod(generics);

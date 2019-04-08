@@ -33,10 +33,10 @@ namespace Fluent.Architecture.Specifications
         /// </returns>
         public abstract IQueryable<TO> Where(IQueryable<TE> query);
 
-        // Todo doc
+        // Todo2 doc
         public abstract IOrderedQueryable<TO>  Order(IQueryable<TO> query);
 
-        // Todo doc
+        // Todo2 doc
         internal IOrderedQueryable<TO> ToIQueryable(IQueryable<TE> query)
         {
             return Order(Where(query));

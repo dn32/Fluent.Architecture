@@ -37,10 +37,10 @@ namespace Fluent.Architecture.Validation
 
         public UserSessionRequest SessionRequest => Service.SessionRequest;
 
-        // Todo documentar
+        // Todo2 documentar
         public bool NullParameterOk { get; set; } = true;
 
-        // Todo documentar
+        // Todo2 documentar
         public bool KeyValuesOk { get; set; } = true;
 
         #endregion
@@ -90,7 +90,7 @@ namespace Fluent.Architecture.Validation
             this.RunTheContextValidation();
         }
 
-        // Todo Documentar
+        // Todo2 Documentar
         public virtual void Find(T entity, bool checkId = true)
         {
             this.ParameterMustBeInformed(entity);

@@ -13,7 +13,7 @@ using System.Runtime.CompilerServices;
 using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Model;
 
-[assembly: InternalsVisibleTo(@"Fluent.Architecture.EntityFramework.SqlServer, PublicKey=0024000004800000940000000602000000240000525341310004000001000100695b7abf1265ea2f1aa5bcca4155cb0a8a657b2995a7b278b4a108f6d386cd4bf80544b30aa3f4f230e6f880bfd7ed3200580ce949729eafbcf456a61e07571caf703c916bf9c175f79adf693db191e9f01f128076122f37a8ab1902035a809bad424c34edadc97c9f1e4744a1cd3a473912182bedd56d5dc4ceb71696cbbbc1")]
+[assembly: InternalsVisibleTo(@"Fluent.Architecture.EntityFramework.SqlServer, PublicKey=00240000048000009400000006020000002400005253413100040000010001002d98533364f3b3fbd11e7a3f14cd73d169e1daabd62ba2d1e5bc6a48a9bc709a503960db0e76c190e7a8dcefaed037e539682d6a891b242ddb91a3ab20fbfa0c04fb6304c8903857e1ed75399850fca4037dd2c810749e75770e5d455e950ccb9d06cf6fea5f30b00557a29408ce4c45021c412eca32616f47809bfe2cf404cc")]
 namespace Fluent.Architecture.Specifications
 {
     /// <summary>
@@ -35,7 +35,7 @@ namespace Fluent.Architecture.Specifications
         /// </returns>
         public abstract IQueryable<TE> Where(IQueryable<TE> query);
 
-        // Todo doc
+        // Todo2 doc
         public abstract IOrderedQueryable<TE> Order(IQueryable<TE> query);
 
         internal IOrderedQueryable<TE> ToIQueryable(IQueryable<TE> query)

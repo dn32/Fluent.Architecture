@@ -47,7 +47,7 @@
 //        /// </returns>
 //        //T FirstOrDefault(IFluentSpecification spec);
 
-//        //Todo Doc
+//        //Todo2 Doc
 //        //T FirstOrDefault();
 
 //        /// <summary>
@@ -75,10 +75,10 @@
 //        /// </returns>
 //        int Count(IFluentSpecification spec);
 
-//        // Todo documentar
+//        // Todo2 documentar
 //        int Count();
 
-//        // Todo documentar
+//        // Todo2 documentar
 //        void RemoveRange(IFluentSpecification spec);
 
 //        /// <summary>
@@ -110,7 +110,7 @@
 //        //// </param>
 //        //T Add(T entity);
 
-//        ////Todo documentar
+//        ////Todo2 documentar
 //        //T Find(T entity);
 
 //        //// <summary>
@@ -129,7 +129,7 @@
 //        //// </param>
 //        //T Remove(T entity);
 
-//        ////Todo documentar
+//        ////Todo2 documentar
 //        //void RemoveRange(params T[] entities);
 //    }
 //}

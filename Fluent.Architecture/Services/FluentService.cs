@@ -100,7 +100,7 @@ namespace Fluent.Architecture.Services
         /// </returns>
         public virtual List<T> List(IFluentSpecification spec, FluentPagination pagination = null)
         {
-            return Repository.List<T>(spec, pagination);
+            return Repository.List(spec, pagination);
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace Fluent.Architecture.Services
             return Repository.FirstOrDefault(spec);
         }
 
-        //Todo Doc
+        //Todo2 Doc
 
         public virtual T FirstOrDefault()
         {
@@ -173,13 +173,13 @@ namespace Fluent.Architecture.Services
             return this.Repository.Count(spec);
         }
 
-        // Todo documentar
+        // Todo2 documentar
         public virtual int Count()
         {
             return Repository.Count();
         }
 
-        // Todo documentar
+        // Todo2 documentar
         public virtual void RemoveRange(IFluentSpecification spec)
         {
             Repository.RemoveRange(spec);
@@ -235,7 +235,7 @@ namespace Fluent.Architecture.Services
             return Repository.Add(entity);
         }
 
-        // Todo documentar
+        // Todo2 documentar
 
         public virtual T Find(T entity, bool checkId = true)
         {
@@ -269,7 +269,7 @@ namespace Fluent.Architecture.Services
             return this.Repository.Remove(entity);
         }
 
-        // Todo documentar
+        // Todo2 documentar
 
         public virtual void RemoveRange(params T[] entities)
         {

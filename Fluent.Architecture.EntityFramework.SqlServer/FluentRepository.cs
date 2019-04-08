@@ -34,7 +34,7 @@ namespace Fluent.Architecture.Repository
     /// <typeparam name="TE">
     /// O tipo de entidade do repositório.
     /// </typeparam>
-    public class FluentRepository<TE> : TransactionlRepository where TE : BaseEntity
+    public class FluentRepository<TE> : TransactionlRepository, IFluentRepository<TE> where TE : BaseEntity
     {
         #region PROPERTIES
         public UserSessionRequest SessionRequest => Service.SessionRequest;
@@ -68,6 +68,8 @@ namespace Fluent.Architecture.Repository
         /// O serviço qual esse repositório representa.
         /// </summary>
         internal FluentService<TE> Service { get; set; }
+        ITransactionObjects IFluentRepository<TE>.TransactionObjects { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        FluentService<TE> IFluentRepository<TE>.Service { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
         protected void RunTheContextValidation() => Service.SessionRequest.ContextFluentValidationException.Validate();
 
@@ -218,14 +220,14 @@ namespace Fluent.Architecture.Repository
         }
 
         //Todo não é ´permitido listar sem spec, pois sem spec não tem como ordenar pra paginar. Sem paginação pode ter sobrecarga.
-        //Todo doc
+        //Todo2 doc
         //
         //public virtual List<TE> List(FluentPagination pagination = null)
         //{
         //    return FluentPaginate(Query.ToIQueryable(Query), pagination).ToList();
         //}
 
-        //Todo doc
+        //Todo2 doc
 
         public virtual TE FirstOrDefault()
         {
@@ -280,7 +282,7 @@ namespace Fluent.Architecture.Repository
             return GetSpec(spec).ToIQueryable(Query).Count();
         }
 
-        //Todo doc
+        //Todo2 doc
 
         public virtual int Count()
         {
