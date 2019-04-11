@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace Fluent.Architecture.Sample
+namespace Fluent.Architecture.Sample.API
 {
     public class Program
     {

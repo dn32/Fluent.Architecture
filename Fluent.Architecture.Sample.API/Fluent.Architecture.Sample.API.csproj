@@ -5,12 +5,10 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
-
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
   </ItemGroup>
-
 
   <ItemGroup>
     <ProjectReference Include="..\Fluent.Architecture.EntityFramework.SqlServer\Fluent.Architecture.EntityFramework.SqlServer.csproj" />

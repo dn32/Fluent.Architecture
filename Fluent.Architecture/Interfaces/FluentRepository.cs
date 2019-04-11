@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Services;
@@ -8,8 +9,7 @@ namespace Fluent.Architecture.Core.Interfaces
     public interface IFluentRepository<TE> : ITransactionlRepository where TE : BaseEntity
     {
         ITransactionObjects TransactionObjects { get; set; }
-        FluentService<TE> Service { get; set; }
-
+        Type TransactionObjectsType { get; }
         void RemoveRange(IFluentSpecification spec);
         void RemoveRange(TE[] entities);
         TE Remove(TE entity);

@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{B8A705
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.EntityFramework.SqlServer", "Fluent.Architecture.EntityFramework.SqlServer\Fluent.Architecture.EntityFramework.SqlServer.csproj", "{5354F543-E7F6-46E3-99DC-7F56D4573ACF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent.Architecture.Sample", "Fluent.Architecture.Sample\Fluent.Architecture.Sample.csproj", "{6A3468CA-6630-4FD1-BEA9-6A1C455D3155}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent.Architecture.Sample.API", "Fluent.Architecture.Sample.API\Fluent.Architecture.Sample.API.csproj", "{D3B68587-57C1-4EC4-B201-79A3F746320D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,10 +39,10 @@ Global
 		{5354F543-E7F6-46E3-99DC-7F56D4573ACF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5354F543-E7F6-46E3-99DC-7F56D4573ACF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5354F543-E7F6-46E3-99DC-7F56D4573ACF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6A3468CA-6630-4FD1-BEA9-6A1C455D3155}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6A3468CA-6630-4FD1-BEA9-6A1C455D3155}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6A3468CA-6630-4FD1-BEA9-6A1C455D3155}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6A3468CA-6630-4FD1-BEA9-6A1C455D3155}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3B68587-57C1-4EC4-B201-79A3F746320D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3B68587-57C1-4EC4-B201-79A3F746320D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3B68587-57C1-4EC4-B201-79A3F746320D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3B68587-57C1-4EC4-B201-79A3F746320D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,7 +50,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{7F240F59-97AC-4794-894E-EAA7E472C91C} = {B8A70513-1332-4DC5-88EB-B9FB43D556AF}
 		{AB51F7C9-E955-404F-B808-9D6C211950A6} = {3CDE6F00-CAA7-48F5-9E60-1D1A6A81667C}
-		{6A3468CA-6630-4FD1-BEA9-6A1C455D3155} = {B8A70513-1332-4DC5-88EB-B9FB43D556AF}
+		{D3B68587-57C1-4EC4-B201-79A3F746320D} = {B8A70513-1332-4DC5-88EB-B9FB43D556AF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {123E34D5-DA60-4929-9110-E760ECAC5050}

@@ -25,6 +25,8 @@ using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Core.Interfaces;
 using System;
+using Fluent.Architecture.Core.Attributes;
+using Fluent.Architecture.Enumerator;
 
 namespace Fluent.Architecture.Repository
 {
@@ -35,23 +37,22 @@ namespace Fluent.Architecture.Repository
     /// <typeparam name="TE">
     /// O tipo de entidade do repositório.
     /// </typeparam>
+    [DbType(FluentDbType.SQL_SERVER)]
     public class FluentSQLRepository<TE> : TransactionlRepository, IFluentRepository<TE> where TE : BaseEntity
     {
-        public FluentSQLRepository(string connectionStringID)
+        public FluentSQLRepository()
         {
-            ConnectionStringID = connectionStringID;
         }
 
         #region PROPERTIES
 
         private string ConnectionStringID { get; set; }
 
-        public UserSessionRequest SessionRequest => Service.SessionRequest;
+        public ITransactionObjects TransactionObjects { get; set; }
 
-        /// <summary>
-        /// Os objetos de transação do repositório.
-        /// </summary>
-        internal ITransactionObjects TransactionObjects { get; set; }
+        public Type TransactionObjectsType => typeof(TransactionObjects);
+
+        public UserSessionRequest SessionRequest => Service.SessionRequest;
 
         /// <summary>
         /// A referência da sessão do EF.
@@ -77,8 +78,8 @@ namespace Fluent.Architecture.Repository
         /// O serviço qual esse repositório representa.
         /// </summary>
         internal FluentService<TE> Service { get; set; }
-        ITransactionObjects IFluentRepository<TE>.TransactionObjects { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-        FluentService<TE> IFluentRepository<TE>.Service { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+
+       // FluentService<TE> IFluentRepository<TE>.Service { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
         protected void RunTheContextValidation() => Service.SessionRequest.ContextFluentValidationException.Validate();
 

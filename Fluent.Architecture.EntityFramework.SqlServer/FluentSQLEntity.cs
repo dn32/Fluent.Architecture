@@ -5,7 +5,7 @@ using Fluent.Architecture.Model;
 namespace Fluent.Architecture.EntityFramework.SqlServer
 {
     [DbType(FluentDbType.SQL_SERVER)]
-    public class FluentSQLEntity : FluentEntity
+    public abstract class FluentSQLEntity : FluentEntity
     {
     }
 }

@@ -31,6 +31,8 @@ using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Enumerator;
+using Fluent.Architecture.Extensions;
+using Fluent.Architecture.Core.Attributes;
 
 namespace Fluent.Architecture
 {
@@ -40,19 +42,20 @@ namespace Fluent.Architecture
         public string Identifier { get; internal set; }
         public Func<object, string> GetConnectionString { get; internal set; }
         public FluentDbType DBType { get; set; }
+        public bool CreateDatabaseIfNotExists { get; set; }
     }
 
-    public interface IConfigClassValidado
+    public interface IConfigValidate
     {
-        ConfigClass ConfigClass { get; set; }
+        Config Config { get; set; }
     }
 
-    internal class ConfigClassValidado : IConfigClassValidado
+    internal class ConfigClassValidado : IConfigValidate
     {
-        public ConfigClass ConfigClass { get; set; }
+        public Config Config { get; set; }
     }
 
-    public class ConfigClass
+    public class Config
     {
         public List<Connection> Connections { get; internal set; }
         public IServiceProvider ServiceProvider { get; internal set; }
@@ -68,7 +71,7 @@ namespace Fluent.Architecture
 
         private static readonly object LockInitialization = new object();
 
-        //  internal static Type TransactionObjectsType { get; set; }
+        public static Type TransactionObjectsType { get; set; }
 
         internal static GlobalizationService GlobalizationService { get; set; }
 
@@ -84,6 +87,10 @@ namespace Fluent.Architecture
 
         internal static Dictionary<Guid, UserSessionRequest> UserSessionList { get; set; }
 
+        internal static Dictionary<FluentDbType, Type> RepositoryTypes = new Dictionary<FluentDbType, Type>();
+
+        internal static IConfigValidate Config { get; set; }
+
         #endregion
 
         #region PUBLIC METHODS
@@ -93,68 +100,67 @@ namespace Fluent.Architecture
             GlobalizationService = ServiceFactory.Create<TS>(httpContext);
         }
 
-        public static void DbSetup(bool createDatabaseIfNotExists)
-        {
-            // Todo - Arrumar essa implementação
-#if NET461
-            //if (createDatabaseIfNotExists)
-            //{
-            //    Database.SetInitializer(new CreateDatabaseIfNotExists<EfContext>());
-            //}
-            //else
-            //{
-            //    Database.SetInitializer<EfContext>(null);
-            //}
-#else
-            //if (createDatabaseIfNotExists)
-            //{
-            //        var context = ServiceProvider.GetRequiredService<EfContext>();
-            //        context.Database.Migrate();
-            //}
-#endif
-        }
 
 
 #if NET461
 #else
-        public static ConfigClass SetServiceProvider(this ConfigClass configClass, IServiceProvider serviceProvider)
+        public static Config SetServiceProvider(this Config configClass, IServiceProvider serviceProvider)
         {
             configClass.ServiceProvider = serviceProvider;
             return configClass;
         }
 #endif
 
-        public static ConfigClass Init()
+        public static Config Init()
         {
-            return new ConfigClass();
+            return new Config();
         }
 
-        public static ConfigClass AddConnectionString(this ConfigClass configClass, string connectionString, FluentDbType dbType, string identifier = "")
+        public static Config AddConnectionString(
+                this Config configClass,
+                string connectionString,
+                bool createDatabaseIfNotExists,
+                FluentDbType dbType,
+                string identifier = "")
         {
-            return configClass.AddConnectionString(_ => connectionString, dbType, identifier);
+            return configClass.AddConnectionString(_ => connectionString, createDatabaseIfNotExists, dbType, identifier);
         }
 
-        public static ConfigClass AddConnectionString(this ConfigClass configClass, Func<object, string> getConnectionString, FluentDbType dbType, string identifier = "")
+        public static Config AddConnectionString(
+                this Config configClass,
+                Func<object, string> getConnectionString,
+                bool createDatabaseIfNotExists,
+                FluentDbType dbType,
+                string identifier = "")
         {
             if (configClass.Connections == null)
             {
                 configClass.Connections = new List<Connection>();
             }
 
-            configClass.Connections.Add(new Connection { GetConnectionString = getConnectionString, DBType = dbType, Identifier = identifier });
+            configClass.Connections.Add(
+                new Connection
+                {
+                    GetConnectionString = getConnectionString,
+                    DBType = dbType,
+                    Identifier = identifier,
+                    CreateDatabaseIfNotExists = createDatabaseIfNotExists
+                });
+
             return configClass;
         }
 
-        public static void Run(this IConfigClassValidado configClassValidado)
+        public static void Run(this IConfigValidate configClassValidado)
         {
+            Config = configClassValidado;
             InternalInitialize();
         }
 
-        public static IConfigClassValidado Build(this ConfigClass configClass)
+        public static IConfigValidate Build(this Config configClass)
         {
             return new ConfigClassValidado
             {
-                ConfigClass = configClass
+                Config = configClass
             };
         }
 
@@ -225,6 +231,10 @@ namespace Fluent.Architecture
                 types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentService<BaseEntity>)))
                     .Where(x => x.Item1 != null).ToList()
                     .ForEach(AddService);
+
+                types.Where(x => x.Is(typeof(TransactionlRepository)))
+                 .Where(x => x.GetCustomAttribute<DbTypeAttribute>() != null).ToList()
+                 .ForEach(AddRepositoryTypes);
 
                 types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(IFluentRepository<BaseEntity>)))
                    .Where(x => x.Item1 != null).ToList()
@@ -399,7 +409,6 @@ namespace Fluent.Architecture
             Services.Add(service.Item1, service.Item2);
         }
 
-
         private static void AddValidation(Tuple<Type, Type> validation)
         {
             if (Model.ContainsKey(validation.Item1))
@@ -418,6 +427,12 @@ namespace Fluent.Architecture
             }
 
             Repositories.Add(repository.Item1, repository.Item2);
+        }
+
+        private static void AddRepositoryTypes(Type repositoryType)
+        {
+            var attr = repositoryType.GetCustomAttribute<DbTypeAttribute>();
+            RepositoryTypes.Add(attr.DbType, repositoryType);
         }
 
         private static void CheckErrorInTheRepository(IEnumerable<Type> types)

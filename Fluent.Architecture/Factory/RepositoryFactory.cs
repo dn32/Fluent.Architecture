@@ -7,8 +7,13 @@
 
 // ReSharper disable CommentTypo
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using Fluent.Architecture.Core.Attributes;
+using Fluent.Architecture.Core.Factory;
 using Fluent.Architecture.Core.Interfaces;
+using Fluent.Architecture.Enumerator;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
@@ -38,18 +43,9 @@ namespace Fluent.Architecture.Factory
         /// </returns>
         internal static IFluentRepository<T> Create(ITransactionObjects transactionObjects, FluentService<T> service)
         {
-            Type localType;
-
-            if (typeof(T).IsSubclassOf(typeof(FluentGlobalizedEntity)))
-            {
-                // Todo cade esse serviço?
-                throw new NotImplementedException();
-                //localType = typeof(FluentGlobalizedRepository<>).MakeGenericType(typeof(T));
-            }
-            else
-            {
-                localType = typeof(IFluentRepository<T>);
-            }
+            var dbType = GetTheEntityDBType(typeof(T));
+            var localType = GetRepositoryType(dbType.DbType);
+            localType = localType.MakeGenericType(typeof(T));
 
             if (Setup.Repositories.TryGetValue(typeof(T), out var repositoryType))
             {
@@ -57,14 +53,53 @@ namespace Fluent.Architecture.Factory
             }
 
             var repository = Create(localType);
-            repository.TransactionObjects = transactionObjects;
-            repository.Service = service;
+
+            if (transactionObjects == null)
+            {
+                Connection connetion;
+
+                if (string.IsNullOrWhiteSpace(dbType.Identifier))
+                {
+                    //Todo checar erros aqui.
+                    connetion = Setup.Config.Config.Connections.Single(x => x.DBType == dbType.DbType);
+                }
+                else
+                {
+                    //Todo checar erros aqui.
+                    connetion = Setup.Config.Config.Connections.Single(x => x.Identifier == dbType.Identifier);
+                }
+
+                var transactionObjectsType = repository.TransactionObjectsType;
+                connetion = Setup.Config.Config.Connections.First(x => x.DBType == dbType.DbType);
+                repository.TransactionObjects = TransactionObjectsFactory.Create(transactionObjectsType, connetion);
+            }
+            else
+            {
+                repository.TransactionObjects = transactionObjects;
+            }
+
             return repository;
         }
 
         private static IFluentRepository<T> Create(Type repositoryType)
         {
             return Activator.CreateInstance(repositoryType) as IFluentRepository<T>;
+        }
+
+        //Todo - validar no boot se todas as entidades tem tipo de BD,ou se só tem um tipo de bd instanciado na aplicação
+        private static DbTypeAttribute GetTheEntityDBType(Type type)
+        {
+            return type.GetCustomAttribute<DbTypeAttribute>();
+        }
+
+        private static Type GetRepositoryType(FluentDbType dbType)
+        {
+            if (Setup.RepositoryTypes.TryGetValue(dbType, out Type repo))
+            {
+                return repo;
+            }
+
+            throw new Exception($"Not found repository type for {dbType}");
         }
     }
 }
