@@ -3,13 +3,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Fluent.Architecture.Sample
 {
-    [Route("api/teste")]
+    [Route("api/teste/[Action]")]
     public class TesteController : FluentController<EntidadeTeste>
     {
         [HttpGet]
-        public void Add(EntidadeTeste entity)
+        public object Add(EntidadeTeste entity)
         {
-            Service.Add(entity);
+            entity.Name = "Teste";
+            return Service.Add(entity);
+        }
+
+        [HttpGet]
+        public object Get(EntidadeTeste entity)
+        {
+            return Service.Find(entity);
         }
     }
 }

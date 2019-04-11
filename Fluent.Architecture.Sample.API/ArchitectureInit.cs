@@ -17,7 +17,7 @@ namespace Fluent.Architecture.Sample
 
         public static string GetConnectionString(object sessionId)
         {
-            return "Server=localhost;Database=dbTeste;Trusted_Connection=True;";
+            return "Server=N000967\\MSSQLSERVER01;Database=dbTeste;Trusted_Connection=True;";
         }
     }
 }

@@ -71,12 +71,12 @@ namespace Fluent.Architecture.Factory
 
                 var transactionObjectsType = repository.TransactionObjectsType;
                 connetion = Setup.Config.Config.Connections.First(x => x.DBType == dbType.DbType);
-                repository.TransactionObjects = TransactionObjectsFactory.Create(transactionObjectsType, connetion);
+                transactionObjects = TransactionObjectsFactory.Create(transactionObjectsType, connetion);
+                service.SessionRequest.TransactionObjects = transactionObjects;
             }
-            else
-            {
-                repository.TransactionObjects = transactionObjects;
-            }
+
+            repository.TransactionObjects = transactionObjects;
+            repository.Service = service;
 
             return repository;
         }

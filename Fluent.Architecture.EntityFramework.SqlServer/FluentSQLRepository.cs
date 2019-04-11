@@ -77,7 +77,7 @@ namespace Fluent.Architecture.Repository
         /// <summary>
         /// O serviço qual esse repositório representa.
         /// </summary>
-        internal FluentService<TE> Service { get; set; }
+        public FluentService<TE> Service { get; set; }
 
        // FluentService<TE> IFluentRepository<TE>.Service { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 

@@ -79,6 +79,11 @@ namespace Fluent.Architecture.Repository
 
         private void AfterSave(List<EntityEntry> changedEntities, List<FluentEventEntity> eventChange)
         {
+            if (EntityChangedEventEvent == null)
+            {
+                return;
+            }
+
             changedEntities.ForEach(x =>
             {
                 var fluentEventEntity = eventChange.Next();
@@ -91,6 +96,12 @@ namespace Fluent.Architecture.Repository
         {
             changedEntities = ChangeTracker.Entries().Where(e => e.State == EntityState.Added || e.State == EntityState.Deleted || e.State == EntityState.Modified).ToList();
             eventChange = changedEntities.Select(GetEventChange).ToList();
+
+            if (EntityChangingEventEvent == null)
+            {
+                return;
+            }
+
             eventChange.ForEach(x => EntityChangingEventEvent(x));
         }
 

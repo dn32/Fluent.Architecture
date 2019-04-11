@@ -8,6 +8,7 @@ namespace Fluent.Architecture.Core.Interfaces
 {
     public interface IFluentRepository<TE> : ITransactionlRepository where TE : BaseEntity
     {
+        FluentService<TE> Service { get; set; }
         ITransactionObjects TransactionObjects { get; set; }
         Type TransactionObjectsType { get; }
         void RemoveRange(IFluentSpecification spec);
