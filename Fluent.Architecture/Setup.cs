@@ -30,6 +30,7 @@ using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Core.Interfaces;
+using Fluent.Architecture.Enumerator;
 
 namespace Fluent.Architecture
 {
@@ -38,7 +39,7 @@ namespace Fluent.Architecture
     {
         public string Identifier { get; internal set; }
         public Func<object, string> GetConnectionString { get; internal set; }
-
+        public FluentDbType DBType { get; set; }
     }
 
     public interface IConfigClassValidado
@@ -128,19 +129,19 @@ namespace Fluent.Architecture
             return new ConfigClass();
         }
 
-        public static ConfigClass AddConnectionString(this ConfigClass configClass, string connectionString, string identifier)
+        public static ConfigClass AddConnectionString(this ConfigClass configClass, string connectionString, FluentDbType dbType, string identifier = "")
         {
-            return configClass.AddConnectionString(_ => connectionString, identifier);
+            return configClass.AddConnectionString(_ => connectionString, dbType, identifier);
         }
 
-        public static ConfigClass AddConnectionString(this ConfigClass configClass, Func<object, string> getConnectionString, string identifier)
+        public static ConfigClass AddConnectionString(this ConfigClass configClass, Func<object, string> getConnectionString, FluentDbType dbType, string identifier = "")
         {
             if (configClass.Connections == null)
             {
                 configClass.Connections = new List<Connection>();
             }
 
-            configClass.Connections.Add(new Connection { GetConnectionString = getConnectionString, Identifier = identifier });
+            configClass.Connections.Add(new Connection { GetConnectionString = getConnectionString, DBType = dbType, Identifier = identifier });
             return configClass;
         }
 

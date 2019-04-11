@@ -4,7 +4,7 @@ using System.Data;
 
 namespace Fluent.Architecture.Core.Attributes
 {
-    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Class, Inherited = true)]
     public class DbTypeAttribute : Attribute
     {
         public FluentDbType DbType { get; set; }
