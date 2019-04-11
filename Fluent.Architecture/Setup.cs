@@ -33,6 +33,30 @@ using Fluent.Architecture.Core.Interfaces;
 
 namespace Fluent.Architecture
 {
+
+    public class Connection
+    {
+        public string Identifier { get; internal set; }
+        public Func<object, string> GetConnectionString { get; internal set; }
+
+    }
+
+    public interface IConfigClassValidado
+    {
+        ConfigClass ConfigClass { get; set; }
+    }
+
+    internal class ConfigClassValidado : IConfigClassValidado
+    {
+        public ConfigClass ConfigClass { get; set; }
+    }
+
+    public class ConfigClass
+    {
+        public List<Connection> Connections { get; internal set; }
+        public IServiceProvider ServiceProvider { get; internal set; }
+    }
+
     public static class Setup
     {
         #region PROPERTIES
@@ -43,7 +67,7 @@ namespace Fluent.Architecture
 
         private static readonly object LockInitialization = new object();
 
-        internal static Type TransactionObjectsType { get; set; }
+        //  internal static Type TransactionObjectsType { get; set; }
 
         internal static GlobalizationService GlobalizationService { get; set; }
 
@@ -59,21 +83,9 @@ namespace Fluent.Architecture
 
         internal static Dictionary<Guid, UserSessionRequest> UserSessionList { get; set; }
 
-#endregion
+        #endregion
 
-#region PUBLIC METHODS
-
-        /// <summary>
-        /// Permite definir um tipo para TransactionObjectsType que é o contexto da aplicação referente ao banco de dados.
-        /// Muito útil para o controle de mock de testes automatizados.
-        /// </summary>
-        /// <param name="transactionObjectsType">
-        /// O tipo a ser definido.
-        /// </param>
-        public static void SetCustomTypes(Type transactionObjectsType)
-        {
-            TransactionObjectsType = transactionObjectsType;
-        }
+        #region PUBLIC METHODS
 
         public static void SetGlobalizationServiceType<TS>(object httpContext) where TS : GlobalizationService, new()
         {
@@ -103,19 +115,49 @@ namespace Fluent.Architecture
 
 
 #if NET461
-        public static void Initialize(string connectionString, bool createDatabaseIfNotExists = true)
-        {
-            InternalInitialize(connectionString, createDatabaseIfNotExists);
-        }
 #else
-        public static void Initialize(IServiceProvider serviceProvider, string connectionString, bool createDatabaseIfNotExists = true)
+        public static ConfigClass SetServiceProvider(this ConfigClass configClass, IServiceProvider serviceProvider)
         {
-            ServiceProvider = serviceProvider;
-            InternalInitialize(connectionString, createDatabaseIfNotExists);
+            configClass.ServiceProvider = serviceProvider;
+            return configClass;
         }
 #endif
 
-        private static void InternalInitialize(string connectionString, bool createDatabaseIfNotExists = true)
+        public static ConfigClass Init()
+        {
+            return new ConfigClass();
+        }
+
+        public static ConfigClass AddConnectionString(this ConfigClass configClass, string connectionString, string identifier)
+        {
+            return configClass.AddConnectionString(_ => connectionString, identifier);
+        }
+
+        public static ConfigClass AddConnectionString(this ConfigClass configClass, Func<object, string> getConnectionString, string identifier)
+        {
+            if (configClass.Connections == null)
+            {
+                configClass.Connections = new List<Connection>();
+            }
+
+            configClass.Connections.Add(new Connection { GetConnectionString = getConnectionString, Identifier = identifier });
+            return configClass;
+        }
+
+        public static void Run(this IConfigClassValidado configClassValidado)
+        {
+            InternalInitialize();
+        }
+
+        public static IConfigClassValidado Build(this ConfigClass configClass)
+        {
+            return new ConfigClassValidado
+            {
+                ConfigClass = configClass
+            };
+        }
+
+        private static void InternalInitialize()
         {
             lock (LockInitialization)
             {
@@ -124,74 +166,85 @@ namespace Fluent.Architecture
                     return;
                 }
 
-                Initialized = true;
+                ObjectInit();
 
-                // Todo - Avaliar impacto de separação de pacote
-               // TransactionObjects.DataBaseConnectionString = connectionString;
+                var typeList = LoadAssemblies();
 
-                Services = new Dictionary<Type, Type>();
-                Repositories = new Dictionary<Type, Type>();
-                Validations = new Dictionary<Type, Type>();
-                Model = new Dictionary<Type, Type>();
-                UserSessionList = new Dictionary<Guid, UserSessionRequest>();
-                // Todo - Avaliar impacto de separação de pacote
-               // TransactionObjectsType = typeof(TransactionObjects);
-
-                Services.Add(typeof(FluentEntity), typeof(FluentService<FluentEntity>));
-                // Todo - Avaliar impacto de separação de pacote
-               // Repositories.Add(typeof(FluentEntity), typeof(FluentRepository<FluentEntity>));
-                Validations.Add(typeof(FluentEntity), typeof(FluentValidation<FluentEntity>));
-
-                var assemblies = AppDomain.CurrentDomain.GetAssemblies().OrderBy(x => x.FullName).ToList();
-                foreach (var assembly in assemblies)
-                {
-                    Type[] types;
-
-                    try
-                    {
-                        types = assembly.GetTypes();
-                    }
-#pragma warning disable CA1031 // Do not catch general exception types
-                    catch
-                    {
-                        continue;
-                    }
-#pragma warning restore CA1031 // Do not catch general exception types
-
-                    var transactionalServices = types.Where(x => x.IsSubclassOf(typeof(TransactionalService))).ToList();
-
-                    ValidateIfAllServicePropertiesNotHaveTheSetMethod(transactionalServices);
-                    ValidateIfAllServicePropertiesAreVirtual(transactionalServices);
-                    ValidateIfAllServicePropertiesNotHavePublic(transactionalServices);
-                    ValidateIfAllServicePropertiesHaveDefaultConstructor(transactionalServices);
-
-                    ValidateSpecifications(types.Where(x => x.IsSubclassOf(typeof(BaseSpecification))).ToList());
-                    ValidateController(types.Where(x => x.IsSubclassOf(typeof(BaseController))).ToList());
-
-                    types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentService<BaseEntity>)))
-                        .Where(x => x.Item1 != null).ToList()
-                        .ForEach(AddService);
-
-                    types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(IFluentRepository<BaseEntity>)))
-                       .Where(x => x.Item1 != null).ToList()
-                       .ForEach(AddRepository);
-
-                    types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentValidation<BaseEntity>)))
-                       .Where(x => x.Item1 != null).ToList()
-                       .ForEach(AddValidation);
-
-                    types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(BaseEntity)))
-                        .Where(x => x.Item1 != null && x.Item2 != typeof(BaseEntity)).ToList()
-                        .ForEach(AddModel);
-                }
-
-                // ValidateIfAllMethodsAreVirtual(Services.Values.ToList()); // To intercept
-                // ValidateIfAllMethodsAreVirtual(Repositories.Values.ToList()); // To intercept
-                // ValidateIfAllMethodsAreVirtual(Validations.Values.ToList()); //It is not necessary
-                CheckErrorInTheRepository(Repositories.Values.ToList());
-
-                DbSetup(createDatabaseIfNotExists);
+                InitValidations(typeList);
             }
+        }
+
+        private static void ObjectInit()
+        {
+            Initialized = true;
+            Services = new Dictionary<Type, Type>();
+            Repositories = new Dictionary<Type, Type>();
+            Validations = new Dictionary<Type, Type>();
+            Model = new Dictionary<Type, Type>();
+            UserSessionList = new Dictionary<Guid, UserSessionRequest>();
+            Services.Add(typeof(FluentEntity), typeof(FluentService<FluentEntity>));
+            Repositories.Add(typeof(FluentEntity), typeof(IFluentRepository<FluentEntity>));
+            Validations.Add(typeof(FluentEntity), typeof(FluentValidation<FluentEntity>));
+        }
+
+        private static List<Type[]> LoadAssemblies()
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies().OrderBy(x => x.FullName).ToList();
+            var typeList = new List<Type[]>();
+
+            foreach (var assembly in assemblies)
+            {
+                try
+                {
+                    typeList.Add(assembly.GetTypes());
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+
+            return typeList;
+        }
+
+        private static void InitValidations(List<Type[]> typeList)
+        {
+            foreach (var types in typeList)
+            {
+                var transactionalServices = types.Where(x => x.IsSubclassOf(typeof(TransactionalService))).ToList();
+
+                ValidateIfAllServicePropertiesNotHaveTheSetMethod(transactionalServices);
+                ValidateIfAllServicePropertiesAreVirtual(transactionalServices);
+                ValidateIfAllServicePropertiesNotHavePublic(transactionalServices);
+                ValidateIfAllServicePropertiesHaveDefaultConstructor(transactionalServices);
+
+                ValidateSpecifications(types.Where(x => x.IsSubclassOf(typeof(BaseSpecification))).ToList());
+                ValidateController(types.Where(x => x.IsSubclassOf(typeof(BaseController))).ToList());
+
+                types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentService<BaseEntity>)))
+                    .Where(x => x.Item1 != null).ToList()
+                    .ForEach(AddService);
+
+                types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(IFluentRepository<BaseEntity>)))
+                   .Where(x => x.Item1 != null).ToList()
+                   .ForEach(AddRepository);
+
+                types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentValidation<BaseEntity>)))
+                   .Where(x => x.Item1 != null).ToList()
+                   .ForEach(AddValidation);
+
+                types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(BaseEntity)))
+                    .Where(x => x.Item1 != null && x.Item2 != typeof(BaseEntity)).ToList()
+                    .ForEach(AddModel);
+            }
+
+            // Todo - Não me recordo o motivo de estar comentado, mas acredito que tenha que descomentar
+            // ValidateIfAllMethodsAreVirtual(Services.Values.ToList()); // To intercept
+            // ValidateIfAllMethodsAreVirtual(Repositories.Values.ToList()); // To intercept
+            // ValidateIfAllMethodsAreVirtual(Validations.Values.ToList()); //It is not necessary
+            CheckErrorInTheRepository(Repositories.Values.ToList());
+
+            // DbSetup(createDatabaseIfNotExists);
         }
 
         //Todo testar
@@ -218,9 +271,9 @@ namespace Fluent.Architecture
             });
         }
 
-#endregion
+        #endregion
 
-#region INTERNAL METHODS
+        #region INTERNAL METHODS
 
         internal static UserSessionRequest GetUserRequestSession(Guid sessionIdGuid)
         {
@@ -248,9 +301,9 @@ namespace Fluent.Architecture
             }
         }
 
-#endregion
+        #endregion
 
-#region PRIVATE
+        #region PRIVATE
 
         private static void ValidateIfAllServicePropertiesHaveDefaultConstructor(IEnumerable<Type> types)
         {
@@ -391,6 +444,6 @@ namespace Fluent.Architecture
             }
         }
 
-#endregion
+        #endregion
     }
 }

@@ -30,4 +30,6 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1304:Specify CultureInfo", Justification = "<Pending>", Scope = "member", Target = "~P:Fluent.Architecture.Exceptions.ValidationException.FluentValidationException.GlobalizationKey")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "<Pending>", Scope = "member", Target = "~P:Fluent.Architecture.Exceptions.ValidationException.FluentValidationException.Values")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "<Pending>", Scope = "member", Target = "~M:Fluent.Architecture.Util.AutenticationUtil.GenerateToken(System.Int32,System.Int32)~System.String")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>", Scope = "member", Target = "~M:Fluent.Architecture.Setup.InternalInitialize")]
 
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>", Scope = "member", Target = "~M:Fluent.Architecture.Setup.LoadAssemblies~System.Collections.Generic.List{System.Type[]}")]

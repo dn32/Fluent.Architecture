@@ -24,6 +24,7 @@ using Fluent.Architecture.Model;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Core.Interfaces;
+using System;
 
 namespace Fluent.Architecture.Repository
 {
@@ -34,9 +35,17 @@ namespace Fluent.Architecture.Repository
     /// <typeparam name="TE">
     /// O tipo de entidade do repositório.
     /// </typeparam>
-    public class FluentRepository<TE> : TransactionlRepository, IFluentRepository<TE> where TE : BaseEntity
+    public class FluentSQLRepository<TE> : TransactionlRepository, IFluentRepository<TE> where TE : BaseEntity
     {
+        public FluentSQLRepository(string connectionStringID)
+        {
+            ConnectionStringID = connectionStringID;
+        }
+
         #region PROPERTIES
+
+        private string ConnectionStringID { get; set; }
+
         public UserSessionRequest SessionRequest => Service.SessionRequest;
 
         /// <summary>

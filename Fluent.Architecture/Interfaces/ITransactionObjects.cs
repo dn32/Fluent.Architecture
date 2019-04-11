@@ -10,6 +10,7 @@ namespace Fluent.Architecture.Core.Interfaces
         object Session { get; }
 
         IQueryable<TX> GetObjectQueryInternal<TX>() where TX : BaseEntity;
+
         object GetObjectInputDataInternal<T>();
     }
 }

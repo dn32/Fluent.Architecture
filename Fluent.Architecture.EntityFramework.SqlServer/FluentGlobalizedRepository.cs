@@ -33,7 +33,7 @@ namespace Fluent.Architecture.Repository
     /// <typeparam name="TE">
     /// O tipo de entidade do repositório.
     /// </typeparam>
-    public class FluentGlobalizedRepository<TE> : FluentRepository<TE> where TE : FluentGlobalizedEntity
+    public class FluentGlobalizedRepository<TE> : FluentSQLRepository<TE> where TE : FluentGlobalizedEntity
     {
         // Tradução ok
         /// <summary>
