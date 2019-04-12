@@ -1,4 +1,4 @@
-﻿#if NETCOREAPP2_1
+﻿#if !NET461
 
 using Microsoft.IdentityModel.Tokens;
 using System;

@@ -1,12 +1,12 @@
 ﻿
 using System;
 using System.Linq;
+#if NET461
+using System.Data.Entity;
 
-#if NETCOREAPP2_1
-using Microsoft.EntityFrameworkCore;
 
 #else
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 #endif
 

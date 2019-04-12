@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.EntityF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent.Architecture.Sample.API", "Fluent.Architecture.Sample.API\Fluent.Architecture.Sample.API.csproj", "{D3B68587-57C1-4EC4-B201-79A3F746320D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent.Architecture.EntityFramework.PostgreSQL", "Fluent.Architecture.EntityFramework.PostgreSQL\Fluent.Architecture.EntityFramework.PostgreSQL.csproj", "{7908F454-A8C8-42A8-8949-C1B33E2B56EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent.Architecture.EntityFramework", "Fluent.Architecture.EntityFramework\Fluent.Architecture.EntityFramework.csproj", "{B79539C3-9A24-437C-A8B0-578C2FF80763}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +47,14 @@ Global
 		{D3B68587-57C1-4EC4-B201-79A3F746320D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3B68587-57C1-4EC4-B201-79A3F746320D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3B68587-57C1-4EC4-B201-79A3F746320D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7908F454-A8C8-42A8-8949-C1B33E2B56EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7908F454-A8C8-42A8-8949-C1B33E2B56EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7908F454-A8C8-42A8-8949-C1B33E2B56EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7908F454-A8C8-42A8-8949-C1B33E2B56EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B79539C3-9A24-437C-A8B0-578C2FF80763}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B79539C3-9A24-437C-A8B0-578C2FF80763}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B79539C3-9A24-437C-A8B0-578C2FF80763}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B79539C3-9A24-437C-A8B0-578C2FF80763}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

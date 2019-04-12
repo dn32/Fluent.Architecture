@@ -67,10 +67,5 @@ namespace Fluent.Architecture.Repository
         /// Sessão do EF.
         /// </summary>
         public DbContext Session { get; set; }
-
-        ///// <summary>
-        ///// String de conexão com o banco de dados.
-        ///// </summary>
-        internal static Func<object, string> GetConnectionString { get; set; }
     }
 }

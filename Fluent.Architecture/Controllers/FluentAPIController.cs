@@ -1,5 +1,5 @@
 ﻿
-#if NETCOREAPP2_1
+#if !NET461
 
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Model;

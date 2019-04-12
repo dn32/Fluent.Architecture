@@ -3,20 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net461;netcoreapp2.1;netcoreapp2.2</TargetFrameworks>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Fluent.Architecture.snk</AssemblyOriginatorKeyFile>
-    <Version>1.1.5-beta-43</Version>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <LangVersion>7.3</LangVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|AnyCPU'">
-    <DefineConstants>TRACE;NO_PROPAGATION</DefineConstants>
-     <StyleCopTreatErrors>true</StyleCopTreatErrors>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net461|AnyCPU'">
-    <DefineConstants>TRACE;PROPAGATION</DefineConstants>
-    <StyleCopTreatErrors>true</StyleCopTreatErrors>
+    <AssemblyOriginatorKeyFile>Fluent.Architecture.EntityFramework.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
@@ -33,7 +20,7 @@
     <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
-  
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.2' ">
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
@@ -43,24 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-<!--
-  <ItemGroup>
-    <PackageReference Include="StyleCop.MSBuild" Version="5.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
--->
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.ServiceProcess" />
-    <Reference Include="System.Transactions" />
+    <ProjectReference Include="..\Fluent.Architecture\Fluent.Architecture.Core.csproj" />
   </ItemGroup>
 
 </Project>

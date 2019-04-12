@@ -1,4 +1,4 @@
-﻿#if NETCOREAPP2_1
+﻿#if !NET461
 
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
