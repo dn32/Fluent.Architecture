@@ -1,17 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Fluent.Architecture.EntityFramework.PostgreSQL.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Fluent.Architecture.EntityFramework.MySQL.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Fluent.Architecture.EntityFramework.PostgreSQL.snk" />
+    <None Remove="Fluent.Architecture.EntityFramework.MySQL.snk" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.0" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>

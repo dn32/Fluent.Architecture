@@ -30,6 +30,10 @@
   </ItemGroup>
   
   <ItemGroup>
+    <None Remove="Fluent.Architecture.EntityFramework.SqlServer.snk" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <ProjectReference Include="..\Fluent.Architecture.EntityFramework\Fluent.Architecture.EntityFramework.csproj" />
     <ProjectReference Include="..\Fluent.Architecture\Fluent.Architecture.Core.csproj" />
   </ItemGroup>

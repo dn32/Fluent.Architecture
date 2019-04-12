@@ -24,7 +24,7 @@
 //using Fluent.Architecture.Model;
 //using Fluent.Architecture.Sample.Test.SupportElements.Model;
 
-//namespace Fluent.Architecture.Repository
+//namespace Fluent.Architecture.EntityFramework.SqlServer
 //{
 //    /// <inheritdoc />
 //    /// <summary>

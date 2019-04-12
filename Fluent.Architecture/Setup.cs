@@ -43,6 +43,7 @@ namespace Fluent.Architecture
         public Func<object, string> GetConnectionString { get; internal set; }
         public FluentDbType DBType { get; set; }
         public bool CreateDatabaseIfNotExists { get; set; }
+        public Type DbContextType { get; set; }
     }
 
     public interface IConfigValidate
@@ -121,9 +122,10 @@ namespace Fluent.Architecture
                 string connectionString,
                 bool createDatabaseIfNotExists,
                 FluentDbType dbType,
+                Type dbContextType,
                 string identifier = "")
         {
-            return configClass.AddConnectionString(_ => connectionString, createDatabaseIfNotExists, dbType, identifier);
+            return configClass.AddConnectionString(_ => connectionString, createDatabaseIfNotExists, dbType, dbContextType, identifier);
         }
 
         public static Config AddConnectionString(
@@ -131,6 +133,7 @@ namespace Fluent.Architecture
                 Func<object, string> getConnectionString,
                 bool createDatabaseIfNotExists,
                 FluentDbType dbType,
+                Type dbContextType,
                 string identifier = "")
         {
             if (configClass.Connections == null)
@@ -143,6 +146,7 @@ namespace Fluent.Architecture
                 {
                     GetConnectionString = getConnectionString,
                     DBType = dbType,
+                    DbContextType = dbContextType,
                     Identifier = identifier,
                     CreateDatabaseIfNotExists = createDatabaseIfNotExists
                 });

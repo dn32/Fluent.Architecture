@@ -1,8 +1,9 @@
-﻿using Fluent.Architecture.EntityFramework.SqlServer;
+﻿using Fluent.Architecture.EntityFramework.MySQL;
+using Fluent.Architecture.EntityFramework.SqlServer;
 
 namespace Fluent.Architecture.Sample
 {
-    public class EntidadeTeste : FluentSQLEntity
+    public class EntidadeTeste : FluentMySQLEntity
     {
         public int Id { get; set; }
 

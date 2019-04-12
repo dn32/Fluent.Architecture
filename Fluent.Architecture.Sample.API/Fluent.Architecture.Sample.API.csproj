@@ -11,6 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Fluent.Architecture.EntityFramework.MySQL\Fluent.Architecture.EntityFramework.MySQL.csproj" />
+    <ProjectReference Include="..\Fluent.Architecture.EntityFramework.PostgreSQL\Fluent.Architecture.EntityFramework.PostgreSQL.csproj" />
     <ProjectReference Include="..\Fluent.Architecture.EntityFramework.SqlServer\Fluent.Architecture.EntityFramework.SqlServer.csproj" />
     <ProjectReference Include="..\Fluent.Architecture\Fluent.Architecture.Core.csproj" />
   </ItemGroup>

@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent.Architecture.EntityF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent.Architecture.EntityFramework", "Fluent.Architecture.EntityFramework\Fluent.Architecture.EntityFramework.csproj", "{B79539C3-9A24-437C-A8B0-578C2FF80763}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent.Architecture.EntityFramework.MySQL", "Fluent.Architecture.EntityFramework.MySQL\Fluent.Architecture.EntityFramework.MySQL.csproj", "{2F970D78-25E7-4374-848D-5FE159B23983}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{B79539C3-9A24-437C-A8B0-578C2FF80763}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B79539C3-9A24-437C-A8B0-578C2FF80763}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B79539C3-9A24-437C-A8B0-578C2FF80763}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F970D78-25E7-4374-848D-5FE159B23983}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F970D78-25E7-4374-848D-5FE159B23983}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F970D78-25E7-4374-848D-5FE159B23983}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F970D78-25E7-4374-848D-5FE159B23983}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

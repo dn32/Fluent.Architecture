@@ -17,12 +17,10 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Fluent.Architecture.Model;
 using Fluent.Architecture.Core.Interfaces;
-using System;
 using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Enumerator;
-using Fluent.Architecture.EntityFramework;
 
-namespace Fluent.Architecture.EntityFramework.SqlServer
+namespace Fluent.Architecture.EntityFramework.PostgreSQL
 {
     /// <inheritdoc />
     /// <summary>
@@ -31,8 +29,8 @@ namespace Fluent.Architecture.EntityFramework.SqlServer
     /// <typeparam name="TE">
     /// O tipo de entidade do repositório.
     /// </typeparam>
-    [DbType(FluentDbType.SQL_SERVER)]
-    public class FluentSQLRepository<TE> : FluentEFRepository<TE>, IFluentRepository<TE> where TE : BaseEntity
+    [DbType(FluentDbType.POSTGREE_SQL)]
+    public class FluentPostgreRepository<TE> : FluentEFRepository<TE>, IFluentRepository<TE> where TE : BaseEntity
     {
         #region SQL
 

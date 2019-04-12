@@ -19,7 +19,7 @@ namespace Fluent.Architecture.EntityFramework
     /// <summary>
     /// Contexto do EF no net Core
     /// </summary>
-    public class EfContext : DbContext
+    public abstract class EfContext : DbContext
     {
         internal delegate void EntityChangeEventHandler(FluentEventEntity fluentEventEntity);
         internal event EntityChangeEventHandler EntityChangingEventEvent;

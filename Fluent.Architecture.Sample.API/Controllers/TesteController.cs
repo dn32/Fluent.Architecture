@@ -6,10 +6,9 @@ namespace Fluent.Architecture.Sample
     [Route("api/teste/[Action]")]
     public class TesteController : FluentController<EntidadeTeste>
     {
-        [HttpGet]
-        public object Add(EntidadeTeste entity)
+        [HttpPost]
+        public object Add([FromBody] EntidadeTeste entity)
         {
-            entity.Name = "Teste";
             return Service.Add(entity);
         }
 

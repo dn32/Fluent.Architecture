@@ -7,24 +7,22 @@ using Microsoft.EntityFrameworkCore;
 
 #endif
 
-using Fluent.Architecture.EntityFramework;
-
-namespace Fluent.Architecture.Repository
+namespace Fluent.Architecture.EntityFramework.PostgreSQL
 {
     /// <inheritdoc />
     /// <summary>
     /// Contexto do EF no net Core
     /// </summary>
-    public class EfContextSQL : EfContext
+    public class EfContextPostgreSQL : EfContext
     {
-        public EfContextSQL(string connectionString) : base(connectionString)
+        public EfContextPostgreSQL(string connectionString) : base(connectionString)
         {
         }
 
 #if !NET461
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(ConnectionString);
+            optionsBuilder.UseNpgsql(ConnectionString);
         }
 #endif
     }
