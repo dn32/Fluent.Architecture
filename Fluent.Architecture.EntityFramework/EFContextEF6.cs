@@ -25,8 +25,11 @@ namespace Fluent.Architecture.EntityFramework
     /// </summary>
     public class EfContext : DbContext
     {
+        protected internal string ConnectionString { get; set; }
+      
         public EfContext(string connectionString) : base(connectionString)
         {
+            ConnectionString = connectionString;
         }
 
         /// <summary>

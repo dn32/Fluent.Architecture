@@ -25,7 +25,7 @@ namespace Fluent.Architecture.EntityFramework
         internal event EntityChangeEventHandler EntityChangingEventEvent;
         internal event EntityChangeEventHandler EntityChangedEventEvent;
 
-        internal string ConnectionString { get; set; }
+        protected internal string ConnectionString { get; set; }
 
         public EfContext(string connectionString)
         {
