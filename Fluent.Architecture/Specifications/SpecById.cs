@@ -9,7 +9,7 @@ using System.Data.Entity;
 
 #endif
 
-using Fluent.Architecture.Model;
+using Fluent.Architecture.Entities;
 using System.Linq;
 
 namespace Fluent.Architecture.Specifications

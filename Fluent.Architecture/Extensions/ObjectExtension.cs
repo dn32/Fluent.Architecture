@@ -11,7 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Fluent.Architecture.Model;
+using Fluent.Architecture.Entities;
 using Newtonsoft.Json;
 
 namespace Fluent.Architecture.Extensions

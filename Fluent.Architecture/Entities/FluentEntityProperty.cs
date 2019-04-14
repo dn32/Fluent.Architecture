@@ -1,5 +1,5 @@
 ﻿
-namespace Fluent.Architecture.Model
+namespace Fluent.Architecture.Entities
 {
     public class FluentEventEntityProperty
     {

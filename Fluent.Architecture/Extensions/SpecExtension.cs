@@ -1,6 +1,6 @@
 ﻿using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Interfaces;
-using Fluent.Architecture.Model;
+using Fluent.Architecture.Entities;
 using System.Collections.Generic;
 using System.Linq;
 

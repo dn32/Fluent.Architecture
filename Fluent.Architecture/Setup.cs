@@ -20,8 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Fluent.Architecture.Model;
-using Fluent.Architecture.Repository;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
@@ -30,18 +29,15 @@ using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Core.Interfaces;
-using Fluent.Architecture.Enumerator;
-using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Core.Attributes;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo(@"Fluent.Architecture.EntityFramework, PublicKey=002400000480000094000000060200000024000052534131000400000100010001e5fbcd7e6f1d70524fc7b787a6ba4d8f332e822c5506e1831f4e59ab41e930c56bbf8cc29fa91f1270f4e873c036335c5aa4ccfc76ab13bfa7372de9d4e17de6c2d188fae9e6842d7d90d51e123836fd9f5d6be5580a32d1a12e59489519c6b93cdcf7ecd782042db1f31190350fbf937bbd6a5ae61d648773b46b9a706ccf")]
 namespace Fluent.Architecture
 {
-
     public class Connection
     {
         public string Identifier { get; internal set; }
         public Func<object, string> GetConnectionString { get; internal set; }
-        public FluentDbType DBType { get; set; }
         public bool CreateDatabaseIfNotExists { get; set; }
         public Type DbContextType { get; set; }
     }
@@ -60,6 +56,7 @@ namespace Fluent.Architecture
     {
         public List<Connection> Connections { get; internal set; }
         public IServiceProvider ServiceProvider { get; internal set; }
+        internal IRepositoryFactory RepositoryFactory { get; set; }
     }
 
     public static class Setup
@@ -71,8 +68,6 @@ namespace Fluent.Architecture
 #endif
 
         private static readonly object LockInitialization = new object();
-
-        public static Type TransactionObjectsType { get; set; }
 
         internal static GlobalizationService GlobalizationService { get; set; }
 
@@ -87,8 +82,6 @@ namespace Fluent.Architecture
         public static bool Initialized { get; set; }
 
         internal static Dictionary<Guid, UserSessionRequest> UserSessionList { get; set; }
-
-        internal static Dictionary<FluentDbType, Type> RepositoryTypes = new Dictionary<FluentDbType, Type>();
 
         internal static IConfigValidate Config { get; set; }
 
@@ -111,6 +104,11 @@ namespace Fluent.Architecture
             return configClass;
         }
 #endif
+        internal static Config SetRepositoryFactory(this Config configClass, IRepositoryFactory repositoryFactory)
+        {
+            configClass.RepositoryFactory = repositoryFactory;
+            return configClass;
+        }
 
         public static Config Init()
         {
@@ -121,18 +119,16 @@ namespace Fluent.Architecture
                 this Config configClass,
                 string connectionString,
                 bool createDatabaseIfNotExists,
-                FluentDbType dbType,
                 Type dbContextType,
                 string identifier = "")
         {
-            return configClass.AddConnectionString(_ => connectionString, createDatabaseIfNotExists, dbType, dbContextType, identifier);
+            return configClass.AddConnectionString(_ => connectionString, createDatabaseIfNotExists, dbContextType, identifier);
         }
 
         public static Config AddConnectionString(
                 this Config configClass,
                 Func<object, string> getConnectionString,
                 bool createDatabaseIfNotExists,
-                FluentDbType dbType,
                 Type dbContextType,
                 string identifier = "")
         {
@@ -145,7 +141,6 @@ namespace Fluent.Architecture
                 new Connection
                 {
                     GetConnectionString = getConnectionString,
-                    DBType = dbType,
                     DbContextType = dbContextType,
                     Identifier = identifier,
                     CreateDatabaseIfNotExists = createDatabaseIfNotExists
@@ -162,6 +157,9 @@ namespace Fluent.Architecture
 
         public static IConfigValidate Build(this Config configClass)
         {
+            //Todo no boot da aplicação, checar se os tipos de contexto possuem o atrubuto do tipo de BD
+            //Todo - checar ainda se não tem identificador igual
+
             return new ConfigClassValidado
             {
                 Config = configClass
@@ -235,10 +233,6 @@ namespace Fluent.Architecture
                 types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentService<BaseEntity>)))
                     .Where(x => x.Item1 != null).ToList()
                     .ForEach(AddService);
-
-                types.Where(x => x.Is(typeof(TransactionlRepository)))
-                 .Where(x => x.GetCustomAttribute<DbTypeAttribute>() != null).ToList()
-                 .ForEach(AddRepositoryTypes);
 
                 types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(IFluentRepository<BaseEntity>)))
                    .Where(x => x.Item1 != null).ToList()
@@ -431,12 +425,6 @@ namespace Fluent.Architecture
             }
 
             Repositories.Add(repository.Item1, repository.Item2);
-        }
-
-        private static void AddRepositoryTypes(Type repositoryType)
-        {
-            var attr = repositoryType.GetCustomAttribute<DbTypeAttribute>();
-            RepositoryTypes.Add(attr.DbType, repositoryType);
         }
 
         private static void CheckErrorInTheRepository(IEnumerable<Type> types)

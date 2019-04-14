@@ -15,7 +15,7 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Attributes;
-using Fluent.Architecture.Model;
+using Fluent.Architecture.Entities;
 
 namespace Fluent.Architecture.EntityFramework
 {

@@ -9,7 +9,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Fluent.Architecture.Model
+namespace Fluent.Architecture.Entities
 {
     public class Translation : FluentEntity
     {

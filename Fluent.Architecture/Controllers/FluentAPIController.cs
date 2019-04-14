@@ -2,7 +2,7 @@
 #if !NET461
 
 using Fluent.Architecture.Attributes;
-using Fluent.Architecture.Model;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Specifications;
 using Microsoft.AspNetCore.Mvc;
 

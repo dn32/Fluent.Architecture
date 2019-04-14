@@ -9,7 +9,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Fluent.Architecture.Model;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Services;

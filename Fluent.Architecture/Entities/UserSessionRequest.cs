@@ -21,7 +21,7 @@ using Fluent.Architecture.Services;
 using Fluent.Architecture.Validation;
 using Fluent.Architecture.Core.Interfaces;
 
-namespace Fluent.Architecture.Model
+namespace Fluent.Architecture.Entities
 {
     /// <summary>
     /// Entidade organizadora da injeção de dependência e do contexto da requisição do usuário.

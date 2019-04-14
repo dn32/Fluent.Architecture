@@ -7,16 +7,15 @@
 
 // ReSharper disable CommentTypo
 
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using Fluent.Architecture.Core.Interfaces;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Interfaces;
-using Fluent.Architecture.Model;
-using Fluent.Architecture.Repository;
 using Fluent.Architecture.Validation;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace Fluent.Architecture.Services
 {
@@ -52,7 +51,7 @@ namespace Fluent.Architecture.Services
             base.SetUserSession(sessionRequest);
 
             ValidateInit();
-            this.Repository = RepositoryFactory<T>.Create(this.TransactionObjects, this);
+            this.Repository = Setup.Config.Config.RepositoryFactory.Create(TransactionObjects, this);
             this.Validation = ValidationFactory.Create<T>();
             this.Validation.Init(this);
         }
@@ -199,7 +198,7 @@ namespace Fluent.Architecture.Services
             return this.Repository.Exists(spec);
         }
 
-        public virtual bool Exists(T entity,bool checkId = true)
+        public virtual bool Exists(T entity, bool checkId = true)
         {
             return this.Find(entity, checkId) != null;
         }

@@ -8,7 +8,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Fluent.Architecture.Model
+namespace Fluent.Architecture.Entities
 {
     /// <inheritdoc />
     public abstract class FluentGlobalizedEntity : FluentIdEntity

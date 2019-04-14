@@ -1,6 +1,4 @@
-﻿using Fluent.Architecture.Core.Attributes;
-using Fluent.Architecture.Enumerator;
-using Fluent.Architecture.Model;
+﻿using Fluent.Architecture.Entities;
 
 namespace Fluent.Architecture.EntityFramework.PostgreSQL
 {

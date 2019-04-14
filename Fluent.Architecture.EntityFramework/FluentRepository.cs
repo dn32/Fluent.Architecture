@@ -19,7 +19,7 @@ using System.Linq;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Interfaces;
-using Fluent.Architecture.Model;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Core.Interfaces;
@@ -40,7 +40,7 @@ namespace Fluent.Architecture.EntityFramework
     /// <typeparam name="TE">
     /// O tipo de entidade do repositório.
     /// </typeparam>
-    public abstract class FluentEFRepository<TE> : TransactionlRepository, IFluentRepository<TE> where TE : BaseEntity
+    public class FluentEFRepository<TE> : TransactionlRepository, IFluentRepository<TE> where TE : BaseEntity
     {
         public FluentEFRepository()
         {
@@ -174,9 +174,31 @@ namespace Fluent.Architecture.EntityFramework
 
         #region SQL
 
-        internal abstract bool ExistsSql(string sql);
+        /// <summary>
+        /// Todo - Muito cuidado, pois se definir esse método como público, pode permitir vilnerabilidades no sistema por ser string sql.
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        internal bool ExistsSql(string sql)
+        {
+#if NET461
+            return this.Input.SqlQuery(sql).Any();
+#else
+            return this.Input.FromSql(sql).Any();
+#endif
+        }
 
-        internal abstract TE FindSingleOrDefaultSql(string sql);
+        internal TE FindSingleOrDefaultSql(string sql)
+        {
+#if NET461
+            return this.Input.SqlQuery(sql).SingleOrDefault();
+#else
+            return this.Input.FromSql(sql).SingleOrDefault();
+#endif
+        }
+        //internal abstract bool ExistsSql(string sql);
+
+        //internal abstract TE FindSingleOrDefaultSql(string sql);
 
         #endregion
 

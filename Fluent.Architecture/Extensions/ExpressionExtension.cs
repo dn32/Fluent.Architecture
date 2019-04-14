@@ -1,4 +1,4 @@
-﻿using Fluent.Architecture.Model;
+﻿using Fluent.Architecture.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

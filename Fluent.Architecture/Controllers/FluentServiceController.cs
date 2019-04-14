@@ -12,7 +12,7 @@ using System.Security.Claims;
 using System.Web;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Services;
-using Fluent.Architecture.Model;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Util;
 
 #if NET461

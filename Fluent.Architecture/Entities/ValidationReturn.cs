@@ -12,7 +12,7 @@ using Fluent.Architecture.Validation;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Fluent.Architecture.Model
+namespace Fluent.Architecture.Entities
 {
     public class ValidationReturn
     {

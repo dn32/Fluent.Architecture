@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 #endif
 
 using System.Linq;
-using Fluent.Architecture.Model;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Core.Interfaces;
 using System.Runtime.CompilerServices;
 

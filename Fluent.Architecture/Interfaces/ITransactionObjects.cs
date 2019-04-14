@@ -1,7 +1,7 @@
 ﻿
 using System;
 using System.Linq;
-using Fluent.Architecture.Model;
+using Fluent.Architecture.Entities;
 
 #if NET461
 using System.Data.Entity;

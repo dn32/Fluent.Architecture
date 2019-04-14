@@ -13,7 +13,7 @@ using System.Web;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Exceptions;
-using Fluent.Architecture.Model;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
 

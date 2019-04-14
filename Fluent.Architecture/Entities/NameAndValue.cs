@@ -7,10 +7,14 @@
 
 // ReSharper disable CommentTypo
 
-namespace Fluent.Architecture.Model
+namespace Fluent.Architecture.Entities
 {
-    /// <inheritdoc />
-    public abstract class FluentEntity : BaseEntity
+    /// <summary>
+    /// Model de Nome e Valor para uso genérico.
+    /// </summary>
+    public class NameAndValue
     {
+        public string Name { get; set; }
+        public object Value { get; set; }
     }
 }

@@ -1,5 +1,0 @@
-﻿
-namespace Fluent.Architecture.Model
-{
-  
-}

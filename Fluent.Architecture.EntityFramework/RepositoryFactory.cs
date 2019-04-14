@@ -6,19 +6,15 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Core.Factory;
 using Fluent.Architecture.Core.Interfaces;
-using Fluent.Architecture.Enumerator;
-using Fluent.Architecture.Model;
-using Fluent.Architecture.Repository;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Services;
+using System;
+using System.Linq;
+using System.Reflection;
 
-namespace Fluent.Architecture.Factory
+namespace Fluent.Architecture.EntityFramework
 {
     /// <summary>
     /// Classe interna. Nunca a deixe pública, pois o acesso a um repositório à partir de um serviço terceiro não deve ser permitido.
@@ -27,7 +23,7 @@ namespace Fluent.Architecture.Factory
     /// <typeparam name="T">
     ///  O tipo da entidade do repositório a ser criado.
     /// </typeparam>
-    internal class RepositoryFactory<T> where T : BaseEntity
+    internal class RepositoryFactory : IRepositoryFactory
     {
         /// <summary>
         /// Cria um novo repositório.
@@ -41,18 +37,18 @@ namespace Fluent.Architecture.Factory
         /// <returns>
         /// O repositório criado.
         /// </returns>
-        internal static IFluentRepository<T> Create(ITransactionObjects transactionObjects, FluentService<T> service)
+        public IFluentRepository<T> Create<T>(ITransactionObjects transactionObjects, FluentService<T> service) where T : BaseEntity
         {
             var dbType = GetTheEntityDBType(typeof(T));
-            var localType = GetRepositoryType(dbType.DbType);
-            localType = localType.MakeGenericType(typeof(T));
+            var localType = typeof(FluentEFRepository<T>);
+            //localType = localType.MakeGenericType(typeof(T));
 
             if (Setup.Repositories.TryGetValue(typeof(T), out var repositoryType))
             {
                 localType = repositoryType;
             }
 
-            var repository = Create(localType);
+            var repository = Create<T>(localType);
 
             if (transactionObjects == null)
             {
@@ -60,17 +56,15 @@ namespace Fluent.Architecture.Factory
 
                 if (string.IsNullOrWhiteSpace(dbType.Identifier))
                 {
-                    //Todo checar erros aqui.
-                    connetion = Setup.Config.Config.Connections.Single(x => x.DBType == dbType.DbType);
+                    connetion = Setup.Config.Config.Connections.Single(x => x.DbContextType.GetCustomAttribute<DbTypeAttribute>().DbType == dbType.DbType);
+
                 }
                 else
                 {
-                    //Todo checar erros aqui.
-                    connetion = Setup.Config.Config.Connections.Single(x => x.Identifier == dbType.Identifier);
+                    connetion = Setup.Config.Config.Connections.Single(x => x.Identifier.Equals(dbType.Identifier, StringComparison.InvariantCultureIgnoreCase));
                 }
 
                 var transactionObjectsType = repository.TransactionObjectsType;
-                connetion = Setup.Config.Config.Connections.First(x => x.DBType == dbType.DbType);
                 transactionObjects = TransactionObjectsFactory.Create(transactionObjectsType, connetion);
                 service.SessionRequest.TransactionObjects = transactionObjects;
             }
@@ -81,25 +75,15 @@ namespace Fluent.Architecture.Factory
             return repository;
         }
 
-        private static IFluentRepository<T> Create(Type repositoryType)
+        internal IFluentRepository<T> Create<T>(Type repositoryType) where T : BaseEntity
         {
             return Activator.CreateInstance(repositoryType) as IFluentRepository<T>;
         }
 
         //Todo - validar no boot se todas as entidades tem tipo de BD,ou se só tem um tipo de bd instanciado na aplicação
-        private static DbTypeAttribute GetTheEntityDBType(Type type)
+        private DbTypeAttribute GetTheEntityDBType(Type type)
         {
             return type.GetCustomAttribute<DbTypeAttribute>();
-        }
-
-        private static Type GetRepositoryType(FluentDbType dbType)
-        {
-            if (Setup.RepositoryTypes.TryGetValue(dbType, out Type repo))
-            {
-                return repo;
-            }
-
-            throw new Exception($"Not found repository type for {dbType}");
         }
     }
 }

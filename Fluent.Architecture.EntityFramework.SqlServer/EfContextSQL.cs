@@ -3,11 +3,8 @@
 #if NET461
 
 #else
-using Microsoft.EntityFrameworkCore;
 
 #endif
-
-using Fluent.Architecture.EntityFramework;
 
 namespace Fluent.Architecture.EntityFramework.SqlServer
 {
@@ -22,9 +19,9 @@ namespace Fluent.Architecture.EntityFramework.SqlServer
         }
 
 #if !NET461
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnConfiguring(Microsoft.EntityFrameworkCore.DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(ConnectionString);
+            Microsoft.EntityFrameworkCore.SqlServerDbContextOptionsExtensions.UseSqlServer(optionsBuilder, ConnectionString);
         }
 #endif
     }

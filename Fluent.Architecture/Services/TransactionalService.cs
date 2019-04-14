@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Factory;
-using Fluent.Architecture.Model;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Validation;

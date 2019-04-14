@@ -1,6 +1,5 @@
-﻿using Fluent.Architecture.EntityFramework.MySQL;
-using Fluent.Architecture.EntityFramework.PostgreSQL;
-using Fluent.Architecture.EntityFramework.SqlServer;
+﻿using Fluent.Architecture.EntityFramework;
+using Fluent.Architecture.EntityFramework.MySQL;
 using Fluent.Architecture.Enumerator;
 using System;
 
@@ -12,10 +11,11 @@ namespace Fluent.Architecture.Sample
         {
             Architecture.Setup
                 .Init()
-                //.AddConnectionString(GetSQLServerConnectionString, true, FluentDbType.SQL_SERVER, typeof(EfContextSQL))
-                //.AddConnectionString(GetPostgreConnectionString, true, FluentDbType.POSTGREE_SQL, typeof(EfContextPostgreSQL))
-                .AddConnectionString(GetMySQLConnectionString, true, FluentDbType.MYSQL, typeof(EfContextMySQL))
+                //.AddConnectionString(GetSQLServerConnectionString, true, typeof(EfContextSQL))
+                //.AddConnectionString(GetPostgreConnectionString, true, typeof(EfContextPostgreSQL))
+                .AddConnectionString(GetMySQLConnectionString, true, typeof(EfContextMySQL))
                 .SetServiceProvider(serviceProvider)
+                .UseEntityFramework()
                 .Build()
                 .Run();
         }

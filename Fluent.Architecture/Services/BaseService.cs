@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Security.Claims;
 using Fluent.Architecture.Factory;
-using Fluent.Architecture.Model;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Validation;
 using Fluent.Architecture.Core.Interfaces;

@@ -33,3 +33,5 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>", Scope = "member", Target = "~M:Fluent.Architecture.Setup.InternalInitialize")]
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>", Scope = "member", Target = "~M:Fluent.Architecture.Setup.LoadAssemblies~System.Collections.Generic.List{System.Type[]}")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1040:Avoid empty interfaces", Justification = "<Pending>", Scope = "type", Target = "~T:Fluent.Architecture.Core.Interfaces.ITransactionlRepository")]
+

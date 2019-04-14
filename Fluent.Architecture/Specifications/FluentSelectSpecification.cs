@@ -10,7 +10,7 @@
 using System;
 using System.Linq;
 using Fluent.Architecture.Interfaces;
-using Fluent.Architecture.Model;
+using Fluent.Architecture.Entities;
 
 namespace Fluent.Architecture.Specifications
 {

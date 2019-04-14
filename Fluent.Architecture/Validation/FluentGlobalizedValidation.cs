@@ -9,7 +9,7 @@ using System.Globalization;
 using System.Linq;
 using Fluent.Architecture.Exceptions.ValidationException;
 using Fluent.Architecture.Interfaces;
-using Fluent.Architecture.Model;
+using Fluent.Architecture.Entities;
 
 namespace Fluent.Architecture.Validation
 {

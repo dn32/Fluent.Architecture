@@ -7,16 +7,13 @@
 
 // ReSharper disable CommentTypo
 
-using System.Collections.Generic;
-using Fluent.Architecture.Sample.Test.SupportElements.Model;
-
-namespace Fluent.Architecture.Model
+namespace Fluent.Architecture.Entities
 {
     /// <summary>
     /// A entidade base de todas as entidades do sistema.
     /// </summary>
     public abstract class BaseEntity
     {
-       // internal List<Translation> Translations { get; set; }
+        // internal List<Translation> Translations { get; set; }
     }
 }

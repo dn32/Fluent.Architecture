@@ -12,7 +12,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Model;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;

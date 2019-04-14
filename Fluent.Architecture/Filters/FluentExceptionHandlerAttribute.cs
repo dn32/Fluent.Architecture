@@ -9,7 +9,7 @@
 #if NET461
 using System.Web.Mvc;
 
-using Fluent.Architecture.Model;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
 
