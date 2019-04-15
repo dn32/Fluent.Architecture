@@ -15,6 +15,7 @@ namespace Fluent.Architecture.EntityFramework.MySQL
     /// <summary>
     /// Contexto do EF no net Core
     /// </summary>
+    [DbType(FluentDbType.MYSQL)]
     public class EfContextMySQL : EfContext
     {
         public EfContextMySQL(string connectionString) : base(connectionString)

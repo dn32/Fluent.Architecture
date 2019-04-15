@@ -12,6 +12,7 @@ namespace Fluent.Architecture.EntityFramework.SqlServer
     /// <summary>
     /// Contexto do EF no net Core
     /// </summary>
+    [DbType(FluentDbType.SQL_SERVER)]
     public class EfContextSQL : EfContext
     {
         public EfContextSQL(string connectionString) : base(connectionString)
