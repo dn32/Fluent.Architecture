@@ -30,6 +30,9 @@ namespace Fluent.Architecture.EntityFramework
         public EfContext(string connectionString)
         {
             ConnectionString = connectionString;
+            //Database.EnsureDeleted();
+            Database.EnsureCreated();
+            //Database.Migrate();
         }
 
         /// <summary>
