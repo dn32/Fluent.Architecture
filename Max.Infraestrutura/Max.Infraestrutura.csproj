@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="config\appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="config\appsettings.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Fluent.Architecture.Core" Version="1.1.5-beta-44" />
+    <PackageReference Include="Fluent.Architecture.EntityFramework" Version="1.0.0-beta-02" />
+    <PackageReference Include="Fluent.Architecture.EntityFramework.MySQL" Version="1.0.0-beta-02" />
+    <PackageReference Include="Fluent.Architecture.EntityFramework.PostgreSQL" Version="1.0.0-beta-02" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Fluent.Architecture.EntityFramework.Oracle" Version="1.0.0-beta-02" />
+  </ItemGroup>
+
+</Project>
