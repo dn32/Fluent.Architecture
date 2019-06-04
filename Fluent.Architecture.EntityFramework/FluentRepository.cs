@@ -98,7 +98,8 @@ namespace Fluent.Architecture.EntityFramework
         /// </returns>
         public virtual TE FirstOrDefault(IFluentSpecification spec)
         {
-            return GetSpec(spec).ToIQueryable(Query).FirstOrDefault();
+            var val = GetSpec(spec).ToIQueryable(Query);
+            return val.FirstOrDefault();
         }
 
         #endregion

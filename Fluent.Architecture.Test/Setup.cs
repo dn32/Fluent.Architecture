@@ -14,7 +14,8 @@ namespace Fluent.Architecture.Test
     {
         public static void Initialize(string connectionString)
         {
-            Fluent.Architecture.Setup.Initialize(connectionString, true);
+            Fluent.Architecture.Setup.Init();
+            // Fluent.Architecture.Setup.Initialize(connectionString, true);
             // Architecture.Setup.SetCustomTypes(transactionObjectsType: typeof(TransactionObjectsTest));
         }
     }

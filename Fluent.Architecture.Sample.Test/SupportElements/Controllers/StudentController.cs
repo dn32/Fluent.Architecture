@@ -5,14 +5,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.Collections.Generic;
 using System.Web.Mvc;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
-using Fluent.Architecture.Sample.Test.SupportElements.Specifications;
-using Fluent.Architecture.Services;
-using Fluent.Architecture.Specifications;
-using Microsoft.SqlServer.Server;
 
 namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
 {

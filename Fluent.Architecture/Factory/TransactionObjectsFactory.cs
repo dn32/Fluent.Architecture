@@ -1,4 +1,5 @@
 ﻿using Fluent.Architecture.Core.Interfaces;
+using Fluent.Architecture.Entities;
 using System;
 
 namespace Fluent.Architecture.Core.Factory
@@ -11,9 +12,9 @@ namespace Fluent.Architecture.Core.Factory
         /// <returns>
         /// A insância da classe.
         /// </returns>
-        public static ITransactionObjects Create(Type transactionObjectsType, Connection connection)
+        public static ITransactionObjects Create(Type transactionObjectsType, Connection connection, UserSessionRequest userSessionRequest)
         {
-            return Activator.CreateInstance(transactionObjectsType, connection) as ITransactionObjects;
+            return Activator.CreateInstance(transactionObjectsType, connection, userSessionRequest) as ITransactionObjects;
         }
     }
 }

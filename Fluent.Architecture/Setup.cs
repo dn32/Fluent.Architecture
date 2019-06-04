@@ -37,7 +37,7 @@ namespace Fluent.Architecture
     public class Connection
     {
         public string Identifier { get; internal set; }
-        public Func<object, string> GetConnectionString { get; internal set; }
+        public Func<UserSessionRequest, string> GetConnectionString { get; internal set; }
         public bool CreateDatabaseIfNotExists { get; set; }
         public Type DbContextType { get; set; }
     }
@@ -127,7 +127,7 @@ namespace Fluent.Architecture
 
         public static Config AddConnectionString(
                 this Config configClass,
-                Func<object, string> getConnectionString,
+                Func<UserSessionRequest, string> getConnectionString,
                 bool createDatabaseIfNotExists,
                 Type dbContextType,
                 string identifier = "")

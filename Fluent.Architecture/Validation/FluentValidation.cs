@@ -218,9 +218,10 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
                     {
                         return;
                     }
-
-                    this.AddInconsistency(new DbFieldNotRequiredFluentValidationException(property));
-                    this.KeyValuesOk = false;
+                    
+                    //Todo - Exigir que não seja informado somente quando o campo for de auto incremento.
+                    //this.AddInconsistency(new DbFieldNotRequiredFluentValidationException(property));
+                    //this.KeyValuesOk = false;
                 }
             }
         }

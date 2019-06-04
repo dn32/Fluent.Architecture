@@ -42,7 +42,7 @@ namespace Fluent.Architecture.Validation
         /// <summary>
         /// A mensagem de erro da falidação em caso de falha,
         /// </summary>
-        public override string Message => string.Join("\n", this.Inconsistencies.Select(x => "* " + x.GlobalizedMessage).ToArray());
+        public override string Message => string.Join("\n", this.Inconsistencies.Select(x => "* " + (x.GlobalizedMessage ?? x.Message)).ToArray());
 
         /// <summary>
         /// Adiciona uma nova inconsistência ao contexto.

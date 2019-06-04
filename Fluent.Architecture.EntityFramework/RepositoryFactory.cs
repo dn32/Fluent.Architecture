@@ -9,6 +9,7 @@
 using Fluent.Architecture.Core.Factory;
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Entities;
+using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Services;
 using System;
 using System.Linq;
@@ -40,6 +41,11 @@ namespace Fluent.Architecture.EntityFramework
         public IFluentRepository<T> Create<T>(ITransactionObjects transactionObjects, FluentService<T> service) where T : BaseEntity
         {
             var dbType = GetTheEntityDBType(typeof(T));
+            if(dbType == null)
+            {
+                throw new IncorrectDevelopmentException($"The entity {typeof(T).Name} needs a database type specification. Example: [DbType (FluentDbType.ORACLE)]");
+            }
+
             var localType = typeof(FluentEFRepository<T>);
             //localType = localType.MakeGenericType(typeof(T));
 
@@ -56,16 +62,37 @@ namespace Fluent.Architecture.EntityFramework
 
                 if (string.IsNullOrWhiteSpace(dbType.Identifier))
                 {
-                    connetion = Setup.Config.Config.Connections.Single(x => x.DbContextType.GetCustomAttribute<DbTypeAttribute>().DbType == dbType.DbType);
+                    var conn = Setup.Config.Config.Connections.Where(x => x.DbContextType.GetCustomAttribute<DbTypeAttribute>()?.DbType == dbType.DbType);
+                    if (conn.Count() > 1)
+                    {
+                        throw new IncorrectDevelopmentException($"More than one connection of the same type was found with the same type \"{dbType.DbType}\". Add identifiers for them.");
+                    }
 
+                    if (conn.Count() == 0)
+                    {
+                        throw new IncorrectDevelopmentException($"Could not find connection of requested \"{dbType.DbType}\" type in entity \"{typeof(T).Name}\"");
+                    }
+                    connetion = conn.Single();
                 }
                 else
                 {
-                    connetion = Setup.Config.Config.Connections.Single(x => x.Identifier.Equals(dbType.Identifier, StringComparison.InvariantCultureIgnoreCase));
+                    var conn = Setup.Config.Config.Connections.Where(x =>
+                                    x.DbContextType.GetCustomAttribute<DbTypeAttribute>()?.DbType == dbType.DbType &&
+                                    x.Identifier.Equals(dbType.Identifier, StringComparison.InvariantCultureIgnoreCase));
+                    if (conn.Count() > 1)
+                    {
+                        throw new IncorrectDevelopmentException($"More than one connection of the same type was found with the same identifier \"{dbType.Identifier}\"");
+                    }
+
+                    if (conn.Count() == 0)
+                    {
+                        throw new IncorrectDevelopmentException($"Could not find connection of requested \"{dbType.DbType}\" type and identifier \"{dbType.Identifier}\" in entity \"{typeof(T).Name}\"");
+                    }
+                    connetion = conn.Single();
                 }
 
                 var transactionObjectsType = repository.TransactionObjectsType;
-                transactionObjects = TransactionObjectsFactory.Create(transactionObjectsType, connetion);
+                transactionObjects = TransactionObjectsFactory.Create(transactionObjectsType, connetion, service.SessionRequest);
                 service.SessionRequest.TransactionObjects = transactionObjects;
             }
 

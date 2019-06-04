@@ -13,6 +13,7 @@ namespace Fluent.Architecture.EntityFramework.PostgreSQL
     /// <summary>
     /// Contexto do EF no net Core
     /// </summary>
+    [DbType(FluentDbType.POSTGREE_SQL)]
     public class EfContextPostgreSQL : EfContext
     {
         public EfContextPostgreSQL(string connectionString) : base(connectionString)

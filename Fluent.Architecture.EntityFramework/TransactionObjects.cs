@@ -29,6 +29,13 @@ namespace Fluent.Architecture.EntityFramework
     /// </summary>
     public class TransactionObjects : ITransactionObjects
     {
+        /// <summary>
+        /// Sessão do EF.
+        /// </summary>
+        public DbContext Session { get; set; }
+
+        public UserSessionRequest UserSessionRequest { get; set; }
+
         public void Dispose()
         {
             this.Session.Dispose();
@@ -41,9 +48,10 @@ namespace Fluent.Architecture.EntityFramework
         /// <param name="dataBaseConnectionString">
         /// String de conexão com o banco de dados.
         /// </param>
-        public TransactionObjects(Connection connection)
+        public TransactionObjects(Connection connection, UserSessionRequest userSessionRequest)
         {
-            this.Session = ContextFactory.Create(connection);
+            this.UserSessionRequest = userSessionRequest;
+            this.Session = ContextFactory.Create(connection, UserSessionRequest);
         }
 
         public DbSet<TX> GetObjectInputDataInternal<TX>() where TX : class
@@ -64,10 +72,5 @@ namespace Fluent.Architecture.EntityFramework
         {
             return this.Session.Set<TX>();
         }
-
-        /// <summary>
-        /// Sessão do EF.
-        /// </summary>
-        public DbContext Session { get; set; }
     }
 }

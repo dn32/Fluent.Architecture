@@ -4,6 +4,8 @@
     <TargetFrameworks>net461;netcoreapp2.1;netcoreapp2.2</TargetFrameworks>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Fluent.Architecture.EntityFramework.SqlServer.snk</AssemblyOriginatorKeyFile>
+    <Version>1.0.0-beta-01</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">

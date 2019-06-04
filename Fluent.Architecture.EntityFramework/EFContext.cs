@@ -31,7 +31,7 @@ namespace Fluent.Architecture.EntityFramework
         {
             ConnectionString = connectionString;
             //Database.EnsureDeleted();
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
             //Database.Migrate();
         }
 
