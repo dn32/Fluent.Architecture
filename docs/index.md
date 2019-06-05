@@ -17,7 +17,7 @@ Os seguintes frameworks são compatíveis:
 ### 2° Passo:
 Adicione a referencia do pacote ao seu projeto por meio do gerenciador de pacotes do nuget
 
-{{ "{% endhighlight " }}%}  nuget
+{{ "{% endhighlight nuget " }}%} 
 
 Install-Package Fluent.Architecture.Core
 Install-Package Fluent.Architecture.EntityFramework
@@ -26,7 +26,7 @@ Install-Package Fluent.Architecture.EntityFramework
 
 Escolha os pacotes abaixo de acordo com os bancos de dados a serem usados na aplicação:
 
-{{ "{% endhighlight " }}%}  nuget
+{{ "{% endhighlight nuget " }}%}  
 
 Install-Package Fluent.Architecture.EntityFramework.MySQL
 Install-Package Fluent.Architecture.EntityFramework.Oracle
