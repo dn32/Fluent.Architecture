@@ -109,6 +109,7 @@ public class User : FluentEntity
 ```
 > Note que usamos o atributo _Table_ para indicar o nome da tabela do banco de dados e o atributo _DbType_ para indicar o tipo de banco de dados a ser usado por essa entidade.
 > Uma entidade sempre deve ser criada para um tipo de banco de dados específico. Em casos em que se deseja criar um Model e não uma entidade, deve se tratar de forma um pouco diferente. Veja mais em:  [Entidade](Entidade)
+
 ### 6° passo:
 Crie um controller  conforme abaixo:
 ```C++
