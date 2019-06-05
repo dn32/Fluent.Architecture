@@ -17,21 +17,21 @@ Os seguintes frameworks são compatíveis:
 ### 2° Passo:
 Adicione a referencia do pacote ao seu projeto por meio do gerenciador de pacotes do nuget
 
-```nuget
+{{ "{% endhighlight " }}%}  nuget
 Install-Package Fluent.Architecture.Core
 Install-Package Fluent.Architecture.EntityFramework
-```
+{{ "{% endhighlight " }}%}  
 Escolha os pacotes abaixo de acordo com os bancos de dados a serem usados na aplicação:
-```nuget
+{{ "{% endhighlight " }}%}  nuget
 Install-Package Fluent.Architecture.EntityFramework.MySQL
 Install-Package Fluent.Architecture.EntityFramework.Oracle
 Install-Package Fluent.Architecture.EntityFramework.PostgreSQL
 Install-Package Fluent.Architecture.EntityFramework.SqlServer
-```
+{{ "{% endhighlight " }}%}  
 
 ### 3° Passo:
 Crie uma classe que será responsável pela inicialização da arquitetura, conforme exemplo abaixo:
-```C#
+{{ "{% highlight C#" }}%}  
 using Fluent.Architecture;
 using Fluent.Architecture.EntityFramework;
 using Fluent.Architecture.EntityFramework.PostgreSQL;
@@ -55,12 +55,12 @@ public class ArchitectureInit
         .Run();
     }
 }
-```
+{{ "{% endhighlight " }}%}  
 ### 4º Passo:
 À partir do Startup de sua aplicação, inicialize a arquitetura:
 
 #### Exemplo no .Net Core
-```C#
+{{ "{% highlight C#" }}%}  
 ...
 public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 {
@@ -74,9 +74,9 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     Inicializacao.Inicialize(app.ApplicationServices); //A inicialização da arquitetura
 }
 ...
-```
+{{ "{% endhighlight " }}%}  
 #### Exemplo no .Net Framework
-```C#
+{{ "{% highlight C#" }}%}  
 
 public class WebApiApplication : System.Web.HttpApplication
 {
@@ -85,10 +85,10 @@ public class WebApiApplication : System.Web.HttpApplication
         Inicializacao.Inicialize(null); //A inicialização da arquitetura
     }
 }
-```
+{{ "{% endhighlight " }}%}  
 ### 5º Passo:
 Crie uma entidade:
-```C#
+{{ "{% highlight C#" }}%}  
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Fluent.Architecture.Attributes;
@@ -106,13 +106,13 @@ public class User : FluentEntity
 
     public string Name { get; set; }
 }
-```
+{{ "{% endhighlight " }}%}  
 > Note que usamos o atributo _Table_ para indicar o nome da tabela do banco de dados e o atributo _DbType_ para indicar o tipo de banco de dados a ser usado por essa entidade.
 > Uma entidade sempre deve ser criada para um tipo de banco de dados específico. Em casos em que se deseja criar um Model e não uma entidade, deve se tratar de forma um pouco diferente. Veja mais em:  [Entidade](Entidade)
 
 ### 6° passo:
 Crie um controller  conforme abaixo:
-```C++
+{{ "{% endhighlight " }}%}  C++
 using Fluent.Architecture.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -161,7 +161,7 @@ public class UserController : FluentController<User>
         Service.RemoveRange(entidades);
     }
 }
-```
+{{ "{% endhighlight " }}%}  
 
 Todos os métodos do controller estão prontos para serem executados.
 Execute a aplicação e teste os métodos.
@@ -170,7 +170,7 @@ Baixe o template o template do link abaixo e importe no seu postman para facilit
 
 ### 7° Passo:
 Crie uma especificação de consulta
-```C#
+{{ "{% highlight C#" }}%}  
 using System;
 using System.Linq;
 using Fluent.Architecture.Specifications;
@@ -195,19 +195,19 @@ public class UserByEmailSpec : FluentSpecification<User>
         return query.OrderBy(x => x.Name);
     }
 }
-```
+{{ "{% endhighlight " }}%}  
 > Uma especificação define um modelo de consulta e pode ser utilizada em vários métodos do FluentService<>.
 
 ### 8° passo:
 Adicione esse novo método ao seu controller:
-```C#
+{{ "{% highlight C#" }}%}  
 [HttpGet("GetUserByEMail")]
 public User GetUserByEMail(string email)
 {
     var spec = CreateSpec<UserByEmailSpec>().AddParameter(email);
     return Service.FirstOrDefault(spec);
 }
-```
+{{ "{% endhighlight " }}%}  
 Execute a aplicação e acesse o endereço da aplicação.
 Exemplo: http://localhost:5000/api/user/GetUserByEMail?email=dn@dn32.com.br
 
@@ -217,15 +217,15 @@ Exemplo: http://localhost:5000/api/user/GetUserByEMail?email=dn@dn32.com.br
 Adicione o filtro **FluentExceptionHandlerAttribute** de controle de exceções à classe FilterConfig ou equivalente, ficando como a seguir:
 
 #### Exemplo no .Net Core
-```C#
+{{ "{% highlight C#" }}%}  
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddMvc(options => options.Filters.Add(new FluentExceptionHandlerAttribute()));
 }
-```
+{{ "{% endhighlight " }}%}  
 
 #### Exemplo no .Net Framework
-```C#
+{{ "{% highlight C#" }}%}  
 using Fluent.Architecture.Filters;
 
 public class FilterConfig
@@ -236,14 +236,14 @@ public class FilterConfig
         filters.Add(new FluentExceptionHandlerAttribute());
     }
 }
-```
+{{ "{% endhighlight " }}%}  
 Eventuais erros agora serão apresentados da seguinte forma:
-```C++
+{{ "{% endhighlight " }}%}  C++
 {
     Message:  "An entity with any of these keys already exists in the database: {Id:0}, {Email:'max@mail.com'}",
     ValidationError:  true
 }
-```
+{{ "{% endhighlight " }}%}  
 O erro de validação refere-se ao e-mail repetido no banco de dados. Quando decoramos a propriedade Email de User com **FluentUniqueKey**, informamos para o sistema que não é permitido duplicação do valor desse campo.
 
 Veja mais sobre validação em [Validação](Validação).
