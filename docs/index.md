@@ -18,20 +18,28 @@ Os seguintes frameworks são compatíveis:
 Adicione a referencia do pacote ao seu projeto por meio do gerenciador de pacotes do nuget
 
 {{ "{% endhighlight " }}%}  nuget
+
 Install-Package Fluent.Architecture.Core
 Install-Package Fluent.Architecture.EntityFramework
+
 {{ "{% endhighlight " }}%}  
+
 Escolha os pacotes abaixo de acordo com os bancos de dados a serem usados na aplicação:
+
 {{ "{% endhighlight " }}%}  nuget
+
 Install-Package Fluent.Architecture.EntityFramework.MySQL
 Install-Package Fluent.Architecture.EntityFramework.Oracle
 Install-Package Fluent.Architecture.EntityFramework.PostgreSQL
 Install-Package Fluent.Architecture.EntityFramework.SqlServer
+
 {{ "{% endhighlight " }}%}  
 
 ### 3° Passo:
 Crie uma classe que será responsável pela inicialização da arquitetura, conforme exemplo abaixo:
+
 {{ "{% highlight C#" }}%}  
+
 using Fluent.Architecture;
 using Fluent.Architecture.EntityFramework;
 using Fluent.Architecture.EntityFramework.PostgreSQL;
@@ -56,6 +64,7 @@ public class ArchitectureInit
     }
 }
 {{ "{% endhighlight " }}%}  
+
 ### 4º Passo:
 À partir do Startup de sua aplicação, inicialize a arquitetura:
 
