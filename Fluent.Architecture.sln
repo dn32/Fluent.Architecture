@@ -25,10 +25,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.EntityF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.EntityFramework.Oracle", "Fluent.Architecture.EntityFramework.Oracle\Fluent.Architecture.EntityFramework.Oracle.csproj", "{E0BABC2B-C759-4F1E-9109-BC52F9A9E7DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Max.Infraestrutura", "Max.Infraestrutura\Max.Infraestrutura.csproj", "{C7FD76AC-44BE-4040-8332-BE48DD7AE27C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Max.AplicacaoDeTeste", "Max.AplicacaoDeTeste\Max.AplicacaoDeTeste.csproj", "{D7D350BA-E11E-4910-90EB-4424A0CF16BB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,14 +67,6 @@ Global
 		{E0BABC2B-C759-4F1E-9109-BC52F9A9E7DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0BABC2B-C759-4F1E-9109-BC52F9A9E7DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0BABC2B-C759-4F1E-9109-BC52F9A9E7DF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C7FD76AC-44BE-4040-8332-BE48DD7AE27C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C7FD76AC-44BE-4040-8332-BE48DD7AE27C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C7FD76AC-44BE-4040-8332-BE48DD7AE27C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C7FD76AC-44BE-4040-8332-BE48DD7AE27C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D7D350BA-E11E-4910-90EB-4424A0CF16BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D7D350BA-E11E-4910-90EB-4424A0CF16BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D7D350BA-E11E-4910-90EB-4424A0CF16BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D7D350BA-E11E-4910-90EB-4424A0CF16BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,8 +75,6 @@ Global
 		{7F240F59-97AC-4794-894E-EAA7E472C91C} = {B8A70513-1332-4DC5-88EB-B9FB43D556AF}
 		{AB51F7C9-E955-404F-B808-9D6C211950A6} = {3CDE6F00-CAA7-48F5-9E60-1D1A6A81667C}
 		{D3B68587-57C1-4EC4-B201-79A3F746320D} = {B8A70513-1332-4DC5-88EB-B9FB43D556AF}
-		{C7FD76AC-44BE-4040-8332-BE48DD7AE27C} = {B8A70513-1332-4DC5-88EB-B9FB43D556AF}
-		{D7D350BA-E11E-4910-90EB-4424A0CF16BB} = {B8A70513-1332-4DC5-88EB-B9FB43D556AF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {123E34D5-DA60-4929-9110-E760ECAC5050}
