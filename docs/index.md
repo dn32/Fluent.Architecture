@@ -168,7 +168,7 @@ public class UserController : FluentController<User>
 Todos os métodos do controller estão prontos para serem executados.
 Execute a aplicação e teste os métodos.
 Baixe o template o template do link abaixo e importe no seu postman para facilitar os testes.
-[Template para importação](https://dn32.github.io/Fluent.Architecture/postman-user-v1.txt)
+[Template para importação](https://dn32.github.io/Fluent.Architecture/postman-user-v1.json)
 
 ### 7° Passo:
 Crie uma especificação de consulta
