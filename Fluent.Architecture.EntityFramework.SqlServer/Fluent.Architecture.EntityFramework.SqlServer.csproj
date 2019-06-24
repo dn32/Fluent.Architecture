@@ -6,6 +6,8 @@
     <AssemblyOriginatorKeyFile>Fluent.Architecture.EntityFramework.SqlServer.snk</AssemblyOriginatorKeyFile>
     <Version>1.0.0-beta-01</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <RepositoryUrl>https://dn32.github.io/Fluent.Architecture/</RepositoryUrl>
+    <PackageProjectUrl>https://dn32.github.io/Fluent.Architecture/</PackageProjectUrl>
   </PropertyGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">

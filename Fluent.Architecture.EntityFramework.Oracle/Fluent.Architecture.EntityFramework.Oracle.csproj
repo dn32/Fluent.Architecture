@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <Version>1.0.0-beta-02</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://dn32.github.io/Fluent.Architecture/</PackageProjectUrl>
+    <RepositoryUrl>https://dn32.github.io/Fluent.Architecture/</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

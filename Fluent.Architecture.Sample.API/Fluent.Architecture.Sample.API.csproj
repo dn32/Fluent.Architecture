@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <LangVersion>7.2</LangVersion>
+    <RepositoryUrl>https://dn32.github.io/Fluent.Architecture/</RepositoryUrl>
+    <PackageProjectUrl>https://dn32.github.io/Fluent.Architecture/</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>

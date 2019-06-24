@@ -423,7 +423,7 @@ namespace Fluent.Architecture.EntityFramework
 #if NET461
             return Service.SessionRequest.LocalHttpContext.Request.Params.Get(key);
 #else
-            if (Service.SessionRequest.LocalHttpContext.Request.Method == "GET")
+            if (Service.SessionRequest.LocalHttpContext.Request.Method == "GET" || Service.SessionRequest.LocalHttpContext.Request.HasFormContentType == false)
             {
                 return "";
             }

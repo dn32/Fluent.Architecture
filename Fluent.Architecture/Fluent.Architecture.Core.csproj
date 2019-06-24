@@ -7,6 +7,8 @@
     <Version>1.1.5-beta-44</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <LangVersion>7.3</LangVersion>
+    <PackageProjectUrl>https://dn32.github.io/Fluent.Architecture/</PackageProjectUrl>
+    <RepositoryUrl>https://dn32.github.io/Fluent.Architecture/</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|AnyCPU'">
