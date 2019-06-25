@@ -7,7 +7,7 @@
 
 using System.Web.Mvc;
 using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Model;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Sample.Test.SupportElements.Services;
 using Fluent.Architecture.Sample.Test.SupportElements.Specifications;

@@ -8,7 +8,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Fluent.Architecture.Attributes;
-using Fluent.Architecture.Model;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Test.Mock;
 using Newtonsoft.Json;
 

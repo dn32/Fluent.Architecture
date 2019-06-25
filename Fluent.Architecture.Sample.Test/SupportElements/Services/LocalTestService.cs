@@ -5,7 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Fluent.Architecture.Model;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Services;
 

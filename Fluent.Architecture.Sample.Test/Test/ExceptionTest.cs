@@ -8,11 +8,11 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Web.Mvc;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Exceptions.ValidationException;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Filters;
-using Fluent.Architecture.Model;
 using Fluent.Architecture.Sample.Test.SupportElements;
 using Fluent.Architecture.Sample.Test.SupportElements.Controllers;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;

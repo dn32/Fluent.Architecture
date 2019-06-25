@@ -4,7 +4,7 @@
     <TargetFrameworks>net461;netcoreapp2.1;netcoreapp2.2</TargetFrameworks>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Fluent.Architecture.snk</AssemblyOriginatorKeyFile>
-    <Version>1.1.5-beta-44</Version>
+    <Version>1.1.5-beta-45</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <LangVersion>7.3</LangVersion>
     <PackageProjectUrl>https://dn32.github.io/Fluent.Architecture/</PackageProjectUrl>

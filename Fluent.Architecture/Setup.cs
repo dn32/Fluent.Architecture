@@ -56,6 +56,7 @@ namespace Fluent.Architecture
     {
         public List<Connection> Connections { get; internal set; }
         public IServiceProvider ServiceProvider { get; internal set; }
+        public Type UserSessionRequestType { get; internal set; }
         internal IRepositoryFactory RepositoryFactory { get; set; }
     }
 
@@ -113,6 +114,13 @@ namespace Fluent.Architecture
         public static Config Init()
         {
             return new Config();
+        }
+
+        public static Config SetUserSessionRequestType(this Config configClass, Type userSessionRequestType)
+        {
+            //Todo - checar se o tipo informado é um UserSessionRequest
+            configClass.UserSessionRequestType = userSessionRequestType;
+            return configClass;
         }
 
         public static Config AddConnectionString(
