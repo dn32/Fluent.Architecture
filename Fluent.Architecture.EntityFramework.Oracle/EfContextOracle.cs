@@ -4,8 +4,6 @@
 
 #else
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Debug;
 
 #endif
 
@@ -23,8 +21,6 @@ namespace Fluent.Architecture.EntityFramework.Oracle
         }
 
 #if !NET461
-
-        public static readonly LoggerFactory MyLoggerFactory = new LoggerFactory(new[] { new DebugLoggerProvider() });
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

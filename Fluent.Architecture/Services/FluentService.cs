@@ -200,7 +200,7 @@ namespace Fluent.Architecture.Services
 
         public virtual bool Exists(T entity, bool checkId = true)
         {
-            return this.Find(entity, checkId) != null;
+            return this.Repository.Exists(entity);
         }
 
         public virtual bool ExistsSelect<TO>(ISpec spec)

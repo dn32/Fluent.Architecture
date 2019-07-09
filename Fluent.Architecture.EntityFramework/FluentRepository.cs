@@ -27,6 +27,8 @@ using System;
 using Fluent.Architecture.EntityFramework;
 using System.Runtime.CompilerServices;
 using Fluent.Architecture.Repository;
+using System.Data.Common;
+using System.Data;
 
 [assembly: InternalsVisibleTo(@"Fluent.Architecture.EntityFramework.SqlServer, PublicKey=00240000048000009400000006020000002400005253413100040000010001002d98533364f3b3fbd11e7a3f14cd73d169e1daabd62ba2d1e5bc6a48a9bc709a503960db0e76c190e7a8dcefaed037e539682d6a891b242ddb91a3ab20fbfa0c04fb6304c8903857e1ed75399850fca4037dd2c810749e75770e5d455e950ccb9d06cf6fea5f30b00557a29408ce4c45021c412eca32616f47809bfe2cf404cc")]
 [assembly: InternalsVisibleTo(@"Fluent.Architecture.EntityFramework.PostgreSQL, PublicKey=0024000004800000940000000602000000240000525341310004000001000100192d4ee01ba583399ab1d381c4301592f8520d29c628f3220e1550b2068e540e26886fa8d8b52618553f89fed1dccb18d5d3c07c548fca3c916a10823f411c23ef0e85bf0526ed94aa3cfbdf79a9595861348cfc369670f8ed9f7c4afd08de5f3cd87a0c7c6b1d8a0b94622c163a764813ba95d39dc44ea1baf7b663800a49bc")]
@@ -197,9 +199,48 @@ namespace Fluent.Architecture.EntityFramework
             return this.Input.FromSql(sql).SingleOrDefault();
 #endif
         }
-        //internal abstract bool ExistsSql(string sql);
 
-        //internal abstract TE FindSingleOrDefaultSql(string sql);
+#if !NET461
+
+        /// <summary>
+        /// Exemplo:
+        ///   public int ProximoId()
+        ///   {
+        ///       int Leitor(DbDataReader reader)
+        ///       {
+        ///           return (int)reader[0];
+        ///       }
+        ///
+        ///       return RawSqlQuery("SELECT TOP 10 Name, COUNT(*) FROM Users", Leitor).FirstOrDefault();
+        ///   }
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        public List<T> RawSqlQuery<T>(string query, Func<DbDataReader, T> map)
+        {
+            using (var command = Session.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = query;
+                command.CommandType = CommandType.Text;
+
+                Session.Database.OpenConnection();
+
+                using (var result = command.ExecuteReader())
+                {
+                    var entities = new List<T>();
+
+                    while (result.Read())
+                    {
+                        entities.Add(map(result));
+                    }
+
+                    return entities;
+                }
+            }
+        }
+#endif
 
         #endregion
 

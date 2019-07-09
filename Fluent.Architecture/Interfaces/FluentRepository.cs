@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Services;
+using System.Data.Common;
 
 namespace Fluent.Architecture.Core.Interfaces
 {
@@ -24,9 +25,13 @@ namespace Fluent.Architecture.Core.Interfaces
         int CountSelect<TO>(IFluentSpecification<TO> spec);
         bool ExistsSelect<TO>(ISpec spec);
         bool Exists(ISpec spec);
+        bool Exists(TE entity);
         TE Find(TE entity);
         TE Add(TE entity);
         void AddRange(TE[] entities);
         int Count(IFluentSpecification spec);
+#if !NET461
+        List<T> RawSqlQuery<T>(string query, Func<DbDataReader, T> map);
+#endif
     }
 }

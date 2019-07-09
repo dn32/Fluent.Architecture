@@ -451,7 +451,7 @@ namespace Fluent.Architecture
                     var parameters = method.GetParameters().Select(x => x.ParameterType).ToList();
                     foreach (var parameter in parameters)
                     {
-                        if (parameter.Name.StartsWith("Func", StringComparison.CurrentCultureIgnoreCase))
+                        if (parameter.Name.StartsWith("Func", StringComparison.CurrentCultureIgnoreCase) && method.Name != "RawSqlQuery")
                         {
                             throw new IncorrectDevelopmentException($"You should not use Func as the input parameter of the repository methods, since Func requires the materialization of the entire list of entities. {name}");
                         }
