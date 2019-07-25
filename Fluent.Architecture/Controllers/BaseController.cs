@@ -28,7 +28,7 @@ namespace Fluent.Architecture.Controllers
 
         protected internal object Service { get; set; }
 
-        public void SetLocalHttpContext(HttpContextBase httpContext)
+        protected void SetLocalHttpContext(HttpContextBase httpContext)
         {
             this._localHttpContext = httpContext;
         }

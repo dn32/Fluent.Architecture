@@ -20,7 +20,7 @@ namespace Fluent.Architecture.Controllers
 
         public new IPrincipal User => HttpContext.User;
 
-        public void SetLocalHttpContext(HttpContext httpContext)
+        protected void SetLocalHttpContext(HttpContext httpContext)
         {
             this._localHttpContext = httpContext;
         }

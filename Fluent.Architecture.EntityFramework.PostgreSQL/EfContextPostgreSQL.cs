@@ -20,6 +20,12 @@ namespace Fluent.Architecture.EntityFramework.PostgreSQL
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.NamesToSnakeCase();
+            base.OnModelCreating(modelBuilder);
+        }
+
 #if !NET461
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

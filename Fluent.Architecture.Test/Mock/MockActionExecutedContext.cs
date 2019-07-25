@@ -5,6 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Web.Mvc;
 using Fluent.Architecture.Controllers;
 
@@ -14,11 +15,12 @@ namespace Fluent.Architecture.Test.Mock
     {
         public static ActionExecutedContext Create(BaseController controller, string actionName)
         {
-            var controllerContext = MockUtil.GetMockControllerContext(controller);
-            var controllerDescriptor = new MockControllerDescriptor(controller.GetType());
-            var actionDescriptor = new MockActionDescriptor(actionName, controllerDescriptor);
+            throw new NotImplementedException();
+            //var controllerContext = MockUtil.GetMockControllerContext(controller);
+            //var controllerDescriptor = new MockControllerDescriptor(controller.GetType());
+            //var actionDescriptor = new MockActionDescriptor(actionName, controllerDescriptor);
 
-            return new ActionExecutedContext(controllerContext, actionDescriptor, false, null);
+            //return new ActionExecutedContext(controllerContext, actionDescriptor, false, null);
         }
     }
 }
