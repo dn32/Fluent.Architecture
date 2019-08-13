@@ -1,6 +1,6 @@
 ﻿using Fluent.Architecture;
 using Fluent.Architecture.EntityFramework;
-using Fluent.Architecture.EntityFramework.MySQL;
+using Fluent.Architecture.EntityFramework.SqLite;
 using System;
 
 public class ArchitectureInit
@@ -11,7 +11,7 @@ public class ArchitectureInit
         .Init()
         .SetServiceProvider(serviceProvider)
         .UseEntityFramework()
-        .AddConnectionString("Server=localhost;Database=testDb;Uid=root;Pwd=admin;", createDatabaseIfNotExists: true, typeof(EfContextMySQL))
+        .AddConnectionString("Data Source=sample.db;", createDatabaseIfNotExists: true, typeof(EfContextSqLite))
         .Build()
         .Run();
     }

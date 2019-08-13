@@ -1,16 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <Version>1.0.0-beta-02</Version>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://dn32.github.io/Fluent.Architecture/</PackageProjectUrl>
     <RepositoryUrl>https://dn32.github.io/Fluent.Architecture/</RepositoryUrl>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Oracle.EntityFrameworkCore" Version="2.19.30" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Fluent.Architecture.EntityFramework\Fluent.Architecture.EntityFramework.csproj" />

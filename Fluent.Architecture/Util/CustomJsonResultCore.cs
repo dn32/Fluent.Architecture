@@ -1,6 +1,4 @@
-﻿#if !NET461
-
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace Fluent.Architecture.Util
@@ -47,4 +45,3 @@ namespace Fluent.Architecture.Util
         //}
     }
 }
-#endif

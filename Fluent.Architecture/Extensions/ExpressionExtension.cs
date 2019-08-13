@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Fluent.Architecture.Extensions
 {
-    public static class UtilitarioDeExpression
+    public static class ExpressionUtil
     {
         public static PropertyInfo GetPropertyInfo<TSource, TProperty>(Expression<Func<TSource, TProperty>> propertyLambda)
         {

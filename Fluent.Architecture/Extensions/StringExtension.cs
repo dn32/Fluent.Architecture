@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 
 namespace Fluent.Architecture.Extensions
 {
@@ -10,7 +11,7 @@ namespace Fluent.Architecture.Extensions
         }
 
         public static string GetGlobalizationOfResourceWithParameters(this string text, params string[] parameters)
-        {           
+        {
             return GetGlobalizationOfResource(text, text, parameters);
         }
 
@@ -29,6 +30,18 @@ namespace Fluent.Architecture.Extensions
             }
 
             return Setup.GlobalizationService.GetResource(text, defaultMessage, parameters);
+        }
+
+        public static string RemoveString(this string text, params string[] remove)
+        {
+            if (string.IsNullOrWhiteSpace(text) || remove.Length == 0) { return text; }
+
+            remove.ToList().ForEach(x =>
+            {
+                text = text.Replace(x, "");
+            });
+
+            return text;
         }
     }
 }

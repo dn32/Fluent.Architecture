@@ -6,14 +6,7 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-#if NET461
-using System.Data.Entity;
-
-#else
 using Microsoft.EntityFrameworkCore;
-
-#endif
-
 using System.Linq;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Core.Interfaces;

@@ -1,11 +1,5 @@
 // ReSharper disable CommentTypo
-
-#if NET461
-
-#else
 using Microsoft.EntityFrameworkCore;
-
-#endif
 
 namespace Fluent.Architecture.EntityFramework.Oracle
 {
@@ -20,8 +14,6 @@ namespace Fluent.Architecture.EntityFramework.Oracle
         {
         }
 
-#if !NET461
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
@@ -30,6 +22,5 @@ namespace Fluent.Architecture.EntityFramework.Oracle
 
           //  MyLoggerFactory.AddDebug(LogLevel.Information);
         }
-#endif
     }
 }

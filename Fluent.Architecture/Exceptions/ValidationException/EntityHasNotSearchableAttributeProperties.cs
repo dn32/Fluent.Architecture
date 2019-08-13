@@ -8,11 +8,10 @@
 // ReSharper disable CommentTypo
 namespace Fluent.Architecture.Exceptions.ValidationException
 {
-    /// <inheritdoc />
-    public class NullParameterFluentValidationException : NullValueFluentValidationException
+    public class EntityHasNotSearchableAttributeProperties : FluentValidationException
     {
-        public NullParameterFluentValidationException(string parameter)
-            : base($"The parameter {parameter} can not be null.", parameter)
+        public EntityHasNotSearchableAttributeProperties(string entityName)
+            : base($"Entity {entityName} has no properties decorated with SearchableAttribute")
         {
         }
     }

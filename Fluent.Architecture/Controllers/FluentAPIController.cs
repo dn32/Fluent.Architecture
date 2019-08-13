@@ -1,6 +1,4 @@
 ﻿
-#if !NET461
-
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Specifications;
@@ -51,5 +49,3 @@ namespace Fluent.Architecture.Controllers
         }
     }
 }
-
-#endif

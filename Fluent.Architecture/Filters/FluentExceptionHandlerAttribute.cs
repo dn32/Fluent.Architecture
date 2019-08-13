@@ -6,58 +6,6 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-#if NET461
-using System.Web.Mvc;
-
-using Fluent.Architecture.Entities;
-using Fluent.Architecture.Util;
-using Fluent.Architecture.Validation;
-
-namespace Fluent.Architecture.Filters
-{
-    //Todo - Implementar para net core
-    /// <inheritdoc />
-    public class FluentExceptionHandlerAttribute : HandleErrorAttribute
-    {
-        public override void OnException(ExceptionContext filterContext)
-        {
-            if (!filterContext.HttpContext.IsCustomErrorEnabled)
-            {
-                if (filterContext.Exception is ContextFluentValidationException exception)
-                {
-                    filterContext.Result = new CustomJsonResult
-                    {
-                        JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                        Data = new ValidationReturn
-                        {
-                            Message = exception.Message,
-                            ValidationError = true
-                        }
-                    };
-                }
-                else
-                {
-                    filterContext.Result = new CustomJsonResult
-                    {
-                        JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                        Data = new
-                        {
-                            Error = true,
-                            filterContext.Exception.Message
-                        }
-                    };
-                }
-
-                // Todo implementar o log de erros aqui posteriormente
-                filterContext.ExceptionHandled = true;
-                filterContext.HttpContext.Response.Clear();
-                filterContext.HttpContext.Response.StatusCode = 500;
-                filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
-            }
-        }
-    }
-}
-#else
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
@@ -68,7 +16,7 @@ public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
 {
     public override void OnException(ExceptionContext filterContext)
     {
-        if (filterContext.Exception is ContextFluentValidationException exception)
+        if (filterContext?.Exception is ContextFluentValidationException exception)
         {
             filterContext.Result = new CustomJsonResult(new ValidationReturn
             {
@@ -91,4 +39,3 @@ public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
         filterContext.HttpContext.Response.StatusCode = 500;
     }
 }
-#endif

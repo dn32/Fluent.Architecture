@@ -27,11 +27,10 @@ namespace Fluent.Architecture.Core.Interfaces
         bool Exists(ISpec spec);
         bool Exists(TE entity);
         TE Find(TE entity);
+        List<TE> FindByTerm(string term, FluentPagination pagination = null);
         TE Add(TE entity);
         void AddRange(TE[] entities);
         int Count(IFluentSpecification spec);
-#if !NET461
         List<T> RawSqlQuery<T>(string query, Func<DbDataReader, T> map);
-#endif
     }
 }

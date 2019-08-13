@@ -79,7 +79,7 @@ namespace Fluent.Architecture.Sample.Test.Test
         [TestCase(false, typeof(UniqueKeyFluentValidationException))]
         [TestCase(false, typeof(EntityNotFoundFluentValidationException))]
         [TestCase(false, typeof(FluentValidationException))]
-        [TestCase(false, typeof(NullFluentValidationException))]
+        [TestCase(false, typeof(NullParameterFluentValidationException))]
         [TestCase(true, typeof(MethodNotFoundException))]
 
         // For test custom errors

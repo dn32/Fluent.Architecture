@@ -242,6 +242,12 @@ namespace Fluent.Architecture.Services
             return this.Repository.Find(entity);
         }
 
+        public virtual List<T> FindByTerm(string term, FluentPagination pagination = null)
+        {
+            this.Validation.FindByTerm(term);
+            return this.Repository.FindByTerm(term, pagination);
+        }
+
         /// <summary>
         /// Atualiza um item do banco de dados baseado em seu identificador.
         /// </summary>

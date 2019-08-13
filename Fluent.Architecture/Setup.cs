@@ -6,16 +6,6 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-#if NET461
-using System.Data.Entity;
-using System.Management.Instrumentation;
-
-#else
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-
-#endif
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,9 +54,7 @@ namespace Fluent.Architecture
     {
         #region PROPERTIES
 
-#if !NET461
         public static IServiceProvider ServiceProvider { get; set; }
-#endif
 
         private static readonly object LockInitialization = new object();
 
@@ -97,14 +85,13 @@ namespace Fluent.Architecture
 
 
 
-#if NET461
-#else
+
         public static Config SetServiceProvider(this Config configClass, IServiceProvider serviceProvider)
         {
             configClass.ServiceProvider = serviceProvider;
             return configClass;
         }
-#endif
+
         internal static Config SetRepositoryFactory(this Config configClass, IRepositoryFactory repositoryFactory)
         {
             configClass.RepositoryFactory = repositoryFactory;

@@ -1,7 +1,4 @@
 ﻿// ReSharper disable CommentTypo
-
-#if !NET461
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,7 +63,6 @@ namespace Fluent.Architecture.EntityFramework
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //optionsBuilder.UseSqlServer(ConnectionString);
         }
 
         public override int SaveChanges()
@@ -143,5 +139,3 @@ namespace Fluent.Architecture.EntityFramework
         }
     }
 }
-
-#endif

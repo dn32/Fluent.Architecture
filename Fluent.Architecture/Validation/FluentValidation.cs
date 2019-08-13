@@ -10,11 +10,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Fluent.Architecture.Entities;
-using Fluent.Architecture.Repository;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Exceptions.ValidationException;
 using System.Reflection;
+using Fluent.Architecture.Core.Attributes;
 
 namespace Fluent.Architecture.Validation
 {
@@ -107,14 +107,29 @@ namespace Fluent.Architecture.Validation
             this.RunTheContextValidation();
         }
 
+        public virtual void FindByTerm(string term)
+        {
+            if (string.IsNullOrEmpty(term))
+            {
+                AddInconsistency(new NullParameterFluentValidationException(nameof(term)));
+            }
+
+            if (!typeof(T).GetProperties().Any(x => x.GetCustomAttribute<SearchableAttribute>() != null))
+            {
+                AddInconsistency(new EntityHasNotSearchableAttributeProperties(typeof(T).Name));
+            }
+
+            RunTheContextValidation();
+        }
+
         /*
-=== PADRÃO DE NOMECLATURA ===
-O que deve ser verdadeiro
-ParameterMustBeInformed 
-(O parâmetro deve ser informado. Se não for informado, teremos uma inconsistência)
-Evite escrever negação, mas quando não for possível evitar, escreva assim: EntityShouldNotExistInDatabase.
-A entida não pode existir. Se existir, teremos uma inconsistência.
-=============================         
+    === PADRÃO DE NOMECLATURA ===
+    O que deve ser verdadeiro
+    ParameterMustBeInformed 
+    (O parâmetro deve ser informado. Se não for informado, teremos uma inconsistência)
+    Evite escrever negação, mas quando não for possível evitar, escreva assim: EntityShouldNotExistInDatabase.
+    A entida não pode existir. Se existir, teremos uma inconsistência.
+    =============================         
          */
         #region VALIDATIONS
 
@@ -122,7 +137,7 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
         {
             if (entity == null)
             {
-                this.AddInconsistency(new NullFluentValidationException(nameof(entity)));
+                this.AddInconsistency(new NullParameterFluentValidationException(nameof(entity)));
                 this.NullParameterOk = false;
                 return;
             }
@@ -218,7 +233,7 @@ A entida não pode existir. Se existir, teremos uma inconsistência.
                     {
                         return;
                     }
-                    
+
                     //Todo - Exigir que não seja informado somente quando o campo for de auto incremento.
                     //this.AddInconsistency(new DbFieldNotRequiredFluentValidationException(property));
                     //this.KeyValuesOk = false;

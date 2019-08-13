@@ -6,16 +6,9 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-#if NET461
-using System.Data.Entity;
-using System.Runtime.CompilerServices;
 
-#else
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
-
-#endif
-
 using System;
 using Fluent.Architecture.Entities;
 
@@ -59,22 +52,11 @@ namespace Fluent.Architecture.EntityFramework
 
         private static void CreateDB(string connectionString, bool createDatabaseIfNotExists, EfContext efContext)
         {
-#if NET461
-            if (createDatabaseIfNotExists)
-            {
-                Database.SetInitializer(new CreateDatabaseIfNotExists<EfContext>());
-            }
-            else
-            {
-                Database.SetInitializer<EfContext>(null);
-            }
-#else
             if (createDatabaseIfNotExists)
             {
                 efContext.Database.EnsureCreated();
                 efContext.Database.Migrate();
             }
-#endif
         }
     }
 }

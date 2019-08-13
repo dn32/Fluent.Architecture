@@ -20,11 +20,9 @@ namespace Fluent.Architecture.EntityFramework.PostgreSQL
         {
         }
 
-#if !NET461
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(ConnectionString);
         }
-#endif
     }
 }

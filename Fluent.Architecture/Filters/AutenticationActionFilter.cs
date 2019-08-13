@@ -1,7 +1,4 @@
-﻿
-#if !NET461
-
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Fluent.Architecture.Attributes;
 using System;
 using System.Linq;
@@ -28,5 +25,3 @@ namespace Fluent.Architecture.Filters
         }
     }
 }
-
-#endif

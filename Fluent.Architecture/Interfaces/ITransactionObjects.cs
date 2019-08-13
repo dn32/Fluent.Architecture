@@ -1,15 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Linq;
 using Fluent.Architecture.Entities;
-
-#if NET461
-using System.Data.Entity;
-
-#else
 using Microsoft.EntityFrameworkCore;
-
-#endif
 
 namespace Fluent.Architecture.Core.Interfaces
 {

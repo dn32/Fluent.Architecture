@@ -6,17 +6,9 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-#if NET461
-using System.Web;
-
-#else
 using Microsoft.AspNetCore.Http;
-
-#endif
-
 using System;
 using System.Collections.Generic;
-using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Validation;
 using Fluent.Architecture.Core.Interfaces;
@@ -44,13 +36,9 @@ namespace Fluent.Architecture.Entities
         /// <summary>
         /// HttpContext da requisição vinda do controller.
         /// </summary>
-#if NET461
-        public HttpContextBase LocalHttpContext => this.HttpContext as HttpContextBase;
 
-#else
         public HttpContext LocalHttpContext => this.HttpContext as HttpContext;
 
-#endif
         public void Dispose(bool primaryService)
         {
             Setup.RemoveSession(this.SessionRequestId);

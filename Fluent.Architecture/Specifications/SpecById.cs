@@ -1,15 +1,4 @@
-﻿
-#if !NET461
-
-using Microsoft.EntityFrameworkCore;
-
-#else
-
-using System.Data.Entity;
-
-#endif
-
-using Fluent.Architecture.Entities;
+﻿using Fluent.Architecture.Entities;
 using System.Linq;
 
 namespace Fluent.Architecture.Specifications

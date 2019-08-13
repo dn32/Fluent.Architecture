@@ -1,5 +1,6 @@
 ﻿using Fluent.Architecture.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 [Route("api/[Controller]")]
 public class UserController : FluentController<User>
@@ -9,6 +10,13 @@ public class UserController : FluentController<User>
     public User Find([FromQuery] User entity)
     {
         return Service.Find(entity);
+    }
+
+    // GET api/user/FindByTerm?code=123
+    [HttpGet("FindByTerm")]
+    public object FindByTerm(string term)
+    {
+        return new { list = Service.FindByTerm(term), pagination = LastRequestPagination, term };
     }
 
     // GET api/user/GetUserByEMail?email=dn@dn32.com.br

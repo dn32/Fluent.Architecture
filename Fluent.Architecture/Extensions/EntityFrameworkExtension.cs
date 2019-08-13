@@ -1,15 +1,7 @@
 ﻿
 using System;
 using System.Linq;
-#if NET461
-using System.Data.Entity;
-
-
-#else
 using Microsoft.EntityFrameworkCore;
-
-#endif
-
 
 namespace Fluent.Architecture.Extensions
 {

@@ -1,7 +1,4 @@
 ﻿// ReSharper disable CommentTypo
-
-#if !NET461
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Principal;
@@ -26,5 +23,3 @@ namespace Fluent.Architecture.Controllers
         }
     }
 }
-
-#endif
