@@ -7,9 +7,11 @@
 
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Entities;
+using Fluent.Architecture.EntityFramework;
 
 namespace Fluent.Architecture.Sample.Test.SupportElements.Model
 {
+    [DbType(FluentDbType.SQLITE)]
     public class Student : FluentEntity
     {
         public int Id { get; set; }

@@ -217,7 +217,7 @@ namespace Fluent.Architecture.Services
 
         public virtual void AddRange(params T[] entities)
         {
-            entities.ToList().ForEach(Validation.Add);
+            Validation.AddRange(entities);
             this.Repository.AddRange(entities);
         }
 
@@ -262,6 +262,19 @@ namespace Fluent.Architecture.Services
         }
 
         /// <summary>
+        /// Atualiza vários itens do banco de dados baseado em seus identificadores.
+        /// </summary>
+        /// <param name="entity">
+        /// Entidades a serem atualizadas com o identificador preenchido.
+        /// </param>
+
+        public virtual void UpdateRange(params T[] entities)
+        {
+            Validation.UpdateRange(entities);
+            Repository.UpdateRange(entities);
+        }
+
+        /// <summary>
         /// Remove um item do banco de dados baseado em seu identificador.
         /// </summary>
         /// <param name="entity">
@@ -278,11 +291,7 @@ namespace Fluent.Architecture.Services
 
         public virtual void RemoveRange(params T[] entities)
         {
-            foreach (var entity in entities)
-            {
-                this.Validation.Remove(entity);
-            }
-
+            this.Validation.RemoveRange(entities);
             this.Repository.RemoveRange(entities);
         }
 

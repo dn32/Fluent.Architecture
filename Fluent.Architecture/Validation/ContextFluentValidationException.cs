@@ -21,9 +21,7 @@ namespace Fluent.Architecture.Validation
     [Serializable]
     public class ContextFluentValidationException : Exception
     {
-#pragma warning disable CA1822
         public bool ValidationError => true;
-#pragma warning restore CA1822
 
         [JsonProperty("inconsistencies")]
         public List<FluentValidationException> Inconsistencies { get; }

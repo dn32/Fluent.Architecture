@@ -8,6 +8,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://dn32.github.io/Fluent.Architecture/</RepositoryUrl>
     <PackageProjectUrl>https://dn32.github.io/Fluent.Architecture/</PackageProjectUrl>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

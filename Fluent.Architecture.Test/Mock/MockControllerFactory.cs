@@ -10,7 +10,7 @@ using Fluent.Architecture.Controllers;
 
 namespace Fluent.Architecture.Test.Mock
 {
-    public static class ControllerMockFactory
+    public static class MockControllerFactory
     {
         public static TC Create<TC>() where TC : BaseController, new()
         {

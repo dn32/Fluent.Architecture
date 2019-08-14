@@ -1,51 +1,85 @@
-﻿
-using Fluent.Architecture.Attributes;
-using Fluent.Architecture.Entities;
+﻿using Fluent.Architecture.Entities;
 using Fluent.Architecture.Specifications;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace Fluent.Architecture.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FluentAPIController<T> : FluentController<T> where T : FluentIdEntity, new()
+    public class FluentAPIController<T> : FluentController<T> where T : FluentEntity, new()
     {
         // GET api/controller
         [HttpGet]
-        [FluentAllowAnonymous]
-        public JsonResult Get()
+        [ActionName("GetAll")]
+        public List<T> Get()
         {
-            var spec = CreateSpec<AllSpec<T>>();
-            return Json(Service.List(spec));
+            return Service.List(CreateSpec<AllSpec<T>>());
         }
 
-        // GET api/controller/5
-        [HttpGet("{id}")]
-        public JsonResult Get(int id)
+        // GET api/controller/id=5
+        [HttpGet]
+        [ActionName("Get")]
+        public T Get([FromRoute] T value)
         {
-            var spec = CreateSpec<SpecById<T>>().SetParameter(id);
-            return Json(Service.FirstOrDefault(spec));
+            return Service.Find(value);
+        }
+
+        // GET api/controller/term=myterm
+        [HttpGet]
+        [ActionName("GetByTerm")]
+        public List<T> Get(string term)
+        {
+            return Service.FindByTerm(term);
         }
 
         // POST api/controller
         [HttpPost]
-        public JsonResult Post([FromBody] T value)
+        [ActionName("Post")]
+        public T Post([FromBody] T value)
         {
-            return Json(Service.Add(value));
+            return Service.Add(value);
         }
 
-        // PUT api/controller/5
+        // POST api/controller
+        [HttpPost]
+        [ActionName("PostRange")]
+        public T[] Post([FromBody] T[] values)
+        {
+            Service.AddRange(values);
+            return values;
+        }
+
+        // PUT api/controller
         [HttpPut]
-        public JsonResult Put([FromBody] T value)
+        [ActionName("Put")]
+        public T Put([FromBody] T value)
         {
-            return Json(Service.Update(value));
+            return Service.Update(value);
         }
 
-        // DELETE api/controller/5
-        [HttpDelete("{id}")]
-        public JsonResult Delete(int id)
+        // PUT api/controller
+        [HttpPut]
+        [ActionName("PutRange")]
+        public void Put([FromBody] T[] values)
         {
-            return Json(Service.Remove(new T { Id = id }));
+            Service.UpdateRange(values);
+        }
+
+        // DELETE api/controller
+        [HttpDelete]
+        [ActionName("Delete")]
+        public void Delete([FromBody] T value)
+        {
+            Service.Remove(value);
+        }
+
+        // DELETE api/controller
+        [HttpDelete]
+        [ActionName("DeleteRange")]
+        public void Delete([FromBody] T[] values)
+        {
+            Service.RemoveRange(values);
         }
     }
 }

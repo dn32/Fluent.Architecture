@@ -16,6 +16,7 @@ namespace Fluent.Architecture.Core.Interfaces
         void RemoveRange(TE[] entities);
         TE Remove(TE entity);
         TE Update(TE entity);
+        void UpdateRange(TE[] entities);
         List<TO> ListSelect<TO>(IFluentSpecification<TO> spec, FluentPagination pagination = null);
         int Count();
         TO FirstOrDefaultSelect<TO>(IFluentSpecification<TO> spec);

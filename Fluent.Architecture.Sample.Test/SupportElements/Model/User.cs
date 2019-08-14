@@ -8,19 +8,20 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Fluent.Architecture.Attributes;
+using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Entities;
-using Fluent.Architecture.Test.Mock;
+using Fluent.Architecture.EntityFramework;
 using Newtonsoft.Json;
 
 namespace Fluent.Architecture.Sample.Test.SupportElements.Model
 {
-    [Table("users")]
+    [Table("users"), DbType(FluentDbType.SQLITE)]
     public class User : FluentIdEntity
     {
-        [Key, Column(Order = 1)]
-        public ePersonType? PersonType { get; set; }
+        [Required]
+        public EnumPersonType? PersonType { get; set; }
 
-        [Required, JsonProperty("full_name")]
+        [Required, JsonProperty("full_name"), Searchable]
         public string Name { get; set; }
 
         [FluentUniqueKey]

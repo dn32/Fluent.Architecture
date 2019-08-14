@@ -6,11 +6,10 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-
 using System.Runtime.InteropServices;
+using Fluent.Architecture.Sample.Test.SupportElements;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Test;
-using Fluent.Architecture.Test.Mock;
 
 namespace Fluent.Architecture.Sample.Test.TestTools
 {
@@ -34,7 +33,7 @@ namespace Fluent.Architecture.Sample.Test.TestTools
             var rand = TestUtil.NextRandom();
             return new User
             {
-                PersonType = ePersonType.User,
+                PersonType = EnumPersonType.User,
                 Id = rand,
                 UserName = $"maria {rand}",
                 Name = $"maria {rand}",

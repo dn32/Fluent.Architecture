@@ -5,7 +5,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.Web.Mvc;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
 
@@ -13,14 +12,14 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
 {
     public class StudentController : FluentController<Student>
     {
-        public JsonResult Add(Student student)
+        public Student Add(Student student)
         {
-            return this.Json(Service.Add(student));
+            return Service.Add(student);
         }
 
-        public JsonResult Update(Student student)
+        public Student Update(Student student)
         {
-            return this.Json(Service.Update(student));
+            return Service.Update(student);
         }
 
         //public JsonResult Add2(Student student)
@@ -45,15 +44,14 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
         //    return this.Json(this.PropagateMethod(nameof(FluentService<Student>.List), null));
         //}
 
-        public JsonResult Find(Student student)
+        public Student Find(Student student)
         {
-            return this.Json(this.Service.Find(student));
+            return Service.Find(student);
         }
 
-        public JsonResult Remove(Student student)
+        public Student Remove(Student student)
         {
-            student = this.Service.Remove(student);
-            return this.Json(student);
+            return Service.Remove(student);
         }
     }
 }

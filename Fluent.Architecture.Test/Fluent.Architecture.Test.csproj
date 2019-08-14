@@ -4,6 +4,9 @@
     <TargetFrameworks>netcoreapp2.2</TargetFrameworks>
     <Version>1.1.5-beta-43</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Fluent.Architecture.Test.snk</AssemblyOriginatorKeyFile>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Fluent.Architecture.EntityFramework.SqLite\Fluent.Architecture.EntityFramework.SqLite.csproj" />
+    <ProjectReference Include="..\Fluent.Architecture.EntityFramework\Fluent.Architecture.EntityFramework.csproj" />
     <ProjectReference Include="..\Fluent.Architecture\Fluent.Architecture.Core.csproj" />
   </ItemGroup>
 

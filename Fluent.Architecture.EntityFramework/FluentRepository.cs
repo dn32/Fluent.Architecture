@@ -376,6 +376,16 @@ namespace Fluent.Architecture.EntityFramework
             return entity;
         }
 
+        public virtual void UpdateRange(TE[] entities)
+        {
+            RunTheContextValidation();
+            foreach(var entity in entities)
+            {
+                var currentEntity = Service.Find(entity);
+                TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
+            }
+        }
+
         /// <summary>
         /// Remove um item do banco de dados baseado em seu identificador.
         /// </summary>

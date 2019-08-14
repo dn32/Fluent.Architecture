@@ -10,7 +10,6 @@ using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Sample.Test.SupportElements;
 using Fluent.Architecture.Sample.Test.SupportElements.Controllers;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
-using Fluent.Architecture.Sample.Test.SupportElements.Specifications;
 using Fluent.Architecture.Sample.Test.TestTools;
 using Fluent.Architecture.Test;
 using NUnit.Framework;
@@ -19,7 +18,7 @@ namespace Fluent.Architecture.Sample.Test.Test
 {
     [TestFixture]
     [ComVisible(true)]
-    public class UserTest : FluentInternalTest
+    internal class UserTest : FluentInternalTest
     {
         [Test]
         public void GetUserAndStudentByEmailTest()
@@ -30,17 +29,17 @@ namespace Fluent.Architecture.Sample.Test.Test
             student.Email = email;
             user.Email = email;
 
-            user = TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Add), user);
-            student = TestUtil.Execute<Student>(this.StudentControllerInstance, nameof(UserController.Add), student);
+            user = AddUser(user);
+            student = AddStudent(student);
 
-            var userStudent = TestUtil.Execute<UserStudent>(this.UserControllerInstance, nameof(UserController.GetUserByEmail), email);
+            var userStudent = TestUtil.ExecuteAndResult<UserStudent, UserController>(UserControllerInstance,(UserController controller) => controller.GetUserByEmail(email));
 
             Assert.NotNull(userStudent);
             FluentAssert.Equal(user, userStudent.User);
             FluentAssert.Equal(student, userStudent.Student);
 
-            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Remove), user);
-            TestUtil.Execute<Student>(this.StudentControllerInstance, nameof(StudentController.Remove), student);
+            RemoveUser(user);
+            RemoveStudent(student);
         }
 
         [Test]
@@ -52,17 +51,17 @@ namespace Fluent.Architecture.Sample.Test.Test
             student.Email = email;
             user.Email = email;
 
-            user = TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Add), user);
-            student = TestUtil.Execute<Student>(this.StudentControllerInstance, nameof(UserController.Add), student);
+            user = AddUser(user);
+            student = AddStudent(student);
 
-            var userStudent = TestUtil.Execute<UserStudent>(this.UserControllerInstance, nameof(UserController.SpecOneUserAndStudent), email);
+            var userStudent = TestUtil.ExecuteAndResult<UserStudent, UserController>(UserControllerInstance,(UserController controller) => controller.SpecOneUserAndStudent(email));
 
             Assert.NotNull(userStudent);
             FluentAssert.Equal(user, userStudent.User);
             FluentAssert.Equal(student, userStudent.Student);
 
-            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Remove), user);
-            TestUtil.Execute<Student>(this.StudentControllerInstance, nameof(StudentController.Remove), student);
+            RemoveUser(user);
+            RemoveStudent(student);
         }
 
         [Theory]
@@ -71,9 +70,10 @@ namespace Fluent.Architecture.Sample.Test.Test
         public void PropagationInCustomRepositorySuccessTest(bool found)
         {
             var user = InternalTestUtil.GetNewUser();
-            user = TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Add), user);
+            user = AddUser(user);
             var userId = found ? user.Id : user.Id + TestUtil.NextRandom();
-            var foundUser = TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.FindById), userId);
+           
+            var foundUser = TestUtil.ExecuteAndResult<User, UserController>(UserControllerInstance,(UserController controller) => controller.FindById(userId));
 
             if (found)
             {
@@ -85,7 +85,7 @@ namespace Fluent.Architecture.Sample.Test.Test
                 Assert.Null(foundUser);
             }
 
-            TestUtil.Execute<User>(this.UserControllerInstance, nameof(UserController.Remove), user);
+            RemoveUser(user);
         }
     }
 }

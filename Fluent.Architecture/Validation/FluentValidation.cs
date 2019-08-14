@@ -62,10 +62,20 @@ namespace Fluent.Architecture.Validation
             this.RunTheContextValidation();
         }
 
-        /// <summary>
-        /// Validate add operation.
-        /// </summary>
-        /// <param name="entity"></param>
+        public virtual void AddRange(T[] entities)
+        {
+            foreach (var entity in entities)
+            {
+                this.ParameterMustBeInformed(entity);
+                this.RequiredPropertyMustBeInformed(entity);
+                this.MaxLenghtPropertyMustBeInformed(entity);
+                this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
+                this.EntityShouldNotExistInDatabaseBasedOnKeys(entity, false);
+            }
+
+            this.RunTheContextValidation();
+        }
+
         public virtual void Update(T entity)
         {
             this.ParameterMustBeInformed(entity);
@@ -75,17 +85,39 @@ namespace Fluent.Architecture.Validation
             this.EntityMustExistInDatabase(entity);
 
             this.RunTheContextValidation();
+        }   
+        
+        public virtual void UpdateRange(T[] entities)
+        {
+            foreach (var entity in entities)
+            {
+                this.ParameterMustBeInformed(entity);
+                this.RequiredPropertyMustBeInformed(entity);
+                this.MaxLenghtPropertyMustBeInformed(entity);
+                this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, isUpdate: true);
+                this.EntityMustExistInDatabase(entity);
+            }
+
+            this.RunTheContextValidation();
         }
 
-        /// <summary>
-        /// Validate add operation.
-        /// </summary>
-        /// <param name="entity"></param>
         public virtual void Remove(T entity)
         {
             this.ParameterMustBeInformed(entity);
             this.AllKeysMustBeInformed(entity);
             this.EntityMustExistInDatabase(entity);
+
+            this.RunTheContextValidation();
+        }
+
+        public virtual void RemoveRange(T[] entities)
+        {
+            foreach(var entity in entities)
+            {
+                this.ParameterMustBeInformed(entity);
+                this.AllKeysMustBeInformed(entity);
+                this.EntityMustExistInDatabase(entity);
+            }
 
             this.RunTheContextValidation();
         }

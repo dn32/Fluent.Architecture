@@ -16,6 +16,7 @@ using Fluent.Architecture.Entities;
 using Fluent.Architecture.Repository;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Validation;
+using System.Runtime.CompilerServices;
 
 namespace Fluent.Architecture.Services
 {

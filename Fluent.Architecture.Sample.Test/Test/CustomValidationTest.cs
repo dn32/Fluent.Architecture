@@ -16,12 +16,16 @@ namespace Fluent.Architecture.Sample.Test.Test
 {
     [TestFixture]
     [ComVisible(true)]
-    public class ReportTest : FluentInternalTest
+    internal class CustomValidationTest : FluentInternalTest
     {
         [Test]
-        public void AddPropagationFullParameterIsNullFail()
+        public void AddValidationParameterIsNullFail()
         {
-            var error = TestUtil.Execute<ContextFluentValidationException>(ReportControllerInstance, nameof(ReportController.GenerateError), null);
+            var error = Assert.Throws<ContextFluentValidationException>(() =>
+            {
+                 TestUtil.Execute(ReportControllerInstance,(ReportController controller) => controller.GenerateError());
+            });
+
             Assert.NotNull(error);
             Assert.AreEqual("* Value Can Not Be Null", error.Message);
         }

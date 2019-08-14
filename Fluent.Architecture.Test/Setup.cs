@@ -6,30 +6,31 @@
 // -----------------------------------------------------------------------
 
 using Fluent.Architecture.Entities;
+using Fluent.Architecture.EntityFramework;
+using Fluent.Architecture.EntityFramework.SqLite;
+using System;
 using System.Runtime.InteropServices;
 
 namespace Fluent.Architecture.Test
 {
     public class UserSessionRequestCustom : UserSessionRequest
     {
-        public int Teste { get; set; }
     }
-
 
     [ComVisible(true)]
     public static class Setup
     {
+        private static long Ticks { get; set;  } = DateTime.Now.Ticks;
+
         public static void Initialize(string connectionString)
         {
-
-            Fluent.Architecture.Setup
-                               .Init()
-                               .SetUserSessionRequestType(typeof(UserSessionRequestCustom))
-                               .Build()
-                               .Run();
-
-            // Fluent.Architecture.Setup.Initialize(connectionString, true);
-            // Architecture.Setup.SetCustomTypes(transactionObjectsType: typeof(TransactionObjectsTest));
+            Architecture.Setup
+              .Init()
+              .UseEntityFramework()
+              .AddConnectionString(string.IsNullOrWhiteSpace(connectionString) ? $"Data Source=unit-tests-{Ticks}.db;" : connectionString, createDatabaseIfNotExists: true, typeof(EfContextSqLite))
+              .SetUserSessionRequestType(typeof(UserSessionRequestCustom))
+              .Build()
+              .Run();
         }
     }
 }
