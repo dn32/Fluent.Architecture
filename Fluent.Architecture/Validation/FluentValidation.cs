@@ -15,6 +15,9 @@ using Fluent.Architecture.Services;
 using Fluent.Architecture.Exceptions.ValidationException;
 using System.Reflection;
 using Fluent.Architecture.Core.Attributes;
+using Fluent.Architecture.Core.Filters;
+using System;
+using System.Linq.Expressions;
 
 namespace Fluent.Architecture.Validation
 {
@@ -64,6 +67,8 @@ namespace Fluent.Architecture.Validation
 
         public virtual void AddRange(T[] entities)
         {
+            this.ParameterMustBeInformed(entities);
+
             foreach (var entity in entities)
             {
                 this.ParameterMustBeInformed(entity);
@@ -89,6 +94,8 @@ namespace Fluent.Architecture.Validation
         
         public virtual void UpdateRange(T[] entities)
         {
+            this.ParameterMustBeInformed(entities);
+
             foreach (var entity in entities)
             {
                 this.ParameterMustBeInformed(entity);
@@ -112,11 +119,31 @@ namespace Fluent.Architecture.Validation
 
         public virtual void RemoveRange(T[] entities)
         {
-            foreach(var entity in entities)
+            this.ParameterMustBeInformed(entities);
+
+            foreach (var entity in entities)
             {
                 this.ParameterMustBeInformed(entity);
-                this.AllKeysMustBeInformed(entity);
+                //this.AllKeysMustBeInformed(entity);
                 this.EntityMustExistInDatabase(entity);
+            }
+
+            this.RunTheContextValidation();
+        }
+
+        internal void FilteredList(Filter[] filters)
+        {
+            this.ParameterMustBeInformed(filters);
+
+            var properties = typeof(T).GetProperties().ToList();
+
+            foreach (var filter in filters)
+            {
+                var property = properties.SingleOrDefault(x => x.Name.Equals(filter.PropertyName, StringComparison.InvariantCultureIgnoreCase));
+                if(property == null)
+                {
+                    AddInconsistency(new FilteredPropertyNotFound(typeof(T).Name, filter.PropertyName));
+                }
             }
 
             this.RunTheContextValidation();
@@ -275,12 +302,12 @@ namespace Fluent.Architecture.Validation
 
         private void EntityMustExistInDatabase(T entity)
         {
-            if (!this.NullParameterOk || !this.KeyValuesOk)
+            if (!this.NullParameterOk)
             {
                 return;
             }
 
-            if (!this.Service.Exists(entity))
+            if (!this.Service.Exists(entity, this.KeyValuesOk))
             {
                 var keys = entity.GetKeyValues().Select(x => $"{{{x.Property.Name}:{x.Value}}}").ToArray();
                 var keyValues = string.Join(", ", keys);

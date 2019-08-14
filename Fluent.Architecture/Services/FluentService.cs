@@ -7,12 +7,15 @@
 
 // ReSharper disable CommentTypo
 
+using Fluent.Architecture.Core.Filters;
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Interfaces;
+using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Validation;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -102,6 +105,11 @@ namespace Fluent.Architecture.Services
             return Repository.List(spec, pagination);
         }
 
+        internal List<T> FilteredList(Filter[] filters, FluentPagination pagination = null)
+        {
+            Validation.FilteredList(filters);
+            return Repository.FilteredList(filters, pagination);
+        }
         /// <summary>
         /// Executa uma solicitação baseada em uma especificação e retorna um resultado ou nulo quando a consulta não é satisfeita.
         /// </summary>

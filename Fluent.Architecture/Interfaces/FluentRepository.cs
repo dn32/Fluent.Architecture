@@ -4,6 +4,7 @@ using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Services;
 using System.Data.Common;
+using Fluent.Architecture.Core.Filters;
 
 namespace Fluent.Architecture.Core.Interfaces
 {
@@ -21,6 +22,7 @@ namespace Fluent.Architecture.Core.Interfaces
         int Count();
         TO FirstOrDefaultSelect<TO>(IFluentSpecification<TO> spec);
         List<TE> List(IFluentSpecification spec, FluentPagination pagination = null);
+        List<TE> FilteredList(Filter[] filters, FluentPagination pagination = null);
         TE FirstOrDefault(IFluentSpecification spec);
         TE FirstOrDefault();
         int CountSelect<TO>(IFluentSpecification<TO> spec);

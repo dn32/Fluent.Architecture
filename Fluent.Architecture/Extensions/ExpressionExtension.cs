@@ -1,4 +1,5 @@
 ﻿using Fluent.Architecture.Entities;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,11 +37,11 @@ namespace Fluent.Architecture.Extensions
         {
             var listaDepropriedades = new List<Tuple<string, Type>>();
             var membros = ((NewExpression)par.Body).Members as IReadOnlyCollection<MemberInfo>;
-            var tipoOriginal = typeof(T);
+            var typeOriginal = typeof(T);
 
             foreach (PropertyInfo membro in membros)
             {
-                var tipoInformado = membro.PropertyType;
+                var typeInformado = membro.PropertyType;
                 var nomeDoParametro = membro.Name;
                 var propriedades = nomeDoParametro.Split('_');
 
@@ -50,7 +51,7 @@ namespace Fluent.Architecture.Extensions
                 {
                     var nome = propriedades[i];
                     nomeConcatenadoDasPropriedades += string.IsNullOrEmpty(nomeConcatenadoDasPropriedades) ? nome : "." + nome;
-                    var propriedade = tipoOriginal.GetProperty(nome);
+                    var propriedade = typeOriginal.GetProperty(nome);
                     if (propriedade == null)
                     {
                         if (!valide)
@@ -58,52 +59,52 @@ namespace Fluent.Architecture.Extensions
                             continue;
                         }
 
-                        throw new Exception($"Não foi encontrado uma property com caminho {nomeConcatenadoDasPropriedades} no tipo {tipoOriginal.Name}. Confira o elemento {nomeDoParametro}, pois é provável que esteja escrito incorretamente.");
+                        throw new Exception($"Não foi encontrado uma property com caminho {nomeConcatenadoDasPropriedades} no type {typeOriginal.Name}. Confira o elemento {nomeDoParametro}, pois é provável que esteja escrito incorretamente.");
                     }
                     if (propriedades.Count() == i + 1)
                     {
-                        if (propriedade.PropertyType != tipoInformado)
+                        if (propriedade.PropertyType != typeInformado)
                         {
-                            throw new Exception($"O tipo encontrado na propriedade {tipoOriginal.Name} não foi encontrado no caminho {nomeConcatenadoDasPropriedades}. o tipo informado é {tipoInformado} e o tipo encontrado foi {propriedade.PropertyType}");
+                            throw new Exception($"O type encontrado na propriedade {typeOriginal.Name} não foi encontrado no caminho {nomeConcatenadoDasPropriedades}. o type informado é {typeInformado} e o type encontrado foi {propriedade.PropertyType}");
                         }
                     }
 
-                    tipoOriginal = propriedade.PropertyType;
+                    typeOriginal = propriedade.PropertyType;
                 }
 
-                listaDepropriedades.Add(new Tuple<string, Type>(nomeConcatenadoDasPropriedades, tipoInformado));
+                listaDepropriedades.Add(new Tuple<string, Type>(nomeConcatenadoDasPropriedades, typeInformado));
             }
 
             return listaDepropriedades;
         }
 
-        public static object ObtenhaValorPorPropriedade(string propriedadeInformada, object p, out Type tipoDaPropriedade)
+        public static object ObtenhavaluePorPropriedade(string propriedadeInformada, object p, out Type typeDaPropriedade)
         {
-            tipoDaPropriedade = null;
+            typeDaPropriedade = null;
             if (propriedadeInformada == null)
             {
                 return null;
             }
 
             var propriedades = propriedadeInformada.Split('.');
-            var tipoOriginal = p.GetType();
-            var valorOriginal = p;
+            var typeOriginal = p.GetType();
+            var valueOriginal = p;
             var nomeConcatenadoDaspropriedades = string.Empty;
 
             for (int i = 0; i < propriedades.Count(); i++)
             {
                 var nome = propriedades[i];
                 nomeConcatenadoDaspropriedades += string.IsNullOrEmpty(nomeConcatenadoDaspropriedades) ? nome : "." + nome;
-                var propriedade = tipoOriginal.GetProperty(nome);
-                valorOriginal = propriedade.GetValue(valorOriginal);
+                var propriedade = typeOriginal.GetProperty(nome);
+                valueOriginal = propriedade.GetValue(valueOriginal);
 
                 if (propriedades.Count() == i + 1)
                 {
-                    tipoDaPropriedade = propriedade.PropertyType;
-                    return valorOriginal;
+                    typeDaPropriedade = propriedade.PropertyType;
+                    return valueOriginal;
                 }
 
-                tipoOriginal = propriedade.PropertyType;
+                typeOriginal = propriedade.PropertyType;
             }
 
             return null;
@@ -111,6 +112,11 @@ namespace Fluent.Architecture.Extensions
 
         public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> a, Expression<Func<T, bool>> b)
         {
+            if (a == null)
+            {
+                return b;
+            }
+
             var p = a.Parameters[0];
             var visitor = new SubstExpressionVisitor { Subst = { [b.Parameters[0]] = p } };
             var body = Expression.AndAlso(a.Body, visitor.Visit(b.Body));
@@ -126,7 +132,19 @@ namespace Fluent.Architecture.Extensions
 
             var p = a.Parameters[0];
             var visitor = new SubstExpressionVisitor { Subst = { [b.Parameters[0]] = p } };
-            Expression body = Expression.OrElse(a.Body, visitor.Visit(b.Body));
+            var body = Expression.OrElse(a.Body, visitor.Visit(b.Body));
+            return Expression.Lambda<Func<T, bool>>(body, p);
+        }
+
+        public static Expression<Func<T, bool>> Not<T>(this Expression<Func<T, bool>> a)
+        {
+            if (a == null)
+            {
+                return a;
+            }
+            var p = a.Parameters[0];
+            var visitor = new SubstExpressionVisitor { Subst = { [a.Parameters[0]] = p } };
+            var body = Expression.Not(a.Body);
             return Expression.Lambda<Func<T, bool>>(body, p);
         }
 
@@ -140,39 +158,66 @@ namespace Fluent.Architecture.Extensions
             }
         }
 
-        public static Expression<Func<T, bool>> Contains<T>(string nomePropriedade, string valor, Type tipo)
+        public static Expression<Func<T, bool>> StartWith<T>(string propertyName, string value)
         {
-            if (tipo == typeof(string))
+            var parameter = Expression.Parameter(typeof(T), "x");
+            var property = Expression.Property(parameter, propertyName);
+            var containsCall = Expression.Call(property, "StartsWith", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
+            return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
+        }
+
+        public static Expression<Func<T, bool>> EndsWith<T>(string propertyName, string value)
+        {
+            var parameter = Expression.Parameter(typeof(T), "x");
+            var property = Expression.Property(parameter, propertyName);
+            var containsCall = Expression.Call(property, "EndsWith", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
+            return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
+        }
+
+        public static Expression<Func<T, bool>> Contains<T>(string propertyName, string value, Type type)
+        {
+            if (type == typeof(string))
             {
                 var parameter = Expression.Parameter(typeof(T), "x");
-                var property = Expression.Property(parameter, nomePropriedade);
-
-                var containsCall = Expression.Call(
-                    property, "Contains",
-                    null, Expression.Constant(valor));
-
+                var property = Expression.Property(parameter, propertyName);
+                var containsCall = Expression.Call(property, "Contains", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
                 return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
             }
             else
             {
                 var parameter = Expression.Parameter(typeof(T), "x");
-                var property = Expression.Property(parameter, nomePropriedade);
-                var toStringCall = Expression.Call(
-                    property, "ToString",
-                    null, Expression.Constant("D"));
-
-                var containsCall = Expression.Call(
-                    toStringCall, "Contains",
-                    null, Expression.Constant(valor));
-
+                var property = Expression.Property(parameter, propertyName);
+                var toStringCall = Expression.Call(property, "ToString", null, Expression.Constant("D"));
+                var containsCall = Expression.Call(toStringCall, "Contains", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
                 return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
             }
         }
 
-        public static Expression<Func<T, bool>> Equals<T>(string nomePropriedade, object valor)
+        public static Expression<Func<T, bool>> Equals<T>(string propertyName, string value, Type type)
         {
-            var conditions = ToExpression<T>("and", nomePropriedade, "==", valor);
-            return conditions;
+            var parameter = Expression.Parameter(typeof(T), "x");
+            var property = Expression.Property(parameter, propertyName);
+            var toStringCall = Expression.Call(property, "ToString", null, Expression.Constant("D"));
+            var containsCall = Expression.Call(toStringCall, "Equals", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
+            return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
+        }
+
+        public static Expression<Func<T, bool>> SmallerThan<T>(string propertyName, object value, bool including)
+        {
+            return ToExpression<T>("and", propertyName, including ? "<=" : "<", value);
+        }
+
+        public static Expression<Func<T, bool>> GreaterThan<T>(string propertyName, object value, bool including)
+        {
+            return ToExpression<T>("and", propertyName, including ? ">=" : ">", value);
+        }
+
+        public static Expression<Func<T, bool>> IsNull<T>(string propertyName)
+        {
+            var parameter = Expression.Parameter(typeof(T), "x");
+            var property = Expression.Property(parameter, propertyName);
+            var nullCheck = Expression.Equal(property, Expression.Constant(null, typeof(object)));
+            return Expression.Lambda<Func<T, bool>>(nullCheck, parameter);
         }
 
         public static Expression<Func<T, bool>> ToExpression<T>(string andOrOperator, string propName, string opr, object value, Expression<Func<T, bool>> expr = null)

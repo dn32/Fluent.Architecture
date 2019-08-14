@@ -25,6 +25,7 @@ using System.Data;
 using System.Reflection;
 using Fluent.Architecture.Core.Attributes;
 using System.Linq.Expressions;
+using Fluent.Architecture.Core.Filters;
 
 [assembly: InternalsVisibleTo(@"Fluent.Architecture.EntityFramework.SqlServer, PublicKey=00240000048000009400000006020000002400005253413100040000010001002d98533364f3b3fbd11e7a3f14cd73d169e1daabd62ba2d1e5bc6a48a9bc709a503960db0e76c190e7a8dcefaed037e539682d6a891b242ddb91a3ab20fbfa0c04fb6304c8903857e1ed75399850fca4037dd2c810749e75770e5d455e950ccb9d06cf6fea5f30b00557a29408ce4c45021c412eca32616f47809bfe2cf404cc")]
 [assembly: InternalsVisibleTo(@"Fluent.Architecture.EntityFramework.PostgreSQL, PublicKey=0024000004800000940000000602000000240000525341310004000001000100192d4ee01ba583399ab1d381c4301592f8520d29c628f3220e1550b2068e540e26886fa8d8b52618553f89fed1dccb18d5d3c07c548fca3c916a10823f411c23ef0e85bf0526ed94aa3cfbdf79a9595861348cfc369670f8ed9f7c4afd08de5f3cd87a0c7c6b1d8a0b94622c163a764813ba95d39dc44ea1baf7b663800a49bc")]
@@ -251,6 +252,85 @@ namespace Fluent.Architecture.EntityFramework
             return FluentPaginate(query, pagination).ToList();
         }
 
+        public virtual List<TE> FilteredList(Filter[] filters, FluentPagination pagination = null)
+        {
+            RunTheContextValidation();
+
+            var properties = typeof(TE).GetProperties().ToList();
+            Expression<Func<TE, bool>> allExpression = null;
+            EnumJunctionType LastJunctionType = EnumJunctionType.OR;
+
+            foreach (var filter in filters)
+            {
+                var property = properties.Single(x => x.Name.Equals(filter.PropertyName, StringComparison.InvariantCultureIgnoreCase));
+
+                Expression<Func<TE, bool>> expression;
+
+                switch (filter.FilterType)
+                {
+                    case EnumFilterType.CONTAINS:
+                        expression = ExpressionUtil.Contains<TE>(property.Name, filter.Value, property.PropertyType);
+                        break;
+                    case EnumFilterType.GREATER_THAN:
+                        expression = ExpressionUtil.SmallerThan<TE>(property.Name, filter.Value, filter.Including);
+                        break;
+                    case EnumFilterType.SMALLER_THAN:
+                        expression = ExpressionUtil.SmallerThan<TE>(property.Name, filter.Value, filter.Including);
+                        break;
+                    case EnumFilterType.START_WITH:
+                        expression = ExpressionUtil.StartWith<TE>(property.Name, filter.Value);
+                        break;
+                    case EnumFilterType.ENDS_WITH:
+                        expression = ExpressionUtil.EndsWith<TE>(property.Name, filter.Value);
+                        break;
+                    case EnumFilterType.EQUAL_TO:
+                        expression = ExpressionUtil.Equals<TE>(property.Name, filter.Value, property.PropertyType);
+                        break;
+                    case EnumFilterType.TRUE:
+                        expression = ExpressionUtil.Equals<TE>(property.Name, "true", property.PropertyType);
+                        break;
+                    case EnumFilterType.FALSE:
+                        expression = ExpressionUtil.Equals<TE>(property.Name, "false", property.PropertyType);
+                        break;
+                    case EnumFilterType.NULL:
+                        expression = ExpressionUtil.IsNull<TE>(property.Name);
+                        break;
+                    default:
+                        throw new NotImplementedException($"{filter.FilterType} filter not found");
+                }
+
+                if (filter.IsReverse)
+                {
+                    expression = expression.Not();
+                }
+
+                if (allExpression == null)
+                {
+                    allExpression = expression;
+                }
+                else
+                {
+
+                    if (LastJunctionType == EnumJunctionType.OR)
+                    {
+                        allExpression = allExpression.Or(expression);
+                    }
+                    else
+                    {
+                        allExpression = allExpression.And(expression);
+                    }
+                }
+
+                LastJunctionType = filter.JunctionType;
+            }
+
+            if (allExpression == null) { allExpression = x => true; }
+
+            var query = Query.Where(allExpression);
+            var order = query.OrderBy(x => x);
+            return FluentPaginate(order, pagination).ToList();
+        }
+
         public virtual TE FirstOrDefault()
         {
             return Query.FirstOrDefault();
@@ -313,7 +393,7 @@ namespace Fluent.Architecture.EntityFramework
 
         public virtual TE Find(TE entity)
         {
-            var sql = CreateSqlFromKeyAndFluentUniqueKeys(entity);
+            var sql = CreateSqlFromKeyOrFluentUniqueKeys(entity);
             return FindSingleOrDefaultSql(sql);
         }
 
@@ -340,7 +420,7 @@ namespace Fluent.Architecture.EntityFramework
 
         public virtual bool Exists(TE entity)
         {
-            var sql = CreateSqlFromKeyAndFluentUniqueKeys(entity);
+            var sql = CreateSqlFromKeyOrFluentUniqueKeys(entity);
             return this.ExistsSql(sql);
         }
 
@@ -379,7 +459,7 @@ namespace Fluent.Architecture.EntityFramework
         public virtual void UpdateRange(TE[] entities)
         {
             RunTheContextValidation();
-            foreach(var entity in entities)
+            foreach (var entity in entities)
             {
                 var currentEntity = Service.Find(entity);
                 TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
@@ -396,7 +476,7 @@ namespace Fluent.Architecture.EntityFramework
         public virtual TE Remove(TE entity)
         {
             this.RunTheContextValidation();
-            return this.Input.Remove(Service.Find(entity)).Entity;
+            return this.Input.Remove(Service.Find(entity, false)).Entity;
         }
 
         public virtual void RemoveRange(IFluentSpecification spec)
@@ -475,7 +555,7 @@ namespace Fluent.Architecture.EntityFramework
             return Service.SessionRequest.LocalHttpContext.Request?.Form[key];
         }
 
-        private static string CreateSqlFromKeyAndFluentUniqueKeys(TE entity)
+        private static string CreateSqlFromKeyOrFluentUniqueKeys(TE entity)
         {
             var tableName = entity.GetTableName();
             var keyValues = entity.GetKeyValues().Select(x => $"{x.ColumnName} = {x.Value}").ToArray();

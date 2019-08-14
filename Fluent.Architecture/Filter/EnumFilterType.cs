@@ -1,0 +1,43 @@
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+namespace Fluent.Architecture.Core.Filters
+{
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum EnumFilterType
+    {
+        //Numérico
+        GREATER_THAN, // Maior que
+        SMALLER_THAN, // Menor que
+
+        //String
+        START_WITH, // Inicia com
+        ENDS_WITH, // Termina com
+        CONTAINS, // Contém
+
+        //All
+        EQUAL_TO, // igual a
+        NULL, // é nulo
+
+        //Bool
+        TRUE, // é true
+        FALSE, // é false
+    }
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum EnumJunctionType
+    {
+        AND,
+        OR
+    }
+
+    public class Filter
+    {
+        public EnumFilterType FilterType { get; set; }
+        public EnumJunctionType JunctionType { get; set; }
+        public bool IsReverse { get; set; }
+        public string Value { get; set; }
+        public string PropertyName { get; set; }
+        public bool Including { get; set; }
+    }
+}

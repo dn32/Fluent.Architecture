@@ -16,4 +16,6 @@ public class User : FluentEntity
 
     [Searchable]
     public string Name { get; set; }
+
+    public string Andress { get; set; }
 }

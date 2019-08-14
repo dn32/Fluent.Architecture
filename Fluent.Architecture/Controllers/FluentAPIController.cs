@@ -1,83 +1,94 @@
-﻿using Fluent.Architecture.Entities;
+﻿using Fluent.Architecture.Core.Filters;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Specifications;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 namespace Fluent.Architecture.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class FluentAPIController<T> : FluentController<T> where T : FluentEntity, new()
     {
-        // GET api/controller
+        // GET api/user/list
         [HttpGet]
-        [ActionName("GetAll")]
-        public List<T> Get()
+        public object List()
         {
-            return Service.List(CreateSpec<AllSpec<T>>());
+            return new { list = Service.List(CreateSpec<AllSpec<T>>()), pagination = LastRequestPagination };
         }
 
-        // GET api/controller/id=5
-        [HttpGet]
-        [ActionName("Get")]
-        public T Get([FromRoute] T value)
-        {
-            return Service.Find(value);
-        }
-
-        // GET api/controller/term=myterm
-        [HttpGet]
-        [ActionName("GetByTerm")]
-        public List<T> Get(string term)
-        {
-            return Service.FindByTerm(term);
-        }
-
-        // POST api/controller
+        // GET api/user/Filtered list
         [HttpPost]
-        [ActionName("Post")]
-        public T Post([FromBody] T value)
+        public object FilteredList(Filter[] filters)
+        {
+            return new { list = Service.FilteredList(filters), pagination = LastRequestPagination };
+        }
+
+        // GET api/user/Find?id=5
+        [HttpGet]
+        public T Find([FromQuery]T value)
+        {
+            return Service.Find(value, false);
+        }
+
+        // GET api/user/FindByTerm?term=myterm
+        [HttpGet]
+        public object FindByTerm(string term)
+        {
+            return new { term, list = Service.FindByTerm(term), pagination = LastRequestPagination };
+        }
+
+        // GET api/user/Count
+        [HttpGet]
+        public int Count()
+        {
+            return Service.Count();
+        }
+
+        // GET api/user/Exists/?id=5
+        [HttpGet]
+        public bool Exists(T value)
+        {
+            return Service.Exists(value);
+        }
+
+        // POST api/user/Add/
+        [HttpPost]
+        public T Add([FromBody] T value)
         {
             return Service.Add(value);
         }
 
-        // POST api/controller
+        // POST api/user/AddRange
         [HttpPost]
-        [ActionName("PostRange")]
-        public T[] Post([FromBody] T[] values)
+        public void AddRange([FromBody] T[] values)
         {
             Service.AddRange(values);
-            return values;
         }
 
-        // PUT api/controller
+        // PUT api/user/Update
         [HttpPut]
-        [ActionName("Put")]
-        public T Put([FromBody] T value)
+        public T Update([FromBody] T value)
         {
             return Service.Update(value);
         }
 
-        // PUT api/controller
+        // PUT api/user/UpdateRange
         [HttpPut]
-        [ActionName("PutRange")]
-        public void Put([FromBody] T[] values)
+        public void UpdateRange([FromBody] T[] values)
         {
             Service.UpdateRange(values);
         }
 
-        // DELETE api/controller
+        // DELETE api/user/Remove
         [HttpDelete]
-        [ActionName("Delete")]
-        public void Delete([FromBody] T value)
+        public void Remove([FromBody] T value)
         {
             Service.Remove(value);
         }
 
-        // DELETE api/controller
+        // DELETE api/user/RemoveRange
         [HttpDelete]
-        [ActionName("DeleteRange")]
-        public void Delete([FromBody] T[] values)
+        public void RemoveRange([FromBody] T[] values)
         {
             Service.RemoveRange(values);
         }
