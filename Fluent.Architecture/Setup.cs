@@ -17,7 +17,6 @@ using Fluent.Architecture.Validation;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Specifications;
-using Fluent.Architecture.Factory;
 using Fluent.Architecture.Core.Interfaces;
 using System.Runtime.CompilerServices;
 
@@ -58,8 +57,6 @@ namespace Fluent.Architecture
 
         private static readonly object LockInitialization = new object();
 
-        internal static GlobalizationService GlobalizationService { get; set; }
-
         internal static Dictionary<Type, Type> Services { get; set; }
 
         internal static Dictionary<Type, Type> Repositories { get; set; }
@@ -77,14 +74,6 @@ namespace Fluent.Architecture
         #endregion
 
         #region PUBLIC METHODS
-
-        public static void SetGlobalizationServiceType<TS>(object httpContext) where TS : GlobalizationService, new()
-        {
-            GlobalizationService = ServiceFactory.Create<TS>(httpContext);
-        }
-
-
-
 
         public static Config SetServiceProvider(this Config configClass, IServiceProvider serviceProvider)
         {

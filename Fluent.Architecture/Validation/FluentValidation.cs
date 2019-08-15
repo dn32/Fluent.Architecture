@@ -60,7 +60,11 @@ namespace Fluent.Architecture.Validation
             this.RequiredPropertyMustBeInformed(entity);
             this.MaxLenghtPropertyMustBeInformed(entity);
             this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
-            this.EntityShouldNotExistInDatabaseBasedOnKeys(entity, false);
+
+            if (KeyValuesOk)
+            {
+                EntityShouldNotExistInDatabaseBasedOnKeys(entity, false);
+            }
 
             this.RunTheContextValidation();
         }
@@ -75,7 +79,11 @@ namespace Fluent.Architecture.Validation
                 this.RequiredPropertyMustBeInformed(entity);
                 this.MaxLenghtPropertyMustBeInformed(entity);
                 this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
-                this.EntityShouldNotExistInDatabaseBasedOnKeys(entity, false);
+
+                if (KeyValuesOk)
+                {
+                    EntityShouldNotExistInDatabaseBasedOnKeys(entity, false);
+                }
             }
 
             this.RunTheContextValidation();
@@ -87,7 +95,11 @@ namespace Fluent.Architecture.Validation
             this.RequiredPropertyMustBeInformed(entity);
             this.MaxLenghtPropertyMustBeInformed(entity);
             this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, isUpdate: true);
-            this.EntityMustExistInDatabase(entity);
+
+            if (KeyValuesOk)
+            {
+                EntityMustExistInDatabase(entity);
+            }
 
             this.RunTheContextValidation();
         }   
@@ -102,7 +114,10 @@ namespace Fluent.Architecture.Validation
                 this.RequiredPropertyMustBeInformed(entity);
                 this.MaxLenghtPropertyMustBeInformed(entity);
                 this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, isUpdate: true);
-                this.EntityMustExistInDatabase(entity);
+                if (KeyValuesOk)
+                {
+                    EntityMustExistInDatabase(entity);
+                }
             }
 
             this.RunTheContextValidation();

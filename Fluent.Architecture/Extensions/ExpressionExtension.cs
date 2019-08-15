@@ -1,5 +1,4 @@
 ﻿using Fluent.Architecture.Entities;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -158,16 +157,26 @@ namespace Fluent.Architecture.Extensions
             }
         }
 
-        public static Expression<Func<T, bool>> StartWith<T>(string propertyName, string value)
+        public static Expression<Func<T, bool>> StartWith<T>(string propertyName, string value, Type type)
         {
+            if (type != typeof(string))
+            {
+                throw new InvalidOperationException($"Filter type StartWith can only be used for string and field {propertyName} is not string");
+            }
+
             var parameter = Expression.Parameter(typeof(T), "x");
             var property = Expression.Property(parameter, propertyName);
             var containsCall = Expression.Call(property, "StartsWith", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
             return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
         }
 
-        public static Expression<Func<T, bool>> EndsWith<T>(string propertyName, string value)
+        public static Expression<Func<T, bool>> EndsWith<T>(string propertyName, string value, Type type)
         {
+            if (type != typeof(string))
+            {
+                throw new InvalidOperationException($"Filter type EndsWith can only be used for string and field {propertyName} is not string");
+            }
+
             var parameter = Expression.Parameter(typeof(T), "x");
             var property = Expression.Property(parameter, propertyName);
             var containsCall = Expression.Call(property, "EndsWith", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
@@ -176,29 +185,39 @@ namespace Fluent.Architecture.Extensions
 
         public static Expression<Func<T, bool>> Contains<T>(string propertyName, string value, Type type)
         {
+            var parameter = Expression.Parameter(typeof(T), "x");
+            var property = Expression.Property(parameter, propertyName);
+            MethodCallExpression containsCall;
+
             if (type == typeof(string))
             {
-                var parameter = Expression.Parameter(typeof(T), "x");
-                var property = Expression.Property(parameter, propertyName);
-                var containsCall = Expression.Call(property, "Contains", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
-                return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
+                containsCall = Expression.Call(property, "Contains", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
             }
             else
             {
-                var parameter = Expression.Parameter(typeof(T), "x");
-                var property = Expression.Property(parameter, propertyName);
                 var toStringCall = Expression.Call(property, "ToString", null, Expression.Constant("D"));
-                var containsCall = Expression.Call(toStringCall, "Contains", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
-                return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
+                containsCall = Expression.Call(toStringCall, "Contains", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
             }
+
+            return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
         }
 
         public static Expression<Func<T, bool>> Equals<T>(string propertyName, string value, Type type)
         {
             var parameter = Expression.Parameter(typeof(T), "x");
             var property = Expression.Property(parameter, propertyName);
-            var toStringCall = Expression.Call(property, "ToString", null, Expression.Constant("D"));
-            var containsCall = Expression.Call(toStringCall, "Equals", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
+            MethodCallExpression containsCall;
+
+            if (type == typeof(string))
+            {
+                containsCall = Expression.Call(property, "Equals", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
+            }
+            else
+            {
+                var toStringCall = Expression.Call(property, "ToString", null, Expression.Constant("D"));
+                containsCall = Expression.Call(toStringCall, "Equals", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
+            }
+
             return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
         }
 

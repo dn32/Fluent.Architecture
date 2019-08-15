@@ -53,12 +53,6 @@ namespace Fluent.Architecture.Controllers
                 if (Service.SessionRequest.ContextFluentValidationException.IsValid)
                 {
                     session.SaveChanges();
-
-                    if (Service.ExecuteInteractions())
-                    {
-                        session.SaveChanges();
-                    }
-
                     transaction.Commit();
                 }
                 else

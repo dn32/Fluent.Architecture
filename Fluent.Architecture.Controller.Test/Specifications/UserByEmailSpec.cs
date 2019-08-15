@@ -7,27 +7,27 @@
 
 using System;
 using System.Linq;
-using Fluent.Architecture.Sample.Test.SupportElements.Model;
+using Fluent.Architecture.Controller.Test.Model;
 using Fluent.Architecture.Specifications;
 
-namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
+namespace Fluent.Architecture.Controller.Test.Specifications
 {
-    public class StudentByEmailSpec : FluentSpecification<Student>
+    public class UserByEmailSpec : FluentSpecification<User>
     {
         private string _email;
 
-        public StudentByEmailSpec DefineParams(string email)
+        public UserByEmailSpec DefineParams(string email)
         {
             this._email = email;
             return this;
         }
-
-        public override IQueryable<Student> Where(IQueryable<Student> query)
+        
+        public override IQueryable<User> Where(IQueryable<User> query)
         {
             return query.Where(x => x.Email.Equals(this._email, StringComparison.CurrentCultureIgnoreCase));
         }
 
-        public override IOrderedQueryable<Student> Order(IQueryable<Student> query)
+        public override IOrderedQueryable<User> Order(IQueryable<User> query)
         {
             return query.OrderBy(x => x.Name);
         }

@@ -9,6 +9,7 @@ using Fluent.Architecture.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fluent.Architecture.EntityFramework
 {
@@ -41,7 +42,6 @@ namespace Fluent.Architecture.EntityFramework
         /// </param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var entityMethod = typeof(ModelBuilder).GetMethod("Entity", Array.Empty<Type>());
             var exportedTypes = Setup.Model.Values.ToList();
             foreach (var type in exportedTypes)
             {
@@ -52,7 +52,8 @@ namespace Fluent.Architecture.EntityFramework
 
                 if (type.IsSubclassOf(typeof(FluentEntity)))
                 {
-                    if (entityMethod != null) entityMethod.MakeGenericMethod(type).Invoke(modelBuilder, Array.Empty<object>());
+                    var eb = modelBuilder.Entity(type);
+                    SetEntity(eb, type);
                 }
             }
 
@@ -61,9 +62,9 @@ namespace Fluent.Architecture.EntityFramework
             base.OnModelCreating(modelBuilder);
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-        }
+         protected virtual void SetEntity(EntityTypeBuilder entity, Type type) { }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
         public override int SaveChanges()
         {

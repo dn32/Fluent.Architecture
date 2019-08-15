@@ -12,24 +12,24 @@ using Fluent.Architecture.Specifications;
 
 namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
 {
-    public class UserByPasswordSpec : FluentSpecification<User>
+    public class UserIdByZipCodeSpec : FluentSelectSpecification<User, int>
     {
-        private string _password;
+        private long _zipCode;
 
-        public UserByPasswordSpec DefineParams(string password)
+        public UserIdByZipCodeSpec DefineParams(long zipCode)
         {
-            this._password = password;
+            _zipCode = zipCode;
             return this;
         }
-
-        public override IQueryable<User> Where(IQueryable<User> query)
+      
+        public override IQueryable<int> Where(IQueryable<User> query)
         {
-            return query.Where(x => x.Password.Equals(this._password, StringComparison.InvariantCultureIgnoreCase));
+            return query.Where(x => x.ZipCode ==_zipCode).Select(x => x.Id);
         }
 
-        public override IOrderedQueryable<User> Order(IQueryable<User> query)
+        public override IOrderedQueryable<int> Order(IQueryable<int> query)
         {
-            return query.OrderBy(x => x.Name);
+            return query.OrderBy(x => x);
         }
     }
 }

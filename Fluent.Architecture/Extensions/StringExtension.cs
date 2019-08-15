@@ -10,27 +10,27 @@ namespace Fluent.Architecture.Extensions
             return Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(text.ToLowerInvariant());
         }
 
-        public static string GetGlobalizationOfResourceWithParameters(this string text, params string[] parameters)
-        {
-            return GetGlobalizationOfResource(text, text, parameters);
-        }
+        //public static string GetGlobalizationOfResourceWithParameters(this string text, params string[] parameters)
+        //{
+        //    return GetGlobalizationOfResource(text, text, parameters);
+        //}
 
-        public static string GetGlobalizationOfResource(this string text, string defaultMessage = "", params string[] parameters)
-        {
-            if (Setup.GlobalizationService == null)
-            {
-                if (string.IsNullOrWhiteSpace(defaultMessage))
-                {
-                    return text;
-                }
-                else
-                {
-                    return defaultMessage;
-                }
-            }
+        //public static string GetGlobalizationOfResource(this string text, string defaultMessage = "", params string[] parameters)
+        //{
+        //    if (Setup.GlobalizationService == null)
+        //    {
+        //        if (string.IsNullOrWhiteSpace(defaultMessage))
+        //        {
+        //            return text;
+        //        }
+        //        else
+        //        {
+        //            return defaultMessage;
+        //        }
+        //    }
 
-            return Setup.GlobalizationService.GetResource(text, defaultMessage, parameters);
-        }
+        //    return Setup.GlobalizationService.GetResource(text, defaultMessage, parameters);
+        //}
 
         public static string RemoveString(this string text, params string[] remove)
         {

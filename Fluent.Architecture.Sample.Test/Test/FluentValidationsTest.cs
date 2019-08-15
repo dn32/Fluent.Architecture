@@ -1,311 +1,316 @@
-﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
-//     TODOS OS DIREITOS RESERVADOS.
-// </copyright>
-// -----------------------------------------------------------------------
+﻿//// -----------------------------------------------------------------------
+//// <copyright company="Fluent System">
+////     Copyright © Fluent System. All rights reserved.
+////     TODOS OS DIREITOS RESERVADOS.
+//// </copyright>
+//// -----------------------------------------------------------------------
 
-using System;
-using System.Linq;
-using System.Runtime.InteropServices;
-using Fluent.Architecture.Exceptions.ValidationException;
-using Fluent.Architecture.Sample.Test.SupportElements;
-using Fluent.Architecture.Sample.Test.SupportElements.Controllers;
-using Fluent.Architecture.Sample.Test.SupportElements.Model;
-using Fluent.Architecture.Sample.Test.TestTools;
-using Fluent.Architecture.Test;
-using Fluent.Architecture.Test.Mock;
-using Fluent.Architecture.Validation;
-using NUnit.Framework;
+//using System;
+//using System.Linq;
+//using System.Runtime.InteropServices;
+//using Fluent.Architecture.Exceptions.ValidationException;
+//using Fluent.Architecture.Sample.Test.SupportElements;
+//using Fluent.Architecture.Sample.Test.SupportElements.Controllers;
+//using Fluent.Architecture.Sample.Test.SupportElements.Model;
+//using Fluent.Architecture.Sample.Test.TestTools;
+//using Fluent.Architecture.Test;
+//using Fluent.Architecture.Test.Mock;
+//using Fluent.Architecture.Validation;
+//using NUnit.Framework;
 
-namespace Fluent.Architecture.Sample.Test.Test
-{
-    //Todo - Validar todos os range com lista vazia
-    [TestFixture]
-    [ComVisible(true)]
-    internal class FluentValidationsTest : FluentInternalTest
-    {
-        [Test]
-        public void NullAllKeyNullTestFailUpdate()
-        {
-            var user = InternalTestUtil.GetNewUser();
-            user.PersonType = null;
-            var error = Assert.Throws<ContextFluentValidationException>(() =>
-            {
-                UpdateUser(user);
-            });
+//namespace Fluent.Architecture.Sample.Test.Test
+//{
+//    //Todo - Validar todos os range com lista vazia
+//    [TestFixture]
+//    [ComVisible(true)]
+//    internal class FluentValidationsTest : FluentInternalTest
+//    {
+//        [Test]
+//        public void NullAllKeyNullTestFailUpdate()
+//        {
+//            var user = InternalTestUtil.GetNewUser();
+//            user.PersonType = null;
+//            var error = Assert.Throws<ContextFluentValidationException>(() =>
+//            {
+//                UpdateUser(user);
+//            });
 
-            Assert.NotNull(error);
-            Assert.AreEqual(2, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<UiFieldRequiredFluentValidationException>(error.Inconsistencies.First());
-        }
+//            Assert.NotNull(error);
+//            Assert.AreEqual(2, error.Inconsistencies.Count);
+//            Assert.IsAssignableFrom<UiFieldRequiredFluentValidationException>(error.Inconsistencies.First());
+//        }
 
-        [Test]
-        public void NullAllKeyNullTestFailAdd()
-        {
-            var user = InternalTestUtil.GetNewUser();
-            user.PersonType = null;
-            var error = Assert.Throws<ContextFluentValidationException>(() =>
-            {
-                TestUtil.Execute(UserControllerInstance, (UserController controller) => controller.Add(user));
-            });
+//        [Test]
+//        public void NullAllKeyNullTestFailAdd()
+//        {
+//            var user = InternalTestUtil.GetNewUser();
+//            user.PersonType = null;
+//            var error = Assert.Throws<ContextFluentValidationException>(() =>
+//            {
+//                TestUtil.Execute<UserController, object>(UserControllerInstance, (UserController controller) => controller.Add(user));
+//            });
 
-            Assert.NotNull(error);
-            Assert.AreEqual(1, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<UiFieldRequiredFluentValidationException>(error.Inconsistencies.First());
-        }
+//            Assert.NotNull(error);
+//            Assert.AreEqual(1, error.Inconsistencies.Count);
+//            Assert.IsAssignableFrom<UiFieldRequiredFluentValidationException>(error.Inconsistencies.First());
+//        }
 
-        [Test]
-        public void NullOneKeyNullTestUpdateFail()
-        {
-            var student = InternalTestUtil.GetNewStudent();
-            student.Id = 0;
-            var error = Assert.Throws<ContextFluentValidationException>(() =>
-            {
-                TestUtil.Execute(StudentControllerInstance, (StudentController controller) => controller.Update(student));
-            });
+//        [Test]
+//        public void NullOneKeyNullTestUpdateFail()
+//        {
+//            var student = InternalTestUtil.GetNewStudent();
+//            student.Id = 0;
+//            var error = Assert.Throws<ContextFluentValidationException>(() =>
+//            {
+//                TestUtil.Execute<StudentController, object>(StudentControllerInstance, (StudentController controller) => controller.Update(student));
+//            });
 
-            Assert.NotNull(error);
-            Assert.AreEqual(1, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<DbFieldRequiredFluentValidationException>(error.Inconsistencies.First());
-            Assert.AreEqual($"The field {nameof(Student.Id)} must have a value for this operation.", error.Inconsistencies.First().Message);
-        }
+//            Assert.NotNull(error);
+//            Assert.AreEqual(1, error.Inconsistencies.Count);
+//            Assert.IsAssignableFrom<DbFieldRequiredFluentValidationException>(error.Inconsistencies.First());
+//            Assert.AreEqual($"The field {nameof(Student.Id)} must have a value for this operation.", error.Inconsistencies.First().Message);
+//        }
 
-        [Test]
-        public void EntityExistsInDatabaseAddFail()
-        {
-            var user = InternalTestUtil.GetNewUser();
-            user = AddUser(user);
-            Assert.NotNull(user);
+//        [Test]
+//        public void EntityExistsInDatabaseAddFail()
+//        {
+//            var user = InternalTestUtil.GetNewUser();
 
-            var error = Assert.Throws<ContextFluentValidationException>(() =>
-            {
-                user = AddUser(user);
-            });
+//            AddUser(user);
+//            user = FindUser(user);
 
-            Assert.NotNull(error);
-            Assert.AreEqual(1, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<EntityExistsFluentValidationException>(error.Inconsistencies.First());
-        }
+//            Assert.NotNull(user);
 
-        [Theory]
-        [TestCase(nameof(UserController.Update), "")]
-        [TestCase(nameof(UserController.Add), "")]
-        [TestCase(nameof(UserController.Update), " ")]
-        [TestCase(nameof(UserController.Add), " ")]
-        [TestCase(nameof(UserController.Update), null)]
-        [TestCase(nameof(UserController.Add), null)]
-        public void RequiredAddAndUpdateTestFail(string method, string name)
-        {
-            var user = InternalTestUtil.GetNewUser();
+//            var error = Assert.Throws<ContextFluentValidationException>(() =>
+//            {
+//                AddUser(user);
+//            });
 
-            if (method == nameof(UserController.Update))
-            {
-                user = AddUser(user);
-            }
+//            Assert.NotNull(error);
+//            Assert.AreEqual(1, error.Inconsistencies.Count);
+//            Assert.IsAssignableFrom<EntityExistsFluentValidationException>(error.Inconsistencies.First());
+//        }
 
-            user.Name = name;
+//        [Theory]
+//        [TestCase(nameof(UserController.Update), "")]
+//        [TestCase(nameof(UserController.Add), "")]
+//        [TestCase(nameof(UserController.Update), " ")]
+//        [TestCase(nameof(UserController.Add), " ")]
+//        [TestCase(nameof(UserController.Update), null)]
+//        [TestCase(nameof(UserController.Add), null)]
+//        public void RequiredAddAndUpdateTestFail(string method, string name)
+//        {
+//            var user = InternalTestUtil.GetNewUser();
 
-            var error = Assert.Throws<ContextFluentValidationException>(() =>
-            {
-                if (method == nameof(UserController.Update))
-                {
-                    UpdateUser(user);
-                }
-                else
-                {
-                    TestUtil.Execute(UserControllerInstance, (UserController controller) => controller.Add(user));
-                }
-            });
+//            if (method == nameof(UserController.Update))
+//            {
+//                AddUser(user);
+//                user = FindUser(user);
+//            }
 
-            Assert.NotNull(error);
-            Assert.AreEqual(2, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<UiFieldRequiredFluentValidationException>(error.Inconsistencies.First());
-            Assert.IsAssignableFrom<UiFieldRequiredFluentValidationException>(error.Inconsistencies.Last());
+//            user.Name = name;
 
-            if (method == nameof(UserController.Update))
-            {
-                RemoveUser(user);
-            }
-        }
+//            var error = Assert.Throws<ContextFluentValidationException>(() =>
+//            {
+//                if (method == nameof(UserController.Update))
+//                {
+//                    UpdateUser(user);
+//                }
+//                else
+//                {
+//                    TestUtil.Execute<UserController, object>(UserControllerInstance, (UserController controller) => controller.Add(user));
+//                }
+//            });
 
-        [Test]
-        public void UpdateNotFoundFail()
-        {
-            var user = new User
-            {
-                Email = $"test{Guid.NewGuid()}@mail.com",
-                UserName = $"test{Guid.NewGuid()}@mail.com",
-                PersonType = EnumPersonType.User,
-                Name = "name name",
-                Id = new Random().Next(1, int.MaxValue)
-            };
+//            Assert.NotNull(error);
+//            Assert.AreEqual(2, error.Inconsistencies.Count);
+//            Assert.IsAssignableFrom<UiFieldRequiredFluentValidationException>(error.Inconsistencies.First());
+//            Assert.IsAssignableFrom<UiFieldRequiredFluentValidationException>(error.Inconsistencies.Last());
 
-            var error = Assert.Throws<ContextFluentValidationException>(() =>
-            {
-                UpdateUser(user);
-            });
+//            if (method == nameof(UserController.Update))
+//            {
+//                RemoveUser(user);
+//            }
+//        }
 
-            Assert.NotNull(error);
-            Assert.AreEqual(1, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<EntityNotFoundFluentValidationException>(error.Inconsistencies.First());
-            Assert.True(error.ValidationError);
-        }
+//        [Test]
+//        public void UpdateNotFoundFail()
+//        {
+//            var user = new User
+//            {
+//                Email = $"test{Guid.NewGuid()}@mail.com",
+//                UserName = $"test{Guid.NewGuid()}@mail.com",
+//                PersonType = EnumPersonType.User,
+//                Name = "name name",
+//                Id = new Random().Next(1, int.MaxValue)
+//            };
 
-        [Test]
-        public void RemoveNotFoundFail()
-        {
-            var user = new User
-            {
-                Name = $"test{Guid.NewGuid()}@mail.com",
-                PersonType = EnumPersonType.User,
-                Id = new Random().Next(1, int.MaxValue)
-            };
+//            var error = Assert.Throws<ContextFluentValidationException>(() =>
+//            {
+//                UpdateUser(user);
+//            });
 
-            var error = Assert.Throws<ContextFluentValidationException>(() =>
-            {
-                RemoveUser(user);
-            });
+//            Assert.NotNull(error);
+//            Assert.AreEqual(1, error.Inconsistencies.Count);
+//            Assert.IsAssignableFrom<EntityNotFoundFluentValidationException>(error.Inconsistencies.First());
+//            Assert.True(error.ValidationError);
+//        }
 
-            Assert.NotNull(error);
-            Assert.AreEqual(1, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<EntityNotFoundFluentValidationException>(error.Inconsistencies.Last());
-            Assert.True(error.ValidationError);
-        }
+//        [Test]
+//        public void RemoveNotFoundFail()
+//        {
+//            var user = new User
+//            {
+//                Name = $"test{Guid.NewGuid()}@mail.com",
+//                PersonType = EnumPersonType.User,
+//                Id = new Random().Next(1, int.MaxValue)
+//            };
 
-        [Test]
-        public void UpdateAndUpdateNotKeyValueFail()
-        {
-            var user = new User
-            {
-                Name = $"test{Guid.NewGuid()}@mail.com",
-                PersonType = EnumPersonType.User,
-            };
+//            var error = Assert.Throws<ContextFluentValidationException>(() =>
+//            {
+//                RemoveUser(user);
+//            });
 
-            var error = Assert.Throws<ContextFluentValidationException>(() =>
-            {
-                UpdateUser(user);
-            });
+//            Assert.NotNull(error);
+//            Assert.AreEqual(1, error.Inconsistencies.Count);
+//            Assert.IsAssignableFrom<EntityNotFoundFluentValidationException>(error.Inconsistencies.Last());
+//            Assert.True(error.ValidationError);
+//        }
 
-            Assert.NotNull(error);
-            Assert.AreEqual(2, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<UiFieldRequiredFluentValidationException>(error.Inconsistencies.First());
-            Assert.IsAssignableFrom<DbFieldRequiredFluentValidationException>(error.Inconsistencies.Last());
+//        [Test]
+//        public void UpdateAndUpdateNotKeyValueFail()
+//        {
+//            var user = new User
+//            {
+//                Name = $"test{Guid.NewGuid()}@mail.com",
+//                PersonType = EnumPersonType.User,
+//            };
 
-            error.Inconsistencies.Clear();
-        }
+//            var error = Assert.Throws<ContextFluentValidationException>(() =>
+//            {
+//                UpdateUser(user);
+//            });
 
-        [Test]
-        public void UpdateAndRemoveNotKeyValueFail()
-        {
-            var user = new User
-            {
-                Name = $"test{Guid.NewGuid()}@mail.com",
-                PersonType = EnumPersonType.User,
-            };
+//            Assert.NotNull(error);
+//            Assert.AreEqual(2, error.Inconsistencies.Count);
+//            Assert.IsAssignableFrom<UiFieldRequiredFluentValidationException>(error.Inconsistencies.First());
+//            Assert.IsAssignableFrom<DbFieldRequiredFluentValidationException>(error.Inconsistencies.Last());
 
-            var error = Assert.Throws<ContextFluentValidationException>(() =>
-            {
-                RemoveUser(user);
-            });
+//            error.Inconsistencies.Clear();
+//        }
 
-            Assert.NotNull(error);
-            Assert.AreEqual(1, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<DbFieldRequiredFluentValidationException>(error.Inconsistencies.Last());
+//        [Test]
+//        public void UpdateAndRemoveNotKeyValueFail()
+//        {
+//            var user = new User
+//            {
+//                Name = $"test{Guid.NewGuid()}@mail.com",
+//                PersonType = EnumPersonType.User,
+//            };
 
-            error.Inconsistencies.Clear();
-        }
+//            var error = Assert.Throws<ContextFluentValidationException>(() =>
+//            {
+//                RemoveUser(user);
+//            });
 
-        [Test]
-        public void AddUpdateAndRemoveSuccess()
-        {
-            var user = InternalTestUtil.GetNewUser();
+//            Assert.NotNull(error);
+//            Assert.AreEqual(2, error.Inconsistencies.Count);
+//            Assert.IsAssignableFrom<DbFieldRequiredFluentValidationException>(error.Inconsistencies.First());
+//            Assert.IsAssignableFrom<EntityNotFoundFluentValidationException>(error.Inconsistencies.Last());
 
-            // Add
-            AddUser(user);
-            user = FindUser(user);
-            Assert.NotNull(user);
+//            error.Inconsistencies.Clear();
+//        }
 
-            // Update
-            user.Name = "New name";
-            UpdateUser(user);
-            user = FindUser(user);
-            Assert.NotNull(user);
-            Assert.AreEqual("New name", user.Name);
+//        [Test]
+//        public void AddUpdateAndRemoveSuccess()
+//        {
+//            var user = InternalTestUtil.GetNewUser();
 
-            // Remove
-            RemoveUser(user);
-            user = FindUser(user);
-            Assert.Null(user);
-        }
+//            // Add
+//            AddUser(user);
+//            user = FindUser(user);
+//            Assert.NotNull(user);
 
-        [Test]
-        public void FullNameAddValidationFail()
-        {
-            var user = InternalTestUtil.GetNewUser();
-            user.Name = "Maria";
+//            // Update
+//            user.Name = "New name";
+//            UpdateUser(user);
+//            user = FindUser(user);
+//            Assert.NotNull(user);
+//            Assert.AreEqual("New name", user.Name);
 
-            var error = Assert.Throws<ContextFluentValidationException>(() =>
-            {
-                AddUser(user);
-            });
+//            // Remove
+//            RemoveUser(user);
+//            user = FindUser(user);
+//            Assert.Null(user);
+//        }
 
-            Assert.NotNull(error);
-            Assert.AreEqual(1, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<UiFieldRequiredFluentValidationException>(error.Inconsistencies.First());
-            var validationError = (FluentPropertyValidationException)error.Inconsistencies.First();
-            Assert.AreEqual("Full Name", validationError.Values.First());
-        }
+//        [Test]
+//        public void FullNameAddValidationFail()
+//        {
+//            var user = InternalTestUtil.GetNewUser();
+//            user.Name = "Maria";
 
-        [Test]
-        public void FullNameUpdateValidationFail()
-        {
-            var user = InternalTestUtil.GetNewUser();
-            user.Name = "Maria Santos";
+//            var error = Assert.Throws<ContextFluentValidationException>(() =>
+//            {
+//                AddUser(user);
+//            });
 
-            AddUser(user);
-            user = FindUser(user);
-            Assert.NotNull(user);
+//            Assert.NotNull(error);
+//            Assert.AreEqual(1, error.Inconsistencies.Count);
+//            Assert.IsAssignableFrom<UiFieldRequiredFluentValidationException>(error.Inconsistencies.First());
+//            var validationError = (FluentPropertyValidationException)error.Inconsistencies.First();
+//            Assert.AreEqual("Full Name", validationError.Values.First());
+//        }
 
-            // Update
-            user.Name = "Maria";
+//        [Test]
+//        public void FullNameUpdateValidationFail()
+//        {
+//            var user = InternalTestUtil.GetNewUser();
+//            user.Name = "Maria Santos";
 
-            var error = Assert.Throws<ContextFluentValidationException>(() =>
-            {
-                UpdateUser(user);
-            });
+//            AddUser(user);
+//            user = FindUser(user);
+//            Assert.NotNull(user);
 
-            Assert.NotNull(error);
-            Assert.AreEqual(1, error.Inconsistencies.Count);
-            Assert.IsAssignableFrom<UiFieldRequiredFluentValidationException>(error.Inconsistencies.First());
-            var validationError = (FluentPropertyValidationException)error.Inconsistencies.First();
-            Assert.AreEqual("Full Name", validationError.Values.First());
+//            // Update
+//            user.Name = "Maria";
 
-            // Remove
-            RemoveUser(user);
-        }
+//            var error = Assert.Throws<ContextFluentValidationException>(() =>
+//            {
+//                UpdateUser(user);
+//            });
 
-        [Test]
-        public void FullNameAddAndUpdateValidationSuccess()
-        {
-            var user = InternalTestUtil.GetNewUser();
-            user.Name = "Maria Santos";
+//            Assert.NotNull(error);
+//            Assert.AreEqual(1, error.Inconsistencies.Count);
+//            Assert.IsAssignableFrom<UiFieldRequiredFluentValidationException>(error.Inconsistencies.First());
+//            var validationError = (FluentPropertyValidationException)error.Inconsistencies.First();
+//            Assert.AreEqual("Full Name", validationError.Values.First());
 
-            // Add
-            AddUser(user);
-            user = FindUser(user);
-            Assert.NotNull(user);
+//            // Remove
+//            RemoveUser(user);
+//        }
 
-            // Update
-            user.Name = "New name";
-            UpdateUser(user);
-            user = FindUser(user);
-            Assert.NotNull(user);
-            Assert.AreEqual("New name", user.Name);
+//        [Test]
+//        public void FullNameAddAndUpdateValidationSuccess()
+//        {
+//            var user = InternalTestUtil.GetNewUser();
+//            user.Name = "Maria Santos";
 
-            // Remove
-            RemoveUser(user);
-        }
-    }
-}
+//            // Add
+//            AddUser(user);
+//            user = FindUser(user);
+//            Assert.NotNull(user);
+
+//            // Update
+//            user.Name = "New name";
+//            UpdateUser(user);
+//            user = FindUser(user);
+//            Assert.NotNull(user);
+//            Assert.AreEqual("New name", user.Name);
+
+//            // Remove
+//            RemoveUser(user);
+//        }
+//    }
+//}
 

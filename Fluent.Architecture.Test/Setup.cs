@@ -29,6 +29,7 @@ namespace Fluent.Architecture.Test
               .UseEntityFramework()
               .AddConnectionString(string.IsNullOrWhiteSpace(connectionString) ? $"Data Source=unit-tests-{Ticks}.db;" : connectionString, createDatabaseIfNotExists: true, typeof(EfContextSqLite))
               .SetUserSessionRequestType(typeof(UserSessionRequestCustom))
+              .SetServiceProvider(null)
               .Build()
               .Run();
         }

@@ -1,91 +1,73 @@
-﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
-//     TODOS OS DIREITOS RESERVADOS.
-// </copyright>
-// -----------------------------------------------------------------------
+﻿//// -----------------------------------------------------------------------
+//// <copyright company="Fluent System">
+////     Copyright © Fluent System. All rights reserved.
+////     TODOS OS DIREITOS RESERVADOS.
+//// </copyright>
+//// -----------------------------------------------------------------------
 
-using System.Runtime.InteropServices;
-using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Sample.Test.SupportElements;
-using Fluent.Architecture.Sample.Test.SupportElements.Controllers;
-using Fluent.Architecture.Sample.Test.SupportElements.Model;
-using Fluent.Architecture.Sample.Test.TestTools;
-using Fluent.Architecture.Test;
-using NUnit.Framework;
+//using System.Runtime.InteropServices;
+//using Fluent.Architecture.Extensions;
+//using Fluent.Architecture.Sample.Test.SupportElements;
+//using Fluent.Architecture.Sample.Test.SupportElements.Controllers;
+//using Fluent.Architecture.Sample.Test.SupportElements.Model;
+//using Fluent.Architecture.Sample.Test.TestTools;
+//using Fluent.Architecture.Test;
+//using NUnit.Framework;
 
-namespace Fluent.Architecture.Sample.Test.Test
-{
-    [TestFixture]
-    [ComVisible(true)]
-    internal class UserTest : FluentInternalTest
-    {
-        [Test]
-        public void GetUserAndStudentByEmailTest()
-        {
-            var email = $"test{TestUtil.NextRandom()}@mail.com";
-            var user = InternalTestUtil.GetNewUser();
-            var student = InternalTestUtil.GetNewStudent();
-            student.Email = email;
-            user.Email = email;
+//namespace Fluent.Architecture.Sample.Test.Test
+//{
+//    [TestFixture]
+//    [ComVisible(true)]
+//    internal class UserTest : FluentInternalTest
+//    {
+//        //[Test]
+//        //public void GetUserAndStudentByEmailTest()
+//        //{
+//        //    var email = $"test{TestUtil.NextRandom()}@mail.com";
+//        //    var user = InternalTestUtil.GetNewUser();
+//        //    var student = InternalTestUtil.GetNewStudent();
+//        //    student.Email = email;
+//        //    user.Email = email;
 
-            user = AddUser(user);
-            student = AddStudent(student);
+//        //    AddUser(user);
+//        //    AddStudent(student);
 
-            var userStudent = TestUtil.ExecuteAndResult<UserStudent, UserController>(UserControllerInstance,(UserController controller) => controller.GetUserByEmail(email));
+//        //    user = FindUser(user);
+//        //    student = FindStudent(student);
 
-            Assert.NotNull(userStudent);
-            FluentAssert.Equal(user, userStudent.User);
-            FluentAssert.Equal(student, userStudent.Student);
+//        //    var userStudent = TestUtil.Execute<UserController, UserStudent>(UserControllerInstance, (UserController controller) => controller.GetUserByEmail(email));
 
-            RemoveUser(user);
-            RemoveStudent(student);
-        }
+//        //    Assert.NotNull(userStudent);
+//        //    FluentAssert.Equal(user, userStudent.User);
+//        //    FluentAssert.Equal(student, userStudent.Student);
 
-        [Test]
-        public void GetUserAndStudentByEmailJoinTest()
-        {
-            var email = $"test{TestUtil.NextRandom()}@mail.com";
-            var user = InternalTestUtil.GetNewUser();
-            var student = InternalTestUtil.GetNewStudent();
-            student.Email = email;
-            user.Email = email;
+//        //    RemoveUser(user);
+//        //    RemoveStudent(student);
+//        //}
 
-            user = AddUser(user);
-            student = AddStudent(student);
+//        [Test]
+//        public void GetUserAndStudentByEmailJoinTest()
+//        {
+//            var email = $"test{TestUtil.NextRandom()}@mail.com";
+//            var user = InternalTestUtil.GetNewUser();
+//            var student = InternalTestUtil.GetNewStudent();
+//            student.Email = email;
+//            user.Email = email;
 
-            var userStudent = TestUtil.ExecuteAndResult<UserStudent, UserController>(UserControllerInstance,(UserController controller) => controller.SpecOneUserAndStudent(email));
+//            AddUser(user);
+//            AddStudent(student);
 
-            Assert.NotNull(userStudent);
-            FluentAssert.Equal(user, userStudent.User);
-            FluentAssert.Equal(student, userStudent.Student);
+//            user = FindUser(user);
+//            student = FindStudent(student);
 
-            RemoveUser(user);
-            RemoveStudent(student);
-        }
+//            var userStudent = TestUtil.Execute<UserController, UserStudent>(UserControllerInstance,(UserController controller) => controller.SpecOneUserAndStudent(email));
 
-        [Theory]
-        [TestCase(true)]
-        [TestCase(false)]
-        public void PropagationInCustomRepositorySuccessTest(bool found)
-        {
-            var user = InternalTestUtil.GetNewUser();
-            user = AddUser(user);
-            var userId = found ? user.Id : user.Id + TestUtil.NextRandom();
-           
-            var foundUser = TestUtil.ExecuteAndResult<User, UserController>(UserControllerInstance,(UserController controller) => controller.FindById(userId));
+//            Assert.NotNull(userStudent);
+//            FluentAssert.Equal(user, userStudent.User);
+//            FluentAssert.Equal(student, userStudent.Student);
 
-            if (found)
-            {
-                Assert.NotNull(foundUser);
-                Assert.AreEqual(user.GetAllDataOfObject(), foundUser.GetAllDataOfObject());
-            }
-            else
-            {
-                Assert.Null(foundUser);
-            }
-
-            RemoveUser(user);
-        }
-    }
-}
+//            RemoveUser(user);
+//            RemoveStudent(student);
+//        }
+//    }
+//}

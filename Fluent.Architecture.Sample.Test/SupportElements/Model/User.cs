@@ -16,21 +16,26 @@ using Newtonsoft.Json;
 namespace Fluent.Architecture.Sample.Test.SupportElements.Model
 {
     [Table("users"), DbType(FluentDbType.SQLITE)]
-    public class User : FluentIdEntity
+    public class User : FluentEntity
     {
+        [Key]
+        public int Id { get; set; }
+
         [Required]
         public EnumPersonType? PersonType { get; set; }
 
         [Required, JsonProperty("full_name"), Searchable]
         public string Name { get; set; }
 
-        [FluentUniqueKey]
+        [FluentUniqueKey, Searchable]
         public string UserName { get; set; }
 
-        [FluentUniqueKey]
+        [FluentUniqueKey, Searchable]
         public string Email { get; set; }
 
         public string Tel { get; set; }
+
+        public long ZipCode { get; set; }
 
         public string Password { get; set; }
     }

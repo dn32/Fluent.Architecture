@@ -6,12 +6,12 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-
 using System;
 using System.Runtime.InteropServices;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Test.Mock;
 using Fluent.Architecture.Test.Mock.ControllerMock;
+using Newtonsoft.Json;
 
 namespace Fluent.Architecture.Test
 {
@@ -30,20 +30,12 @@ namespace Fluent.Architecture.Test
             return Random.Next(1, int.MaxValue);
         }
 
-        public static TR ExecuteAndResult<TR, TC>(TC controller, Func<TC, object> actionMethod) where TC : BaseController
+        public static TR Execute<TC, TR>(TC controller, Func<TC, object> actionMethod) where TC : BaseController
         {
             controller.OnActionExecuting(MockActionExecutingContextFactory.Create(controller));
-            var ret = actionMethod(controller);
+            var ret = actionMethod(controller) as DefaultResult;
             controller.OnActionExecuted(MockActionExecutedContextFactory.Create(controller));
-            return (TR)ret;
-        }
-
-        public static object Execute<TC>(TC controller, Func<TC, object> actionMethod) where TC : BaseController
-        {
-            controller.OnActionExecuting(MockActionExecutingContextFactory.Create(controller));
-            var ret = actionMethod(controller);
-            controller.OnActionExecuted(MockActionExecutedContextFactory.Create(controller));
-            return ret;
+            return JsonConvert.DeserializeObject<TR>(JsonConvert.SerializeObject(ret.Data));
         }
     }
 }

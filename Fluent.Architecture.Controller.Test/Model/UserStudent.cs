@@ -5,14 +5,11 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Fluent.Architecture.Entities
+namespace Fluent.Architecture.Controller.Test.Model
 {
-    public abstract class FluentIdEntity : FluentEntity
+    public class UserStudent
     {
-        [Key, Column(Order = 0)]
-        public int Id { get; set; }
+        public User User { get; set; }
+        public Student Student { get; set; }
     }
 }

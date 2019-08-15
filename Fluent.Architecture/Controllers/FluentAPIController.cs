@@ -1,4 +1,5 @@
 ﻿using Fluent.Architecture.Core.Filters;
+using Fluent.Architecture.Core.Specifications;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Specifications;
 using Microsoft.AspNetCore.Mvc;
@@ -11,86 +12,104 @@ namespace Fluent.Architecture.Controllers
     {
         // GET api/user/list
         [HttpGet]
-        public object List()
+        public virtual DefaultPaginationResult List()
         {
-            return new { list = Service.List(CreateSpec<AllSpec<T>>()), pagination = LastRequestPagination };
+            return List(null);
         }
 
-        // GET api/user/Filtered list
         [HttpPost]
-        public object FilteredList(Filter[] filters)
+        public virtual DefaultPaginationResult List([FromBody] Filter[] filters)
         {
-            return new { list = Service.FilteredList(filters), pagination = LastRequestPagination };
+            FluentSpecification<T> spec;
+            if (filters != null && filters.Length > 0)
+            {
+                spec = CreateSpec<FilterSpec<T>>().SetParameter(filters);
+            }
+            else
+            {
+                spec = CreateSpec<AllSpec<T>>();
+            }
+
+            var list = Service.List(spec);
+
+            return Result(list, LastRequestPagination);
         }
 
         // GET api/user/Find?id=5
         [HttpGet]
-        public T Find([FromQuery]T value)
+        public virtual DefaultResult Find([FromQuery]T value)
         {
-            return Service.Find(value, false);
+            return Result(Service.Find(value, false));
         }
 
         // GET api/user/FindByTerm?term=myterm
         [HttpGet]
-        public object FindByTerm(string term)
+        public virtual DefaultPaginationTermResult FindByTerm(string term)
         {
-            return new { term, list = Service.FindByTerm(term), pagination = LastRequestPagination };
+            var spec = CreateSpec<TermSpec<T>>().SetParameter(term);
+            var list = Service.List(spec);
+            return Result(list, LastRequestPagination, term);
         }
 
         // GET api/user/Count
         [HttpGet]
-        public int Count()
+        public virtual DefaultResult Count()
         {
-            return Service.Count();
+            return Result(Service.Count());
         }
 
         // GET api/user/Exists/?id=5
         [HttpGet]
-        public bool Exists(T value)
+        public virtual DefaultResult Exists(T value)
         {
-            return Service.Exists(value);
+            return Result(Service.Exists(value));
         }
 
         // POST api/user/Add/
         [HttpPost]
-        public T Add([FromBody] T value)
+        public virtual DefaultResult Add([FromBody] T value)
         {
-            return Service.Add(value);
+            return Result(Service.Add(value));
         }
 
         // POST api/user/AddRange
         [HttpPost]
-        public void AddRange([FromBody] T[] values)
+        public virtual DefaultResult AddRange([FromBody] T[] values)
         {
             Service.AddRange(values);
+            return Result(true);
         }
 
         // PUT api/user/Update
         [HttpPut]
-        public T Update([FromBody] T value)
+        public virtual DefaultResult Update([FromBody] T value)
         {
-            return Service.Update(value);
+            Service.Update(value);
+            return Result(true);
         }
 
         // PUT api/user/UpdateRange
         [HttpPut]
-        public void UpdateRange([FromBody] T[] values)
+        public virtual DefaultResult UpdateRange([FromBody] T[] values)
         {
             Service.UpdateRange(values);
+            return Result(true);
         }
 
         // DELETE api/user/Remove
         [HttpDelete]
-        public void Remove([FromBody] T value)
+        public virtual DefaultResult Remove([FromBody] T value)
         {
             Service.Remove(value);
+            return Result(true);
         }
 
         // DELETE api/user/RemoveRange
         [HttpDelete]
-        public void RemoveRange([FromBody] T[] values)
+        public virtual DefaultResult RemoveRange([FromBody] T[] values)
         {
             Service.RemoveRange(values);
+            return Result(true);
         }
     }
 }

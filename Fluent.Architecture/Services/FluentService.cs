@@ -105,11 +105,6 @@ namespace Fluent.Architecture.Services
             return Repository.List(spec, pagination);
         }
 
-        internal List<T> FilteredList(Filter[] filters, FluentPagination pagination = null)
-        {
-            Validation.FilteredList(filters);
-            return Repository.FilteredList(filters, pagination);
-        }
         /// <summary>
         /// Executa uma solicitação baseada em uma especificação e retorna um resultado ou nulo quando a consulta não é satisfeita.
         /// </summary>
@@ -140,13 +135,6 @@ namespace Fluent.Architecture.Services
         public virtual T FirstOrDefault(IFluentSpecification spec)
         {
             return Repository.FirstOrDefault(spec);
-        }
-
-        //Todo2 Doc
-
-        public virtual T FirstOrDefault()
-        {
-            return this.Repository.FirstOrDefault();
         }
 
         /// <summary>
@@ -248,12 +236,6 @@ namespace Fluent.Architecture.Services
         {
             this.Validation.Find(entity, checkId);
             return this.Repository.Find(entity);
-        }
-
-        public virtual List<T> FindByTerm(string term, FluentPagination pagination = null)
-        {
-            this.Validation.FindByTerm(term);
-            return this.Repository.FindByTerm(term, pagination);
         }
 
         /// <summary>

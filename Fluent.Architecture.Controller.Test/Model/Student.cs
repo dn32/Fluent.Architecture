@@ -5,19 +5,22 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.EntityFramework;
 
-namespace Fluent.Architecture.Sample.Test.SupportElements.Model
+namespace Fluent.Architecture.Controller.Test.Model
 {
-    /// <inheritdoc />
     [DbType(FluentDbType.SQLITE)]
-    public class Course : FluentGlobalizedEntity
+    public class Student : FluentEntity
     {
-        [FluentGlobalization]
-        public string Title { get; set; }
+        public int Id { get; set; }
 
-        [FluentGlobalization]
-        public string Description { get; set; }
+        public string Name { get; set; }
+
+        [FluentUniqueKey]
+        public string Document { get; set; }
+
+        public string Email { get; set; }
     }
 }

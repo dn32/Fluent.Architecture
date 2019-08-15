@@ -34,7 +34,6 @@ namespace Fluent.Architecture.Sample.Test.SupportElements
             }
         }
 
-
         public void FindById(int id)
         {
             if (id == 0)

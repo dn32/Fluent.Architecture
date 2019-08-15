@@ -15,23 +15,21 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Services
     {
         protected virtual FluentService<Student> StudentService => null;
 
-        protected virtual FluentService<Student> StudentService2 => null;
+        //public UserStudent GetUserByEmail(string email)
+        //{
+        //    var userSpec = CreateSpec<UserByEmailSpec>().DefineParams(email);
+        //    var studentSpec = CreateSpec<StudentByEmailSpec>().DefineParams(email);
+        //    //var studentSpec = new StudentByEmailSpec(this, email);
 
-        public UserStudent GetUserByEmail(string email)
-        {
-            var userSpec = CreateSpec<UserByEmailSpec>().DefineParams(email);
-            var studentSpec = CreateSpec<StudentByEmailSpec>().DefineParams(email);
-            //var studentSpec = new StudentByEmailSpec(this, email);
+        //    var user = this.FirstOrDefault(userSpec);
+        //    var student = this.StudentService.FirstOrDefault(studentSpec);
+        //    var student2 = this.StudentService2.FirstOrDefault(studentSpec); // Para o teste de reutilização de serviço na injeção
 
-            var user = this.FirstOrDefault(userSpec);
-            var student = this.StudentService.FirstOrDefault(studentSpec);
-            var student2 = this.StudentService2.FirstOrDefault(studentSpec); // Para o teste de reutilização de serviço na injeção
-
-            return new UserStudent
-            {
-                User = user,
-                Student = student
-            };
-        }
+        //    return new UserStudent
+        //    {
+        //        User = user,
+        //        Student = student
+        //    };
+        //}
     }
 }

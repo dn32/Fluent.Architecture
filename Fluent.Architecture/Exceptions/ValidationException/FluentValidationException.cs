@@ -61,18 +61,18 @@ namespace Fluent.Architecture.Exceptions.ValidationException
 
         private void Inicialize(string message)
         {
-            if (Setup.GlobalizationService != null)
-            {
-                if (GlobalizeValues)
-                {
-                    for (var i = 0; i < Values.Length; i++)
-                    {
-                        Values[i] = Setup.GlobalizationService.GetResource("campo_" + Values[i], Values[i]);
-                    }
-                }
+            //if (Setup.GlobalizationService != null)
+            //{
+            //    if (GlobalizeValues)
+            //    {
+            //        for (var i = 0; i < Values.Length; i++)
+            //        {
+            //            Values[i] = Setup.GlobalizationService.GetResource("campo_" + Values[i], Values[i]);
+            //        }
+            //    }
 
-                GlobalizedMessage = Setup.GlobalizationService.GetResource(GlobalizationKey, message, Values);
-            }
+            //    GlobalizedMessage = Setup.GlobalizationService.GetResource(GlobalizationKey, message, Values);
+            //}
         }
     }
 }

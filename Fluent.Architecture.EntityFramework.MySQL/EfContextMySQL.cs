@@ -16,7 +16,7 @@ namespace Fluent.Architecture.EntityFramework.MySQL
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySql(ConnectionString);
+            optionsBuilder.UseMySQL(ConnectionString);
             base.OnConfiguring(optionsBuilder);
         }
     }

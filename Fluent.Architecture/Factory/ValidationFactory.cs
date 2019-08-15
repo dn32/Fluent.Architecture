@@ -40,11 +40,6 @@ namespace Fluent.Architecture.Factory
 
             if (entityType != null)
             {
-                if (entityType.IsSubclassOf(typeof(FluentGlobalizedEntity)))
-                {
-                    localType = typeof(FluentGlobalizedValidation<>).MakeGenericType(entityType);
-                }
-
                 if (Setup.Validations.TryGetValue(entityType, out var validationTypeOut))
                 {
                     localType = validationTypeOut;
