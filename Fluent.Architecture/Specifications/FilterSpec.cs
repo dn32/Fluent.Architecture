@@ -47,11 +47,11 @@ namespace Fluent.Architecture.Core.Specifications
                     case EnumFilterType.CONTAINS:
                         expression = ExpressionUtil.Contains<T>(property.Name, filter.Value, property.PropertyType);
                         break;
-                    case EnumFilterType.GREATER_THAN:
-                        expression = ExpressionUtil.SmallerThan<T>(property.Name, filter.Value, filter.Including);
+                    case EnumFilterType.GREATER:
+                        expression = ExpressionUtil.Greate<T>(property.Name, filter.Value, filter.Including, property.PropertyType);
                         break;
-                    case EnumFilterType.SMALLER_THAN:
-                        expression = ExpressionUtil.SmallerThan<T>(property.Name, filter.Value, filter.Including);
+                    case EnumFilterType.SMALLER:
+                        expression = ExpressionUtil.Smaller<T>(property.Name, filter.Value, filter.Including, property.PropertyType);
                         break;
                     case EnumFilterType.START_WITH:
                         expression = ExpressionUtil.StartWith<T>(property.Name, filter.Value, property.PropertyType);
@@ -59,14 +59,14 @@ namespace Fluent.Architecture.Core.Specifications
                     case EnumFilterType.ENDS_WITH:
                         expression = ExpressionUtil.EndsWith<T>(property.Name, filter.Value, property.PropertyType);
                         break;
-                    case EnumFilterType.EQUAL_TO:
+                    case EnumFilterType.EQUAL:
                         expression = ExpressionUtil.Equals<T>(property.Name, filter.Value, property.PropertyType);
                         break;
                     case EnumFilterType.TRUE:
-                        expression = ExpressionUtil.Equals<T>(property.Name, "true", property.PropertyType);
+                        expression = ExpressionUtil.IsTrue<T>(property.Name, property.PropertyType);
                         break;
                     case EnumFilterType.FALSE:
-                        expression = ExpressionUtil.Equals<T>(property.Name, "false", property.PropertyType);
+                        expression = ExpressionUtil.IsFalse<T>(property.Name, property.PropertyType);
                         break;
                     case EnumFilterType.NULL:
                         expression = ExpressionUtil.IsNull<T>(property.Name);

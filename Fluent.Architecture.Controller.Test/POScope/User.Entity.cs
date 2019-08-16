@@ -5,16 +5,16 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.EntityFramework;
-using Fluent.Architecture.Sample.Test.SupportElements;
 using Newtonsoft.Json;
 
-namespace Fluent.Architecture.Controller.Test.Model
+namespace Fluent.Architecture.Controller.Test.POScope
 {
     [Table("users"), DbType(FluentDbType.SQLITE)]
     public class User : FluentEntity
@@ -31,13 +31,21 @@ namespace Fluent.Architecture.Controller.Test.Model
         [FluentUniqueKey, Searchable]
         public string UserName { get; set; }
 
-        [FluentUniqueKey, Searchable]
+        [FluentUniqueKey]
         public string Email { get; set; }
+
+        public int Category { get; set; }
 
         public string Tel { get; set; }
 
         public long ZipCode { get; set; }
 
+        public int Age { get; set; }
+
+        public bool HasChildren { get; set; }
+
         public string Password { get; set; }
+
+        public DateTime? DateOfBirth { get; set; }
     }
 }

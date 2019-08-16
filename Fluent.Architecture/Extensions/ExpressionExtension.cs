@@ -1,6 +1,7 @@
 ﻿using Fluent.Architecture.Entities;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -206,11 +207,34 @@ namespace Fluent.Architecture.Extensions
         {
             var parameter = Expression.Parameter(typeof(T), "x");
             var property = Expression.Property(parameter, propertyName);
-            MethodCallExpression containsCall;
+            Expression containsCall;
 
+            if (type == typeof(bool) || type == typeof(bool?))
+            {
+                if (bool.TryParse(value, out bool boolValue))
+                {
+                    return IsTrueOrFalse<T>(propertyName, boolValue, type);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"The value '{value}' for the filter is not boolean as the type is. Preferably when using EnumFilterType.FALSE or EnumFilterType.FALSE for boolean operations.");
+                }
+            }
             if (type == typeof(string))
             {
                 containsCall = Expression.Call(property, "Equals", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
+            }
+            else if (type.IsNullableEnum())
+            {
+                var localType = type.GetTypeByEnumType();
+                if (Enum.TryParse(localType, value, out object enumObject))
+                {
+                    containsCall = Expression.Equal(property, Expression.Constant(enumObject, type));
+                }
+                else
+                {
+                    throw new InvalidOperationException($"The value '{value}' for the filter is not valid enum for type {type.Name}");
+                }
             }
             else
             {
@@ -221,14 +245,99 @@ namespace Fluent.Architecture.Extensions
             return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
         }
 
-        public static Expression<Func<T, bool>> SmallerThan<T>(string propertyName, object value, bool including)
+        public static Expression<Func<T, bool>> IsTrue<T>(string propertyName, Type type)
         {
-            return ToExpression<T>("and", propertyName, including ? "<=" : "<", value);
+            return IsTrueOrFalse<T>(propertyName, true, type);
         }
 
-        public static Expression<Func<T, bool>> GreaterThan<T>(string propertyName, object value, bool including)
+        public static Expression<Func<T, bool>> IsFalse<T>(string propertyName, Type type)
         {
-            return ToExpression<T>("and", propertyName, including ? ">=" : ">", value);
+            return IsTrueOrFalse<T>(propertyName, false, type);
+        }
+
+        private static Expression<Func<T, bool>> IsTrueOrFalse<T>(string propertyName, bool expectedvalue, Type type)
+        {
+            var parameter = Expression.Parameter(typeof(T), "x");
+            var property = Expression.Property(parameter, propertyName);
+            if (type != typeof(bool) && type != typeof(bool?)) { throw new InvalidOperationException($"The property {propertyName} is not boolean"); }
+            var containsCall = Expression.Equal(property, Expression.Constant(expectedvalue, type));
+            return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
+        }
+
+        public static Expression<Func<T, bool>> Smaller<T>(string propertyName, string value, bool including, Type type)
+        {
+            return SmallerOrGreater<T>(propertyName, value, including, type, false);
+        }
+
+        public static Expression<Func<T, bool>> Greate<T>(string propertyName, string value, bool including, Type type)
+        {
+            return SmallerOrGreater<T>(propertyName, value, including, type, true);
+        }
+
+        private static Expression<Func<T, bool>> SmallerOrGreater<T>(
+            string propertyName,
+            string value,
+            bool including,
+            Type type,
+            bool greater
+            )
+        {
+            var parameter = Expression.Parameter(typeof(T), "x");
+            var property = Expression.Property(parameter, propertyName);
+            object valueObj = null;
+            BinaryExpression containsCall = null;
+
+            if (type == typeof(DateTime) || type == typeof(DateTime?))
+            {
+                if (DateTime.TryParseExact(value, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime outValue))
+                {
+                    valueObj = outValue;
+                }
+                else
+                {
+                    throw new InvalidOperationException($"The value '{value}' for the filter is not valid DateTime as the type is");
+                }
+            }
+            else if (type.IsNumeric())
+            {
+                try
+                {
+                    valueObj = Convert.ChangeType(value, type, CultureInfo.InvariantCulture);
+                }
+                catch (Exception)
+                {
+                    throw new InvalidOperationException($"The value '{value}' for the filter is not valid number as the type is");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException($"Type {type.Name} in property {propertyName} does not support filter type GREATER/SMALLER");
+            }
+
+            if (greater)
+            {
+                if (including)
+                {
+                    containsCall = Expression.GreaterThanOrEqual(property, Expression.Constant(valueObj, type));
+                }
+                else
+                {
+                    containsCall = Expression.GreaterThan(property, Expression.Constant(valueObj, type));
+                }
+            }
+            else
+            {
+                if (including)
+                {
+                    containsCall = Expression.LessThanOrEqual(property, Expression.Constant(valueObj, type));
+                }
+                else
+                {
+                    containsCall = Expression.LessThan(property, Expression.Constant(valueObj, type));
+                }
+            }
+
+            return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
         }
 
         public static Expression<Func<T, bool>> IsNull<T>(string propertyName)

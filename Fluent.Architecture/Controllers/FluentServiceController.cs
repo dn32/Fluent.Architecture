@@ -16,6 +16,10 @@ using Fluent.Architecture.Util;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Storage;
+using Newtonsoft.Json;
+using Fluent.Architecture.Core.Util;
+using Microsoft.Extensions.Primitives;
 
 namespace Fluent.Architecture.Controllers
 {
@@ -35,36 +39,89 @@ namespace Fluent.Architecture.Controllers
 
         protected internal ClaimsPrincipal ServiceUser => Service.User;
 
-
         protected internal HttpContext ServiceHttpContext => Service.LocalHttpContext;
 
+       // private IDbContextTransaction Transaction { get; set; }
+
+        internal protected bool TransactionIsStarted { get; set; }
+
+        [NonAction]
+        protected object PropertySelector(object element)
+        {
+            Request.Headers.TryGetValue("propertyToIgnore", out StringValues propertyToIgnoreValues);
+            Request.Headers.TryGetValue("propertyToShow", out StringValues propertyToShowValues);
+            return JsonConvert.DeserializeObject(JsonConvert.SerializeObject(element,
+                         Formatting.Indented, new JsonSerializerSettings
+                         {
+                             ContractResolver = new PropertySelectorDynamicContractJsonResolver(propertyToIgnoreValues, propertyToShowValues)
+                         }));
+        }
+
+        [NonAction]
+        protected DefaultResult Result(object data)
+        {
+            CloseTransaction();
+            return new DefaultResult(PropertySelector(data));
+        }
+
+        [NonAction]
+        protected DefaultPaginationResult Result(object data, FluentPagination pagination)
+        {
+            CloseTransaction();
+            return new DefaultPaginationResult(PropertySelector(data), pagination);
+        }
+
+        [NonAction]
+        protected DefaultPaginationTermResult Result(object data, FluentPagination pagination, string term)
+        {
+            CloseTransaction();
+            return new DefaultPaginationTermResult(PropertySelector(data), pagination, term);
+        }
+
+        [NonAction]
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            Service = ServiceFactory.Create<TS>(HttpContext);
+            OpenTransaction();
             base.OnActionExecuting(context);
         }
 
+        [NonAction]
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            var session = Service.TransactionObjects.Session;
-
-            using (var transaction = session.Database.BeginTransaction())
-            {
-                if (Service.SessionRequest.ContextFluentValidationException.IsValid)
-                {
-                    session.SaveChanges();
-                    transaction.Commit();
-                }
-                else
-                {
-                    transaction.Rollback();
-                }
-            }
-
-            Service.Dispose(true);
+            CloseTransaction();
             base.OnActionExecuted(filterContext);
         }
 
+        [NonAction]
+        internal protected void OpenTransaction()
+        {
+            Service = ServiceFactory.Create<TS>(HttpContext);
+            //Transaction = Service.TransactionObjects.Session.Database.BeginTransaction();
+            TransactionIsStarted = true;
+        }
+
+        [NonAction]
+        internal protected void CloseTransaction()
+        {
+            if (TransactionIsStarted)
+            {
+                if (Service.SessionRequest.ContextFluentValidationException.IsValid)
+                {
+                    Service.TransactionObjects.Session.SaveChanges();
+                    //Transaction.Commit();
+                    TransactionIsStarted = false;
+                }
+                else
+                {
+                    //Transaction.Rollback();
+                    TransactionIsStarted = false;
+                }
+
+                Service.Dispose(true);
+            }
+        }
+
+        [NonAction]
         protected internal new JsonResult Json(object data)
         {
             return new CustomJsonResult(data);

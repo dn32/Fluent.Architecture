@@ -5,17 +5,13 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Fluent.Architecture.Controller.Test.Services;
 using Fluent.Architecture.Controllers;
 
-namespace Fluent.Architecture.Controller.Test.Controllers
+namespace Fluent.Architecture.Controller.Test.POScope
 {
-    public class ReportController : FluentServiceController<ReportService>
+    public class UserController : FluentAPIController<User>
     {
-        public string GenerateError()
-        {
-          return Service.GenerateError();
-        }
     }
 }
+
 

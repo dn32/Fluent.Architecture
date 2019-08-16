@@ -474,7 +474,7 @@ namespace Fluent.Architecture.EntityFramework
         {
             if (pagination == null)
             {
-                pagination = GetPagination() ?? new FluentPagination(1, false, 255);
+                pagination = GetPagination() ?? new FluentPagination(0, true, 20);
             }
 
             pagination.TotalQuantityOfItems = query.Count();

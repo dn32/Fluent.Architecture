@@ -1,16 +1,17 @@
 ﻿using Fluent.Architecture.Test.Mock.Novos;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fluent.Architecture.Test.Mock
 {
     public static class MockHttpControllerContextFactory
     {
-        public static ControllerContext Create()
+        public static ControllerContext Create(IHeaderDictionary Headers = null)
         {
             var context = new ControllerContext()
             {
                 ActionDescriptor = MockControllerActionDescriptorFactory.Create(),
-                HttpContext = MockHttpContextFactory.Create(),
+                HttpContext = MockHttpContextFactory.Create(Headers),
                 RouteData = MockRouteDataFactory.Create()
             };
 

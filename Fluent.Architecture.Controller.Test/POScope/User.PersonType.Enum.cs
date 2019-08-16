@@ -1,5 +1,5 @@
 ﻿
-namespace Fluent.Architecture.Controller.Test
+namespace Fluent.Architecture.Controller.Test.POScope
 {
     public enum EnumPersonType
     {

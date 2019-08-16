@@ -33,9 +33,37 @@ namespace Fluent.Architecture.Test
         public static TR Execute<TC, TR>(TC controller, Func<TC, object> actionMethod) where TC : BaseController
         {
             controller.OnActionExecuting(MockActionExecutingContextFactory.Create(controller));
-            var ret = actionMethod(controller) as DefaultResult;
+            DefaultResult result;
+
+            try
+            {
+                result = actionMethod(controller) as DefaultResult;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
             controller.OnActionExecuted(MockActionExecutedContextFactory.Create(controller));
-            return JsonConvert.DeserializeObject<TR>(JsonConvert.SerializeObject(ret.Data));
+            return JsonConvert.DeserializeObject<TR>(JsonConvert.SerializeObject(result.Data));
+        }
+
+        public static object Execute<TC>(TC controller, Func<TC, object> actionMethod) where TC : BaseController
+        {
+            controller.OnActionExecuting(MockActionExecutingContextFactory.Create(controller));
+            DefaultResult result;
+
+            try
+            {
+                result = actionMethod(controller) as DefaultResult;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            controller.OnActionExecuted(MockActionExecutedContextFactory.Create(controller));
+            return result;
         }
     }
 }

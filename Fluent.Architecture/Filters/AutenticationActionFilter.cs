@@ -3,24 +3,31 @@ using Fluent.Architecture.Attributes;
 using System;
 using System.Linq;
 using Fluent.Architecture.Util;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Authorization;
+using System.Reflection;
 
 namespace Fluent.Architecture.Filters
 {
-    [AttributeUsage(AttributeTargets.Method)]
-    public class AutenticationActionFilterAttribute : Attribute, IActionFilter
+    public class FluentAuthorizationFilter : IAuthorizationFilter
     {
-        public void OnActionExecuting(ActionExecutingContext context)
+        public void OnAuthorization(AuthorizationFilterContext context)
         {
-            if (context.ActionDescriptor.FilterDescriptors.Where(x => x.Filter is FluentAllowAnonymousAttribute).Any())
+            var action = context?.ActionDescriptor as ControllerActionDescriptor;
+            if (action?.ControllerTypeInfo.GetCustomAttribute<AllowAnonymousAttribute>() != null)
             {
                 return;
             }
 
-            var token = context.HttpContext.Request.Headers["token"];
-            context.HttpContext.User = AutenticationUtil.GetPrincipal(token);
+            if (action?.MethodInfo.GetCustomAttribute<AllowAnonymousAttribute>() != null)
+            {
+                return;
+            }
+
+            OnFluentAuthorizationFilter(context);
         }
 
-        public void OnActionExecuted(ActionExecutedContext context)
+        public virtual void OnFluentAuthorizationFilter(AuthorizationFilterContext context)
         {
         }
     }

@@ -7,8 +7,8 @@ namespace Fluent.Architecture.Core.Filters
     public enum EnumFilterType
     {
         //Numérico
-        GREATER_THAN, // Maior que
-        SMALLER_THAN, // Menor que
+        GREATER, // Maior que
+        SMALLER, // Menor que
 
         //String
         START_WITH, // Inicia com
@@ -16,7 +16,7 @@ namespace Fluent.Architecture.Core.Filters
         CONTAINS, // Contém
 
         //All
-        EQUAL_TO, // igual a
+        EQUAL, // igual a
         NULL, // é nulo
 
         //Bool

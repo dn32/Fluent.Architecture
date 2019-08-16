@@ -61,6 +61,40 @@ namespace Fluent.Architecture.Extensions
                    t1 == t2 || t1.IsSubclassOf(t2) || t2.IsAssignableFrom(t1) || t2.IsSubclassOf(t1) || t1.IsAssignableFrom(t2);
         }
 
+        public static bool IsNullableEnum(this Type t)
+        {
+            if (t.IsEnum) return true;
+            Type u = Nullable.GetUnderlyingType(t);
+            return (u != null) && u.IsEnum;
+        }
+
+        public static Type GetTypeByEnumType(this Type t)
+        {
+            Type u = Nullable.GetUnderlyingType(t);
+            return u ?? t;
+        }
+
+        public static bool IsNumeric(this Type type)
+        {
+            switch (Type.GetTypeCode(type))
+            {
+                case TypeCode.Byte:
+                case TypeCode.SByte:
+                case TypeCode.UInt16:
+                case TypeCode.UInt32:
+                case TypeCode.UInt64:
+                case TypeCode.Int16:
+                case TypeCode.Int32:
+                case TypeCode.Int64:
+                case TypeCode.Decimal:
+                case TypeCode.Double:
+                case TypeCode.Single:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         // Todo - Documentar
         public static object[] GetConstructorParameters(this Type classType)
         {

@@ -8,7 +8,7 @@ namespace Fluent.Architecture.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class FluentAPIController<T> : FluentController<T> where T : FluentEntity, new()
+    public abstract class FluentAPIController<T> : FluentController<T> where T : FluentEntity, new()
     {
         // GET api/user/list
         [HttpGet]
