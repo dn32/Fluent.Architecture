@@ -4,16 +4,12 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Fluent.Architecture.EntityFramework.PostgreSQL.snk</AssemblyOriginatorKeyFile>
-    <Version>1.0.0-beta-05</Version>
+    <Version>2.0.0-RC-01</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://dn32.github.io/Fluent.Architecture/</RepositoryUrl>
     <PackageProjectUrl>https://dn32.github.io/Fluent.Architecture/</PackageProjectUrl>
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Fluent.Architecture.EntityFramework.PostgreSQL.snk" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4" />

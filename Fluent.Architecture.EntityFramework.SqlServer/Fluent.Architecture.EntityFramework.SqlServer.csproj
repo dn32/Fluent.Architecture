@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Fluent.Architecture.EntityFramework.SqlServer.snk</AssemblyOriginatorKeyFile>
-    <Version>1.0.0-beta-01</Version>
+    <Version>2.0.0-RC-01</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://dn32.github.io/Fluent.Architecture/</RepositoryUrl>
     <PackageProjectUrl>https://dn32.github.io/Fluent.Architecture/</PackageProjectUrl>
@@ -13,10 +13,6 @@
   
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <None Remove="Fluent.Architecture.EntityFramework.SqlServer.snk" />
   </ItemGroup>
   
   <ItemGroup>
