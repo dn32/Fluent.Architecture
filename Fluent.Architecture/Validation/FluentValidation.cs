@@ -7,17 +7,16 @@
 
 // ReSharper disable CommentTypo
 
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Fluent.Architecture.Entities;
-using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Services;
-using Fluent.Architecture.Exceptions.ValidationException;
-using System.Reflection;
 using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Core.Filters;
+using Fluent.Architecture.Entities;
+using Fluent.Architecture.Exceptions.ValidationException;
+using Fluent.Architecture.Extensions;
+using Fluent.Architecture.Services;
 using System;
-using System.Linq.Expressions;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Reflection;
 
 namespace Fluent.Architecture.Validation
 {
@@ -73,16 +72,19 @@ namespace Fluent.Architecture.Validation
         {
             this.ParameterMustBeInformed(entities);
 
-            foreach (var entity in entities)
+            if (entities != null)
             {
-                this.ParameterMustBeInformed(entity);
-                this.RequiredPropertyMustBeInformed(entity);
-                this.MaxLenghtPropertyMustBeInformed(entity);
-                this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
-
-                if (KeyValuesOk)
+                foreach (var entity in entities)
                 {
-                    EntityShouldNotExistInDatabaseBasedOnKeys(entity, false);
+                    this.ParameterMustBeInformed(entity);
+                    this.RequiredPropertyMustBeInformed(entity);
+                    this.MaxLenghtPropertyMustBeInformed(entity);
+                    this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
+
+                    if (KeyValuesOk)
+                    {
+                        EntityShouldNotExistInDatabaseBasedOnKeys(entity, false);
+                    }
                 }
             }
 
@@ -102,21 +104,24 @@ namespace Fluent.Architecture.Validation
             }
 
             this.RunTheContextValidation();
-        }   
-        
+        }
+
         public virtual void UpdateRange(T[] entities)
         {
             this.ParameterMustBeInformed(entities);
 
-            foreach (var entity in entities)
+            if (entities != null)
             {
-                this.ParameterMustBeInformed(entity);
-                this.RequiredPropertyMustBeInformed(entity);
-                this.MaxLenghtPropertyMustBeInformed(entity);
-                this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, isUpdate: true);
-                if (KeyValuesOk)
+                foreach (var entity in entities)
                 {
-                    EntityMustExistInDatabase(entity);
+                    this.ParameterMustBeInformed(entity);
+                    this.RequiredPropertyMustBeInformed(entity);
+                    this.MaxLenghtPropertyMustBeInformed(entity);
+                    this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, isUpdate: true);
+                    if (KeyValuesOk)
+                    {
+                        EntityMustExistInDatabase(entity);
+                    }
                 }
             }
 
@@ -126,8 +131,11 @@ namespace Fluent.Architecture.Validation
         public virtual void Remove(T entity)
         {
             this.ParameterMustBeInformed(entity);
-            this.AllKeysMustBeInformed(entity);
-            this.EntityMustExistInDatabase(entity);
+            if (entity != null)
+            {
+                this.AllKeysMustBeInformed(entity);
+                this.EntityMustExistInDatabase(entity);
+            }
 
             this.RunTheContextValidation();
         }
@@ -136,11 +144,14 @@ namespace Fluent.Architecture.Validation
         {
             this.ParameterMustBeInformed(entities);
 
-            foreach (var entity in entities)
+            if (entities != null)
             {
-                this.ParameterMustBeInformed(entity);
-                //this.AllKeysMustBeInformed(entity);
-                this.EntityMustExistInDatabase(entity);
+                foreach (var entity in entities)
+                {
+                    this.ParameterMustBeInformed(entity);
+                    //this.AllKeysMustBeInformed(entity);
+                    this.EntityMustExistInDatabase(entity);
+                }
             }
 
             this.RunTheContextValidation();
@@ -155,7 +166,7 @@ namespace Fluent.Architecture.Validation
             foreach (var filter in filters)
             {
                 var property = properties.SingleOrDefault(x => x.Name.Equals(filter.PropertyName, StringComparison.InvariantCultureIgnoreCase));
-                if(property == null)
+                if (property == null)
                 {
                     AddInconsistency(new FilteredPropertyNotFound(typeof(T).Name, filter.PropertyName));
                 }
@@ -167,15 +178,18 @@ namespace Fluent.Architecture.Validation
         // Todo2 Documentar
         public virtual void Find(T entity, bool checkId = true)
         {
-            this.ParameterMustBeInformed(entity);
+            ParameterMustBeInformed(entity);
 
-            if (checkId)
+            if (entity != null)
             {
-                this.AllKeysMustBeInformed(entity);
-            }
-            else
-            {
-                this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
+                if (checkId)
+                {
+                    AllKeysMustBeInformed(entity);
+                }
+                else
+                {
+                    AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
+                }
             }
 
             this.RunTheContextValidation();

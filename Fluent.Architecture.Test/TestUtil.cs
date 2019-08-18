@@ -6,12 +6,12 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using System;
-using System.Runtime.InteropServices;
 using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Test.Mock;
 using Fluent.Architecture.Test.Mock.ControllerMock;
 using Newtonsoft.Json;
+using System;
+using System.Runtime.InteropServices;
 
 namespace Fluent.Architecture.Test
 {

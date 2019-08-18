@@ -7,7 +7,7 @@
 
 namespace Fluent.Architecture.Repository
 {
-    public class TransactionlRepository: BaseRepository
+    public class TransactionlRepository : BaseRepository
     {
 
     }

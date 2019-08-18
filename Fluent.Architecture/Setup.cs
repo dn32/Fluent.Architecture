@@ -6,18 +6,18 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
+using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Core.Interfaces;
+using Fluent.Architecture.Entities;
+using Fluent.Architecture.Exceptions;
+using Fluent.Architecture.Services;
+using Fluent.Architecture.Specifications;
+using Fluent.Architecture.Util;
+using Fluent.Architecture.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Fluent.Architecture.Entities;
-using Fluent.Architecture.Services;
-using Fluent.Architecture.Util;
-using Fluent.Architecture.Validation;
-using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Exceptions;
-using Fluent.Architecture.Specifications;
-using Fluent.Architecture.Core.Interfaces;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo(@"Fluent.Architecture.EntityFramework, PublicKey=002400000480000094000000060200000024000052534131000400000100010001e5fbcd7e6f1d70524fc7b787a6ba4d8f332e822c5506e1831f4e59ab41e930c56bbf8cc29fa91f1270f4e873c036335c5aa4ccfc76ab13bfa7372de9d4e17de6c2d188fae9e6842d7d90d51e123836fd9f5d6be5580a32d1a12e59489519c6b93cdcf7ecd782042db1f31190350fbf937bbd6a5ae61d648773b46b9a706ccf")]
@@ -77,7 +77,11 @@ namespace Fluent.Architecture
 
         public static Config SetServiceProvider(this Config configClass, IServiceProvider serviceProvider)
         {
-            configClass.ServiceProvider = serviceProvider;
+            if (configClass != null)
+            {
+                configClass.ServiceProvider = serviceProvider;
+            }
+
             return configClass;
         }
 
@@ -95,7 +99,11 @@ namespace Fluent.Architecture
         public static Config SetUserSessionRequestType(this Config configClass, Type userSessionRequestType)
         {
             //Todo - checar se o tipo informado é um UserSessionRequest
-            configClass.UserSessionRequestType = userSessionRequestType;
+            if (configClass != null)
+            {
+                configClass.UserSessionRequestType = userSessionRequestType;
+            }
+
             return configClass;
         }
 
@@ -116,6 +124,11 @@ namespace Fluent.Architecture
                 Type dbContextType,
                 string identifier = "")
         {
+            if (configClass == null)
+            {
+                return configClass;
+            }
+
             if (configClass.Connections == null)
             {
                 configClass.Connections = new List<Connection>();

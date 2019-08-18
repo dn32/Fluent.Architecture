@@ -7,19 +7,18 @@
 
 // ReSharper disable CommentTypo
 
-using System;
-using System.Security.Claims;
+using Fluent.Architecture.Core.Util;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Services;
-using Fluent.Architecture.Entities;
 using Fluent.Architecture.Util;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore.Storage;
-using Newtonsoft.Json;
-using Fluent.Architecture.Core.Util;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
+using System;
+using System.Security.Claims;
 
 namespace Fluent.Architecture.Controllers
 {
@@ -41,7 +40,7 @@ namespace Fluent.Architecture.Controllers
 
         protected internal HttpContext ServiceHttpContext => Service.LocalHttpContext;
 
-       // private IDbContextTransaction Transaction { get; set; }
+        // private IDbContextTransaction Transaction { get; set; }
 
         internal protected bool TransactionIsStarted { get; set; }
 

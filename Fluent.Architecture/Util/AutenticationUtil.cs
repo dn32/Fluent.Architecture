@@ -12,9 +12,11 @@ namespace Fluent.Architecture.Util
 
         internal static void Initialize()
         {
-            var hmac = new HMACSHA256();
-            //Secret = "KipzNHM2NUxLSElUWVJTNDY1NzY4NzAtOTBAIyQlKiomQClOTEtUTHM1c25iSkhHQ1tdeyE5NGFAQHNvaSlVSlNETEpLSMOib3AoQCMkJcKoJipqTTIzNDU2aEU1Vw==";
-            Secret = Convert.ToBase64String(hmac.Key);
+            using (var hmac = new HMACSHA256())
+            {
+                //Secret = "KipzNHM2NUxLSElUWVJTNDY1NzY4NzAtOTBAIyQlKiomQClOTEtUTHM1c25iSkhHQ1tdeyE5NGFAQHNvaSlVSlNETEpLSMOib3AoQCMkJcKoJipqTTIzNDU2aEU1Vw==";
+                Secret = Convert.ToBase64String(hmac.Key);
+            }
         }
 
         //internal static bool ValidateToken(string token, out string username)

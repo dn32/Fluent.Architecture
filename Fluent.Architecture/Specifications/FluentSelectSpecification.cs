@@ -7,10 +7,10 @@
 
 // ReSharper disable CommentTypo
 
+using Fluent.Architecture.Entities;
+using Fluent.Architecture.Interfaces;
 using System;
 using System.Linq;
-using Fluent.Architecture.Interfaces;
-using Fluent.Architecture.Entities;
 
 namespace Fluent.Architecture.Specifications
 {
@@ -34,7 +34,7 @@ namespace Fluent.Architecture.Specifications
         public abstract IQueryable<TO> Where(IQueryable<TE> query);
 
         // Todo2 doc
-        public abstract IOrderedQueryable<TO>  Order(IQueryable<TO> query);
+        public abstract IOrderedQueryable<TO> Order(IQueryable<TO> query);
 
         // Todo2 doc
         internal IOrderedQueryable<TO> ToIQueryable(IQueryable<TE> query)

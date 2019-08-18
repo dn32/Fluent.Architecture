@@ -5,7 +5,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
 
 namespace Fluent.Architecture.Validation

@@ -14,7 +14,7 @@ namespace Fluent.Architecture.Exceptions.ValidationException
 {
     public class PropertyRequiredFluentValidationException : FluentPropertyValidationException
     {
-        public PropertyRequiredFluentValidationException(PropertyInfo propertyName) : base(propertyName.Name, false, $"The property {propertyName.Name} must have a value for this operation.")
+        public PropertyRequiredFluentValidationException(PropertyInfo propertyName) : base(propertyName?.Name, false, $"The property {propertyName.Name} must have a value for this operation.")
         {
         }
     }

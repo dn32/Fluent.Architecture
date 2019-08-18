@@ -6,11 +6,11 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
+using Fluent.Architecture.Exceptions.ValidationException;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Fluent.Architecture.Exceptions.ValidationException;
-using Newtonsoft.Json;
 
 namespace Fluent.Architecture.Validation
 {

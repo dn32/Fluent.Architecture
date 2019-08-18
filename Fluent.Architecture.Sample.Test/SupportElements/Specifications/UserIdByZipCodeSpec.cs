@@ -5,10 +5,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
-using System.Linq;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Specifications;
+using System.Linq;
 
 namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
 {
@@ -21,10 +20,10 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
             _zipCode = zipCode;
             return this;
         }
-      
+
         public override IQueryable<int> Where(IQueryable<User> query)
         {
-            return query.Where(x => x.ZipCode ==_zipCode).Select(x => x.Id);
+            return query.Where(x => x.ZipCode == _zipCode).Select(x => x.Id);
         }
 
         public override IOrderedQueryable<int> Order(IQueryable<int> query)

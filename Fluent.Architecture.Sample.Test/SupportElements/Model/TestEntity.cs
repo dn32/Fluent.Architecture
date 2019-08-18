@@ -5,9 +5,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.Collections.Generic;
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Entities;
+using System.Collections.Generic;
 
 namespace Fluent.Architecture.Sample.Test.SupportElements.Model
 {

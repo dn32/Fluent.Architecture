@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
-using Fluent.Architecture.Entities;
+﻿using Fluent.Architecture.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 
 namespace Fluent.Architecture.Core.Interfaces
 {

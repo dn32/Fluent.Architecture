@@ -1,7 +1,5 @@
-﻿
-using System;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 
 namespace Fluent.Architecture.Extensions
 {
@@ -9,10 +7,7 @@ namespace Fluent.Architecture.Extensions
     {
         public static bool HasPendingChanges(this DbContext context)
         {
-            return context.ChangeTracker.Entries()
-                          .Any(e => e.State == EntityState.Added
-                                 || e.State == EntityState.Deleted
-                                 || e.State == EntityState.Modified);
+            return context?.ChangeTracker?.Entries()?.Any(e => e.State == EntityState.Added || e.State == EntityState.Deleted || e.State == EntityState.Modified) ?? false;
         }
     }
 }

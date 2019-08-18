@@ -6,13 +6,13 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
+using Fluent.Architecture.Entities;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Fluent.Architecture.Entities;
-using Newtonsoft.Json;
 
 namespace Fluent.Architecture.Extensions
 {
@@ -184,7 +184,7 @@ namespace Fluent.Architecture.Extensions
                 {
                     if (item.FieldType.IsPrimitive || item.FieldType.IsValueType || item.FieldType == typeof(string))
                     {
-                        propertyData.Add(new NameAndValue { Name = item.Name.Replace("k__BackingField", string.Empty), Value = item.GetValue(obj) });
+                        propertyData.Add(new NameAndValue { Name = item?.Name?.Replace("k__BackingField", string.Empty, StringComparison.OrdinalIgnoreCase) ?? "", Value = item.GetValue(obj) });
                     }
                     else if (item.FieldType.IsClass && !typeof(IEnumerable).IsAssignableFrom(item.FieldType))
                     {

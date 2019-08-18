@@ -5,7 +5,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Exceptions.ValidationException;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Validation;

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Fluent.Architecture.Entities;
 using Fluent.Architecture.Interfaces;
-using Fluent.Architecture.Entities;
 using Fluent.Architecture.Services;
+using System;
+using System.Collections.Generic;
 using System.Data.Common;
 
 namespace Fluent.Architecture.Core.Interfaces

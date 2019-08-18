@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Fluent.Architecture.Specifications;
+using System;
 using System.Linq;
-using Fluent.Architecture.Specifications;
 
 public class UserByEmailSpec : FluentSpecification<User>
 {

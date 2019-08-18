@@ -5,9 +5,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.Linq;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Specifications;
+using System.Linq;
 
 namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
 {

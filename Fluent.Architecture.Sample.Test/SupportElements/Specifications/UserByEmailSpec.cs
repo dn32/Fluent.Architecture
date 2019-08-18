@@ -5,10 +5,10 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
-using System.Linq;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Specifications;
+using System;
+using System.Linq;
 
 namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
 {
@@ -21,7 +21,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
             this._email = email;
             return this;
         }
-        
+
         public override IQueryable<User> Where(IQueryable<User> query)
         {
             return query.Where(x => x.Email.Equals(this._email, StringComparison.CurrentCultureIgnoreCase));

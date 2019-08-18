@@ -26,6 +26,7 @@ namespace Fluent.Architecture.Extensions
         /// <returns>O nome amigável do método.</returns>
         public static string GetFriendlyName(this MethodBase method, bool showParameterName = false)
         {
+            if (method == null) { return "null"; }
             return method.Name + (method.ContainsGenericParameters ? "<" + string.Join(", ", method.GetGenericArguments().Select(x => x.Name)) + ">" : string.Empty) +
                 "(" + string.Join(", ", method.GetParameters().Select(x => x.ParameterType.GetFriendlyName(false) + (showParameterName ? " " + x.Name : string.Empty))) + ")";
         }
@@ -33,19 +34,19 @@ namespace Fluent.Architecture.Extensions
         // Todo2 doc
         public static object[] GetAllParameters(this MethodBase method)
         {
-            return method.GetParameters().Select(x => x.DefaultValue).ToArray();
+            return method?.GetParameters()?.Select(x => x.DefaultValue)?.ToArray();
         }
 
         // Todo2 doc
         public static MethodInfo GetMethodWithoutAmbiguity(this Type classType, string methodName, object[] parameters, params Type[] generics)
         {
 
-            var methods = classType.GetMethods().Where(x =>
+            var methods = classType?.GetMethods()?.Where(x =>
                 x.Name == methodName &&
                 parameters.Length <= x.GetParameters().Length &&
                 parameters.Length >= x.GetParameters().Count(y => !y.IsOptional) &&
                 parameters.Length + x.GetParameters().Count(y => y.IsOptional) >= x.GetParameters().Length
-            );
+            ) ?? Array.Empty<MethodInfo>();
 
             foreach (var method in methods)
             {
@@ -72,8 +73,8 @@ namespace Fluent.Architecture.Extensions
         public static object FluentInvoke(this MethodInfo method, object entity, object[] parameters)//, params Type[] generics)
         {
             //method = generics == null ? method : method.MakeGenericMethod(generics);
-
-            var localParameters = method.GetAllParameters();
+            if (parameters == null) { parameters = Array.Empty<object>(); }
+            var localParameters = method?.GetAllParameters();
             for (var i = 0; i < parameters.Length; i++)
             {
                 if (parameters[i] != null)
@@ -84,7 +85,7 @@ namespace Fluent.Architecture.Extensions
 
             try
             {
-                return method.Invoke(entity, localParameters);
+                return method?.Invoke(entity, localParameters);
             }
 #pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception ex)

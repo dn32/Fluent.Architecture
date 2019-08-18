@@ -6,10 +6,10 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using System;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
+using System;
 
 namespace Fluent.Architecture.Factory
 {

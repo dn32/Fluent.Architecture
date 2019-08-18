@@ -1,120 +1,122 @@
-﻿using Fluent.Architecture.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Fluent.Architecture.Extensions
 {
     public static class ExpressionUtil
     {
-        public static PropertyInfo GetPropertyInfo<TSource, TProperty>(Expression<Func<TSource, TProperty>> propertyLambda)
-        {
-            Type type = typeof(TSource);
+        //public static PropertyInfo GetPropertyInfo<TSource, TProperty>(Expression<Func<TSource, TProperty>> propertyLambda)
+        //{
+        //    Type type = typeof(TSource);
 
-            if (!(propertyLambda.Body is MemberExpression member))
-            {
-                throw new ArgumentException($"Expression '{propertyLambda}' refers to a method, not a property.");
-            }
+        //    if (!(propertyLambda.Body is MemberExpression member))
+        //    {
+        //        throw new ArgumentException($"Expression '{propertyLambda}' refers to a method, not a property.");
+        //    }
 
-            var propInfo = member.Member as PropertyInfo;
-            if (propInfo == null)
-            {
-                throw new ArgumentException($"Expression '{propertyLambda}' refers to a field, not a property.");
-            }
+        //    var propInfo = member.Member as PropertyInfo;
+        //    if (propInfo == null)
+        //    {
+        //        throw new ArgumentException($"Expression '{propertyLambda}' refers to a field, not a property.");
+        //    }
 
-            if (type != propInfo.ReflectedType && !type.IsSubclassOf(propInfo.ReflectedType))
-            {
-                throw new ArgumentException($"Expresion '{propertyLambda}' refers to a property that is not from type {type}.");
-            }
+        //    if (type != propInfo.ReflectedType && !type.IsSubclassOf(propInfo.ReflectedType))
+        //    {
+        //        throw new ArgumentException($"Expresion '{propertyLambda}' refers to a property that is not from type {type}.");
+        //    }
 
-            return propInfo;
-        }
+        //    return propInfo;
+        //}
 
-        public static List<Tuple<string, Type>> ValideExpression<T>(Expression<Func<T, object>> par, bool valide = true) where T : BaseEntity, new()
-        {
-            var listaDepropriedades = new List<Tuple<string, Type>>();
-            var membros = ((NewExpression)par.Body).Members as IReadOnlyCollection<MemberInfo>;
-            var typeOriginal = typeof(T);
+        //public static List<Tuple<string, Type>> ValideExpression<T>(Expression<Func<T, object>> par, bool valide = true) where T : BaseEntity, new()
+        //{
+        //    var listaDepropriedades = new List<Tuple<string, Type>>();
+        //    var membros = ((NewExpression)par.Body).Members as IReadOnlyCollection<MemberInfo>;
+        //    var typeOriginal = typeof(T);
 
-            foreach (PropertyInfo membro in membros)
-            {
-                var typeInformado = membro.PropertyType;
-                var nomeDoParametro = membro.Name;
-                var propriedades = nomeDoParametro.Split('_');
+        //    foreach (PropertyInfo membro in membros)
+        //    {
+        //        var typeInformado = membro.PropertyType;
+        //        var nomeDoParametro = membro.Name;
+        //        var propriedades = nomeDoParametro.Split('_');
 
-                var nomeConcatenadoDasPropriedades = string.Empty;
+        //        var nomeConcatenadoDasPropriedades = string.Empty;
 
-                for (int i = 0; i < propriedades.Count(); i++)
-                {
-                    var nome = propriedades[i];
-                    nomeConcatenadoDasPropriedades += string.IsNullOrEmpty(nomeConcatenadoDasPropriedades) ? nome : "." + nome;
-                    var propriedade = typeOriginal.GetProperty(nome);
-                    if (propriedade == null)
-                    {
-                        if (!valide)
-                        {
-                            continue;
-                        }
+        //        for (int i = 0; i < propriedades.Count(); i++)
+        //        {
+        //            var nome = propriedades[i];
+        //            nomeConcatenadoDasPropriedades += string.IsNullOrEmpty(nomeConcatenadoDasPropriedades) ? nome : "." + nome;
+        //            var propriedade = typeOriginal.GetProperty(nome);
+        //            if (propriedade == null)
+        //            {
+        //                if (!valide)
+        //                {
+        //                    continue;
+        //                }
 
-                        throw new Exception($"Não foi encontrado uma property com caminho {nomeConcatenadoDasPropriedades} no type {typeOriginal.Name}. Confira o elemento {nomeDoParametro}, pois é provável que esteja escrito incorretamente.");
-                    }
-                    if (propriedades.Count() == i + 1)
-                    {
-                        if (propriedade.PropertyType != typeInformado)
-                        {
-                            throw new Exception($"O type encontrado na propriedade {typeOriginal.Name} não foi encontrado no caminho {nomeConcatenadoDasPropriedades}. o type informado é {typeInformado} e o type encontrado foi {propriedade.PropertyType}");
-                        }
-                    }
+        //                throw new Exception($"Não foi encontrado uma property com caminho {nomeConcatenadoDasPropriedades} no type {typeOriginal.Name}. Confira o elemento {nomeDoParametro}, pois é provável que esteja escrito incorretamente.");
+        //            }
+        //            if (propriedades.Count() == i + 1)
+        //            {
+        //                if (propriedade.PropertyType != typeInformado)
+        //                {
+        //                    throw new Exception($"O type encontrado na propriedade {typeOriginal.Name} não foi encontrado no caminho {nomeConcatenadoDasPropriedades}. o type informado é {typeInformado} e o type encontrado foi {propriedade.PropertyType}");
+        //                }
+        //            }
 
-                    typeOriginal = propriedade.PropertyType;
-                }
+        //            typeOriginal = propriedade.PropertyType;
+        //        }
 
-                listaDepropriedades.Add(new Tuple<string, Type>(nomeConcatenadoDasPropriedades, typeInformado));
-            }
+        //        listaDepropriedades.Add(new Tuple<string, Type>(nomeConcatenadoDasPropriedades, typeInformado));
+        //    }
 
-            return listaDepropriedades;
-        }
+        //    return listaDepropriedades;
+        //}
 
-        public static object ObtenhavaluePorPropriedade(string propriedadeInformada, object p, out Type typeDaPropriedade)
-        {
-            typeDaPropriedade = null;
-            if (propriedadeInformada == null)
-            {
-                return null;
-            }
+        //public static object ObtenhavaluePorPropriedade(string propriedadeInformada, object p, out Type typeDaPropriedade)
+        //{
+        //    typeDaPropriedade = null;
+        //    if (propriedadeInformada == null)
+        //    {
+        //        return null;
+        //    }
 
-            var propriedades = propriedadeInformada.Split('.');
-            var typeOriginal = p.GetType();
-            var valueOriginal = p;
-            var nomeConcatenadoDaspropriedades = string.Empty;
+        //    var propriedades = propriedadeInformada.Split('.');
+        //    var typeOriginal = p.GetType();
+        //    var valueOriginal = p;
+        //    var nomeConcatenadoDaspropriedades = string.Empty;
 
-            for (int i = 0; i < propriedades.Count(); i++)
-            {
-                var nome = propriedades[i];
-                nomeConcatenadoDaspropriedades += string.IsNullOrEmpty(nomeConcatenadoDaspropriedades) ? nome : "." + nome;
-                var propriedade = typeOriginal.GetProperty(nome);
-                valueOriginal = propriedade.GetValue(valueOriginal);
+        //    for (int i = 0; i < propriedades.Count(); i++)
+        //    {
+        //        var nome = propriedades[i];
+        //        nomeConcatenadoDaspropriedades += string.IsNullOrEmpty(nomeConcatenadoDaspropriedades) ? nome : "." + nome;
+        //        var propriedade = typeOriginal.GetProperty(nome);
+        //        valueOriginal = propriedade.GetValue(valueOriginal);
 
-                if (propriedades.Count() == i + 1)
-                {
-                    typeDaPropriedade = propriedade.PropertyType;
-                    return valueOriginal;
-                }
+        //        if (propriedades.Count() == i + 1)
+        //        {
+        //            typeDaPropriedade = propriedade.PropertyType;
+        //            return valueOriginal;
+        //        }
 
-                typeOriginal = propriedade.PropertyType;
-            }
+        //        typeOriginal = propriedade.PropertyType;
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
         public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> a, Expression<Func<T, bool>> b)
         {
             if (a == null)
             {
                 return b;
+            }
+
+            if (b == null)
+            {
+                return a;
             }
 
             var p = a.Parameters[0];
@@ -128,6 +130,11 @@ namespace Fluent.Architecture.Extensions
             if (a == null)
             {
                 return b;
+            }
+
+            if (b == null)
+            {
+                return a;
             }
 
             var p = a.Parameters[0];
@@ -266,12 +273,12 @@ namespace Fluent.Architecture.Extensions
 
         public static Expression<Func<T, bool>> Smaller<T>(string propertyName, string value, bool including, Type type)
         {
-            return SmallerOrGreater<T>(propertyName, value, including, type, false);
+            return SmallerOrGreater<T>(propertyName, value, including, type??null, false);
         }
 
         public static Expression<Func<T, bool>> Greate<T>(string propertyName, string value, bool including, Type type)
         {
-            return SmallerOrGreater<T>(propertyName, value, including, type, true);
+            return SmallerOrGreater<T>(propertyName, value, including, type ?? null, true);
         }
 
         private static Expression<Func<T, bool>> SmallerOrGreater<T>(
@@ -348,86 +355,86 @@ namespace Fluent.Architecture.Extensions
             return Expression.Lambda<Func<T, bool>>(nullCheck, parameter);
         }
 
-        public static Expression<Func<T, bool>> ToExpression<T>(string andOrOperator, string propName, string opr, object value, Expression<Func<T, bool>> expr = null)
-        {
-            Expression<Func<T, bool>> func = null;
+        //public static Expression<Func<T, bool>> ToExpression<T>(string andOrOperator, string propName, string opr, object value, Expression<Func<T, bool>> expr = null)
+        //{
+        //    Expression<Func<T, bool>> func = null;
 
-            ParameterExpression paramExpr = Expression.Parameter(typeof(T));
-            var arrProp = propName.Split('.').ToList();
-            Expression binExpr = null;
-            string partName = null;
-            arrProp.ForEach(x =>
-            {
-                Expression tempExpr = null;
-                partName = string.IsNullOrWhiteSpace(partName) ? x : partName + "." + x;
-                if (partName == propName)
-                {
-                    var member = NestedExprProp(paramExpr, partName);
-                    var type = member.Type.Name == "Nullable`1" ? Nullable.GetUnderlyingType(member.Type) : member.Type;
-                    tempExpr = ApplyFilter(opr, member, Expression.Convert(Expression.Constant(value), member.Type));
-                }
-                else
-                    tempExpr = ApplyFilter("!=", NestedExprProp(paramExpr, partName), Expression.Constant(null));
-                if (binExpr != null)
-                    binExpr = Expression.AndAlso(binExpr, tempExpr);
-                else
-                    binExpr = tempExpr;
-            });
+        //    ParameterExpression paramExpr = Expression.Parameter(typeof(T));
+        //    var arrProp = propName.Split('.').ToList();
+        //    Expression binExpr = null;
+        //    string partName = null;
+        //    arrProp.ForEach(x =>
+        //    {
+        //        Expression tempExpr = null;
+        //        partName = string.IsNullOrWhiteSpace(partName) ? x : partName + "." + x;
+        //        if (partName == propName)
+        //        {
+        //            var member = NestedExprProp(paramExpr, partName);
+        //            var type = member.Type.Name == "Nullable`1" ? Nullable.GetUnderlyingType(member.Type) : member.Type;
+        //            tempExpr = ApplyFilter(opr, member, Expression.Convert(Expression.Constant(value), member.Type));
+        //        }
+        //        else
+        //            tempExpr = ApplyFilter("!=", NestedExprProp(paramExpr, partName), Expression.Constant(null));
+        //        if (binExpr != null)
+        //            binExpr = Expression.AndAlso(binExpr, tempExpr);
+        //        else
+        //            binExpr = tempExpr;
+        //    });
 
-            Expression<Func<T, bool>> innerExpr = Expression.Lambda<Func<T, bool>>(binExpr, paramExpr);
-            if (expr != null)
-                innerExpr = (andOrOperator == null || andOrOperator == "And" || andOrOperator == "AND" || andOrOperator == "&&") ? innerExpr.And(expr) : innerExpr.Or(expr);
-            func = innerExpr;
+        //    Expression<Func<T, bool>> innerExpr = Expression.Lambda<Func<T, bool>>(binExpr, paramExpr);
+        //    if (expr != null)
+        //        innerExpr = (andOrOperator == null || andOrOperator == "And" || andOrOperator == "AND" || andOrOperator == "&&") ? innerExpr.And(expr) : innerExpr.Or(expr);
+        //    func = innerExpr;
 
-            return func;
-        }
+        //    return func;
+        //}
 
-        private static MemberExpression NestedExprProp(Expression expr, string propName)
-        {
-            string[] arrProp = propName.Split('.');
-            int arrPropCount = arrProp.Length;
-            return (arrPropCount > 1) ? Expression.Property(NestedExprProp(expr, arrProp.Take(arrPropCount - 1).Aggregate((a, i) => a + "." + i)), arrProp[arrPropCount - 1]) : Expression.Property(expr, propName);
-        }
+        //private static MemberExpression NestedExprProp(Expression expr, string propName)
+        //{
+        //    string[] arrProp = propName.Split('.');
+        //    int arrPropCount = arrProp.Length;
+        //    return (arrPropCount > 1) ? Expression.Property(NestedExprProp(expr, arrProp.Take(arrPropCount - 1).Aggregate((a, i) => a + "." + i)), arrProp[arrPropCount - 1]) : Expression.Property(expr, propName);
+        //}
 
-        private static Expression ApplyFilter(string opr, Expression left, Expression right)
-        {
-            Expression InnerLambda = null;
-            switch (opr)
-            {
-                case "==":
-                case "=":
-                    InnerLambda = Expression.Equal(left, right);
-                    break;
-                case "<":
-                    InnerLambda = Expression.LessThan(left, right);
-                    break;
-                case ">":
-                    InnerLambda = Expression.GreaterThan(left, right);
-                    break;
-                case ">=":
-                    InnerLambda = Expression.GreaterThanOrEqual(left, right);
-                    break;
-                case "<=":
-                    InnerLambda = Expression.LessThanOrEqual(left, right);
-                    break;
-                case "!=":
-                    InnerLambda = Expression.NotEqual(left, right);
-                    break;
-                case "&&":
-                    InnerLambda = Expression.And(left, right);
-                    break;
-                case "||":
-                    InnerLambda = Expression.Or(left, right);
-                    break;
-                case "LIKE":
-                    InnerLambda = Expression.Call(left, typeof(string).GetMethod("Contains", new Type[] { typeof(string) }), right);
-                    break;
-                case "NOTLIKE":
-                    InnerLambda = Expression.Not(Expression.Call(left, typeof(string).GetMethod("Contains", new Type[] { typeof(string) }), right));
-                    break;
-            }
+        //private static Expression ApplyFilter(string opr, Expression left, Expression right)
+        //{
+        //    Expression InnerLambda = null;
+        //    switch (opr)
+        //    {
+        //        case "==":
+        //        case "=":
+        //            InnerLambda = Expression.Equal(left, right);
+        //            break;
+        //        case "<":
+        //            InnerLambda = Expression.LessThan(left, right);
+        //            break;
+        //        case ">":
+        //            InnerLambda = Expression.GreaterThan(left, right);
+        //            break;
+        //        case ">=":
+        //            InnerLambda = Expression.GreaterThanOrEqual(left, right);
+        //            break;
+        //        case "<=":
+        //            InnerLambda = Expression.LessThanOrEqual(left, right);
+        //            break;
+        //        case "!=":
+        //            InnerLambda = Expression.NotEqual(left, right);
+        //            break;
+        //        case "&&":
+        //            InnerLambda = Expression.And(left, right);
+        //            break;
+        //        case "||":
+        //            InnerLambda = Expression.Or(left, right);
+        //            break;
+        //        case "LIKE":
+        //            InnerLambda = Expression.Call(left, typeof(string).GetMethod("Contains", new Type[] { typeof(string) }), right);
+        //            break;
+        //        case "NOTLIKE":
+        //            InnerLambda = Expression.Not(Expression.Call(left, typeof(string).GetMethod("Contains", new Type[] { typeof(string) }), right));
+        //            break;
+        //    }
 
-            return InnerLambda;
-        }
+        //    return InnerLambda;
+        //}
     }
 }

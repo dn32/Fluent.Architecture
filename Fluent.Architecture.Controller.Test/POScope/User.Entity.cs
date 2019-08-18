@@ -5,14 +5,14 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.EntityFramework;
 using Newtonsoft.Json;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Fluent.Architecture.Controller.Test.POScope
 {

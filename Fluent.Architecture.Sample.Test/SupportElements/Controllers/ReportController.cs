@@ -14,7 +14,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
     {
         public string GenerateError()
         {
-          return Service.GenerateError();
+            return Service.GenerateError();
         }
     }
 }

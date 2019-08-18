@@ -5,9 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using Fluent.Architecture.Exceptions.ValidationException;
-using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
 
 namespace Fluent.Architecture.Validation

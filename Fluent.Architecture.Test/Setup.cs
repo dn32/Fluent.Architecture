@@ -20,7 +20,7 @@ namespace Fluent.Architecture.Test
     [ComVisible(true)]
     public static class Setup
     {
-        private static long Ticks { get; set;  } = DateTime.Now.Ticks;
+        private static long Ticks { get; set; } = DateTime.Now.Ticks;
 
         public static void Initialize(string connectionString)
         {

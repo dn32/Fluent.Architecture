@@ -6,8 +6,6 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluent.Architecture.Factory.Interface;
-using Fluent.Architecture.Entities;
 using Fluent.Architecture.Services;
 using System;
 using System.Collections.Concurrent;
@@ -31,6 +29,7 @@ namespace Fluent.Architecture.Extensions
         /// <returns>O valor padrão do tipo.</returns>
         public static object GetDefaultValue(this Type type)
         {
+            if(type == null) { throw new ArgumentNullException(nameof(type)); }
             return type.IsValueType ? TypeDefaults.GetOrAdd(type, Activator.CreateInstance) : null;
         }
 
@@ -43,6 +42,8 @@ namespace Fluent.Architecture.Extensions
         //Todo2 doc
         public static TX Next<TX>(this List<TX> list)
         {
+            if(list == null) { throw new ArgumentNullException(nameof(list)); }
+
             if (list.Count == 0)
             {
                 return GetDefaultValue<TX>();
@@ -56,6 +57,9 @@ namespace Fluent.Architecture.Extensions
         //Todo2 doc
         public static bool Is(this Type t1, Type t2)
         {
+            if(t1 == null) { throw new ArgumentNullException(nameof(t1)); }
+            if(t2 == null) { throw new ArgumentNullException(nameof(t2)); }
+
             return t1.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == t2) ||
                    t2.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == t1) ||
                    t1 == t2 || t1.IsSubclassOf(t2) || t2.IsAssignableFrom(t1) || t2.IsSubclassOf(t1) || t1.IsAssignableFrom(t2);
@@ -63,14 +67,14 @@ namespace Fluent.Architecture.Extensions
 
         public static bool IsNullableEnum(this Type t)
         {
-            if (t.IsEnum) return true;
-            Type u = Nullable.GetUnderlyingType(t);
+            if (t?.IsEnum == true) { return true; }
+            var u = Nullable.GetUnderlyingType(t);
             return (u != null) && u.IsEnum;
         }
 
         public static Type GetTypeByEnumType(this Type t)
         {
-            Type u = Nullable.GetUnderlyingType(t);
+            var u = Nullable.GetUnderlyingType(t);
             return u ?? t;
         }
 
@@ -98,8 +102,8 @@ namespace Fluent.Architecture.Extensions
         // Todo - Documentar
         public static object[] GetConstructorParameters(this Type classType)
         {
-            var parameters = classType.GetConstructors().First().GetParameters();
-            return parameters.Select(x => x.ParameterType.GetDefaultValue()).ToArray();
+            var parameters = classType?.GetConstructors()?.First()?.GetParameters();
+            return parameters?.Select(x => x?.ParameterType?.GetDefaultValue())?.ToArray();
         }
 
         /// <summary>
@@ -110,9 +114,10 @@ namespace Fluent.Architecture.Extensions
         /// <returns>O nome amigável do tipo.</returns>
         public static string GetFriendlyName(this Type type, bool useGenericT = true)
         {
+            if (type == null) { return "null"; }
             var friendlyName = type.Name;
-            if (!type.IsGenericType) return friendlyName;
-            var iBacktick = friendlyName.IndexOf('`');
+            if (!type.IsGenericType) { return friendlyName; }
+            var iBacktick = friendlyName.IndexOf('`', StringComparison.InvariantCultureIgnoreCase);
             if (iBacktick > 0)
             {
                 friendlyName = friendlyName.Remove(iBacktick);
@@ -133,7 +138,7 @@ namespace Fluent.Architecture.Extensions
 
         public static Type GetSpecializedService(this Type serviceType)
         {
-            if (serviceType.Name == "FluentDynamicProxy")
+            if (serviceType?.Name == "FluentDynamicProxy")
             {
                 serviceType = serviceType.BaseType;
             }

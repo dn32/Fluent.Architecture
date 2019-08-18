@@ -18,6 +18,6 @@ namespace Fluent.Architecture.Interfaces
 
     public interface ISpec
     {
-         TransactionalService Service { get; set; }
+        TransactionalService Service { get; set; }
     }
 }

@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace Fluent.Architecture.Util
 {
-   public static class TextUtil
+    public static class TextUtil
     {
         public static string ClearText(this string str, string separator = "")
         {
+            if (string.IsNullOrWhiteSpace(str)) { return str; }
             StringBuilder sb = new StringBuilder();
             foreach (char c in str)
             {

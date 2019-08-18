@@ -6,7 +6,6 @@
 // -----------------------------------------------------------------------
 
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
-using Fluent.Architecture.Sample.Test.SupportElements.Specifications;
 using Fluent.Architecture.Services;
 
 namespace Fluent.Architecture.Sample.Test.SupportElements.Services

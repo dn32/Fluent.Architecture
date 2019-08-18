@@ -7,7 +7,6 @@
 
 using Fluent.Architecture.Sample.Test.SupportElements.Controllers;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
-using Fluent.Architecture.Sample.Test.SupportElements.Services;
 using Fluent.Architecture.Test;
 using Fluent.Architecture.Test.Mock;
 
@@ -42,14 +41,14 @@ namespace Fluent.Architecture.Sample.Test.SupportElements
         {
             // O elemento salvo não retorna um ID válido, pois somente após a serialização do retorno é que a transação é finalizada
             // Deve-se consultar o elemento para se obter o id
-             TestUtil.Execute<UserController, User[]>(UserControllerInstance, (UserController controller) => controller.AddRange(users));
+            TestUtil.Execute<UserController, User[]>(UserControllerInstance, (UserController controller) => controller.AddRange(users));
         }
 
         internal void AddStudent(Student student)
         {
             // O elemento salvo não retorna um ID válido, pois somente após a serialização do retorno é que a transação é finalizada
             // Deve-se consultar o elemento para se obter o id
-             TestUtil.Execute<StudentController, Student>(StudentControllerInstance, (StudentController controller) => controller.Add(student));
+            TestUtil.Execute<StudentController, Student>(StudentControllerInstance, (StudentController controller) => controller.Add(student));
         }
 
         internal User FindUser(User user)

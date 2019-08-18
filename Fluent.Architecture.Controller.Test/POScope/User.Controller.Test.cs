@@ -4,11 +4,9 @@ using Fluent.Architecture.Core.Filters;
 using Fluent.Architecture.Test;
 using Fluent.Architecture.Test.Mock;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Fluent.Architecture.Controller.Test.POScope
@@ -336,7 +334,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
                 Assert.IsNotNull(result.Pagination);
                 var list = result.Data.JsonObjectToObject<List<User>>();
                 Assert.IsNotNull(list);
-                Assert.AreEqual(count, 3- result.Pagination.TotalQuantityOfItems);
+                Assert.AreEqual(count, 3 - result.Pagination.TotalQuantityOfItems);
             }
 
             //Clear
@@ -344,6 +342,12 @@ namespace Fluent.Architecture.Controller.Test.POScope
             {
                 RemoveUser(user);
             }
+        }
+
+        [Test]
+        public void Test()
+        {
+
         }
     }
 }

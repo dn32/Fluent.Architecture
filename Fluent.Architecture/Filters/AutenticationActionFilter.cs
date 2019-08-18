@@ -1,10 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Fluent.Architecture.Attributes;
-using System;
-using System.Linq;
-using Fluent.Architecture.Util;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Filters;
 using System.Reflection;
 
 namespace Fluent.Architecture.Filters

@@ -5,10 +5,10 @@ namespace Fluent.Architecture.Extensions
 {
     public static class StringExtension
     {
-        public static string TitleCase(this string text)
-        {
-            return Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(text.ToLowerInvariant());
-        }
+        //public static string TitleCase(this string text)
+        //{
+        //    return Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(text.ToLowerInvariant());
+        //}
 
         //public static string GetGlobalizationOfResourceWithParameters(this string text, params string[] parameters)
         //{
@@ -32,16 +32,16 @@ namespace Fluent.Architecture.Extensions
         //    return Setup.GlobalizationService.GetResource(text, defaultMessage, parameters);
         //}
 
-        public static string RemoveString(this string text, params string[] remove)
-        {
-            if (string.IsNullOrWhiteSpace(text) || remove.Length == 0) { return text; }
+        //public static string RemoveString(this string text, params string[] remove)
+        //{
+        //    if (string.IsNullOrWhiteSpace(text) || remove.Length == 0) { return text; }
 
-            remove.ToList().ForEach(x =>
-            {
-                text = text.Replace(x, "");
-            });
+        //    remove.ToList().ForEach(x =>
+        //    {
+        //        text = text.Replace(x, "");
+        //    });
 
-            return text;
-        }
+        //    return text;
+        //}
     }
 }

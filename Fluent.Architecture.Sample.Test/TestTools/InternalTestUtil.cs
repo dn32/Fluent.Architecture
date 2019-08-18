@@ -6,10 +6,10 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using System.Runtime.InteropServices;
 using Fluent.Architecture.Sample.Test.SupportElements;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Test;
+using System.Runtime.InteropServices;
 
 namespace Fluent.Architecture.Sample.Test.TestTools
 {

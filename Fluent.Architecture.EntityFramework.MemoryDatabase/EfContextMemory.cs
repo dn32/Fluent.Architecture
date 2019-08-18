@@ -14,7 +14,7 @@ namespace Fluent.Architecture.EntityFramework.MemoryDatabase
         public EfContextMemory(string connectionString) : base(connectionString)
         {
         }
-        
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.ConfigureWarnings(x =>

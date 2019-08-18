@@ -1,7 +1,7 @@
 ﻿
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Factory;
-using Fluent.Architecture.Entities;
 using Fluent.Architecture.Services;
 using System;
 
@@ -11,6 +11,9 @@ namespace Fluent.Architecture.Extensions
     {
         public static TransactionalService GetServiceInstanceByServiceType(this Type serviceType, UserSessionRequest SessionRequest)
         {
+            if(serviceType == null) { throw new ArgumentNullException(nameof(serviceType)); }
+            if(SessionRequest == null) { throw new ArgumentNullException(nameof(SessionRequest)); }
+
             if (serviceType.Name == "FluentDynamicProxy")
             {
                 serviceType = serviceType.BaseType;
@@ -34,11 +37,11 @@ namespace Fluent.Architecture.Extensions
 
         public static TransactionalService GetServiceInstanceByEntity(this Type entityType, UserSessionRequest SessionRequest)
         {
-            if (!entityType.IsSubclassOf(typeof(FluentEntity)))
+            if (entityType?.IsSubclassOf(typeof(FluentEntity)) != true)
             {
                 throw new IncorrectDevelopmentException($"The service instance attempt using the {nameof(GetServiceInstanceByEntity)} method failed because the passed type is not a {nameof(FluentEntity)}");
             }
-            
+
             var serviceType = typeof(FluentService<>).MakeGenericType(entityType).GetSpecializedService();
             return serviceType.GetServiceInstanceByServiceType(SessionRequest);
         }

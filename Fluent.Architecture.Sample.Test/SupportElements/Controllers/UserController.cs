@@ -6,11 +6,9 @@
 // -----------------------------------------------------------------------
 
 using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Entities;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Sample.Test.SupportElements.Services;
 using Fluent.Architecture.Sample.Test.SupportElements.Specifications;
-using System.Collections.Generic;
 
 namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
 {
@@ -28,7 +26,7 @@ namespace Fluent.Architecture.Sample.Test.SupportElements.Controllers
         //{
         //    return Service.FirstOrDefault(CreateSpec<UserByEmailSpec>().DefineParams(email));
         //}
-      
+
         public DefaultResult SpecOneUserAndStudent(string email)
         {
             var spec = CreateSpec<UserAndStudentByEmailSpec>().DefineParams(email);

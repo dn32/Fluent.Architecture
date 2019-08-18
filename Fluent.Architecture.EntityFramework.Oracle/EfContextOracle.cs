@@ -17,10 +17,10 @@ namespace Fluent.Architecture.EntityFramework.Oracle
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-             //   .UseLoggerFactory(MyLoggerFactory) // Warning: Do not create a new ILoggerFactory instance each time
+                //   .UseLoggerFactory(MyLoggerFactory) // Warning: Do not create a new ILoggerFactory instance each time
                 .UseOracle(ConnectionString);
 
-          //  MyLoggerFactory.AddDebug(LogLevel.Information);
+            //  MyLoggerFactory.AddDebug(LogLevel.Information);
         }
     }
 }

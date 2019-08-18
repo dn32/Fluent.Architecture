@@ -6,14 +6,13 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
+using Fluent.Architecture.Core.Interfaces;
+using Fluent.Architecture.Entities;
+using Fluent.Architecture.Factory;
+using Fluent.Architecture.Validation;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Security.Claims;
-using Fluent.Architecture.Factory;
-using Fluent.Architecture.Entities;
-using Fluent.Architecture.Repository;
-using Fluent.Architecture.Validation;
-using Fluent.Architecture.Core.Interfaces;
 
 namespace Fluent.Architecture.Services
 {

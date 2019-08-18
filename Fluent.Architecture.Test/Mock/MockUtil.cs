@@ -1,6 +1,5 @@
 ﻿using Fluent.Architecture.Controllers;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
@@ -17,7 +16,7 @@ namespace Fluent.Architecture.Test.Mock
 
         public static TC GetMockController<TC>(IHeaderDictionary Headers) where TC : class
         {
-            return GetMockController(typeof(TC),null, Headers) as TC;
+            return GetMockController(typeof(TC), null, Headers) as TC;
         }
 
         public static BaseController GetMockController(Type controllerType, ClaimsPrincipal user = null, IHeaderDictionary Headers = null)

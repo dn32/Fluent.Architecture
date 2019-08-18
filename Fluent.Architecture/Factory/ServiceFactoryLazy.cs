@@ -6,9 +6,9 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using System;
 using Fluent.Architecture.Factory.Proxy;
 using Fluent.Architecture.Services;
+using System;
 
 namespace Fluent.Architecture.Factory
 {

@@ -1,15 +1,15 @@
 ﻿// ReSharper disable CommentTypo
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Fluent.Architecture.Attributes;
-using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Entities;
+using Fluent.Architecture.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace Fluent.Architecture.EntityFramework
 {
@@ -62,7 +62,7 @@ namespace Fluent.Architecture.EntityFramework
             base.OnModelCreating(modelBuilder);
         }
 
-         protected virtual void SetEntity(EntityTypeBuilder entity, Type type) { }
+        protected virtual void SetEntity(EntityTypeBuilder entity, Type type) { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 

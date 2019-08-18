@@ -5,8 +5,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using Fluent.Architecture.Controllers;
+using System;
 
 namespace Fluent.Architecture.Test.Mock
 {

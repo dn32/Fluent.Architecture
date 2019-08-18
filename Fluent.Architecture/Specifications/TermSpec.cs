@@ -44,7 +44,7 @@ namespace Fluent.Architecture.Core.Specifications
                 }
             }
 
-            return allExpression ?? ( x => true); 
+            return allExpression ?? (x => true);
         }
     }
 }

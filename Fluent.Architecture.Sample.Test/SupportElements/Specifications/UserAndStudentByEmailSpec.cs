@@ -5,11 +5,10 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
-using System.Linq;
-using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
 using Fluent.Architecture.Specifications;
+using System;
+using System.Linq;
 
 namespace Fluent.Architecture.Sample.Test.SupportElements.Specifications
 {

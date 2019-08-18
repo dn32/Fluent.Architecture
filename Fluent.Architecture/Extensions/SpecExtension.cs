@@ -1,8 +1,7 @@
-﻿using Fluent.Architecture.Exceptions;
+﻿using Fluent.Architecture.Entities;
+using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Interfaces;
-using Fluent.Architecture.Entities;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Fluent.Architecture.Extensions
 {
@@ -17,7 +16,7 @@ namespace Fluent.Architecture.Extensions
         {
             return spec.Execute(nameof(List), new object[] { pagination });
         }
-   
+
         public static object FirstOrDefault(this ISpec spec)
         {
             return spec.Execute(nameof(FirstOrDefault));
@@ -43,7 +42,7 @@ namespace Fluent.Architecture.Extensions
             {
                 var service = spec2.FluentEntityType.GetServiceInstanceByEntity(spec2.Service.SessionRequest);
                 var method = service.GetType().GetMethod($"{methodName}Select");
-                if(method == null)
+                if (method == null)
                 {
                     throw new IncorrectDevelopmentException($"Method not found: {methodName}Select");
                 }

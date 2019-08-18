@@ -5,9 +5,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using Fluent.Architecture.Sample.Test.SupportElements.Validations;
 using Fluent.Architecture.Services;
+using System;
 
 namespace Fluent.Architecture.Sample.Test.SupportElements.Services
 {

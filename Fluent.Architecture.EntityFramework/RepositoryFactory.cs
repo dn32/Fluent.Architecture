@@ -41,7 +41,7 @@ namespace Fluent.Architecture.EntityFramework
         public IFluentRepository<T> Create<T>(ITransactionObjects transactionObjects, FluentService<T> service) where T : BaseEntity
         {
             var dbType = GetTheEntityDBType(typeof(T));
-            if(dbType == null)
+            if (dbType == null)
             {
                 throw new IncorrectDevelopmentException($"The entity {typeof(T).Name} needs a database type specification. Example: [DbType (FluentDbType.ORACLE)]");
             }
