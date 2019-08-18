@@ -4,6 +4,9 @@ using Fluent.Architecture.Core.Filters;
 using Fluent.Architecture.Test;
 using Fluent.Architecture.Test.Mock;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -344,10 +347,231 @@ namespace Fluent.Architecture.Controller.Test.POScope
             }
         }
 
-        [Test]
-        public void Test()
+        [Theory]
+        [TestCase("full_name", "Padro Santos")]
+        [TestCase(nameof(User.Age), 14)]
+        [TestCase(nameof(User.HasChildren), false)]
+        [TestCase(nameof(User.ZipCode), 65001)]
+        public void PropertyToShowOnSucess(string propertyToShow, object value)
         {
+            /* A categoria foi usada para não conflitar os testes simultâneos que são executados aqui*/
 
+            //Preparation
+            var category = TestUtil.NextRandom();
+            var user = GetNewUser();
+            user.ZipCode = 65001;
+            user.Name = "Padro Santos";
+            user.Age = 14;
+            user.PersonType = EnumPersonType.User;
+            user.HasChildren = false;
+            user.Category = category;
+            user.DateOfBirth = DateTime.UtcNow.Date.AddYears(-1 * user.Age);
+            AddUser(user);
+
+            var customController = MockUtil.GetMockController<UserController>(new HeaderDictionary
+            {
+                { "propertyToShow", propertyToShow },
+            });
+
+            var filters = new Filter[]
+            {
+                new Filter
+                {
+                    FilterType = EnumFilterType.EQUAL,
+                    PropertyName = nameof(User.Category),
+                    Value = category.ToString()
+                }
+            };
+
+            //Operation
+            var result = TestUtil.Execute(customController, (UserController controller) => controller.List(filters)) as DefaultPaginationResult;
+
+            //Tests
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Data);
+            var jarray = result.Data as JArray;
+            Assert.IsNotNull(jarray);
+            Assert.AreEqual(1, jarray.First().Children().Count());
+            var element = jarray.First().Children().First() as JProperty;
+            Assert.IsNotNull(element);
+            Assert.AreEqual(propertyToShow, element.Name);
+            Assert.AreEqual(value.ToString(), element.Value.ToString());
+
+            //Clear
+            RemoveUser(user);
+        }
+
+        [Test]
+        public void PropertyToShowTwoSucess()
+        {
+            /* A categoria foi usada para não conflitar os testes simultâneos que são executados aqui*/
+
+            //Preparation
+            var category = TestUtil.NextRandom();
+            var user = GetNewUser();
+            user.ZipCode = 65001;
+            user.Name = "Padro Santos";
+            user.Age = 14;
+            user.PersonType = EnumPersonType.User;
+            user.HasChildren = false;
+            user.Category = category;
+            user.DateOfBirth = DateTime.UtcNow.Date.AddYears(-1 * user.Age);
+            AddUser(user);
+
+            var customController = MockUtil.GetMockController<UserController>(new HeaderDictionary
+            {
+                { "propertyToShow", new StringValues(new[] { nameof(user.Age), nameof(user.ZipCode) })},
+            });
+
+            var filters = new Filter[]
+            {
+                new Filter
+                {
+                    FilterType = EnumFilterType.EQUAL,
+                    PropertyName = nameof(User.Category),
+                    Value = category.ToString()
+                }
+            };
+
+            //Operation
+            var result = TestUtil.Execute(customController, (UserController controller) => controller.List(filters)) as DefaultPaginationResult;
+
+            //Tests
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Data);
+            var jarray = result.Data as JArray;
+            Assert.IsNotNull(jarray);
+            Assert.AreEqual(2, jarray.First().Children().Count());
+            var elementAge = jarray.First().Children().FirstOrDefault(x => ((JProperty)x).Name == nameof(user.Age)) as JProperty;
+            var elementZipCode = jarray.First().Children().FirstOrDefault(x => ((JProperty)x).Name == nameof(user.ZipCode)) as JProperty;
+
+            Assert.IsNotNull(elementAge);
+            Assert.IsNotNull(elementZipCode);
+
+            Assert.AreEqual(nameof(user.Age), elementAge.Name);
+            Assert.AreEqual(nameof(user.ZipCode), elementZipCode.Name);
+
+            Assert.AreEqual(user.Age.ToString(), elementAge.Value.ToString());
+            Assert.AreEqual(user.ZipCode.ToString(), elementZipCode.Value.ToString());
+
+            //Clear
+            RemoveUser(user);
+        }
+
+        [Theory]
+        [TestCase("full_name")]
+        [TestCase(nameof(User.Age))]
+        [TestCase(nameof(User.HasChildren))]
+        [TestCase(nameof(User.ZipCode))]
+        public void PropertyToIgnoreOnSucess(string propertyToIgnore)
+        {
+            /* A categoria foi usada para não conflitar os testes simultâneos que são executados aqui*/
+
+            //Preparation
+            var category = TestUtil.NextRandom();
+            var user = GetNewUser();
+            user.ZipCode = 65001;
+            user.Name = "Padro Santos";
+            user.Age = 14;
+            user.PersonType = EnumPersonType.User;
+            user.HasChildren = false;
+            user.Category = category;
+            user.DateOfBirth = DateTime.UtcNow.Date.AddYears(-1 * user.Age);
+            AddUser(user);
+
+            var customController = MockUtil.GetMockController<UserController>(new HeaderDictionary
+            {
+                { "propertyToIgnore", propertyToIgnore }
+            });
+
+            var filters = new Filter[]
+            {
+                new Filter
+                {
+                    FilterType = EnumFilterType.EQUAL,
+                    PropertyName = nameof(User.Category),
+                    Value = category.ToString()
+                }
+            };
+
+            //Operation
+            var result = TestUtil.Execute(customController, (UserController controller) => controller.List(filters)) as DefaultPaginationResult;
+
+            //Tests
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Data);
+            var jarray = result.Data as JArray;
+            Assert.IsNotNull(jarray);
+
+            Assert.AreEqual(typeof(User).GetProperties().Length - 1, jarray.First().Children().Count());
+            var elementIgnored = jarray.First().Children().FirstOrDefault(x => ((JProperty)x).Name == propertyToIgnore) as JProperty;
+            var elementCategory = jarray.First().Children().FirstOrDefault(x => ((JProperty)x).Name == nameof(user.Category)) as JProperty;
+
+            Assert.IsNull(elementIgnored);
+            Assert.IsNotNull(elementCategory);
+
+            Assert.AreEqual(nameof(user.Category), elementCategory.Name);
+            Assert.IsNotEmpty(nameof(user.Category), elementCategory.Value.ToString());
+
+            //Clear
+            RemoveUser(user);
+        }
+
+
+        [Test]
+        public void PropertyToIgnoreTwoSucess()
+        {
+            /* A categoria foi usada para não conflitar os testes simultâneos que são executados aqui*/
+
+            //Preparation
+            var category = TestUtil.NextRandom();
+            var user = GetNewUser();
+            user.ZipCode = 65001;
+            user.Name = "Padro Santos";
+            user.Age = 14;
+            user.PersonType = EnumPersonType.User;
+            user.HasChildren = false;
+            user.Category = category;
+            user.DateOfBirth = DateTime.UtcNow.Date.AddYears(-1 * user.Age);
+            AddUser(user);
+
+            var customController = MockUtil.GetMockController<UserController>(new HeaderDictionary
+            {
+                { "propertyToIgnore", new StringValues(new[] { nameof(user.Age), nameof(user.ZipCode) })},
+            });
+
+            var filters = new Filter[]
+            {
+                new Filter
+                {
+                    FilterType = EnumFilterType.EQUAL,
+                    PropertyName = nameof(User.Category),
+                    Value = category.ToString()
+                }
+            };
+
+            //Operation
+            var result = TestUtil.Execute(customController, (UserController controller) => controller.List(filters)) as DefaultPaginationResult;
+
+            //Tests
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Data);
+            var jarray = result.Data as JArray;
+            Assert.IsNotNull(jarray);
+            Assert.AreEqual(typeof(User).GetProperties().Length - 2, jarray.First().Children().Count());
+            var elementAge = jarray.First().Children().FirstOrDefault(x => ((JProperty)x).Name == nameof(user.Age)) as JProperty;
+            var elementZipCode = jarray.First().Children().FirstOrDefault(x => ((JProperty)x).Name == nameof(user.ZipCode)) as JProperty;
+            var elementName = jarray.First().Children().FirstOrDefault(x => ((JProperty)x).Name == "full_name") as JProperty;
+
+            Assert.IsNull(elementAge);
+            Assert.IsNull(elementZipCode);
+            Assert.IsNotNull(elementName);
+
+            Assert.IsNotEmpty(nameof(user.Name), elementName.Value.ToString());
+            Assert.AreEqual("full_name", elementName.Name);
+
+            //Clear
+            RemoveUser(user);
         }
     }
 }
