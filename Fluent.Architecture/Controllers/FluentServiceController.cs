@@ -11,15 +11,16 @@ using Fluent.Architecture.Core.Util;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Services;
-using Fluent.Architecture.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using System;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 
+[assembly: InternalsVisibleTo(@"Fluent.Architecture.Controller.Test, PublicKey= 00240000048000009400000006020000002400005253413100040000010001006d1cca26da4daf8230bb524d15453c319d38c381589ab07912b8ab6afff8174aad961a74f171790b60e5ed604bc7bad410214a7d59ed6e101c03440e3b1cd055e2bdba377915b076aa15ac9cd6da1acf488a633cb9bc2bb34536b62593950249111ac7c572e02523978ac82d829fe8be29fba6cc4f4e5b668a6cd57d39eee2aa ")]
 namespace Fluent.Architecture.Controllers
 {
     /// <inheritdoc />
@@ -108,22 +109,12 @@ namespace Fluent.Architecture.Controllers
                 {
                     Service.TransactionObjects.Session.SaveChanges();
                     //Transaction.Commit();
-                    TransactionIsStarted = false;
-                }
-                else
-                {
-                    //Transaction.Rollback();
-                    TransactionIsStarted = false;
                 }
 
                 Service.Dispose(true);
             }
-        }
 
-        [NonAction]
-        protected internal new JsonResult Json(object data)
-        {
-            return new CustomJsonResult(data);
+            TransactionIsStarted = false;
         }
     }
 }

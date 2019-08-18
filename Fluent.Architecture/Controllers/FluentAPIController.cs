@@ -3,6 +3,7 @@ using Fluent.Architecture.Core.Specifications;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Specifications;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace Fluent.Architecture.Controllers
 {
@@ -52,11 +53,30 @@ namespace Fluent.Architecture.Controllers
         }
 
         // GET api/user/Count
-        [HttpGet]
+        [HttpPost]
         public virtual DefaultResult Count()
         {
-            return Result(Service.Count());
+            return Count(null);
         }
+
+        // GET api/user/Count
+        [HttpGet]
+        public virtual DefaultResult Count([FromBody] Filter[] filters)
+        {
+            FluentSpecification<T> spec;
+            if (filters != null && filters.Length > 0)
+            {
+                spec = CreateSpec<FilterSpec<T>>().SetParameter(filters);
+            }
+            else
+            {
+                spec = CreateSpec<AllSpec<T>>();
+            }
+
+
+            return Result(Service.Count(spec));
+        }
+
 
         // GET api/user/Exists/?id=5
         [HttpGet]
@@ -77,7 +97,7 @@ namespace Fluent.Architecture.Controllers
         public virtual DefaultResult AddRange([FromBody] T[] values)
         {
             Service.AddRange(values);
-            return Result(true);
+            return Result(values);
         }
 
         // PUT api/user/Update

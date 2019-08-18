@@ -13,7 +13,7 @@ namespace Fluent.Architecture.Controllers
 {
     public class DefaultPaginationTermResult : DefaultPaginationResult
     {
-        public string Term { get; set; }
+        public string Term { get; }
 
         public DefaultPaginationTermResult(object data, FluentPagination pagination, string term) : base(data, pagination)
         {

@@ -16,15 +16,15 @@ namespace Fluent.Architecture.Controller.Test.POScope
 {
     internal class UserControllerTest : InternalUserTestBase
     {
+
         [Test]
-        public void AddSucess()
+        public void AddOneSucess()
         {
             //Preparation
             var user = GetNewUser();
 
             //Operation
             var result = Execute<User>((UserController controller) => controller.Add(user));
-            user.Id = result.Id;
 
             //Tests
             Assert.IsNotNull(result);
@@ -33,6 +33,147 @@ namespace Fluent.Architecture.Controller.Test.POScope
 
             //Clear
             RemoveUser(user);
+        }
+
+        [Test]
+        public void ExistsOneSucess()
+        {
+            //Preparation
+            var user = GetNewUser();
+
+            //Operation
+            var result = Execute<User>((UserController controller) => controller.Add(user));
+
+            var exists = Execute<bool>((UserController controller) => controller.Exists(user));
+
+            //Tests
+            Assert.IsNotNull(result);
+            Assert.IsTrue(exists);
+
+            //Clear
+            RemoveUser(user);
+        }
+
+        [Test]
+        public void UpdateOneSucess()
+        {
+            //Preparation
+            var user = GetNewUser();
+            var result = Execute<User>((UserController controller) => controller.Add(user));
+            user.Name = "New name";
+
+            //Operation
+            Execute<bool>((UserController controller) => controller.Update(user));
+            var resultUpdated = Execute<User>((UserController controller) => controller.Find(user));
+
+            //Tests
+            Assert.IsNotNull(resultUpdated);
+            Assert.AreEqual(user.Name, resultUpdated.Name);
+
+            //Clear
+            RemoveUser(user);
+        }
+
+        [Test]
+        public void UpdateRangeSucess()
+        {
+
+            //Preparation
+            var category = TestUtil.NextRandom();
+            var user1 = GetNewUser(category);
+            var user2 = GetNewUser(category);
+            var users = new[] { user1, user2 };
+            var filters = new Filter[]
+             {
+                    new Filter
+                    {
+                        FilterType = EnumFilterType.EQUAL,
+                        PropertyName = nameof(User.Category),
+                        Value = category.ToString()
+                    }
+             };
+
+            var result = Execute<User[]>((UserController controller) => controller.AddRange(users));
+            result[0].Name = "New name1";
+            result[1].Name = "New name2";
+
+            //Operation
+            Execute<bool>((UserController controller) => controller.UpdateRange(result));
+            var resultUpdated = Execute<User[]>((UserController controller) => controller.List(filters));
+
+            //Tests
+            Assert.IsNotNull(resultUpdated);
+            Assert.AreEqual(2, resultUpdated.Length);
+            Assert.AreEqual(resultUpdated.OrderBy(x => x.Name).First().Name, result[0].Name);
+            Assert.AreEqual(resultUpdated.OrderBy(x => x.Name).Last().Name, result[1].Name);
+
+            //Clear
+            RemoveRangeUser(users);
+        }
+
+        [Test]
+        public void AddRangeSucess()
+        {
+            //Preparation
+            var category = TestUtil.NextRandom();
+            var user1 = GetNewUser(category);
+            var user2 = GetNewUser(category);
+            var users = new User[] { user1, user2 };
+            var filters = new Filter[]
+            {
+                new Filter
+                {
+                    FilterType = EnumFilterType.EQUAL,
+                    PropertyName = nameof(User.Category),
+                    Value = category.ToString()
+                }
+            };
+
+            //Operation
+            Execute<User[]>((UserController controller) => controller.AddRange(users));
+
+            //Operation
+            var resultListFiltered = Execute<List<User>>((UserController controller) => controller.List(filters));
+
+            //Tests
+            Assert.AreEqual(2, resultListFiltered.Count);
+            FluentAssert.Equal(users.OrderBy(x => x.Name).Select(x => x.Name).ToArray(), resultListFiltered.OrderBy(x => x.Name).Select(x => x.Name).ToArray());
+
+            //Clear
+            RemoveRangeUser(users);
+        }
+
+        [Test]
+        public void CountSucess()
+        {
+            //Preparation
+            var category = TestUtil.NextRandom();
+            var user1 = GetNewUser(category);
+            var user2 = GetNewUser(category);
+            var users = new User[] { user1, user2 };
+            var filters = new Filter[]
+            {
+                new Filter
+                {
+                    FilterType = EnumFilterType.EQUAL,
+                    PropertyName = nameof(User.Category),
+                    Value = category.ToString()
+                }
+            };
+
+            //Operation
+            Execute<User[]>((UserController controller) => controller.AddRange(users));
+
+            //Operation
+            var count = Execute<int>((UserController controller) => controller.Count());
+            var countFiltered = Execute<int>((UserController controller) => controller.Count(filters));
+
+            //Tests
+            Assert.GreaterOrEqual(2, count);
+            Assert.AreEqual(2, countFiltered);
+
+            //Clear
+            RemoveRangeUser(users);
         }
 
         [Test]
@@ -70,22 +211,37 @@ namespace Fluent.Architecture.Controller.Test.POScope
         [Test]
         public void ListSucess()
         {
+            var category = TestUtil.NextRandom();
             //Preparation
             var currentController = GetNewController();
-            var user1 = AddNewUser();
-            var user2 = AddNewUser();
-            var user3 = AddNewUser();
+            var user1 = AddNewUser(category);
+            var user2 = AddNewUser(category);
+            var user3 = AddNewUser(category);
+
+            var filters = new Filter[]
+            {
+                new Filter
+                {
+                    FilterType = EnumFilterType.EQUAL,
+                    PropertyName = nameof(User.Category),
+                    Value = category.ToString()
+                }
+            };
 
             //Operation
-            var result = TestUtil.Execute(currentController, (UserController controller) => controller.List()) as DefaultPaginationResult;
+            var result = Execute<List<User>>((UserController controller) => controller.List());
+            var resultFiltered = TestUtil.Execute(currentController, (UserController controller) => controller.List(filters)) as DefaultPaginationResult;
 
             //Tests
-            Assert.IsNotNull(result);
-            Assert.IsNotNull(result.Data);
-            Assert.IsNotNull(result.Pagination);
+            Assert.IsNotNull(resultFiltered);
+            Assert.IsNotNull(resultFiltered.Data);
+            Assert.IsNotNull(resultFiltered.Pagination);
 
-            var list = result.Data.JsonObjectToObject<List<User>>();
+            var list = resultFiltered.Data.JsonObjectToObject<List<User>>();
             Assert.IsNotNull(list);
+
+            Assert.GreaterOrEqual(3, result.Count);
+            Assert.AreEqual(3, list.Count);
             FluentAssert.Equal(user1, list.FirstOrDefault(x => x.Id == user1.Id));
             FluentAssert.Equal(user2, list.FirstOrDefault(x => x.Id == user2.Id));
             FluentAssert.Equal(user3, list.FirstOrDefault(x => x.Id == user3.Id));
@@ -151,13 +307,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
         [TestCase(2, 5, 2, 5, false, 5)]
         [TestCase(0, 9, 2, 0, true, 9)]
         [TestCase(1, 9, 2, 9, true, 1)]
-        public void ListSetPaginationSucess(
-            int currentPage,
-            int itemsPerPage,
-            int numberOfPages,
-            int skip,
-            bool startAtZero,
-            int currentQuantityOfItems)
+        public void ListSetPaginationSucess(int currentPage, int itemsPerPage, int numberOfPages, int skip, bool startAtZero, int currentQuantityOfItems)
         {
             /* A categoria foi usada para não conflitar os testes simultâneos que são executados aqui*/
 
@@ -243,13 +393,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
 
         [TestCase(EnumFilterType.NULL, nameof(User.Password), "", false, 1)]
 
-        public void ListSetFilterSucess(
-            EnumFilterType filterType,
-            string propertyName,
-            string value,
-            bool including,
-            int count
-            )
+        public void ListSetFilterSucess(EnumFilterType filterType, string propertyName, string value, bool including, int count)
         {
             //Preparation
             var currentController = GetNewController();
@@ -517,7 +661,6 @@ namespace Fluent.Architecture.Controller.Test.POScope
             RemoveUser(user);
         }
 
-
         [Test]
         public void PropertyToIgnoreTwoSucess()
         {
@@ -572,6 +715,64 @@ namespace Fluent.Architecture.Controller.Test.POScope
 
             //Clear
             RemoveUser(user);
+        }
+
+        [Theory]
+        [TestCase("San", 1)]
+        [TestCase("pd", 1)]
+        [TestCase("www", 0)]
+        public void FindByTermSucess(string term, int count)
+        {
+            /* A categoria foi usada para não conflitar os testes simultâneos que são executados aqui*/
+
+            //Preparation
+            var category = TestUtil.NextRandom();
+            var user = GetNewUser();
+            user.ZipCode = 65001;
+            user.Name = "Padro Santos";
+            user.UserName = "pdsan";
+            user.Age = 14;
+            user.PersonType = EnumPersonType.User;
+            user.HasChildren = false;
+            user.Category = category;
+            user.DateOfBirth = DateTime.UtcNow.Date.AddYears(-1 * user.Age);
+            AddUser(user);
+
+            var filters = new Filter[]
+            {
+                new Filter
+                {
+                    FilterType = EnumFilterType.EQUAL,
+                    PropertyName = nameof(User.Category),
+                    Value = category.ToString()
+                }
+            };
+
+            var newController = GetNewController();
+
+            //Operation
+            var result = TestUtil.Execute(newController, (UserController controller) => controller.FindByTerm(term)) as DefaultPaginationTermResult;
+
+            //Tests
+            Assert.IsNotNull(result);
+            Assert.AreEqual(term, result.Term);
+            var list = result.Data.JsonObjectToObject<List<User>>();
+            Assert.IsNotNull(list);
+            Assert.AreEqual(count, list.Count);
+
+            //Clear
+            RemoveUser(user);
+        }
+
+        [Test]
+        public void InternalCheckSucess()
+        {
+            //Preparation
+            var user = GetNewUser();
+
+            //Operation //Tests
+            var currentController = GetNewController();
+            TestUtil.Execute(currentController, (UserController controller) => controller.InternalCheck());
         }
     }
 }

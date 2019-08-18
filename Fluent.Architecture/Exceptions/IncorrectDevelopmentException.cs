@@ -6,6 +6,8 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
+using System;
+
 namespace Fluent.Architecture.Exceptions
 {
     /// <inheritdoc />
@@ -13,7 +15,7 @@ namespace Fluent.Architecture.Exceptions
     /// Exceção interna.
     /// Util para validar desenvilvimento incorreto.
     /// </summary>
-    public class IncorrectDevelopmentException : System.Exception
+    public class IncorrectDevelopmentException : Exception
     {
         public IncorrectDevelopmentException(string message)
             : base(message)

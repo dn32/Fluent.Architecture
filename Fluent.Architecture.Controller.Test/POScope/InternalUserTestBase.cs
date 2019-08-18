@@ -29,14 +29,14 @@ namespace Fluent.Architecture.Controller.Test.POScope
             return Execute<User>((UserController controller) => controller.Add(user));
         }
 
-        internal User AddNewUser()
+        internal User AddNewUser(int category = 0)
         {
-            return Execute<User>((UserController controller) => controller.Add(GetNewUser()));
+            return Execute<User>((UserController controller) => controller.Add(GetNewUser(category)));
         }
 
-        internal User[] AddRangeUsers(User[] users)
+        internal bool AddRangeUsers(User[] users)
         {
-            return Execute<User[]>((UserController controller) => controller.AddRange(users));
+            return Execute<bool>((UserController controller) => controller.AddRange(users));
         }
 
         internal User FindUser(User user)
@@ -44,9 +44,9 @@ namespace Fluent.Architecture.Controller.Test.POScope
             return Execute<User>((UserController controller) => controller.Find(user));
         }
 
-        internal void RemoveRangeUser(User[] users)
+        internal bool RemoveRangeUser(User[] users)
         {
-            Execute<User[]>((UserController controller) => controller.RemoveRange(users));
+            return Execute<bool>((UserController controller) => controller.RemoveRange(users));
         }
 
         internal bool UpdateUser(User user)
@@ -54,9 +54,11 @@ namespace Fluent.Architecture.Controller.Test.POScope
             return Execute<bool>((UserController controller) => controller.Update(user));
         }
 
-        public static User GetNewUser()
+        public static User GetNewUser(int category = 0)
         {
             var rand = TestUtil.NextRandom();
+            if (category == 0) { category = rand; }
+
             return new User
             {
                 PersonType = EnumPersonType.User,
@@ -67,7 +69,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
                 Password = $"test{rand}@mail.com",
                 Tel = $"test{rand}@mail.com",
                 ZipCode = rand,
-                Category = rand
+                Category = category
             };
         }
 

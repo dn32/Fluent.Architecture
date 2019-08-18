@@ -40,7 +40,7 @@ namespace Fluent.Architecture.Core.Specifications
                 //Todo - Como validar se a propriedade existe antes de chegar aqui?
                 var property = properties.Single(x => x.Name.Equals(filter.PropertyName, StringComparison.InvariantCultureIgnoreCase));
 
-                Expression<Func<T, bool>> expression;
+                Expression<Func<T, bool>> expression = x => true;
 
                 switch (filter.FilterType)
                 {
@@ -71,8 +71,6 @@ namespace Fluent.Architecture.Core.Specifications
                     case EnumFilterType.NULL:
                         expression = ExpressionUtil.IsNull<T>(property.Name);
                         break;
-                    default:
-                        throw new NotImplementedException($"{filter.FilterType} filter not found");
                 }
 
                 if (filter.IsReverse)
