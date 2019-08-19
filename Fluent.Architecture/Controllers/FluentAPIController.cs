@@ -3,14 +3,80 @@ using Fluent.Architecture.Core.Specifications;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Specifications;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using NJsonSchema;
+using NJsonSchema.Generation;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 namespace Fluent.Architecture.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public abstract class FluentAPIController<T> : FluentController<T> where T : FluentEntity, new()
+    public class FluentAPIController<T> : FluentController<T> where T : FluentEntity, new()
     {
+        [HttpGet]
+        public T ExampleData()
+        {
+            string GetValue(int size)
+            {
+                var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                var stringChars = new char[size];
+                var valor = 0;
+
+                for (int i = 0; i < stringChars.Length; i++)
+                {
+                    stringChars[i] = chars[valor++];
+                }
+
+                return new string(stringChars);
+            }
+
+            var obj = new T();
+            foreach (var properties in obj.GetType().GetProperties())
+            {
+                var minLengthAttribute = properties.GetCustomAttribute<MinLengthAttribute>();
+                if (properties.PropertyType == typeof(string))
+                {
+                    if (minLengthAttribute?.Length != null)
+                    {
+                        properties.SetValue(obj, GetValue(minLengthAttribute.Length));
+                    }
+                    else
+                    {
+                        properties.SetValue(obj, GetValue(3));
+                    }
+                }
+                else if (properties.PropertyType == typeof(int) || properties.PropertyType == typeof(long))
+                {
+                    properties.SetValue(obj, 3);
+                }
+                else if (properties.PropertyType == typeof(decimal))
+                {
+                    properties.SetValue(obj, 4.5m);
+                }
+            }
+
+            return obj;
+        }
+
+        [HttpGet]
+        public string Schema()
+        {
+            var type = typeof(T);
+            var settings = new JsonSchemaGeneratorSettings { GenerateExamples = true };
+            var schema = JsonSchema.FromType(type, settings);
+            schema.SchemaVersion = "http://json-schema.org/schema#";
+            schema.Id = $"{Request.Scheme}://{Request.Host}{Request.Path}{type.Name}";
+
+            foreach (var p in schema.Properties)
+            {
+                p.Value.Id = $"#{type.Name}/{p.Value.Name}";
+            }
+
+            return schema.ToJson();
+        }
+
+
         // GET api/user/list
         [HttpGet]
         public virtual DefaultPaginationResult List()

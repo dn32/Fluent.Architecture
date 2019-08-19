@@ -5,7 +5,6 @@ using Fluent.Architecture.Test;
 using Fluent.Architecture.Test.Mock;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using System;
@@ -16,15 +15,14 @@ namespace Fluent.Architecture.Controller.Test.POScope
 {
     internal class UserControllerTest : InternalUserTestBase
     {
-
         [Test]
         public void AddOneSucess()
         {
             //Preparation
-            var user = GetNewUser();
+            var user = base.GetNew();
 
             //Operation
-            var result = Execute<User>((UserController controller) => controller.Add(user));
+            var result = base.Add(user);
 
             //Tests
             Assert.IsNotNull(result);
@@ -32,46 +30,42 @@ namespace Fluent.Architecture.Controller.Test.POScope
             FluentAssert.Equal(user, result);
 
             //Clear
-            RemoveUser(user);
+            base.Remove(user);
         }
 
         [Test]
         public void ExistsOneSucess()
         {
             //Preparation
-            var user = GetNewUser();
+            var user = base.Add();
 
             //Operation
-            var result = Execute<User>((UserController controller) => controller.Add(user));
-
-            var exists = Execute<bool>((UserController controller) => controller.Exists(user));
+            var exists = base.Exists(user);
 
             //Tests
-            Assert.IsNotNull(result);
             Assert.IsTrue(exists);
 
             //Clear
-            RemoveUser(user);
+            base.Remove(user);
         }
 
         [Test]
         public void UpdateOneSucess()
         {
             //Preparation
-            var user = GetNewUser();
-            var result = Execute<User>((UserController controller) => controller.Add(user));
+            var user = base.Add();
             user.Name = "New name";
 
             //Operation
-            Execute<bool>((UserController controller) => controller.Update(user));
-            var resultUpdated = Execute<User>((UserController controller) => controller.Find(user));
+            base.Update(user);
+            var resultUpdated = base.Find(user);
 
             //Tests
             Assert.IsNotNull(resultUpdated);
             Assert.AreEqual(user.Name, resultUpdated.Name);
 
             //Clear
-            RemoveUser(user);
+            base.Remove(user);
         }
 
         [Test]
@@ -80,8 +74,9 @@ namespace Fluent.Architecture.Controller.Test.POScope
 
             //Preparation
             var category = TestUtil.NextRandom();
-            var user1 = GetNewUser(category);
-            var user2 = GetNewUser(category);
+            base.SetCategory(category);
+            var user1 = base.GetNew();
+            var user2 = base.GetNew();
             var users = new[] { user1, user2 };
             var filters = new Filter[]
              {
@@ -93,13 +88,13 @@ namespace Fluent.Architecture.Controller.Test.POScope
                     }
              };
 
-            var result = Execute<User[]>((UserController controller) => controller.AddRange(users));
+            var result = base.AddRange(users);
             result[0].Name = "New name1";
             result[1].Name = "New name2";
 
             //Operation
-            Execute<bool>((UserController controller) => controller.UpdateRange(result));
-            var resultUpdated = Execute<User[]>((UserController controller) => controller.List(filters));
+            base.UpdateRange(result);
+            var resultUpdated = base.List(filters);
 
             //Tests
             Assert.IsNotNull(resultUpdated);
@@ -108,7 +103,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
             Assert.AreEqual(resultUpdated.OrderBy(x => x.Name).Last().Name, result[1].Name);
 
             //Clear
-            RemoveRangeUser(users);
+            base.RemoveRange(users);
         }
 
         [Test]
@@ -116,8 +111,9 @@ namespace Fluent.Architecture.Controller.Test.POScope
         {
             //Preparation
             var category = TestUtil.NextRandom();
-            var user1 = GetNewUser(category);
-            var user2 = GetNewUser(category);
+            base.SetCategory(category);
+            var user1 = base.GetNew();
+            var user2 = base.GetNew();
             var users = new User[] { user1, user2 };
             var filters = new Filter[]
             {
@@ -130,17 +126,17 @@ namespace Fluent.Architecture.Controller.Test.POScope
             };
 
             //Operation
-            Execute<User[]>((UserController controller) => controller.AddRange(users));
+            base.AddRange(users);
 
             //Operation
-            var resultListFiltered = Execute<List<User>>((UserController controller) => controller.List(filters));
+            var resultListFiltered = base.List(filters);
 
             //Tests
-            Assert.AreEqual(2, resultListFiltered.Count);
+            Assert.AreEqual(2, resultListFiltered.Length);
             FluentAssert.Equal(users.OrderBy(x => x.Name).Select(x => x.Name).ToArray(), resultListFiltered.OrderBy(x => x.Name).Select(x => x.Name).ToArray());
 
             //Clear
-            RemoveRangeUser(users);
+            base.RemoveRange(users);
         }
 
         [Test]
@@ -148,8 +144,9 @@ namespace Fluent.Architecture.Controller.Test.POScope
         {
             //Preparation
             var category = TestUtil.NextRandom();
-            var user1 = GetNewUser(category);
-            var user2 = GetNewUser(category);
+            base.SetCategory(category);
+            var user1 = base.GetNew();
+            var user2 = base.GetNew();
             var users = new User[] { user1, user2 };
             var filters = new Filter[]
             {
@@ -162,50 +159,50 @@ namespace Fluent.Architecture.Controller.Test.POScope
             };
 
             //Operation
-            Execute<User[]>((UserController controller) => controller.AddRange(users));
+            base.AddRange(users);
 
             //Operation
-            var count = Execute<int>((UserController controller) => controller.Count());
-            var countFiltered = Execute<int>((UserController controller) => controller.Count(filters));
+            var count = base.Count();
+            var countFiltered = base.Count(filters);
 
             //Tests
             Assert.GreaterOrEqual(2, count);
             Assert.AreEqual(2, countFiltered);
 
             //Clear
-            RemoveRangeUser(users);
+            base.RemoveRange(users);
         }
 
         [Test]
         public void FindByIdSucess()
         {
             //Preparation
-            var user = AddNewUser();
+            var user = base.Add();
 
             //Operation
-            var result = Execute<User>((UserController controller) => controller.Find(new User { Id = user.Id, PersonType = user.PersonType }));
+            var result = Find(new User { Id = user.Id, PersonType = user.PersonType });
 
             //Tests
             FluentAssert.Equal(user, result);
 
             //Clear
-            RemoveUser(user);
+            base.Remove(user);
         }
 
         [Test]
         public void FindByFluentUniqueKeySucess()
         {
             //Preparation
-            var user = AddNewUser();
+            var user = base.Add();
 
             //Operation
-            var result = Execute<User>((UserController controller) => controller.Find(new User { Email = user.Email }));
+            var result = Find(new User { Email = user.Email });
 
             //Tests
             FluentAssert.Equal(user, result);
 
             //Clear
-            RemoveUser(user);
+            base.Remove(user);
         }
 
         [Test]
@@ -213,10 +210,11 @@ namespace Fluent.Architecture.Controller.Test.POScope
         {
             var category = TestUtil.NextRandom();
             //Preparation
-            var currentController = GetNewController();
-            var user1 = AddNewUser(category);
-            var user2 = AddNewUser(category);
-            var user3 = AddNewUser(category);
+            var currentController = GetNewController<UserController>();
+            base.SetCategory(category);
+            var user1 = base.Add();
+            var user2 = base.Add();
+            var user3 = base.Add();
 
             var filters = new Filter[]
             {
@@ -229,7 +227,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
             };
 
             //Operation
-            var result = Execute<List<User>>((UserController controller) => controller.List());
+            var result = base.List();
             var resultFiltered = TestUtil.Execute(currentController, (UserController controller) => controller.List(filters)) as DefaultPaginationResult;
 
             //Tests
@@ -240,30 +238,30 @@ namespace Fluent.Architecture.Controller.Test.POScope
             var list = resultFiltered.Data.JsonObjectToObject<List<User>>();
             Assert.IsNotNull(list);
 
-            Assert.GreaterOrEqual(3, result.Count);
+            Assert.GreaterOrEqual(3, result.Length);
             Assert.AreEqual(3, list.Count);
             FluentAssert.Equal(user1, list.FirstOrDefault(x => x.Id == user1.Id));
             FluentAssert.Equal(user2, list.FirstOrDefault(x => x.Id == user2.Id));
             FluentAssert.Equal(user3, list.FirstOrDefault(x => x.Id == user3.Id));
 
             //Clear
-            RemoveUser(user1);
-            RemoveUser(user2);
-            RemoveUser(user3);
+            base.Remove(user1);
+            base.Remove(user2);
+            base.Remove(user3);
         }
 
         [Test]
         public void ListDefaultPaginationSucess()
         {
             //Preparation
-            var currentController = GetNewController();
+            var currentController = GetNewController<UserController>();
             var category = TestUtil.NextRandom();
             List<User> users = new List<User>();
             for (int i = 0; i < 40; i++)
             {
-                var user = GetNewUser();
+                var user = base.GetNew();
                 user.Category = category;
-                AddUser(user);
+                base.Add(user);
                 users.Add(user);
             }
             var filters = new Filter[]
@@ -297,7 +295,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
             //Clear
             foreach (var user in users)
             {
-                RemoveUser(user);
+                base.Remove(user);
             }
         }
 
@@ -316,9 +314,8 @@ namespace Fluent.Architecture.Controller.Test.POScope
             var users = new List<User>();
             for (int i = 0; i < 10; i++)
             {
-                var user = GetNewUser();
-                user.Category = category;
-                AddUser(user);
+                base.SetCategory(category);
+                var user = base.Add();
                 users.Add(user);
             }
 
@@ -360,7 +357,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
             //Clear
             foreach (var user in users)
             {
-                RemoveUser(user);
+                base.Remove(user);
             }
         }
 
@@ -396,12 +393,12 @@ namespace Fluent.Architecture.Controller.Test.POScope
         public void ListSetFilterSucess(EnumFilterType filterType, string propertyName, string value, bool including, int count)
         {
             //Preparation
-            var currentController = GetNewController();
+            var currentController = GetNewController<UserController>();
             var users = new List<User>();
             var category = TestUtil.NextRandom();
 
             {
-                var user = GetNewUser();
+                var user = base.GetNew();
                 user.ZipCode = 65000;
                 user.Name = "John Smith";
                 user.Age = 32;
@@ -411,10 +408,10 @@ namespace Fluent.Architecture.Controller.Test.POScope
                 user.DateOfBirth = DateTime.UtcNow.Date.AddYears(-1 * user.Age);
                 user.Password = null;
                 users.Add(user);
-                AddUser(user);
+                base.Add(user);
             }
             {
-                var user = GetNewUser();
+                var user = base.GetNew();
                 user.ZipCode = 65000;
                 user.Name = "Mariah Theofly";
                 user.Age = 25;
@@ -423,11 +420,11 @@ namespace Fluent.Architecture.Controller.Test.POScope
                 user.Category = category;
                 user.DateOfBirth = DateTime.UtcNow.Date.AddYears(-1 * user.Age);
                 users.Add(user);
-                AddUser(user);
+                base.Add(user);
             }
 
             {
-                var user = GetNewUser();
+                var user = base.GetNew();
                 user.ZipCode = 65001;
                 user.Name = "Padro Santos";
                 user.Age = 14;
@@ -436,7 +433,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
                 user.Category = category;
                 user.DateOfBirth = DateTime.UtcNow.Date.AddYears(-1 * user.Age);
                 users.Add(user);
-                AddUser(user);
+                base.Add(user);
             }
 
             var filters = new Filter[]
@@ -487,7 +484,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
             //Clear
             foreach (var user in users)
             {
-                RemoveUser(user);
+                base.Remove(user);
             }
         }
 
@@ -502,7 +499,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
 
             //Preparation
             var category = TestUtil.NextRandom();
-            var user = GetNewUser();
+            var user = base.GetNew();
             user.ZipCode = 65001;
             user.Name = "Padro Santos";
             user.Age = 14;
@@ -510,7 +507,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
             user.HasChildren = false;
             user.Category = category;
             user.DateOfBirth = DateTime.UtcNow.Date.AddYears(-1 * user.Age);
-            AddUser(user);
+            base.Add(user);
 
             var customController = MockUtil.GetMockController<UserController>(new HeaderDictionary
             {
@@ -542,7 +539,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
             Assert.AreEqual(value.ToString(), element.Value.ToString());
 
             //Clear
-            RemoveUser(user);
+            base.Remove(user);
         }
 
         [Test]
@@ -552,7 +549,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
 
             //Preparation
             var category = TestUtil.NextRandom();
-            var user = GetNewUser();
+            var user = base.GetNew();
             user.ZipCode = 65001;
             user.Name = "Padro Santos";
             user.Age = 14;
@@ -560,7 +557,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
             user.HasChildren = false;
             user.Category = category;
             user.DateOfBirth = DateTime.UtcNow.Date.AddYears(-1 * user.Age);
-            AddUser(user);
+            base.Add(user);
 
             var customController = MockUtil.GetMockController<UserController>(new HeaderDictionary
             {
@@ -599,7 +596,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
             Assert.AreEqual(user.ZipCode.ToString(), elementZipCode.Value.ToString());
 
             //Clear
-            RemoveUser(user);
+            base.Remove(user);
         }
 
         [Theory]
@@ -613,7 +610,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
 
             //Preparation
             var category = TestUtil.NextRandom();
-            var user = GetNewUser();
+            var user = base.GetNew();
             user.ZipCode = 65001;
             user.Name = "Padro Santos";
             user.Age = 14;
@@ -621,7 +618,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
             user.HasChildren = false;
             user.Category = category;
             user.DateOfBirth = DateTime.UtcNow.Date.AddYears(-1 * user.Age);
-            AddUser(user);
+            base.Add(user);
 
             var customController = MockUtil.GetMockController<UserController>(new HeaderDictionary
             {
@@ -658,7 +655,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
             Assert.IsNotEmpty(nameof(user.Category), elementCategory.Value.ToString());
 
             //Clear
-            RemoveUser(user);
+            base.Remove(user);
         }
 
         [Test]
@@ -668,7 +665,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
 
             //Preparation
             var category = TestUtil.NextRandom();
-            var user = GetNewUser();
+            var user = base.GetNew();
             user.ZipCode = 65001;
             user.Name = "Padro Santos";
             user.Age = 14;
@@ -676,7 +673,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
             user.HasChildren = false;
             user.Category = category;
             user.DateOfBirth = DateTime.UtcNow.Date.AddYears(-1 * user.Age);
-            AddUser(user);
+            base.Add(user);
 
             var customController = MockUtil.GetMockController<UserController>(new HeaderDictionary
             {
@@ -714,7 +711,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
             Assert.AreEqual("full_name", elementName.Name);
 
             //Clear
-            RemoveUser(user);
+            base.Remove(user);
         }
 
         [Theory]
@@ -727,7 +724,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
 
             //Preparation
             var category = TestUtil.NextRandom();
-            var user = GetNewUser();
+            var user = base.GetNew();
             user.ZipCode = 65001;
             user.Name = "Padro Santos";
             user.UserName = "pdsan";
@@ -736,7 +733,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
             user.HasChildren = false;
             user.Category = category;
             user.DateOfBirth = DateTime.UtcNow.Date.AddYears(-1 * user.Age);
-            AddUser(user);
+            base.Add(user);
 
             var filters = new Filter[]
             {
@@ -748,7 +745,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
                 }
             };
 
-            var newController = GetNewController();
+            var newController = GetNewController<UserController>();
 
             //Operation
             var result = TestUtil.Execute(newController, (UserController controller) => controller.FindByTerm(term)) as DefaultPaginationTermResult;
@@ -761,17 +758,17 @@ namespace Fluent.Architecture.Controller.Test.POScope
             Assert.AreEqual(count, list.Count);
 
             //Clear
-            RemoveUser(user);
+            base.Remove(user);
         }
 
         [Test]
         public void InternalCheckSucess()
         {
             //Preparation
-            var user = GetNewUser();
+            var user = base.GetNew();
 
             //Operation //Tests
-            var currentController = GetNewController();
+            var currentController = GetNewController<UserController>();
             TestUtil.Execute(currentController, (UserController controller) => controller.InternalCheck());
         }
     }

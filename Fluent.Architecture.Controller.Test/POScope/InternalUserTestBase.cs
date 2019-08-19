@@ -1,63 +1,25 @@
-﻿using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Test;
-using Fluent.Architecture.Test.Mock;
-using Fluent.Architecture.Test.Mock.ControllerMock;
-using Newtonsoft.Json;
-using System;
+﻿using Fluent.Architecture.Test;
 
 namespace Fluent.Architecture.Controller.Test.POScope
 {
-    internal class InternalUserTestBase
+    internal class InternalUserTestBase : FluentTest<User>
     {
         public InternalUserTestBase()
         {
             Architecture.Test.Setup.Initialize(null);
         }
 
-        protected UserController GetNewController()
+        protected void SetCategory(int category)
         {
-            return MockUtil.GetMockController<UserController>();
+            Category = category;
         }
 
-        internal bool RemoveUser(User user)
-        {
-            return Execute<bool>((UserController controller) => controller.Remove(user));
-        }
+        private int Category { get; set; }
 
-        internal User AddUser(User user)
-        {
-            return Execute<User>((UserController controller) => controller.Add(user));
-        }
-
-        internal User AddNewUser(int category = 0)
-        {
-            return Execute<User>((UserController controller) => controller.Add(GetNewUser(category)));
-        }
-
-        internal bool AddRangeUsers(User[] users)
-        {
-            return Execute<bool>((UserController controller) => controller.AddRange(users));
-        }
-
-        internal User FindUser(User user)
-        {
-            return Execute<User>((UserController controller) => controller.Find(user));
-        }
-
-        internal bool RemoveRangeUser(User[] users)
-        {
-            return Execute<bool>((UserController controller) => controller.RemoveRange(users));
-        }
-
-        internal bool UpdateUser(User user)
-        {
-            return Execute<bool>((UserController controller) => controller.Update(user));
-        }
-
-        public static User GetNewUser(int category = 0)
+        protected override User GetNew()
         {
             var rand = TestUtil.NextRandom();
-            if (category == 0) { category = rand; }
+            if (Category == 0) { Category = rand; }
 
             return new User
             {
@@ -69,17 +31,8 @@ namespace Fluent.Architecture.Controller.Test.POScope
                 Password = $"test{rand}@mail.com",
                 Tel = $"test{rand}@mail.com",
                 ZipCode = rand,
-                Category = category
+                Category = Category
             };
-        }
-
-        public TR Execute<TR>(Func<UserController, DefaultResult> actionMethod)
-        {
-            var currentController = GetNewController();
-            currentController.OnActionExecuting(MockActionExecutingContextFactory.Create(currentController));
-            var ret = actionMethod(currentController);
-            currentController.OnActionExecuted(MockActionExecutedContextFactory.Create(currentController));
-            return JsonConvert.DeserializeObject<TR>(JsonConvert.SerializeObject(ret.Data));
         }
     }
 }
