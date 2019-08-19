@@ -66,11 +66,6 @@ namespace Fluent.Architecture.EntityFramework
         internal DbSet<TE> Input => this.TransactionObjects.GetObjectInputDataInternal<TE>() as DbSet<TE>;
 
         /// <summary>
-        /// A referência de um Input de tradução.
-        /// </summary>
-        internal DbSet<Translation> TranslactionInput => this.TransactionObjects.GetObjectInputDataInternal<Translation>() as DbSet<Translation>;
-
-        /// <summary>
         /// O serviço qual esse repositório representa.
         /// </summary>
         public FluentService<TE> Service { get; set; }

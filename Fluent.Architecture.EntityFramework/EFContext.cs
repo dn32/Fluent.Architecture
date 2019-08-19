@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 
@@ -52,12 +53,12 @@ namespace Fluent.Architecture.EntityFramework
 
                 if (type.IsSubclassOf(typeof(FluentEntity)))
                 {
+                    var keys = type.GetProperties().Where(x => x.GetCustomAttribute<KeyAttribute>() != null).Select(x => x.Name).ToArray();
                     var eb = modelBuilder.Entity(type);
+                    eb.HasKey(keys);
                     SetEntity(eb, type);
                 }
             }
-
-            modelBuilder.Entity<Translation>().HasKey(c => new { c.Language, c.EntityType, c.EntityId, c.Property });
 
             base.OnModelCreating(modelBuilder);
         }

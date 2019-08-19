@@ -19,10 +19,11 @@ namespace Fluent.Architecture.Controller.Test.POScope
     [Table("users"), DbType(FluentDbType.SQLITE)]
     public class User : FluentEntity
     {
-        [Key]
+        [Key, Column(Order = 0)]
         public int Id { get; set; }
 
         [Required]
+        [Key, Column(Order = 1)]
         public EnumPersonType? PersonType { get; set; }
 
         [Required, JsonProperty("full_name"), Searchable]

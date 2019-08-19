@@ -180,19 +180,12 @@ namespace Fluent.Architecture.Validation
         {
             ParameterMustBeInformed(entity);
 
-            if (entity != null)
+            if (checkId && entity != null)
             {
-                if (checkId)
-                {
-                    AllKeysMustBeInformed(entity);
-                }
-                else
-                {
-                    AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
-                }
+                AllKeysMustBeInformed(entity);
             }
 
-            this.RunTheContextValidation();
+            RunTheContextValidation();
         }
 
         public virtual void FindByTerm(string term)

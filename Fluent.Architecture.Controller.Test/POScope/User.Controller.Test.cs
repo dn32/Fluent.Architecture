@@ -183,7 +183,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
             var user = AddNewUser();
 
             //Operation
-            var result = Execute<User>((UserController controller) => controller.Find(new User { Id = user.Id }));
+            var result = Execute<User>((UserController controller) => controller.Find(new User { Id = user.Id, PersonType = user.PersonType }));
 
             //Tests
             FluentAssert.Equal(user, result);
