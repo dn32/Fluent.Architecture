@@ -7,12 +7,14 @@
 
 // ReSharper disable CommentTypo
 
+using Fluent.Architecture.Core.Controllers.ControllerModel;
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Validation;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -176,6 +178,12 @@ namespace Fluent.Architecture.Services
             Repository.RemoveRange(spec);
         }
 
+        public virtual void Truncate(string ERASE_ALL_DATA)
+        {
+            Validation.Truncate(ERASE_ALL_DATA);
+            Repository.Truncate();
+        }
+
         /// <summary>
         /// Avalia se um item existe no banco de dados, baseado em uma especificação.
         /// </summary>
@@ -245,6 +253,12 @@ namespace Fluent.Architecture.Services
         {
             this.Validation.Update(entity);
             return this.Repository.Update(entity);
+        }
+
+        internal T UpdateAlter(UpdateAlter<T> value)
+        {
+            Validation.UpdateAlter(value);
+            return Repository.UpdateAlter(value);
         }
 
         /// <summary>

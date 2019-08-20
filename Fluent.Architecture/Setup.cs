@@ -46,6 +46,8 @@ namespace Fluent.Architecture
         public List<Connection> Connections { get; internal set; }
         public IServiceProvider ServiceProvider { get; internal set; }
         public Type UserSessionRequestType { get; internal set; }
+        public Type GenericServiceType { get; internal set; }
+        public Type GenericRepositoryType { get; internal set; }
         internal IRepositoryFactory RepositoryFactory { get; set; }
     }
 
@@ -80,6 +82,26 @@ namespace Fluent.Architecture
             if (configClass != null)
             {
                 configClass.ServiceProvider = serviceProvider;
+            }
+
+            return configClass;
+        }
+
+        public static Config SetGenericServiceType(this Config configClass, Type serviceType)
+        {
+            if (configClass != null)
+            {
+                configClass.GenericServiceType = serviceType;
+            }
+
+            return configClass;
+        }
+
+        public static Config SetGenericRepositoryType(this Config configClass, Type repositoryType)
+        {
+            if (configClass != null)
+            {
+                configClass.GenericRepositoryType = repositoryType;
             }
 
             return configClass;

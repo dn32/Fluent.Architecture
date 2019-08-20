@@ -29,7 +29,7 @@ namespace Fluent.Architecture.Extensions
         /// <returns>O valor padrão do tipo.</returns>
         public static object GetDefaultValue(this Type type)
         {
-            if(type == null) { throw new ArgumentNullException(nameof(type)); }
+            if (type == null) { throw new ArgumentNullException(nameof(type)); }
             return type.IsValueType ? TypeDefaults.GetOrAdd(type, Activator.CreateInstance) : null;
         }
 
@@ -42,7 +42,7 @@ namespace Fluent.Architecture.Extensions
         //Todo2 doc
         public static TX Next<TX>(this List<TX> list)
         {
-            if(list == null) { throw new ArgumentNullException(nameof(list)); }
+            if (list == null) { throw new ArgumentNullException(nameof(list)); }
 
             if (list.Count == 0)
             {
@@ -57,8 +57,8 @@ namespace Fluent.Architecture.Extensions
         //Todo2 doc
         public static bool Is(this Type t1, Type t2)
         {
-            if(t1 == null) { throw new ArgumentNullException(nameof(t1)); }
-            if(t2 == null) { throw new ArgumentNullException(nameof(t2)); }
+            if (t1 == null) { throw new ArgumentNullException(nameof(t1)); }
+            if (t2 == null) { throw new ArgumentNullException(nameof(t2)); }
 
             return t1.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == t2) ||
                    t2.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == t1) ||
@@ -150,7 +150,8 @@ namespace Fluent.Architecture.Extensions
                 var entityType = args.First();
                 if (!Setup.Services.TryGetValue(entityType, out serviceType))
                 {
-                    serviceType = typeof(FluentService<>).MakeGenericType(entityType);
+                    var type = (Setup.Config.Config.GenericServiceType) ?? typeof(FluentService<>);
+                    serviceType = type.MakeGenericType(entityType);
                 }
             }
 

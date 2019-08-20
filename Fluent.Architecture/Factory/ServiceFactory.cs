@@ -122,7 +122,8 @@ namespace Fluent.Architecture.Factory
                 var entityType = args.First();
                 if (!Setup.Services.TryGetValue(entityType, out serviceType))
                 {
-                    serviceType = typeof(FluentService<>).MakeGenericType(entityType);
+                    var type = (Setup.Config.Config.GenericServiceType) ?? typeof(FluentService<>);
+                    serviceType = type.MakeGenericType(entityType);
                 }
             }
 

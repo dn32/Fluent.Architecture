@@ -46,8 +46,7 @@ namespace Fluent.Architecture.EntityFramework
                 throw new IncorrectDevelopmentException($"The entity {typeof(T).Name} needs a database type specification. Example: [DbType (FluentDbType.ORACLE)]");
             }
 
-            var localType = typeof(FluentEFRepository<T>);
-            //localType = localType.MakeGenericType(typeof(T));
+            var localType = Setup.Config?.Config?.GenericRepositoryType?.MakeGenericType(typeof(T)) ?? typeof(FluentEFRepository<T>);
 
             if (Setup.Repositories.TryGetValue(typeof(T), out var repositoryType))
             {

@@ -1,11 +1,15 @@
-﻿using Fluent.Architecture.Core.Filters;
+﻿using Fluent.Architecture.Core.Controllers.ControllerModel;
+using Fluent.Architecture.Core.Filters;
 using Fluent.Architecture.Core.Specifications;
 using Fluent.Architecture.Entities;
+using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Specifications;
 using Microsoft.AspNetCore.Mvc;
 using NJsonSchema;
 using NJsonSchema.Generation;
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Reflection;
 
 namespace Fluent.Architecture.Controllers
@@ -14,6 +18,13 @@ namespace Fluent.Architecture.Controllers
     [ApiController]
     public class FluentAPIController<T> : FluentController<T> where T : FluentEntity, new()
     {
+        private static readonly Random Random = new Random();
+
+        private static int NextRandom(int max)
+        {
+            return Random.Next(0, max);
+        }
+
         [HttpGet]
         public T ExampleData()
         {
@@ -21,38 +32,54 @@ namespace Fluent.Architecture.Controllers
             {
                 var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
                 var stringChars = new char[size];
-                var valor = 0;
 
                 for (int i = 0; i < stringChars.Length; i++)
                 {
-                    stringChars[i] = chars[valor++];
+                    stringChars[i] = chars[NextRandom(chars.Length - 1)];
                 }
 
                 return new string(stringChars);
             }
 
             var obj = new T();
-            foreach (var properties in obj.GetType().GetProperties())
+            foreach (var property in obj.GetType().GetProperties())
             {
-                var minLengthAttribute = properties.GetCustomAttribute<MinLengthAttribute>();
-                if (properties.PropertyType == typeof(string))
+                var maxLengthAttribute = property.GetCustomAttribute<MaxLengthAttribute>();
+                if (property.PropertyType == typeof(string))
                 {
-                    if (minLengthAttribute?.Length != null)
+                    if (maxLengthAttribute?.Length != null)
                     {
-                        properties.SetValue(obj, GetValue(minLengthAttribute.Length));
+                        property.SetValue(obj, GetValue(maxLengthAttribute.Length));
                     }
                     else
                     {
-                        properties.SetValue(obj, GetValue(3));
+                        property.SetValue(obj, GetValue(3));
                     }
                 }
-                else if (properties.PropertyType == typeof(int) || properties.PropertyType == typeof(long))
+                else if (property.PropertyType.IsNullableEnum())
                 {
-                    properties.SetValue(obj, 3);
+                    var firstEnum = Enum.GetValues(property.PropertyType).GetValue(1);
+                    property.SetValue(obj, firstEnum);
                 }
-                else if (properties.PropertyType == typeof(decimal))
+                else if (property.PropertyType.IsNumeric())
                 {
-                    properties.SetValue(obj, 4.5m);
+                    var maxLengthAttribute2 = property.GetCustomAttribute<RangeAttribute>()?.Maximum as int?;
+                    object MaxValue = null;
+
+                    if (maxLengthAttribute2 != null)
+                    {
+                        MaxValue = NextRandom(maxLengthAttribute2.Value);
+                    }
+                    else
+                    {
+                        MaxValue = property.PropertyType.GetField("MaxValue").GetValue(null);
+                    }
+
+                    if(MaxValue as long? > int.MaxValue) { MaxValue = int.MaxValue; }
+                    var maxValueInt = (Convert.ChangeType(MaxValue, typeof(int), CultureInfo.InvariantCulture) ?? int.MaxValue) as int?;
+                    var value = NextRandom(maxValueInt.Value);
+                    var objectValue = Convert.ChangeType(value, property.PropertyType, CultureInfo.InvariantCulture);
+                    property.SetValue(obj, objectValue);
                 }
             }
 
@@ -122,7 +149,7 @@ namespace Fluent.Architecture.Controllers
         [HttpPost]
         public virtual DefaultResult Count()
         {
-            return Count(null);
+            return Result(Service.Count());
         }
 
         // GET api/user/Count
@@ -142,7 +169,6 @@ namespace Fluent.Architecture.Controllers
 
             return Result(Service.Count(spec));
         }
-
 
         // GET api/user/Exists/?id=5
         [HttpGet]
@@ -174,6 +200,14 @@ namespace Fluent.Architecture.Controllers
             return Result(true);
         }
 
+        // PUT api/user/UpdateAlter
+        [HttpPut]
+        public virtual DefaultResult UpdateAlter([FromBody] UpdateAlter<T> value)
+        {
+            Service.UpdateAlter(value);
+            return Result(true);
+        }
+
         // PUT api/user/UpdateRange
         [HttpPut]
         public virtual DefaultResult UpdateRange([FromBody] T[] values)
@@ -195,6 +229,13 @@ namespace Fluent.Architecture.Controllers
         public virtual DefaultResult RemoveRange([FromBody] T[] values)
         {
             Service.RemoveRange(values);
+            return Result(true);
+        }
+
+        [HttpDelete]
+        public virtual DefaultResult Truncate([FromHeader] string ERASE_ALL_DATA = "false")
+        {
+            Service.Truncate(ERASE_ALL_DATA);
             return Result(true);
         }
     }

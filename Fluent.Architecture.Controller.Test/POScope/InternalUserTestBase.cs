@@ -16,7 +16,7 @@ namespace Fluent.Architecture.Controller.Test.POScope
 
         private int Category { get; set; }
 
-        protected override User GetNew()
+        public override User GetNew()
         {
             var rand = TestUtil.NextRandom();
             if (Category == 0) { Category = rand; }

@@ -1,4 +1,5 @@
-﻿using Fluent.Architecture.Entities;
+﻿using Fluent.Architecture.Core.Controllers.ControllerModel;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Services;
 using System;
@@ -13,6 +14,7 @@ namespace Fluent.Architecture.Core.Interfaces
         ITransactionObjects TransactionObjects { get; set; }
         Type TransactionObjectsType { get; }
         void RemoveRange(IFluentSpecification spec);
+        void Truncate();
         void RemoveRange(TE[] entities);
         TE Remove(TE entity);
         TE Update(TE entity);
@@ -30,6 +32,6 @@ namespace Fluent.Architecture.Core.Interfaces
         TE Add(TE entity);
         void AddRange(TE[] entities);
         int Count(IFluentSpecification spec);
-        List<T> RawSqlQuery<T>(string query, Func<DbDataReader, T> map);
+        TE UpdateAlter(UpdateAlter<TE> value);
     }
 }

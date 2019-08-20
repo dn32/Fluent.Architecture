@@ -8,6 +8,7 @@
 // ReSharper disable CommentTypo
 
 using Fluent.Architecture.Core.Attributes;
+using Fluent.Architecture.Core.Controllers.ControllerModel;
 using Fluent.Architecture.Core.Filters;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions.ValidationException;
@@ -104,6 +105,24 @@ namespace Fluent.Architecture.Validation
             }
 
             this.RunTheContextValidation();
+        }
+
+        internal void UpdateAlter(UpdateAlter<T> value)
+        {
+            ParameterMustBeInformed(value);
+            ParameterMustBeInformed(value.Original);
+            ParameterMustBeInformed(value.Final);
+            RequiredPropertyMustBeInformed(value.Original);
+            RequiredPropertyMustBeInformed(value.Final);
+            MaxLenghtPropertyMustBeInformed(value.Final);
+            AllKeysShouldBeInformedWhenThereAreMoreThanOne(value.Final, isUpdate: true);
+
+            if (KeyValuesOk)
+            {
+                EntityMustExistInDatabase(value.Original);
+            }
+
+            RunTheContextValidation();
         }
 
         public virtual void UpdateRange(T[] entities)
@@ -203,6 +222,16 @@ namespace Fluent.Architecture.Validation
             RunTheContextValidation();
         }
 
+        public void Truncate(string ERASE_ALL_DATA)
+        {
+            if (ERASE_ALL_DATA?.Equals("Yes", StringComparison.InvariantCultureIgnoreCase) != true)
+            {
+                AddInconsistency(new AlterLossOfDadaValidationException());
+            }
+
+            RunTheContextValidation();
+        }
+
         /*
     === PADRÃO DE NOMECLATURA ===
     O que deve ser verdadeiro
@@ -237,7 +266,7 @@ namespace Fluent.Architecture.Validation
             foreach (var property in properties)
             {
                 var attr = property.GetCustomAttribute<MaxLengthAttribute>();
-                if (attr == null)
+                if (attr == null || (property.PropertyType != typeof(string) && property.PropertyType != typeof(String)))
                 {
                     continue;
                 }
@@ -266,7 +295,7 @@ namespace Fluent.Architecture.Validation
                 }
             }
         }
-
+            
         private void AllKeysMustBeInformed(T entity)
         {
             this.KeyValuesOk = true;

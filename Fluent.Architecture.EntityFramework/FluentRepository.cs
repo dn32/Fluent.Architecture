@@ -7,6 +7,7 @@
 
 // ReSharper disable CommentTypo
 
+using Fluent.Architecture.Core.Controllers.ControllerModel;
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions;
@@ -197,7 +198,7 @@ namespace Fluent.Architecture.EntityFramework
         /// <param name="query"></param>
         /// <param name="map"></param>
         /// <returns></returns>
-        public List<T> RawSqlQuery<T>(string query, Func<DbDataReader, T> map)
+        protected List<T> RawSqlQuery<T>(string query, Func<DbDataReader, T> map)
         {
             using (var command = Session.Database.GetDbConnection().CreateCommand())
             {
@@ -217,6 +218,17 @@ namespace Fluent.Architecture.EntityFramework
 
                     return entities;
                 }
+            }
+        }
+
+        protected int ExecuteSqlQuery(string query)
+        {
+            using (var command = Session.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = query;
+                command.CommandType = CommandType.Text;
+                Session.Database.OpenConnection();
+                return command.ExecuteNonQuery();
             }
         }
 
@@ -338,9 +350,18 @@ namespace Fluent.Architecture.EntityFramework
 
             var currentEntity = Service.Find(entity);
             //Input.Attach(currentEntity);
-            //TransactionObjects.Session.Entry(currentEntity).State = EntityState.Modified;
-            ((DbContext)TransactionObjects.Session).Entry(currentEntity).CurrentValues.SetValues(entity);
+            TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
             return entity;
+        }
+
+        public TE UpdateAlter(UpdateAlter<TE> value)
+        {
+            RunTheContextValidation();
+
+            var currentEntity = Service.Find(value.Original);
+            //Input.Attach(currentEntity);
+            TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(value.Final);
+            return value.Final;
         }
 
         public virtual void UpdateRange(TE[] entities)
@@ -372,6 +393,12 @@ namespace Fluent.Architecture.EntityFramework
             this.Input.RemoveRange(list);
         }
 
+        public virtual void Truncate()
+        {
+            var tableName = typeof(TE).GetTableName();
+            var sql = $"TRUNCATE TABLE {tableName}";
+            ExecuteSqlQuery(sql);
+        }
 
         public virtual void RemoveRange(params TE[] entities)
         {
@@ -448,14 +475,20 @@ namespace Fluent.Architecture.EntityFramework
             return Service.SessionRequest.LocalHttpContext.Request?.Form[key];
         }
 
-        private static string CreateSqlFromKeyOrFluentUniqueKeys(TE entity)
+        private string CreateSqlFromKeyOrFluentUniqueKeys(TE entity)
+        {
+            var tableName = entity.GetTableName();
+            var where = GetKeyFilterSql(entity);
+            return $"select * from {tableName} where {where}";
+        }
+
+        protected virtual string GetKeyFilterSql(TE entity)
         {
             var tableName = entity.GetTableName();
             var keyValues = entity.GetKeyValues().Select(x => $"{x.ColumnName} = {x.Value}").ToArray();
             var fluentUniqueKeyValues = entity.GetFluentUniqueKeyValues().Select(x => $"{x.ColumnName} = {x.Value}").ToArray();
 
-
-            var sql = $"select * from {tableName} where ({string.Join(" and ", keyValues)})";
+            var sql = $"({string.Join(" and ", keyValues)})";
 
             if (fluentUniqueKeyValues.Length > 0)
             {

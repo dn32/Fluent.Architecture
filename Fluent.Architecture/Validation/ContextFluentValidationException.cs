@@ -69,6 +69,7 @@ namespace Fluent.Architecture.Validation
         {
             if (IsInvalid)
             {
+
                 throw this;
             }
         }
