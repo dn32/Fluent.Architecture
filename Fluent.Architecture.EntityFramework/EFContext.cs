@@ -6,10 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Query.Expressions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Fluent.Architecture.EntityFramework
@@ -34,7 +36,7 @@ namespace Fluent.Architecture.EntityFramework
             //Database.Migrate();
         }
 
-        [DbFunction("utl_match.jaro_winkler_similarity")]
+        [DbFunction]//(FunctionName = "UTL_MATCH.jaro_winkler_similarity")]
         public static int jaro_winkler_similarity(string s1, string s2)
         {
             throw new Exception();
@@ -66,15 +68,42 @@ namespace Fluent.Architecture.EntityFramework
                 }
             }
 
-            var method = typeof(EfContext).GetMethod(nameof(EfContext.jaro_winkler_similarity), new[] { typeof(string), typeof(string) });
+            //var method = typeof(EfContext).GetMethod(nameof(EfContext.jaro_winkler_similarity), new[] { typeof(string), typeof(string) });
 
-            modelBuilder.HasDbFunction(method, (DbFunctionBuilder ac) =>
-                {
-                    ac.HasName(("utl_match" + nameof(EfContext.jaro_winkler_similarity)).ToUpper());
-                });
+            //modelBuilder.HasDbFunction(method, (DbFunctionBuilder ac) =>
+            //    {
+            //        ac.HasName(("utl_match." + nameof(EfContext.jaro_winkler_similarity)).ToUpper());
+            //    });
 
+            modelBuilder
+              .HasDbFunction(FunctionsSQLServer.ConvertToMethodInfo())
+              .HasTranslation(args =>
+              {
+                  var arguments = args.ToList();
+                  arguments[0] = new SqlFragmentExpression("\"DESCRICAO\"");// (string)((ConstantExpression)arguments.First()).Value);
+                  return new SqlFunctionExpression(new SqlFragmentExpression("UTL_MATCH"), "jaro_winkler_similarity", typeof(int), arguments);
+              });
 
             base.OnModelCreating(modelBuilder);
+        }
+        //public Expression<Func<TE, bool>> exp(string propertyName, string value)
+        //{
+        //    var parameter = Expression.Parameter(typeof(TE), "x");
+        //    var property = Expression.Property(parameter, propertyName);
+
+        //    var method = typeof(EfContext).GetMethod(nameof(EfContext.jaro_winkler_similarity), new[] { typeof(string), typeof(string) });
+        //    var expression = Expression.Call(null, method, property, Expression.Constant(value));
+        //    var maior = Expression.GreaterThan(expression, Expression.Constant(40, typeof(int)));
+
+        //    return Expression.Lambda<Func<TE, bool>>(maior, parameter);
+        //}
+
+        public class FunctionsSQLServer
+        {
+            public static int Convert(string type, string value) => 0;
+
+            public static MethodInfo ConvertToMethodInfo()
+                => typeof(FunctionsSQLServer).GetMethod(nameof(FunctionsSQLServer.Convert));
         }
 
         protected virtual void SetEntity(EntityTypeBuilder entity, Type type) { }

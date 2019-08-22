@@ -257,15 +257,16 @@ namespace Fluent.Architecture.EntityFramework
             // var query = spec.ToIQueryable(Query);
             // return FluentPaginate(query, pagination).ToList();
 
-            var q = Query as IQueryable<Departamento>;
+            var depQuery = Query as IQueryable<Departamento>;
+            var similarQuery = depQuery.Where(x => EfContext.FunctionsSQLServer.Convert(x.Descricao,x.Descricao) > 40);
+            var list = similarQuery.ToList();
 
-            var columnName = typeof(Departamento).GetProperty(nameof(Departamento.Descricao)).GetColumnName();
+            //var columnName = typeof(Departamento).GetProperty(nameof(Departamento.Descricao)).GetColumnName();
 
-            var eexp1 = exp(columnName, "brasilia");
+            //var eexp1 = exp(columnName, "brasilia");
 
-            var func = eexp1.Compile();
-            var dddd = Query.Where(func);
-            var list = dddd.ToList();
+            //var dddd = Query.Where(eexp1);
+            //var list = dddd.ToList();
 
             return null;
         }
@@ -281,6 +282,18 @@ namespace Fluent.Architecture.EntityFramework
 
             return Expression.Lambda<Func<TE, bool>>(maior, parameter);
         }
+
+        //public Expression<Func<TE, bool>> exp(string propertyName, string value)
+        //{
+        //    var parameter = Expression.Parameter(typeof(TE), "x");
+        //    var property = Expression.Property(parameter, propertyName);
+
+        //    var method = typeof(EfContext).GetMethod(nameof(EfContext.jaro_winkler_similarity), new[] { typeof(string), typeof(string) });
+        //    var expression = Expression.Call(null, method, property, Expression.Constant(value));
+        //    var maior = Expression.GreaterThan(expression, Expression.Constant(40, typeof(int)));
+
+        //    return Expression.Lambda<Func<TE, bool>>(maior, parameter);
+        //}
 
 
         /// <summary>
