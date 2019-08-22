@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Query.Expressions;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Expressions;
@@ -178,6 +179,7 @@ namespace Fluent.Architecture.Extensions
             return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
         }
 
+
         public static Expression<Func<T, bool>> EndsWith<T>(string propertyName, string value, Type type)
         {
             if (type != typeof(string))
@@ -273,7 +275,7 @@ namespace Fluent.Architecture.Extensions
 
         public static Expression<Func<T, bool>> Smaller<T>(string propertyName, string value, bool including, Type type)
         {
-            return SmallerOrGreater<T>(propertyName, value, including, type??null, false);
+            return SmallerOrGreater<T>(propertyName, value, including, type ?? null, false);
         }
 
         public static Expression<Func<T, bool>> Greate<T>(string propertyName, string value, bool including, Type type)

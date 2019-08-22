@@ -48,6 +48,7 @@ namespace Fluent.Architecture
         public Type UserSessionRequestType { get; internal set; }
         public Type GenericServiceType { get; internal set; }
         public Type GenericRepositoryType { get; internal set; }
+        public Type GenericValidationType { get; internal set; }
         internal IRepositoryFactory RepositoryFactory { get; set; }
     }
 
@@ -102,6 +103,16 @@ namespace Fluent.Architecture
             if (configClass != null)
             {
                 configClass.GenericRepositoryType = repositoryType;
+            }
+
+            return configClass;
+        }
+
+        public static Config SetGenericValidationType(this Config configClass, Type ValidationType)
+        {
+            if (configClass != null)
+            {
+                configClass.GenericValidationType = ValidationType;
             }
 
             return configClass;

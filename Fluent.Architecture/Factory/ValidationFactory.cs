@@ -30,7 +30,8 @@ namespace Fluent.Architecture.Factory
         /// </returns>
         internal static FluentValidation<T> Create<T>() where T : BaseEntity
         {
-            return Create(typeof(FluentValidation<T>)) as FluentValidation<T>;
+            var localType = Setup.Config?.Config?.GenericValidationType?.MakeGenericType(typeof(T)) ?? typeof(FluentValidation<T>);
+            return Create(localType) as FluentValidation<T>;
         }
 
         internal static TransactionalValidation Create(Type validationType)

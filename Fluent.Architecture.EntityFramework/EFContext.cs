@@ -34,6 +34,12 @@ namespace Fluent.Architecture.EntityFramework
             //Database.Migrate();
         }
 
+        [DbFunction("utl_match.jaro_winkler_similarity")]
+        public static int jaro_winkler_similarity(string s1, string s2)
+        {
+            throw new Exception();
+        }
+
         /// <summary>
         /// Todas as entidades de banco de dados são adicionados automaticamente.
         /// Use <see cref="NotDbEntityAttribute"/> se não desejar que uma entidade seja adicionada.
@@ -59,6 +65,14 @@ namespace Fluent.Architecture.EntityFramework
                     SetEntity(eb, type);
                 }
             }
+
+            var method = typeof(EfContext).GetMethod(nameof(EfContext.jaro_winkler_similarity), new[] { typeof(string), typeof(string) });
+
+            modelBuilder.HasDbFunction(method, (DbFunctionBuilder ac) =>
+                {
+                    ac.HasName(("utl_match" + nameof(EfContext.jaro_winkler_similarity)).ToUpper());
+                });
+
 
             base.OnModelCreating(modelBuilder);
         }

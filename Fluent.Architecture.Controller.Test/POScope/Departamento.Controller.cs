@@ -6,19 +6,14 @@
 // -----------------------------------------------------------------------
 
 using Fluent.Architecture.Controllers;
-using NUnit.Framework;
 
-
-public class UserController : FluentAPIController<User>
+public class DepartamentoController : FluentAPIController<Departamento>
 {
-    public DefaultResult InternalCheck()
+    public virtual DefaultPaginationResult ListByProximity(string term)
     {
-        //Tests
-        Assert.IsNotNull(SessionRequestId);
-        Assert.IsNotNull(ServiceHttpContext);
-        Assert.IsNotNull(ServiceUser);
-        Assert.IsNotNull(User);
-        return Result(true);
+       // var spec = CreateSpec<DepartamentoNameProximity>().AddParameter(term);
+        var list = Service.List(null);
+        return Result(list, LastRequestPagination);
     }
 }
 

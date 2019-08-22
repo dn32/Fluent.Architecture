@@ -1,10 +1,7 @@
 ﻿
-namespace Fluent.Architecture.Controller.Test.POScope
+public enum EnumPersonType
 {
-    public enum EnumPersonType
-    {
-        None = 0,
-        User = 1,
-        ExternalUser = 2
-    }
+    None = 0,
+    User = 1,
+    ExternalUser = 2
 }

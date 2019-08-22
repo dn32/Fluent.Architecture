@@ -67,7 +67,6 @@ namespace Fluent.Architecture.Util
             typeof(FluentService<FluentEntity>).Name,
             typeof(IFluentRepository<FluentEntity>).Name,
             typeof(FluentValidation<FluentEntity>).Name,
-            typeof(FluentController<FluentEntity>).Name,
             typeof(FluentSpecification<FluentEntity>).Name
         };
 

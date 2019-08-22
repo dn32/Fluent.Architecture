@@ -8,6 +8,8 @@
     <SignAssembly>true</SignAssembly>
 
     <AssemblyOriginatorKeyFile>Fluent.Architecture.Controller.Test.snk</AssemblyOriginatorKeyFile>
+
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Fluent.Architecture.EntityFramework.Oracle\Fluent.Architecture.EntityFramework.Oracle.csproj" />
     <ProjectReference Include="..\Fluent.Architecture.EntityFramework.SqLite\Fluent.Architecture.EntityFramework.SqLite.csproj" />
     <ProjectReference Include="..\Fluent.Architecture.EntityFramework\Fluent.Architecture.EntityFramework.csproj" />
     <ProjectReference Include="..\Fluent.Architecture.Test\Fluent.Architecture.Test.csproj" />

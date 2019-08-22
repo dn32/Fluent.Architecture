@@ -5,11 +5,13 @@ using Fluent.Architecture.Entities;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Specifications;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using NJsonSchema;
 using NJsonSchema.Generation;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 
 namespace Fluent.Architecture.Controllers
@@ -75,7 +77,7 @@ namespace Fluent.Architecture.Controllers
                         MaxValue = property.PropertyType.GetField("MaxValue").GetValue(null);
                     }
 
-                    if(MaxValue as long? > int.MaxValue) { MaxValue = int.MaxValue; }
+                    if (MaxValue as long? > int.MaxValue) { MaxValue = int.MaxValue; }
                     var maxValueInt = (Convert.ChangeType(MaxValue, typeof(int), CultureInfo.InvariantCulture) ?? int.MaxValue) as int?;
                     var value = NextRandom(maxValueInt.Value);
                     var objectValue = Convert.ChangeType(value, property.PropertyType, CultureInfo.InvariantCulture);
@@ -87,17 +89,23 @@ namespace Fluent.Architecture.Controllers
         }
 
         [HttpGet]
-        public string Schema()
+        public virtual string Schema()
         {
             var type = typeof(T);
             var settings = new JsonSchemaGeneratorSettings { GenerateExamples = true };
             var schema = JsonSchema.FromType(type, settings);
             schema.SchemaVersion = "http://json-schema.org/schema#";
             schema.Id = $"{Request.Scheme}://{Request.Host}{Request.Path}{type.Name}";
+            var properties = type.GetRuntimeProperties().ToList();
 
-            foreach (var p in schema.Properties)
+            foreach (var jsonProperty in schema.Properties)
             {
-                p.Value.Id = $"#{type.Name}/{p.Value.Name}";
+                var property = properties.FirstOrDefault(x =>
+ x.Name.Equals(jsonProperty.Value.Name, StringComparison.InvariantCultureIgnoreCase) ||
+ x.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName?.Equals(jsonProperty.Value.Name, StringComparison.InvariantCultureIgnoreCase) == true);
+
+                jsonProperty.Value.Id = $"#{type.Name}/{jsonProperty.Value.Name}";
+                jsonProperty.Value.ExtensionData.Add("property", $"{property?.Name}");
             }
 
             return schema.ToJson();
