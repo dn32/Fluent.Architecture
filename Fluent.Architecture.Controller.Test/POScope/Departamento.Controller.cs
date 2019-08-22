@@ -11,8 +11,8 @@ public class DepartamentoController : FluentAPIController<Departamento>
 {
     public virtual DefaultPaginationResult ListByProximity(string term)
     {
-       // var spec = CreateSpec<DepartamentoNameProximity>().AddParameter(term);
-        var list = Service.List(null);
+        var spec = CreateSpec<DepartamentoNameProximity>().AddParameter(term);
+        var list = Service.List(spec);
         return Result(list, LastRequestPagination);
     }
 }

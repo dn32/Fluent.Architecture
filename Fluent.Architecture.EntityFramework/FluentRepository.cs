@@ -253,35 +253,32 @@ namespace Fluent.Architecture.EntityFramework
 
         public virtual List<TE> List(IFluentSpecification ispec, FluentPagination pagination = null)
         {
-            //  var spec = GetSpec(ispec);
-            // var query = spec.ToIQueryable(Query);
-            // return FluentPaginate(query, pagination).ToList();
-
-            var depQuery = Query as IQueryable<Departamento>;
-            var similarQuery = depQuery.Where(x => EfContext.FunctionsSQLServer.Convert(x.Descricao,x.Descricao) > 40);
-            var list = similarQuery.ToList();
-
-            //var columnName = typeof(Departamento).GetProperty(nameof(Departamento.Descricao)).GetColumnName();
-
-            //var eexp1 = exp(columnName, "brasilia");
-
-            //var dddd = Query.Where(eexp1);
-            //var list = dddd.ToList();
-
-            return null;
+            var spec = GetSpec(ispec);
+            var query = spec.ToIQueryable(Query);
+            return FluentPaginate(query, pagination).ToList();
         }
 
-        public Expression<Func<TE, bool>> exp(string propertyName, string value)
-        {
-            var parameter = Expression.Parameter(typeof(TE), "x");
-            var property = Expression.Property(parameter, propertyName);
+        //public Expression<Func<TE, bool>> exp(string propertyName, string value)
+        //{
+        //    var parameter = Expression.Parameter(typeof(TE), "x");
+        //    var property = Expression.Property(parameter, propertyName);
 
-            var method = typeof(EfContext).GetMethod(nameof(EfContext.jaro_winkler_similarity), new[] { typeof(string), typeof(string) });
-            var expression = Expression.Call(null, method, property, Expression.Constant(value));
-            var maior = Expression.GreaterThan(expression, Expression.Constant(40, typeof(int)));
+        //    var method = typeof(EfContext).GetMethod(nameof(EfContext.jaro_winkler_similarity), new[] { typeof(string), typeof(string) });
+        //    //     var expression = Expression.Call(null, method, property, Expression.Constant(value));
+        //    var arguments1 = new SqlFragmentExpression("\"DESCRICAO\"");
+        //    var arguments2 = new SqlFragmentExpression("\"" +value + "\"");
 
-            return Expression.Lambda<Func<TE, bool>>(maior, parameter);
-        }
+        //    var expression = new SqlFunctionExpression(new SqlFragmentExpression("UTL_MATCH"),
+        //        "jaro_winkler_similarity", typeof(int),new[] { arguments1, arguments2 });
+
+        //    var maior = Expression.GreaterThan(expression, Expression.Constant(40, typeof(int)));
+
+
+        //    // arguments[0] = new SqlFragmentExpression("\"DESCRICAO\"");// (string)((ConstantExpression)arguments.First()).Value);
+        //    // return new SqlFunctionExpression(new SqlFragmentExpression("UTL_MATCH"), "jaro_winkler_similarity", typeof(int), arguments);
+
+        //    return Expression.Lambda<Func<TE, bool>>(maior, parameter);
+        //}
 
         //public Expression<Func<TE, bool>> exp(string propertyName, string value)
         //{

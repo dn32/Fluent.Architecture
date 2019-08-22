@@ -32,10 +32,10 @@ internal class DepartamentoControllerTest : FluentTest<Departamento>
                .Run();
     }
 
-    public virtual string ListByProximity(string term)
+    public virtual DefaultPaginationResult ListByProximity(string term)
     {
         var newController = GetNewController();
-        return TestUtil.Execute(newController, (FluentAPIController<Departamento> controller) => ((DepartamentoController)controller).ListByProximity(term)) as string;
+        return TestUtil.Execute(newController, (FluentAPIController<Departamento> controller) => ((DepartamentoController)controller).ListByProximity(term)) as DefaultPaginationResult;
     }
 
     public override FluentAPIController<Departamento> GetNewController()
@@ -55,7 +55,7 @@ internal class DepartamentoControllerTest : FluentTest<Departamento>
         departamento1.Descricao = "São Paulo";
         departamento2.Descricao = "Rio de Janeiro";
         departamento3.Descricao = "São Paulo";
-        departamento4.Descricao = "Brasília";
+        departamento4.Descricao = "Brasil";
 
         var departamentos = new[] { departamento1, departamento2, departamento3, departamento4 };
 
@@ -63,7 +63,9 @@ internal class DepartamentoControllerTest : FluentTest<Departamento>
 
 
         //Operation
-        var result = ListByProximity("brasil");
+        var result = ListByProximity("Brasil");
+        var lista = result.Data.JsonObjectToObject<List<Departamento>>();
+
 
         //Clear
         base.RemoveRange(departamentos);

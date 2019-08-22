@@ -67,43 +67,8 @@ namespace Fluent.Architecture.EntityFramework
                     SetEntity(eb, type);
                 }
             }
-
-            //var method = typeof(EfContext).GetMethod(nameof(EfContext.jaro_winkler_similarity), new[] { typeof(string), typeof(string) });
-
-            //modelBuilder.HasDbFunction(method, (DbFunctionBuilder ac) =>
-            //    {
-            //        ac.HasName(("utl_match." + nameof(EfContext.jaro_winkler_similarity)).ToUpper());
-            //    });
-
-            modelBuilder
-              .HasDbFunction(FunctionsSQLServer.ConvertToMethodInfo())
-              .HasTranslation(args =>
-              {
-                  var arguments = args.ToList();
-                  arguments[0] = new SqlFragmentExpression("\"DESCRICAO\"");// (string)((ConstantExpression)arguments.First()).Value);
-                  return new SqlFunctionExpression(new SqlFragmentExpression("UTL_MATCH"), "jaro_winkler_similarity", typeof(int), arguments);
-              });
-
+        
             base.OnModelCreating(modelBuilder);
-        }
-        //public Expression<Func<TE, bool>> exp(string propertyName, string value)
-        //{
-        //    var parameter = Expression.Parameter(typeof(TE), "x");
-        //    var property = Expression.Property(parameter, propertyName);
-
-        //    var method = typeof(EfContext).GetMethod(nameof(EfContext.jaro_winkler_similarity), new[] { typeof(string), typeof(string) });
-        //    var expression = Expression.Call(null, method, property, Expression.Constant(value));
-        //    var maior = Expression.GreaterThan(expression, Expression.Constant(40, typeof(int)));
-
-        //    return Expression.Lambda<Func<TE, bool>>(maior, parameter);
-        //}
-
-        public class FunctionsSQLServer
-        {
-            public static int Convert(string type, string value) => 0;
-
-            public static MethodInfo ConvertToMethodInfo()
-                => typeof(FunctionsSQLServer).GetMethod(nameof(FunctionsSQLServer.Convert));
         }
 
         protected virtual void SetEntity(EntityTypeBuilder entity, Type type) { }
