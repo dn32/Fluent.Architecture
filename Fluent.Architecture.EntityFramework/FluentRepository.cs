@@ -258,41 +258,6 @@ namespace Fluent.Architecture.EntityFramework
             return FluentPaginate(query, pagination).ToList();
         }
 
-        //public Expression<Func<TE, bool>> exp(string propertyName, string value)
-        //{
-        //    var parameter = Expression.Parameter(typeof(TE), "x");
-        //    var property = Expression.Property(parameter, propertyName);
-
-        //    var method = typeof(EfContext).GetMethod(nameof(EfContext.jaro_winkler_similarity), new[] { typeof(string), typeof(string) });
-        //    //     var expression = Expression.Call(null, method, property, Expression.Constant(value));
-        //    var arguments1 = new SqlFragmentExpression("\"DESCRICAO\"");
-        //    var arguments2 = new SqlFragmentExpression("\"" +value + "\"");
-
-        //    var expression = new SqlFunctionExpression(new SqlFragmentExpression("UTL_MATCH"),
-        //        "jaro_winkler_similarity", typeof(int),new[] { arguments1, arguments2 });
-
-        //    var maior = Expression.GreaterThan(expression, Expression.Constant(40, typeof(int)));
-
-
-        //    // arguments[0] = new SqlFragmentExpression("\"DESCRICAO\"");// (string)((ConstantExpression)arguments.First()).Value);
-        //    // return new SqlFunctionExpression(new SqlFragmentExpression("UTL_MATCH"), "jaro_winkler_similarity", typeof(int), arguments);
-
-        //    return Expression.Lambda<Func<TE, bool>>(maior, parameter);
-        //}
-
-        //public Expression<Func<TE, bool>> exp(string propertyName, string value)
-        //{
-        //    var parameter = Expression.Parameter(typeof(TE), "x");
-        //    var property = Expression.Property(parameter, propertyName);
-
-        //    var method = typeof(EfContext).GetMethod(nameof(EfContext.jaro_winkler_similarity), new[] { typeof(string), typeof(string) });
-        //    var expression = Expression.Call(null, method, property, Expression.Constant(value));
-        //    var maior = Expression.GreaterThan(expression, Expression.Constant(40, typeof(int)));
-
-        //    return Expression.Lambda<Func<TE, bool>>(maior, parameter);
-        //}
-
-
         /// <summary>
         /// Avalia se um item existe no banco de dados, baseado em uma especificação.
         /// </summary>
@@ -535,7 +500,7 @@ namespace Fluent.Architecture.EntityFramework
             return sql;
         }
 
-        protected IQueryable<TX> FluentPaginate<TX>(IOrderedQueryable<TX> query, FluentPagination pagination = null)
+        protected IQueryable<TX> FluentPaginate<TX>(IQueryable<TX> query, FluentPagination pagination = null)
         {
             if (pagination == null)
             {

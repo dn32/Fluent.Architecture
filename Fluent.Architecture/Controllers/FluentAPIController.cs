@@ -110,8 +110,7 @@ namespace Fluent.Architecture.Controllers
 
             return schema.ToJson();
         }
-
-
+        
         // GET api/user/list
         [HttpGet]
         public virtual DefaultPaginationResult List()

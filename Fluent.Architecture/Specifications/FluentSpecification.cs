@@ -27,6 +27,8 @@ namespace Fluent.Architecture.Specifications
     {
         public Type FluentEntityType => typeof(TE);
 
+        protected bool IgnoreOrder { get; set; } = false;
+
         /// <summary>
         /// A especificação.
         /// </summary>
@@ -41,9 +43,17 @@ namespace Fluent.Architecture.Specifications
         // Todo2 doc
         public abstract IOrderedQueryable<TE> Order(IQueryable<TE> query);
 
-        internal IOrderedQueryable<TE> ToIQueryable(IQueryable<TE> query)
+        internal IQueryable<TE> ToIQueryable(IQueryable<TE> query)
         {
-            return Order(Where(query));
+            var w =  Where(query);
+            if (IgnoreOrder)
+            {
+                return w;
+            }
+            else
+            {
+                return Order(w);
+            }
         }
     }
 }

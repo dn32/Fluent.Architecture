@@ -107,7 +107,7 @@ namespace Fluent.Architecture.Test
             return TestUtil.Execute<FluentAPIController<TModel>, bool>(newController, (FluentAPIController<TModel> controller) => controller.RemoveRange(models));
         }
 
-        public virtual bool Truncate(string ERASE_ALL_DATA = "false")
+        public virtual bool Truncate(string ERASE_ALL_DATA = "no")
         {
             var newController = GetNewController();
             return TestUtil.Execute<FluentAPIController<TModel>, bool>(newController, (FluentAPIController<TModel> controller) => controller.Truncate(ERASE_ALL_DATA));
