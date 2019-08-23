@@ -17,6 +17,7 @@ namespace Fluent.Architecture.EntityFramework.SqLite
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite(ConnectionString);
+            base.OnConfiguring(optionsBuilder);
         }
     }
 }

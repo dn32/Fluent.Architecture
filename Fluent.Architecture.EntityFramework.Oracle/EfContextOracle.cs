@@ -21,6 +21,8 @@ namespace Fluent.Architecture.EntityFramework.Oracle
         {
             optionsBuilder.UseOracle(ConnectionString)
             .UseLoggerFactory(_myLoggerFactory);
+
+            base.OnConfiguring(optionsBuilder);
         }
     }
 }

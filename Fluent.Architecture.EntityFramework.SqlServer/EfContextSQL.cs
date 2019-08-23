@@ -16,6 +16,7 @@ namespace Fluent.Architecture.EntityFramework.SqlServer
         protected override void OnConfiguring(Microsoft.EntityFrameworkCore.DbContextOptionsBuilder optionsBuilder)
         {
             Microsoft.EntityFrameworkCore.SqlServerDbContextOptionsExtensions.UseSqlServer(optionsBuilder, ConnectionString);
+            base.OnConfiguring(optionsBuilder);
         }
     }
 }
