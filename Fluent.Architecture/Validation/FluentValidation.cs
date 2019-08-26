@@ -69,6 +69,19 @@ namespace Fluent.Architecture.Validation
             this.RunTheContextValidation();
         }
 
+        public virtual void AddOrUpdate(T entity)
+        {
+            this.ParameterMustBeInformed(entity);
+            this.RequiredPropertyMustBeInformed(entity);
+            this.MaxLenghtPropertyMustBeInformed(entity);
+            this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
+
+            if (KeyValuesOk)
+            {
+                EntityShouldNotExistInDatabaseBasedOnKeys(entity, false);
+            }
+        }
+
         public virtual void AddRange(T[] entities)
         {
             this.ParameterMustBeInformed(entities);

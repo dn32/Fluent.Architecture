@@ -11,12 +11,14 @@ using Fluent.Architecture.Core.Controllers.ControllerModel;
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions;
+using Fluent.Architecture.Exceptions.ValidationException;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Validation;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Fluent.Architecture.Services
 {
@@ -236,10 +238,26 @@ namespace Fluent.Architecture.Services
 
         // Todo2 documentar
 
+        public virtual T AddOrUpdate(T entity)
+        {
+            Validation.AddOrUpdate(entity);
+            var exists = SessionRequest.ContextFluentValidationException.Inconsistencies.Any(x => x.ExceptionType == nameof(EntityExistsFluentValidationException));
+            SessionRequest.ContextFluentValidationException.Inconsistencies.Clear();
+
+            if (exists)
+            {
+                return Update(entity);
+            }
+            else
+            {
+                return Add(entity);
+            }
+        }
+
         public virtual T Find(T entity, bool checkId = true)
         {
-            this.Validation.Find(entity, checkId);
-            return this.Repository.Find(entity);
+            Validation.Find(entity, checkId);
+            return Repository.Find(entity);
         }
 
         /// <summary>

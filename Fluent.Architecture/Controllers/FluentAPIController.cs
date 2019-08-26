@@ -118,6 +118,47 @@ namespace Fluent.Architecture.Controllers
             return List(null);
         }
 
+      
+        // GET api/user/Find?id=5
+        [HttpGet]
+        public virtual DefaultResult Find([FromQuery]T value)
+        {
+            return Result(Service.Find(value, false));
+        }
+
+        // GET api/user/FindByTerm?term=myterm
+        [HttpGet]
+        public virtual DefaultPaginationTermResult FindByTerm(string term)
+        {
+            var spec = CreateSpec<TermSpec<T>>().SetParameter(term);
+            var list = Service.List(spec);
+            return Result(list, LastRequestPagination, term);
+        }
+
+        // GET api/user/Count
+        [HttpGet]
+        public virtual DefaultResult Count([FromBody] Filter[] filters)
+        {
+            FluentSpecification<T> spec;
+            if (filters != null && filters.Length > 0)
+            {
+                spec = CreateSpec<FilterSpec<T>>().SetParameter(filters);
+            }
+            else
+            {
+                spec = CreateSpec<AllSpec<T>>();
+            }
+
+            return Result(Service.Count(spec));
+        }
+
+        // GET api/user/Exists/?id=5
+        [HttpGet]
+        public virtual DefaultResult Exists(T value)
+        {
+            return Result(Service.Exists(value));
+        }
+
         [HttpPost]
         public virtual DefaultPaginationResult List([FromBody] Filter[] filters)
         {
@@ -136,22 +177,6 @@ namespace Fluent.Architecture.Controllers
             return Result(list, LastRequestPagination);
         }
 
-        // GET api/user/Find?id=5
-        [HttpGet]
-        public virtual DefaultResult Find([FromQuery]T value)
-        {
-            return Result(Service.Find(value, false));
-        }
-
-        // GET api/user/FindByTerm?term=myterm
-        [HttpGet]
-        public virtual DefaultPaginationTermResult FindByTerm(string term)
-        {
-            var spec = CreateSpec<TermSpec<T>>().SetParameter(term);
-            var list = Service.List(spec);
-            return Result(list, LastRequestPagination, term);
-        }
-
         // GET api/user/Count
         [HttpPost]
         public virtual DefaultResult Count()
@@ -159,36 +184,18 @@ namespace Fluent.Architecture.Controllers
             return Result(Service.Count());
         }
 
-        // GET api/user/Count
-        [HttpGet]
-        public virtual DefaultResult Count([FromBody] Filter[] filters)
-        {
-            FluentSpecification<T> spec;
-            if (filters != null && filters.Length > 0)
-            {
-                spec = CreateSpec<FilterSpec<T>>().SetParameter(filters);
-            }
-            else
-            {
-                spec = CreateSpec<AllSpec<T>>();
-            }
-
-
-            return Result(Service.Count(spec));
-        }
-
-        // GET api/user/Exists/?id=5
-        [HttpGet]
-        public virtual DefaultResult Exists(T value)
-        {
-            return Result(Service.Exists(value));
-        }
-
         // POST api/user/Add/
         [HttpPost]
         public virtual DefaultResult Add([FromBody] T value)
         {
             return Result(Service.Add(value));
+        }
+
+        // POST api/user/AddOrUpdate/
+        [HttpPost]
+        public virtual DefaultResult AddOrUpdate([FromBody] T value)
+        {
+            return Result(Service.AddOrUpdate(value));
         }
 
         // POST api/user/AddRange
