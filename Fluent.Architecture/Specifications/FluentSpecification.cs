@@ -43,7 +43,7 @@ namespace Fluent.Architecture.Specifications
         // Todo2 doc
         public abstract IOrderedQueryable<TE> Order(IQueryable<TE> query);
 
-        internal IQueryable<TE> ToIQueryable(IQueryable<TE> query)
+        public IQueryable<TE> ToIQueryable(IQueryable<TE> query)
         {
             var w =  Where(query);
             if (IgnoreOrder)

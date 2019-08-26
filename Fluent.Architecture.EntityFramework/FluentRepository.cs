@@ -433,7 +433,7 @@ namespace Fluent.Architecture.EntityFramework
             throw new IncorrectDevelopmentException("The specification is of a different type than expected");
         }
 
-        private FluentSpecification<TE> GetSpec(ISpec spec1)
+        protected FluentSpecification<TE> GetSpec(ISpec spec1)
         {
             if (spec1 is FluentSpecification<TE> spec)
             {
