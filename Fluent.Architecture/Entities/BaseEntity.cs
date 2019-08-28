@@ -14,6 +14,6 @@ namespace Fluent.Architecture.Entities
     /// </summary>
     public abstract class BaseEntity
     {
-        // internal List<Translation> Translations { get; set; }
+      //  public virtual string[] Inclusions() => System.Array.Empty<string>();
     }
 }

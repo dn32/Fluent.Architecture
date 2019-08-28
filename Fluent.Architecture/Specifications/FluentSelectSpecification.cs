@@ -9,6 +9,7 @@
 
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 
@@ -39,6 +40,14 @@ namespace Fluent.Architecture.Specifications
         // Todo2 doc
         internal IOrderedQueryable<TO> ToIQueryable(IQueryable<TE> query)
         {
+            //var dbSet = query as DbSet<TE>;
+            //var inclusions = new TE().Inclusions();
+
+            //foreach (var inclusion in inclusions)
+            //{
+            //    dbSet.Include(inclusion);
+            //}
+
             return Order(Where(query));
         }
 

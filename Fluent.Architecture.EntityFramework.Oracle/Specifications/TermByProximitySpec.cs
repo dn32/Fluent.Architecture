@@ -29,6 +29,7 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Specifications
         public override IQueryable<TE> Where(IQueryable<TE> query)
         {
             IgnoreOrder = true;
+            if (string.IsNullOrWhiteSpace(Term)) { return query.OrderBy(x => x); }
 
             var dbSet = query as DbSet<TE>;
             var sql = $@"
