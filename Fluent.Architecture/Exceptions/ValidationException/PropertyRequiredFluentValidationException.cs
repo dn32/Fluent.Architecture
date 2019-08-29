@@ -12,64 +12,81 @@ using System.Reflection;
 
 namespace Fluent.Architecture.Exceptions.ValidationException
 {
-    public class PropertyRequiredFluentValidationException : FluentPropertyValidationException
+    public class FluentUiFieldValidationException : FluentPropertyValidationException
     {
-        public PropertyRequiredFluentValidationException(PropertyInfo propertyName) : base(propertyName?.Name, false, $"The property {propertyName.Name} must have a value for this operation.")
-        {
-        }
-    }
-
-    public class DbFieldRequiredFluentValidationException : FluentPropertyValidationException
-    {
-        public DbFieldRequiredFluentValidationException(PropertyInfo propertyName) : base(propertyName.GetColumnName(), false, $"The field {propertyName.GetColumnName()} must have a value for this operation.")
-        {
-        }
-    }
-
-    public class DbFieldNotRequiredFluentValidationException : FluentPropertyValidationException
-    {
-        public DbFieldNotRequiredFluentValidationException(PropertyInfo propertyName) : base(propertyName.GetColumnName(), false, $"The {propertyName.GetColumnName()} field should not have a value for this operation.")
-        {
-        }
+        [JsonProperty("field")]
+        public string Field { get; set; }
 
         [JsonProperty("globalization_key")]
-        public override string GlobalizationKey => "ThePropertyShouldNotHaveAValueForThisOperation";
-    }
+        public override string GlobalizationKey => "TheFieldShouldNotHaveAValueForThisOperation";
 
-    public class JsonFieldPropertyRequiredFluentValidationException : FluentPropertyValidationException
-    {
-        public JsonFieldPropertyRequiredFluentValidationException(PropertyInfo propertyName) : base(propertyName.GetJsonPropertyName(), false, $"The field {propertyName.GetJsonPropertyName()} must have a value for this operation.")
+        public FluentUiFieldValidationException(PropertyInfo property, bool globalizeValues, string message) : base(property, globalizeValues, message)
         {
+            Field = property.GetUiPropertyName();
         }
     }
 
-    public class JsonIncorrectFieldValueFluentValidationException : FluentValidationException
+    public class UiFieldRequiredFluentValidationException : FluentUiFieldValidationException
     {
-        public JsonIncorrectFieldValueFluentValidationException(string propertyName, string value) : base($"Field {propertyName} has an incorrect value. Value: {value}.", false, propertyName, value)
-        {
-        }
-
-        [JsonProperty("globalization_key")]
-        public override string GlobalizationKey => "IncorrectFieldValue";
-    }
-
-    public class UiFieldRequiredFluentValidationException : FluentPropertyValidationException
-    {
-        public UiFieldRequiredFluentValidationException(PropertyInfo propertyName) : base(propertyName.GetJsonPropertyName(), true, $"The field {propertyName.GetJsonPropertyName()} must have a value for this operation.")
-        {
-        }
-
         [JsonProperty("globalization_key")]
         public override string GlobalizationKey => "TheFieldMustHaveAValueForThisOperation";
-    }
 
-    public class UiFieldMaxLenghtFluentValidationException : FluentPropertyValidationException
-    {
-        public UiFieldMaxLenghtFluentValidationException(PropertyInfo propertyName) : base(propertyName.GetJsonPropertyName(), true, $"The {propertyName.GetJsonPropertyName()} field has more characters than allowed.")
+        public UiFieldRequiredFluentValidationException(PropertyInfo property) : base(property, true, $"The field {property.GetUiPropertyName()} must have a value for this operation.")
         {
         }
-
-        [JsonProperty("globalization_key")]
-        public override string GlobalizationKey => "TheFieldMaxLenghtFluentValidationException";
     }
+
+    public class UiFieldLenghtFluentValidationException : FluentUiFieldValidationException
+    {
+        [JsonProperty("globalization_key")]
+        public override string GlobalizationKey => "TheFieldLenghtFluentValidationException";
+
+        public UiFieldLenghtFluentValidationException(PropertyInfo property) : base(property, true, $"The {property.GetUiPropertyName()} field has more or less characters than allowed.")
+        {
+            Field = property.GetUiPropertyName();
+        }
+    }
+
+    //public class DbFieldRequiredFluentValidationException : FluentPropertyValidationException
+    //{
+    //    public DbFieldRequiredFluentValidationException(PropertyInfo propertyName) : base(propertyName.GetColumnName(), false, $"The field {propertyName.GetColumnName()} must have a value for this operation.")
+    //    {
+    //    }
+    //}
+
+    //public class PropertyRequiredFluentValidationException : FluentPropertyValidationException
+    //{
+    //    public PropertyRequiredFluentValidationException(PropertyInfo propertyName) : base(propertyName?.Name, false, $"The property {propertyName.Name} must have a value for this operation.")
+    //    {
+    //    }
+    //}
+
+    //public class DbFieldNotRequiredFluentValidationException : FluentPropertyValidationException
+    //{
+    //    public DbFieldNotRequiredFluentValidationException(PropertyInfo propertyName) : base(propertyName.GetColumnName(), false, $"The {propertyName.GetColumnName()} field should not have a value for this operation.")
+    //    {
+    //    }
+
+    //    [JsonProperty("globalization_key")]
+    //    public override string GlobalizationKey => "ThePropertyShouldNotHaveAValueForThisOperation";
+    //}
+
+    //public class JsonFieldPropertyRequiredFluentValidationException : FluentPropertyValidationException
+    //{
+    //    public JsonFieldPropertyRequiredFluentValidationException(PropertyInfo propertyName) : base(propertyName.GetJsonPropertyName(), false, $"The field {propertyName.GetJsonPropertyName()} must have a value for this operation.")
+    //    {
+    //    }
+    //}
+
+    //public class JsonIncorrectFieldValueFluentValidationException : FluentValidationException
+    //{
+    //    public JsonIncorrectFieldValueFluentValidationException(string propertyName, string value) : base($"Field {propertyName} has an incorrect value. Value: {value}.", false, propertyName, value)
+    //    {
+    //    }
+
+    //    [JsonProperty("globalization_key")]
+    //    public override string GlobalizationKey => "IncorrectFieldValue";
+    //}
+
+
 }

@@ -6,7 +6,9 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
+using Fluent.Architecture.Extensions;
 using Newtonsoft.Json;
+using System.Reflection;
 
 namespace Fluent.Architecture.Exceptions.ValidationException
 {
@@ -15,9 +17,10 @@ namespace Fluent.Architecture.Exceptions.ValidationException
         [JsonProperty("property_name")]
         public string PropertyName { get; set; }
 
-        public FluentPropertyValidationException(string propertyName, bool globalizeValues, string message) : base(message, globalizeValues, propertyName)
+        public FluentPropertyValidationException(PropertyInfo property, bool globalizeValues, string message) : base(message, globalizeValues)
         {
-            this.PropertyName = propertyName;
+            PropertyName = property.GetJsonPropertyName();
+            Values = new[] { PropertyName };
         }
 
         [JsonProperty("globalization_key")]

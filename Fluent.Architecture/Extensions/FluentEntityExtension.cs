@@ -7,10 +7,12 @@
 
 // ReSharper disable CommentTypo
 using Fluent.Architecture.Attributes;
+using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Entities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -23,21 +25,21 @@ namespace Fluent.Architecture.Extensions
         // Todo2 documentar
         public static string GetTypeName(this object entity)
         {
-            if(entity == null) { throw new ArgumentNullException(nameof(entity)); }
+            if (entity == null) { throw new ArgumentNullException(nameof(entity)); }
             return entity.GetType().Name;
         }
 
         // Todo2 documentar
         public static string GetTableName(this object entity)
         {
-            if(entity == null) { throw new ArgumentNullException(nameof(entity)); }
+            if (entity == null) { throw new ArgumentNullException(nameof(entity)); }
             return entity.GetType().GetTableName();
         }
 
         // Todo2 documentar
         public static string GetTableName(this Type entityType)
         {
-            if(entityType == null) { throw new ArgumentNullException(nameof(entityType)); }
+            if (entityType == null) { throw new ArgumentNullException(nameof(entityType)); }
             var name = entityType.GetCustomAttribute<TableAttribute>()?.Name;
             if (string.IsNullOrEmpty(name))
             {
@@ -68,6 +70,14 @@ namespace Fluent.Architecture.Extensions
             }
 
             return name;
+        }
+
+        public static string GetUiPropertyName(this PropertyInfo property)
+        {
+            return property.GetCustomAttribute<FluentJsonFormAttribute>()?.name ??
+                   property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ??
+                   property.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName ??
+                   property?.Name;
         }
 
         public static PropertyInfo GetKeyProperty(this Type entityType)

@@ -28,11 +28,12 @@ internal class ExceptionTest : InternalUserTestBase
     }
 
     [Theory]
-    [TestCase(typeof(PropertyRequiredFluentValidationException))]
-    [TestCase(typeof(DbFieldRequiredFluentValidationException))]
-    [TestCase(typeof(JsonFieldPropertyRequiredFluentValidationException))]
+    //[TestCase(typeof(PropertyRequiredFluentValidationException))]
+    //[TestCase(typeof(DbFieldRequiredFluentValidationException))]
+    //[TestCase(typeof(JsonFieldPropertyRequiredFluentValidationException))]
+    [TestCase(typeof(FluentUiFieldValidationException))]
+    [TestCase(typeof(UiFieldLenghtFluentValidationException))]
     [TestCase(typeof(UiFieldRequiredFluentValidationException))]
-    [TestCase(typeof(UiFieldMaxLenghtFluentValidationException))]
     public void ExceptionPropertyInfoFilterTest(Type exceptionType)
     {
         var filter = new FluentExceptionHandlerAttribute();
@@ -55,9 +56,9 @@ internal class ExceptionTest : InternalUserTestBase
     }
 
     [Theory]
+    //[TestCase(typeof(PropertyNotNullFluentValidationException))]
+    //[TestCase(typeof(UniqueKeyFluentValidationException))]
     [TestCase(typeof(EntityExistsFluentValidationException))]
-    [TestCase(typeof(PropertyNotNullFluentValidationException))]
-    [TestCase(typeof(UniqueKeyFluentValidationException))]
     [TestCase(typeof(EntityNotFoundFluentValidationException))]
     [TestCase(typeof(FluentValidationException))]
     [TestCase(typeof(NullParameterFluentValidationException))]

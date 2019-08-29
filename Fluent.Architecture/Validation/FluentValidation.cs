@@ -58,7 +58,7 @@ namespace Fluent.Architecture.Validation
         {
             this.ParameterMustBeInformed(entity);
             this.RequiredPropertyMustBeInformed(entity);
-            this.MaxLenghtPropertyMustBeInformed(entity);
+            this.MaxMinLenghtPropertyMustBeInformed(entity);
             this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
 
             if (KeyValuesOk)
@@ -73,7 +73,7 @@ namespace Fluent.Architecture.Validation
         {
             this.ParameterMustBeInformed(entity);
             this.RequiredPropertyMustBeInformed(entity);
-            this.MaxLenghtPropertyMustBeInformed(entity);
+            this.MaxMinLenghtPropertyMustBeInformed(entity);
             this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
 
             if (KeyValuesOk)
@@ -92,7 +92,7 @@ namespace Fluent.Architecture.Validation
                 {
                     this.ParameterMustBeInformed(entity);
                     this.RequiredPropertyMustBeInformed(entity);
-                    this.MaxLenghtPropertyMustBeInformed(entity);
+                    this.MaxMinLenghtPropertyMustBeInformed(entity);
                     this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
 
                     if (KeyValuesOk)
@@ -109,7 +109,7 @@ namespace Fluent.Architecture.Validation
         {
             this.ParameterMustBeInformed(entity);
             this.RequiredPropertyMustBeInformed(entity);
-            this.MaxLenghtPropertyMustBeInformed(entity);
+            this.MaxMinLenghtPropertyMustBeInformed(entity);
             this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, isUpdate: true);
 
             if (KeyValuesOk)
@@ -127,7 +127,7 @@ namespace Fluent.Architecture.Validation
             ParameterMustBeInformed(value.Final);
             RequiredPropertyMustBeInformed(value.Original);
             RequiredPropertyMustBeInformed(value.Final);
-            MaxLenghtPropertyMustBeInformed(value.Final);
+            MaxMinLenghtPropertyMustBeInformed(value.Final);
             AllKeysShouldBeInformedWhenThereAreMoreThanOne(value.Final, isUpdate: true);
 
             if (KeyValuesOk)
@@ -148,7 +148,7 @@ namespace Fluent.Architecture.Validation
                 {
                     this.ParameterMustBeInformed(entity);
                     this.RequiredPropertyMustBeInformed(entity);
-                    this.MaxLenghtPropertyMustBeInformed(entity);
+                    this.MaxMinLenghtPropertyMustBeInformed(entity);
                     this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, isUpdate: true);
                     if (KeyValuesOk)
                     {
@@ -268,26 +268,49 @@ namespace Fluent.Architecture.Validation
             this.NullParameterOk = true;
         }
 
-        private void MaxLenghtPropertyMustBeInformed(T entity)
+        private void MaxMinLenghtPropertyMustBeInformed(T entity)
         {
             if (!this.NullParameterOk)
             {
                 return;
             }
 
-            var properties = typeof(T).GetPropertiesByAttribute<RequiredAttribute>();
+            var properties = entity.GetType().GetProperties().ToList();
             foreach (var property in properties)
             {
-                var attr = property.GetCustomAttribute<MaxLengthAttribute>();
-                if (attr == null || (property.PropertyType != typeof(string) && property.PropertyType != typeof(String)))
+                var value = property.GetValue(entity);
+                if (property.PropertyType.IsNumeric())
                 {
-                    continue;
+                    var min = property.GetCustomAttribute<FluentJsonFormAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
+                    var max = property.GetCustomAttribute<FluentJsonFormAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
+                    if (min == null || max == null) { continue; }
+                    if (!new RangeAttribute(min.GetType(), min.ToString(), max.ToString()).IsValid(value))
+                    {
+                        this.AddInconsistency(new UiFieldLenghtFluentValidationException(property));
+                    }
                 }
 
-                var value = property.GetValue(entity);
-                if (!attr.IsValid(value))
+                if (property.PropertyType == typeof(string) && property.PropertyType == typeof(String))
                 {
-                    this.AddInconsistency(new UiFieldMaxLenghtFluentValidationException(property));
+                    var requ = property.GetCustomAttribute<RequiredAttribute>() != null;
+                    if (requ && property.GetValue(entity).IsFluentNull())
+                    {//Nesse caso já há uma inconsistência de requerido adicionada
+                        return;
+                    }
+
+                    var min = property.GetCustomAttribute<FluentJsonFormAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
+                    var max = property.GetCustomAttribute<FluentJsonFormAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length;
+                    if (min == null || max == null) { continue; }
+
+                    if (!new MinLengthAttribute(min.Value).IsValid(value))
+                    {
+                        this.AddInconsistency(new UiFieldLenghtFluentValidationException(property));
+                    }
+
+                    if (!new MaxLengthAttribute(max.Value).IsValid(value))
+                    {
+                        this.AddInconsistency(new UiFieldLenghtFluentValidationException(property));
+                    }
                 }
             }
         }
@@ -308,7 +331,7 @@ namespace Fluent.Architecture.Validation
                 }
             }
         }
-            
+
         private void AllKeysMustBeInformed(T entity)
         {
             this.KeyValuesOk = true;
@@ -318,7 +341,7 @@ namespace Fluent.Architecture.Validation
             {
                 if (property.GetValue(entity).IsFluentNull())
                 {
-                    this.AddInconsistency(new DbFieldRequiredFluentValidationException(property));
+                    this.AddInconsistency(new UiFieldRequiredFluentValidationException(property));
                     this.KeyValuesOk = false;
                 }
             }
@@ -347,7 +370,7 @@ namespace Fluent.Architecture.Validation
                         return;
                     }
 
-                    this.AddInconsistency(new DbFieldRequiredFluentValidationException(property));
+                    this.AddInconsistency(new UiFieldRequiredFluentValidationException(property));
                     this.KeyValuesOk = false;
                 }
                 else
