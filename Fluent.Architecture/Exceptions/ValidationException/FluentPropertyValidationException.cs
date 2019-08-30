@@ -17,8 +17,12 @@ namespace Fluent.Architecture.Exceptions.ValidationException
         [JsonProperty("property_name")]
         public string PropertyName { get; set; }
 
+        [JsonIgnore]
+        public PropertyInfo Property { get; set; }
+
         public FluentPropertyValidationException(PropertyInfo property, bool globalizeValues, string message) : base(message, globalizeValues)
         {
+            Property = property;
             PropertyName = property.GetJsonPropertyName();
             Values = new[] { PropertyName };
         }

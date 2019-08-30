@@ -48,6 +48,14 @@ namespace Fluent.Architecture.Core.Attributes
         [JsonProperty("PropertyName")]
         public string propName { get; set; }
 
+        [DisplayName("Group")]
+        [JsonProperty("Group")]
+        public string group { get; set; }
+
+        [DisplayName("DefaultValue")]
+        [JsonProperty("DefaultValue")]
+        public object value { get; set; }
+
         public FluentCompositionAttribute FluentComposition { get; set; }
 
         public FluentAggregationAttribute FluentAggregation { get; set; }

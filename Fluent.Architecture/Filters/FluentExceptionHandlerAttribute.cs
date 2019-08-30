@@ -30,19 +30,21 @@ public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
                 {
                     return new FluentUiFieldInconsistence
                     {
-                        PropertyName = field.PropertyName,
                         Field = field.Field,
                         Message = field.Message,
-                        GlobalizationKey = field.GlobalizationKey
+                        GlobalizationKey = field.GlobalizationKey,
+                        Property = field.Property,
+                        FluentException = inconsistence
                     };
                 }
                 else if (inconsistence is FluentPropertyValidationException prop)
                 {
                     return new FluentPropertyInconsistence
                     {
-                        PropertyName = prop.PropertyName,
                         Message = prop.Message,
-                        GlobalizationKey = prop.GlobalizationKey
+                        GlobalizationKey = prop.GlobalizationKey,
+                        Property = prop.Property,
+                        FluentException = inconsistence
                     };
                 }
                 else
@@ -50,11 +52,14 @@ public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
                     return new FluentInconsistence
                     {
                         Message = inconsistence.Message,
-                        GlobalizationKey = inconsistence.GlobalizationKey
+                        GlobalizationKey = inconsistence.GlobalizationKey,
+                        FluentException = inconsistence
                     };
                 }
             })
             .ToList();
+
+            inconsistencies.ForEach(GetGlobalization);
 
             filterContext.Result = new CustomJsonResult(new ValidationReturn
             {
@@ -75,5 +80,9 @@ public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
 
             filterContext.HttpContext.Response.StatusCode = 500;
         }
+    }
+
+    public virtual void GetGlobalization(FluentInconsistence inconsistence)
+    {
     }
 }

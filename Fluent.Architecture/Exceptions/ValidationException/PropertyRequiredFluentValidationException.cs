@@ -18,7 +18,7 @@ namespace Fluent.Architecture.Exceptions.ValidationException
         public string Field { get; set; }
 
         [JsonProperty("globalization_key")]
-        public override string GlobalizationKey => "TheFieldShouldNotHaveAValueForThisOperation";
+        public override string GlobalizationKey => "FluentUiFieldValidationException";
 
         public FluentUiFieldValidationException(PropertyInfo property, bool globalizeValues, string message) : base(property, globalizeValues, message)
         {
@@ -41,8 +41,16 @@ namespace Fluent.Architecture.Exceptions.ValidationException
         [JsonProperty("globalization_key")]
         public override string GlobalizationKey => "TheFieldLenghtFluentValidationException";
 
+        public int Min { get; set; }
+
+        public int Max { get; set; }
+
         public UiFieldLenghtFluentValidationException(PropertyInfo property) : base(property, true, $"The {property.GetUiPropertyName()} field has more or less characters than allowed.")
         {
+            var ret = property.GetPropertyRange();
+            Min = ret?.min ?? 0;
+            Max = ret?.max ?? 0;
+
             Field = property.GetUiPropertyName();
         }
     }

@@ -122,6 +122,29 @@ namespace Fluent.Architecture.Extensions
             return entityType?.GetProperties()?.Where(x => x.GetCustomAttribute<TA>(true) != null)?.ToList();
         }
 
+        public static (int min, int max)? GetPropertyRange(this PropertyInfo property)
+        {
+            if (property.PropertyType.IsNumeric())
+            {
+                var min = property.GetCustomAttribute<FluentJsonFormAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
+                var max = property.GetCustomAttribute<FluentJsonFormAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
+                if (min == null || max == null) { return null; }
+
+                return ((min as int?).Value, (max as int?).Value);
+            }
+
+            if (property.PropertyType == typeof(string) && property.PropertyType == typeof(String))
+            {
+                var min = property.GetCustomAttribute<FluentJsonFormAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
+                var max = property.GetCustomAttribute<FluentJsonFormAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length;
+                if (min == null || max == null) { return null; }
+
+                return (min.Value, max.Value);
+            }
+
+            return null;
+        }
+
         // Todo2 documentar
         public static List<KeyValue> GetFluentUniqueKeyValues(this object entity)
         {
