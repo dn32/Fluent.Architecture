@@ -80,6 +80,11 @@ namespace Fluent.Architecture.Extensions
 
         public static bool IsNumeric(this Type type)
         {
+            if (type.IsNullableEnum())
+            {
+                return false;
+            }
+
             switch (Type.GetTypeCode(type))
             {
                 case TypeCode.Byte:
