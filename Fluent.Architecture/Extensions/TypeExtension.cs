@@ -72,7 +72,7 @@ namespace Fluent.Architecture.Extensions
             return (u != null) && u.IsEnum;
         }
 
-        public static Type GetTypeByEnumType(this Type t)
+        public static Type GetTypeByNullType(this Type t)
         {
             var u = Nullable.GetUnderlyingType(t);
             return u ?? t;

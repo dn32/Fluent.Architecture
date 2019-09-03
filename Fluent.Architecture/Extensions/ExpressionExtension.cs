@@ -235,7 +235,7 @@ namespace Fluent.Architecture.Extensions
             }
             else if (type.IsNullableEnum())
             {
-                var localType = type.GetTypeByEnumType();
+                var localType = type.GetTypeByNullType();
                 if (Enum.TryParse(localType, value, out object enumObject))
                 {
                     containsCall = Expression.Equal(property, Expression.Constant(enumObject, type));

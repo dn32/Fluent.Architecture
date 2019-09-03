@@ -1,4 +1,5 @@
-﻿using Fluent.Architecture.Core.Controllers.ControllerModel;
+﻿using Fluent.Architecture.Core.Attributes;
+using Fluent.Architecture.Core.Controllers.ControllerModel;
 using Fluent.Architecture.Core.Filters;
 using Fluent.Architecture.Core.Specifications;
 using Fluent.Architecture.Entities;
@@ -6,8 +7,6 @@ using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Specifications;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using NJsonSchema;
-using NJsonSchema.Generation;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -27,8 +26,26 @@ namespace Fluent.Architecture.Controllers
             return Random.Next(0, max);
         }
 
+        private static int NextRandom(int min, int max)
+        {
+            return Random.Next(min, max);
+        }
+
+        private string NextRandomString(int size)
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var stringChars = new char[size];
+
+            for (int i = 0; i < stringChars.Length; i++)
+            {
+                stringChars[i] = chars[NextRandom(chars.Length - 1)];
+            }
+
+            return new string(stringChars);
+        }
+
         [HttpGet]
-        public T ExampleData()
+        public virtual T ExampleData()
         {
             string GetValue(int size)
             {
@@ -46,71 +63,108 @@ namespace Fluent.Architecture.Controllers
             var obj = new T();
             foreach (var property in obj.GetType().GetProperties())
             {
-                var maxLengthAttribute = property.GetCustomAttribute<MaxLengthAttribute>();
-                if (property.PropertyType == typeof(string))
+                if (property.PropertyType.IsNullableEnum())
                 {
-                    if (maxLengthAttribute?.Length != null)
-                    {
-                        property.SetValue(obj, GetValue(maxLengthAttribute.Length));
-                    }
-                    else
-                    {
-                        property.SetValue(obj, GetValue(3));
-                    }
-                }
-                else if (property.PropertyType.IsNullableEnum())
-                {
-                    var firstEnum = Enum.GetValues(property.PropertyType).GetValue(1);
+                    var firstEnum = Enum.GetValues(property.PropertyType.GetTypeByNullType()).GetValue(1);
                     property.SetValue(obj, firstEnum);
                 }
-                else if (property.PropertyType.IsNumeric())
+                else
                 {
-                    var maxLengthAttribute2 = property.GetCustomAttribute<RangeAttribute>()?.Maximum as int?;
-                    object MaxValue = null;
-
-                    if (maxLengthAttribute2 != null)
-                    {
-                        MaxValue = NextRandom(maxLengthAttribute2.Value);
-                    }
-                    else
-                    {
-                        MaxValue = property.PropertyType.GetField("MaxValue").GetValue(null);
-                    }
-
-                    if (MaxValue as long? > int.MaxValue) { MaxValue = int.MaxValue; }
-                    var maxValueInt = (Convert.ChangeType(MaxValue, typeof(int), CultureInfo.InvariantCulture) ?? int.MaxValue) as int?;
-                    var value = NextRandom(maxValueInt.Value);
-                    var objectValue = Convert.ChangeType(value, property.PropertyType, CultureInfo.InvariantCulture);
-                    property.SetValue(obj, objectValue);
+                    var value = GetExampleValueByPropertyInfo(property);
+                    var newValue = Convert.ChangeType(value, property.PropertyType, CultureInfo.InvariantCulture);
+                    property.SetValue(obj, newValue);
                 }
+
+                //var maxLengthAttribute = property.GetCustomAttribute<MaxLengthAttribute>();
+                //if (property.PropertyType == typeof(string))
+                //{
+                //    if (maxLengthAttribute?.Length != null)
+                //    {
+                //        property.SetValue(obj, GetValue(maxLengthAttribute.Length));
+                //    }
+                //    else
+                //    {
+                //        property.SetValue(obj, GetValue(3));
+                //    }
+                //}
+                //else if (property.PropertyType.IsNullableEnum())
+                //{
+                //    var firstEnum = Enum.GetValues(property.PropertyType).GetValue(1);
+                //    property.SetValue(obj, firstEnum);
+                //}
+                //else if (property.PropertyType.IsNumeric())
+                //{
+                //    var maxLengthAttribute2 = property.GetCustomAttribute<RangeAttribute>()?.Maximum as int?;
+                //    object MaxValue = null;
+
+                //    if (maxLengthAttribute2 != null)
+                //    {
+                //        MaxValue = NextRandom(maxLengthAttribute2.Value);
+                //    }
+                //    else
+                //    {
+                //        MaxValue = property.PropertyType.GetField("MaxValue").GetValue(null);
+                //    }
+
+                //    if (MaxValue as long? > int.MaxValue) { MaxValue = int.MaxValue; }
+                //    var maxValueInt = (Convert.ChangeType(MaxValue, typeof(int), CultureInfo.InvariantCulture) ?? int.MaxValue) as int?;
+                //    var value = NextRandom(maxValueInt.Value);
+                //    var objectValue = Convert.ChangeType(value, property.PropertyType, CultureInfo.InvariantCulture);
+                //    property.SetValue(obj, objectValue);
+                //}
             }
 
             return obj;
         }
 
-        [HttpGet]
-        public virtual string Schema()
+        private object GetExampleValueByPropertyInfo(PropertyInfo property)
         {
-            var type = typeof(T);
-            var settings = new JsonSchemaGeneratorSettings { GenerateExamples = true };
-            var schema = JsonSchema.FromType(type, settings);
-            schema.SchemaVersion = "http://json-schema.org/schema#";
-            schema.Id = $"{Request.Scheme}://{Request.Host}{Request.Path}{type.Name}";
-            var properties = type.GetRuntimeProperties().ToList();
-
-            foreach (var jsonProperty in schema.Properties)
+            if (property.PropertyType.IsNumeric())
             {
-                var property = properties.FirstOrDefault(x =>
- x.Name.Equals(jsonProperty.Value.Name, StringComparison.InvariantCultureIgnoreCase) ||
- x.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName?.Equals(jsonProperty.Value.Name, StringComparison.InvariantCultureIgnoreCase) == true);
+                var min = property.GetCustomAttribute<FluentJsonFormAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
+                var max = property.GetCustomAttribute<FluentJsonFormAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
+                if (min == null || max == null) { return NextRandom(int.MaxValue); }
 
-                jsonProperty.Value.Id = $"#{type.Name}/{jsonProperty.Value.Name}";
-                jsonProperty.Value.ExtensionData.Add("property", $"{property?.Name}");
+                return NextRandom((min as int?).Value, (max as int?).Value);
             }
 
-            return schema.ToJson();
+            if (property.PropertyType == typeof(string) && property.PropertyType == typeof(String))
+            {
+                var min = property.GetCustomAttribute<FluentJsonFormAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
+                var max = property.GetCustomAttribute<FluentJsonFormAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length;
+                if (min == null && max == null) { return NextRandom(12); }
+                if (min == null) { return NextRandomString((max as int?).Value); }
+                if (max == null) { return NextRandomString((min as int?).Value); }
+                return NextRandomString((max as int?).Value);
+            }
+
+            return property.PropertyType.GetDefaultValue();
         }
-        
+
+
+        //       [HttpGet]
+        //       public virtual string Schema()
+        //       {
+        //           var type = typeof(T);
+        //           var settings = new JsonSchemaGeneratorSettings { GenerateExamples = true };
+        //           var schema = JsonSchema.FromType(type, settings);
+        //           schema.SchemaVersion = "http://json-schema.org/schema#";
+        //           schema.Id = $"{Request.Scheme}://{Request.Host}{Request.Path}{type.Name}";
+        //           var properties = type.GetRuntimeProperties().ToList();
+
+        //           foreach (var jsonProperty in schema.Properties)
+        //           {
+        //               var property = properties.FirstOrDefault(x =>
+        //x.Name.Equals(jsonProperty.Value.Name, StringComparison.InvariantCultureIgnoreCase) ||
+        //x.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName?.Equals(jsonProperty.Value.Name, StringComparison.InvariantCultureIgnoreCase) == true);
+
+        //               jsonProperty.Value.Id = $"#{type.Name}/{jsonProperty.Value.Name}";
+        //               jsonProperty.Value.ExtensionData.Add("property", $"{property?.Name}");
+        //           }
+
+        //           return schema.ToJson();
+        //       }
+
         // GET api/user/list
         [HttpGet]
         public virtual DefaultPaginationResult List()
@@ -118,7 +172,7 @@ namespace Fluent.Architecture.Controllers
             return List(null);
         }
 
-      
+
         // GET api/user/Find?id=5
         [HttpGet]
         public virtual DefaultResult Find([FromQuery]T value)

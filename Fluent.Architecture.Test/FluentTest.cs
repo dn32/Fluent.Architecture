@@ -32,11 +32,11 @@ namespace Fluent.Architecture.Test
             return Execute((FluentAPIController<TModel> controller) => controller.Add(model));
         }
 
-        public virtual string Schema()
-        {
-            var newController = GetNewController();
-            return TestUtil.Execute(newController, (FluentAPIController<TModel> controller) => controller.Schema()) as string;
-        }
+        //public virtual string Schema()
+        //{
+        //    var newController = GetNewController();
+        //    return TestUtil.Execute(newController, (FluentAPIController<TModel> controller) => controller.Schema()) as string;
+        //}
 
         public virtual bool Update(TModel model)
         {

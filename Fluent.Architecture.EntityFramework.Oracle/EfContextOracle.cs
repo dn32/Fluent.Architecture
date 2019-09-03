@@ -19,8 +19,13 @@ namespace Fluent.Architecture.EntityFramework.Oracle
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseOracle(ConnectionString)
-            .UseLoggerFactory(_myLoggerFactory);
+            optionsBuilder.UseOracle(ConnectionString);
+
+#if DEBUG
+            optionsBuilder
+                .UseLoggerFactory(_myLoggerFactory)
+                .EnableSensitiveDataLogging();
+#endif
 
             base.OnConfiguring(optionsBuilder);
         }

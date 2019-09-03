@@ -70,16 +70,10 @@ namespace Fluent.Architecture.Extensions
                 return $"'{value}'";
             }
 
-            try
+            if (value.GetType().IsNullableEnum())
             {
-                return (int)value; // Enum
+                return (int)value;
             }
-#pragma warning disable CA1031 // Do not catch general exception types
-            catch
-            {
-                // ignored
-            }
-#pragma warning restore CA1031 // Do not catch general exception types
 
             return value;
         }
@@ -117,18 +111,12 @@ namespace Fluent.Architecture.Extensions
                 return (Guid)value == Guid.Empty;
             }
 
-            try
+            if (value.GetType().IsNullableEnum())
             {
-                return (int)value == 0; // Enum
+                return (int)value == 0;
             }
-#pragma warning disable CA1031 // Do not catch general exception types
-            catch
-            {
-                // ignored
-            }
-#pragma warning restore CA1031 // Do not catch general exception types
 
-            return false;
+            return value == value.GetType().GetDefaultValue();
         }
 
         /// <summary>

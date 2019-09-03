@@ -52,6 +52,10 @@ namespace Fluent.Architecture.Core.Attributes
         [JsonProperty("Group")]
         public string group { get; set; }
 
+        [DisplayName("GroupType")]
+        [JsonProperty("GroupType")]
+        public EnumGrupType tgroup { get; set; }
+
         [DisplayName("DefaultValue")]
         [JsonProperty("DefaultValue")]
         public object value { get; set; }

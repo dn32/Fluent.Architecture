@@ -16,6 +16,7 @@ using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Services;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
@@ -284,9 +285,12 @@ namespace Fluent.Architecture.Validation
                     var min = property.GetCustomAttribute<FluentJsonFormAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
                     var max = property.GetCustomAttribute<FluentJsonFormAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
                     if (min == null || max == null) { continue; }
-                    if (!new RangeAttribute(min.GetType(), min.ToString(), max.ToString()).IsValid(value))
+                    var mindouble = double.Parse(min.ToString(), CultureInfo.InvariantCulture);
+                    var maxdouble = double.Parse(max.ToString(), CultureInfo.InvariantCulture);
+                    var valuedoble = double.Parse(value.ToString(), CultureInfo.InvariantCulture);
+                    if (!new RangeAttribute(mindouble, maxdouble).IsValid(valuedoble))
                     {
-                        this.AddInconsistency(new UiFieldLenghtFluentValidationException(property));
+                        AddInconsistency(new UiFieldLenghtFluentValidationException(property));
                     }
                 }
 
