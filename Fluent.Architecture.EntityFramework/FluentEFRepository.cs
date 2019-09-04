@@ -13,11 +13,9 @@ using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Interfaces;
-using Fluent.Architecture.Repository;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Expressions;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
@@ -39,10 +37,16 @@ namespace Fluent.Architecture.EntityFramework
     /// <typeparam name="TE">
     /// O tipo de entidade do repositório.
     /// </typeparam>
-    public class FluentEFRepository<TE> : TransactionlRepository, IFluentRepository<TE> where TE : BaseEntity
+    public class FluentEFRepository<TE> : IFluentRepository<TE> where TE : BaseEntity
     {
         public FluentEFRepository()
         {
+        }
+
+        public virtual void Dispose()
+        {
+            Session.Dispose();
+            TransactionObjects.Dispose();
         }
 
         #region PROPERTIES
