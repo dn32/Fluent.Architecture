@@ -88,7 +88,6 @@ namespace Fluent.Architecture.Services
             }
 
             this.Disposed = true;
-            this.Repository.Dispose();
             this.SessionRequest.Dispose(primaryService);
         }
 

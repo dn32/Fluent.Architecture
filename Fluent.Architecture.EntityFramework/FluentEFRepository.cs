@@ -43,12 +43,6 @@ namespace Fluent.Architecture.EntityFramework
         {
         }
 
-        public virtual void Dispose()
-        {
-            Session.Dispose();
-            TransactionObjects.Dispose();
-        }
-
         #region PROPERTIES
 
         public ITransactionObjects TransactionObjects { get; set; }
