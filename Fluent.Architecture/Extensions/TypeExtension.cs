@@ -6,11 +6,15 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
+using Fluent.Architecture.Core.Attributes;
+using Fluent.Architecture.Core.Extensions;
 using Fluent.Architecture.Services;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
 
 namespace Fluent.Architecture.Extensions
 {
@@ -63,6 +67,33 @@ namespace Fluent.Architecture.Extensions
             return t1.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == t2) ||
                    t2.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == t1) ||
                    t1 == t2 || t1.IsSubclassOf(t2) || t2.IsAssignableFrom(t1) || t2.IsSubclassOf(t1) || t1.IsAssignableFrom(t2);
+        }
+
+        public static object GetExampleValue(this Type type)
+        {
+            var obj = Activator.CreateInstance(type);
+            foreach (var property in type.GetProperties())
+            {
+                //Todo - Remover quando liberar a composição
+                if (property.GetCustomAttribute<FluentCompositionAttribute>() != null)
+                {
+                    continue;
+                }
+
+                if (property.PropertyType.IsNullableEnum())
+                {
+                    var firstEnum = Enum.GetValues(property.PropertyType.GetTypeByNullType()).GetValue(1);
+                    property.SetValue(obj, firstEnum);
+                }
+                else
+                {
+                    var value = property.GetExampleValue();
+                    var newValue = Convert.ChangeType(value, property.PropertyType, CultureInfo.InvariantCulture);
+                    property.SetValue(obj, newValue);
+                }
+            }
+
+            return obj;
         }
 
         public static bool IsNullableEnum(this Type t)

@@ -122,7 +122,7 @@ namespace Fluent.Architecture.Extensions
             return entityType?.GetProperties()?.Where(x => x.GetCustomAttribute<TA>(true) != null)?.ToList();
         }
 
-        public static (int min, int max)? GetPropertyRange(this PropertyInfo property)
+        public static (int min, double max)? GetPropertyRange(this PropertyInfo property)
         {
             if (property.PropertyType.IsNumeric())
             {

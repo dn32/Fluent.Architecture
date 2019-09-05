@@ -1,17 +1,10 @@
-﻿using Fluent.Architecture.Core.Attributes;
-using Fluent.Architecture.Core.Controllers.ControllerModel;
+﻿using Fluent.Architecture.Core.Controllers.ControllerModel;
 using Fluent.Architecture.Core.Filters;
 using Fluent.Architecture.Core.Specifications;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Specifications;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.Linq;
-using System.Reflection;
 
 namespace Fluent.Architecture.Controllers
 {
@@ -19,127 +12,15 @@ namespace Fluent.Architecture.Controllers
     [ApiController]
     public class FluentAPIController<T> : FluentController<T> where T : FluentEntity, new()
     {
-        private static readonly Random Random = new Random();
 
-        private static int NextRandom(int max)
-        {
-            return Random.Next(0, max);
-        }
-
-        private static int NextRandom(int min, int max)
-        {
-            return Random.Next(min, max);
-        }
-
-        private string NextRandomString(int size)
-        {
-            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            var stringChars = new char[size];
-
-            for (int i = 0; i < stringChars.Length; i++)
-            {
-                stringChars[i] = chars[NextRandom(chars.Length - 1)];
-            }
-
-            return new string(stringChars);
-        }
 
         [HttpGet]
         public virtual T ExampleData()
         {
-            string GetValue(int size)
-            {
-                var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-                var stringChars = new char[size];
-
-                for (int i = 0; i < stringChars.Length; i++)
-                {
-                    stringChars[i] = chars[NextRandom(chars.Length - 1)];
-                }
-
-                return new string(stringChars);
-            }
-
-            var obj = new T();
-            foreach (var property in obj.GetType().GetProperties())
-            {
-                if (property.PropertyType.IsNullableEnum())
-                {
-                    var firstEnum = Enum.GetValues(property.PropertyType.GetTypeByNullType()).GetValue(1);
-                    property.SetValue(obj, firstEnum);
-                }
-                else
-                {
-                    var value = GetExampleValueByPropertyInfo(property);
-                    var newValue = Convert.ChangeType(value, property.PropertyType, CultureInfo.InvariantCulture);
-                    property.SetValue(obj, newValue);
-                }
-
-                //var maxLengthAttribute = property.GetCustomAttribute<MaxLengthAttribute>();
-                //if (property.PropertyType == typeof(string))
-                //{
-                //    if (maxLengthAttribute?.Length != null)
-                //    {
-                //        property.SetValue(obj, GetValue(maxLengthAttribute.Length));
-                //    }
-                //    else
-                //    {
-                //        property.SetValue(obj, GetValue(3));
-                //    }
-                //}
-                //else if (property.PropertyType.IsNullableEnum())
-                //{
-                //    var firstEnum = Enum.GetValues(property.PropertyType).GetValue(1);
-                //    property.SetValue(obj, firstEnum);
-                //}
-                //else if (property.PropertyType.IsNumeric())
-                //{
-                //    var maxLengthAttribute2 = property.GetCustomAttribute<RangeAttribute>()?.Maximum as int?;
-                //    object MaxValue = null;
-
-                //    if (maxLengthAttribute2 != null)
-                //    {
-                //        MaxValue = NextRandom(maxLengthAttribute2.Value);
-                //    }
-                //    else
-                //    {
-                //        MaxValue = property.PropertyType.GetField("MaxValue").GetValue(null);
-                //    }
-
-                //    if (MaxValue as long? > int.MaxValue) { MaxValue = int.MaxValue; }
-                //    var maxValueInt = (Convert.ChangeType(MaxValue, typeof(int), CultureInfo.InvariantCulture) ?? int.MaxValue) as int?;
-                //    var value = NextRandom(maxValueInt.Value);
-                //    var objectValue = Convert.ChangeType(value, property.PropertyType, CultureInfo.InvariantCulture);
-                //    property.SetValue(obj, objectValue);
-                //}
-            }
-
-            return obj;
+            return typeof(T).GetExampleValue() as T;
         }
 
-        private object GetExampleValueByPropertyInfo(PropertyInfo property)
-        {
-            if (property.PropertyType.IsNumeric())
-            {
-                var min = property.GetCustomAttribute<FluentJsonFormAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
-                var max = property.GetCustomAttribute<FluentJsonFormAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
-                if (min == null || max == null) { return NextRandom(int.MaxValue); }
 
-                return NextRandom((min as int?).Value, (max as int?).Value);
-            }
-
-            if (property.PropertyType == typeof(string) && property.PropertyType == typeof(String))
-            {
-                var min = property.GetCustomAttribute<FluentJsonFormAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
-                var max = property.GetCustomAttribute<FluentJsonFormAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length;
-                if (min == null && max == null) { return NextRandom(12); }
-                if (min == null) { return NextRandomString((max as int?).Value); }
-                if (max == null) { return NextRandomString((min as int?).Value); }
-                return NextRandomString((max as int?).Value);
-            }
-
-            return property.PropertyType.GetDefaultValue();
-        }
 
 
         //       [HttpGet]

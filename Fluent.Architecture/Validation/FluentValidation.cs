@@ -311,7 +311,8 @@ namespace Fluent.Architecture.Validation
                         this.AddInconsistency(new UiFieldLenghtFluentValidationException(property));
                     }
 
-                    if (!new MaxLengthAttribute(max.Value).IsValid(value))
+                    var maxint = Convert.ChangeType(max, typeof(int), CultureInfo.InvariantCulture) as int?;
+                    if (!new MaxLengthAttribute(maxint.Value).IsValid(value))
                     {
                         this.AddInconsistency(new UiFieldLenghtFluentValidationException(property));
                     }

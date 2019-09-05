@@ -26,7 +26,7 @@ namespace Fluent.Architecture.Core.Attributes
 
         [DisplayName("Maximum")]
         [JsonProperty("Maximum")]
-        public int max { get; set; }
+        public double max { get; set; }
 
         [DisplayName("Form")]
         [JsonProperty("Form")]

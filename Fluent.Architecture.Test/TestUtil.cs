@@ -18,17 +18,10 @@ namespace Fluent.Architecture.Test
     [ComVisible(true)]
     public static class TestUtil
     {
-        private static readonly Random Random = new Random();
-
         public static BaseController GetController(Type controllerType)
         {
             return MockControllerFactory.Create(controllerType);
-        }
-
-        public static int NextRandom()
-        {
-            return Random.Next(1, int.MaxValue);
-        }
+        }              
 
         public static TR Execute<TC, TR>(TC controller, Func<TC, object> actionMethod) where TC : BaseController
         {

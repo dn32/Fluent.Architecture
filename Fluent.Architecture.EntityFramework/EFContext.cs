@@ -1,5 +1,6 @@
 ﻿// ReSharper disable CommentTypo
 using Fluent.Architecture.Attributes;
+using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -57,17 +58,40 @@ namespace Fluent.Architecture.EntityFramework
                 if (type.IsSubclassOf(typeof(FluentEntity)))
                 {
                     var keys = type.GetProperties().Where(x => x.GetCustomAttribute<KeyAttribute>() != null).Select(x => x.Name).ToArray();
-                    var eb = modelBuilder.Entity(type);
-                    eb.HasKey(keys);
-                    SetEntity(eb, type);
+                    var entity = modelBuilder.Entity(type);
+                    entity.HasKey(keys);
+
+                    var navigations = entity.Metadata.GetNavigations();
+                    foreach (var property in type.GetProperties())
+                    {
+                        if (navigations.Any(x => x.Name == property.Name))
+                        {
+                            continue;
+                        }
+
+                        if (property.PropertyType.IsNullableEnum())
+                        {
+                            if (property.PropertyType.GetCustomAttribute<FluentUseEnumValueToDBAttribute>() == null)
+                            {
+                                entity.Property(property.Name).HasConversion<string>();// Converte os enumeradores para salvar o valor string no BD
+                            }
+                        }
+
+                        if (property.GetCustomAttribute<NotMappedAttribute>() != null)
+                        {
+                            entity.Ignore(property.Name);
+                            continue;
+                        }
+
+                        SetEntity(entity, type, property);
+                    }
                 }
             }
-
 
             base.OnModelCreating(modelBuilder);
         }
 
-        protected virtual void SetEntity(EntityTypeBuilder entity, Type type) { }
+        protected virtual void SetEntity(EntityTypeBuilder entity, Type type, PropertyInfo property) { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 

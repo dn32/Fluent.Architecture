@@ -43,7 +43,7 @@ namespace Fluent.Architecture.Exceptions.ValidationException
 
         public int Min { get; set; }
 
-        public int Max { get; set; }
+        public double Max { get; set; }
 
         public UiFieldLenghtFluentValidationException(PropertyInfo property) : base(property, true, $"The {property.GetUiPropertyName()} field has more or less characters than allowed.")
         {
