@@ -191,10 +191,38 @@ namespace Fluent.Architecture.EntityFramework
 
             return ret;
         }
-        
+
+        internal int CountSql(string sql, bool includeExcludedLogically = false)
+        {
+            if (includeExcludedLogically)
+            {
+                lock (SessionRequest)
+                {
+                    Session.EnableLogicalDeletion = false;
+                }
+            }
+
+            var ret = this.Input.FromSql(sql).Count();
+
+            lock (SessionRequest)
+            {
+                Session.EnableLogicalDeletion = true;
+            }
+
+            return ret;
+        }
+
         internal TE FindSingleOrDefaultSql(string sql)
         {
-            return this.Input.FromSql(sql).SingleOrDefault();
+            try
+            {
+                return this.Input.FromSql(sql).SingleOrDefault();
+
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException($"More than one record was found with the given keys. This is an indication of data with duplicate keys in the database. The table is {typeof(TE).GetTableName()}");
+            }
         }
 
         /// <summary>
@@ -328,14 +356,26 @@ namespace Fluent.Architecture.EntityFramework
 
         public virtual TE Find(TE entity)
         {
-            var sql = CreateSqlFromKeyOrFluentUniqueKeys(entity);
-            return FindSingleOrDefaultSql(sql);
+            return FindSingleOrDefaultSql(GetKeyFilterSql(entity)) ?? 
+                   FindSingleOrDefaultSql(GetFluentUniqueKeyFilterSql(entity));
         }
 
         public virtual bool Exists(TE entity, bool includeExcludedLogically = false)
         {
-            var sql = CreateSqlFromKeyOrFluentUniqueKeys(entity);
+            var sql = GetKeyAndFluentUniqueKeyFilterSql(entity);
             return this.ExistsSql(sql, includeExcludedLogically);
+        }
+
+        public virtual bool ExistsOnlyOne(TE entity, bool includeExcludedLogically = false)
+        {
+            var sql = GetKeyAndFluentUniqueKeyFilterSql(entity);
+            return CountSql(sql, includeExcludedLogically) == 1;
+        }
+
+        public virtual int Count(TE entity, bool includeExcludedLogically = false)
+        {
+            var sql = GetKeyAndFluentUniqueKeyFilterSql(entity);
+            return CountSql(sql, includeExcludedLogically);
         }
 
         public virtual void AddRange(params TE[] entities)
@@ -369,7 +409,7 @@ namespace Fluent.Architecture.EntityFramework
             }
 
             var currentEntity = Service.Find(entity);
-           
+
             TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
 
             lock (SessionRequest)
@@ -501,27 +541,34 @@ namespace Fluent.Architecture.EntityFramework
             return Service.SessionRequest.LocalHttpContext.Request?.Form[key];
         }
 
-        private string CreateSqlFromKeyOrFluentUniqueKeys(TE entity)
+        protected virtual string GetFluentUniqueKeyFilterSql(TE entity)
         {
             var tableName = entity.GetTableName();
-            var where = GetKeyFilterSql(entity);
-            return $"select * from {tableName} where {where}";
+            var fluentUniqueKeyValues = entity.GetFluentUniqueKeyValues().Select(x => $"{x.ColumnName} = {x.Value}").ToArray();
+            return $"select * from {tableName} where ({string.Join(" and ", fluentUniqueKeyValues)})";// O and está no lugar certo sim
         }
 
         protected virtual string GetKeyFilterSql(TE entity)
         {
             var tableName = entity.GetTableName();
             var keyValues = entity.GetKeyValues().Select(x => $"{x.ColumnName} = {x.Value}").ToArray();
+            return $"select * from {tableName} where ({string.Join(" and ", keyValues)})"; // O and está no lugar certo sim
+        }
+
+        protected virtual string GetKeyAndFluentUniqueKeyFilterSql(TE entity)
+        {
+            var tableName = entity.GetTableName();
+            var keyValues = entity.GetKeyValues().Select(x => $"{x.ColumnName} = {x.Value}").ToArray();
             var fluentUniqueKeyValues = entity.GetFluentUniqueKeyValues().Select(x => $"{x.ColumnName} = {x.Value}").ToArray();
 
-            var sql = $"({string.Join(" and ", keyValues)})";
+            var sql = $"({string.Join(" and ", keyValues)})";// O and está no lugar certo sim
 
             if (fluentUniqueKeyValues.Length > 0)
             {
                 sql += $" or ({string.Join(" or ", fluentUniqueKeyValues)})";
             }
 
-            return sql;
+            return $"select * from {tableName} where {sql}";
         }
 
         protected IQueryable<TX> FluentPaginate<TX>(IQueryable<TX> query, FluentPagination pagination = null)

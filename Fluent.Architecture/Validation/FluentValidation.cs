@@ -116,6 +116,7 @@ namespace Fluent.Architecture.Validation
             if (KeyValuesOk)
             {
                 EntityMustExistInDatabase(entity, true);
+                ThereIsOnlyOneEntity(entity, false);
             }
 
             this.RunTheContextValidation();
@@ -134,6 +135,8 @@ namespace Fluent.Architecture.Validation
             if (KeyValuesOk)
             {
                 EntityMustExistInDatabase(value.Original);
+                //Todo validate ThereIsOnlyOneEntity(entity, false);
+                //Todo validate logical delete
             }
 
             RunTheContextValidation();
@@ -154,6 +157,8 @@ namespace Fluent.Architecture.Validation
                     if (KeyValuesOk)
                     {
                         EntityMustExistInDatabase(entity);
+                        //Todo validate ThereIsOnlyOneEntity(entity, false);
+                        //Todo validate logical delete
                     }
                 }
             }
@@ -414,6 +419,21 @@ namespace Fluent.Architecture.Validation
                 var keys = entity.GetKeyValues().Select(x => $"{{{x.Property.Name}:{x.Value}}}").ToArray();
                 var keyValues = string.Join(", ", keys);
                 this.AddInconsistency(new EntityNotFoundFluentValidationException(keyValues));
+            }
+        }
+
+        private void ThereIsOnlyOneEntity(T entity, bool includeExcludedLogically = false)
+        {
+            if (!this.NullParameterOk)
+            {
+                return;
+            }
+
+            if (this.Service.Count(entity) > 1)
+            {
+                var keys = entity.GetKeyValues().Select(x => $"{{{x.Property.Name}:{x.Value}}}").ToArray();
+                var keyValues = string.Join(", ", keys);
+                this.AddInconsistency(new EntityExistsFluentValidationException(keyValues));
             }
         }
 

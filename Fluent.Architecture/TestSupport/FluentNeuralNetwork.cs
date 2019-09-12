@@ -98,7 +98,14 @@ namespace Fluent.Architecture.Core.TestSupport
                     if (item.isList)
                     {
                         var typeList = typeof(List<>).MakeGenericType(item.type);
-                        value = Activator.CreateInstance(typeList, value);
+                        if (value == null)
+                        {
+                            value = Activator.CreateInstance(typeList);
+                        }
+                        else
+                        {
+                            value = Activator.CreateInstance(typeList, value);
+                        }
                     }
 
                     item.property.SetValue(entity, value);

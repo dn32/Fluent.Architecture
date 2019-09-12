@@ -77,8 +77,13 @@ namespace Fluent.Architecture.Extensions
         public static object GetExampleValue(this Type type)
         {
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
-
             var obj = Activator.CreateInstance(type);
+
+            //if (type.Name == "List`1")
+            //{//Todo - implementar para lista
+            //    return Activator;
+            //}
+
             foreach (var property in type.GetProperties())
             {
                 if (property.PropertyType.IsNullableEnum())
@@ -89,8 +94,14 @@ namespace Fluent.Architecture.Extensions
                 else
                 {
                     var value = property.GetExampleValue();
-                    var newValue = Convert.ChangeType(value, property.PropertyType, CultureInfo.InvariantCulture);
-                    property.SetValue(obj, newValue);
+                    if (value != null)
+                    {
+                        var newValue = Convert.ChangeType(value, property.PropertyType, CultureInfo.InvariantCulture);
+                        if (property.SetMethod != null)
+                        {
+                            property.SetValue(obj, newValue);
+                        }
+                    }
                 }
             }
 
@@ -211,7 +222,7 @@ namespace Fluent.Architecture.Extensions
             type.GetProperties().ToList().ForEach(x =>
             {
                 var attr = x.GetCustomAttribute<FluentJsonPropertyAttribute>();
-                if (attr == null)
+                if (attr == null || attr.form == EnumForm.NONE)
                 {
                     return;
                 }

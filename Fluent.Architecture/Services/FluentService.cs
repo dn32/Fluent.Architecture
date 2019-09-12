@@ -205,6 +205,16 @@ namespace Fluent.Architecture.Services
             return this.Repository.Exists(entity, includeExcludedLogically);
         }
 
+        public virtual bool ExistsOnlyOne(T entity, bool includeExcludedLogically = false)
+        {
+            return this.Repository.ExistsOnlyOne(entity, includeExcludedLogically);
+        }
+
+        public virtual int Count(T entity, bool includeExcludedLogically = false)
+        {
+            return this.Repository.Count(entity, includeExcludedLogically);
+        }
+
         public virtual bool ExistsSelect<TO>(ISpec spec)
         {
             return this.Repository.ExistsSelect<TO>(spec);
@@ -233,7 +243,15 @@ namespace Fluent.Architecture.Services
         public virtual T Add(T entity)
         {
             this.Validation.Add(entity);
-            return Repository.Add(entity);
+
+            if(Exists(entity, true, true))
+            {
+                return Update(entity); // Restore deleted
+            }
+            else
+            {
+                return Repository.Add(entity);
+            }
         }
 
         // Todo2 documentar
@@ -331,6 +349,7 @@ namespace Fluent.Architecture.Services
 
             throw new IncorrectDevelopmentException($"You can not initialize the {nameof(FluentService<T>)}");
         }
+
 
         #endregion
     }

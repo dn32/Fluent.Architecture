@@ -28,6 +28,8 @@ namespace Fluent.Architecture.Core.Interfaces
         bool ExistsSelect<TO>(ISpec spec);
         bool Exists(ISpec spec);
         bool Exists(TE entity, bool includeExcludedLogically = false);
+        bool ExistsOnlyOne(TE entity, bool includeExcludedLogically);
+        int Count(TE entity, bool includeExcludedLogically);
         TE Find(TE entity);
         TE Add(TE entity);
         void AddRange(TE[] entities);
