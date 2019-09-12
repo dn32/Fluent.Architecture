@@ -7,13 +7,9 @@ namespace Fluent.Architecture.Core.Attributes
     [AttributeUsage(AttributeTargets.Property)]
     public class FluentReferenceAttribute : Attribute
     {
-        public string Display { get; set; }
-
         public string[] LocalKeys { get; set; }
 
         public string[] ExternalKeys { get; set; }
-
-        public string PropertyForFindByProximity { get; set; }
 
         [JsonIgnore]
         public string LocalKey

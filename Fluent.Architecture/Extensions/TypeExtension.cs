@@ -7,14 +7,19 @@
 
 // ReSharper disable CommentTypo
 using Fluent.Architecture.Core.Attributes;
+using Fluent.Architecture.Core.Entities;
+using Fluent.Architecture.Core.Enumerator;
 using Fluent.Architecture.Core.Extensions;
 using Fluent.Architecture.Services;
+using Fluent.Architecture.Util;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 
 namespace Fluent.Architecture.Extensions
 {
@@ -71,15 +76,11 @@ namespace Fluent.Architecture.Extensions
 
         public static object GetExampleValue(this Type type)
         {
+            if (type == null) { throw new ArgumentNullException(nameof(type)); }
+
             var obj = Activator.CreateInstance(type);
             foreach (var property in type.GetProperties())
             {
-                //Todo - Remover quando liberar a composição
-                if (property.GetCustomAttribute<FluentCompositionAttribute>() != null)
-                {
-                    continue;
-                }
-
                 if (property.PropertyType.IsNullableEnum())
                 {
                     var firstEnum = Enum.GetValues(property.PropertyType.GetTypeByNullType()).GetValue(1);
@@ -94,6 +95,229 @@ namespace Fluent.Architecture.Extensions
             }
 
             return obj;
+        }
+
+        public static bool IsOfNullableType(this Type type)
+        {
+            return Nullable.GetUnderlyingType(type) != null;
+        }
+
+        public static FieldInfo[] GetEnumFields(this Type type)
+        {
+            var nullValue = Nullable.GetUnderlyingType(type);
+            type = nullValue ?? type;
+            return type.GetFields();
+        }
+
+        public static bool IsPrimitive(this Type type)
+        {
+            var types = new[]
+                           {
+                              typeof (Enum),
+                              typeof (String),
+                              typeof (Char),
+                              typeof (Guid),
+
+                              typeof (Boolean),
+                              typeof (Byte),
+                              typeof (Int16),
+                              typeof (Int32),
+                              typeof (Int64),
+                              typeof (Single),
+                              typeof (Double),
+                              typeof (Decimal),
+
+                              typeof (SByte),
+                              typeof (UInt16),
+                              typeof (UInt32),
+                              typeof (UInt64),
+
+                              typeof (DateTime),
+                              typeof (DateTimeOffset),
+                              typeof (TimeSpan),
+                          }.ToList();
+
+            if (types.Any(x => x.IsAssignableFrom(type)))
+            {
+                return true;
+            }
+
+            return type.IsEnum;
+        }
+
+        public static bool IsPrimitiveOrPrimitiveNulable(this Type type)
+        {
+
+            var types = new[]
+                           {
+                              typeof (Enum),
+                              typeof (String),
+                              typeof (Char),
+                              typeof (Guid),
+
+                              typeof (Boolean),
+                              typeof (Byte),
+                              typeof (Int16),
+                              typeof (Int32),
+                              typeof (Int64),
+                              typeof (Single),
+                              typeof (Double),
+                              typeof (Decimal),
+
+                              typeof (SByte),
+                              typeof (UInt16),
+                              typeof (UInt32),
+                              typeof (UInt64),
+
+                              typeof (DateTime),
+                              typeof (DateTimeOffset),
+                              typeof (TimeSpan),
+                          }.ToList();
+
+            var nullTypes = from t in types
+                            where t.IsValueType
+                            select typeof(Nullable<>).MakeGenericType(t);
+
+            types.Concat(nullTypes);
+
+
+            if (types.Any(x => x.IsAssignableFrom(type)))
+            {
+                return true;
+            }
+
+            var nut = Nullable.GetUnderlyingType(type);
+            return nut != null && nut.IsEnum;
+        }
+
+        public static FluentJsonSchema GetFluentJsonSchema(this Type type, bool tablet)
+        {
+            if (type == null) { throw new ArgumentNullException(nameof(type)); }
+
+            if (type.Name == "List`1")
+            {
+                type = type.GenericTypeArguments[0];
+            }
+
+            var form = type.GetCustomAttribute<FluentJsonFormAttribute>();
+            form.propName = type.Name;
+
+            var root = new FluentJsonSchema
+            {
+                FluentJsonForm = form,
+                Properties = new List<FluentJsonPropertyAttribute>()
+            };
+
+            type.GetProperties().ToList().ForEach(x =>
+            {
+                var attr = x.GetCustomAttribute<FluentJsonPropertyAttribute>();
+                if (attr == null)
+                {
+                    return;
+                }
+
+                attr.FluentAggregation = x.GetCustomAttribute<FluentAggregationAttribute>(true);
+                attr.FluentComposition = x.GetCustomAttribute<FluentCompositionAttribute>(true);
+                attr.IsKey = x.GetCustomAttribute<KeyAttribute>() != null;
+                attr.IsList = x.PropertyType.Name == "List`1";
+                attr.IsNullable = x.PropertyType.Equals(typeof(string)) || x.PropertyType.IsOfNullableType();
+
+                if (attr.FluentAggregation != null)
+                {
+                    attr.FluentAggregation.SetType(x.PropertyType.Name);
+                    attr.FluentAggregation.SetName(x.Name);
+                }
+
+                if (attr.FluentComposition != null)
+                {
+                    attr.FluentComposition.SetType(x.PropertyType.Name);
+                    attr.FluentComposition.SetName(x.Name);
+                    attr.FluentComposition.Form = GetFluentJsonSchema(x.PropertyType, tablet);
+                }
+
+                if (x.PropertyType.IsNullableEnum())
+                {
+                    attr.IsEnum = true;
+                    attr.Enums = new List<KeyValuePair<string, string>>();
+
+                    foreach (var field in x.PropertyType.GetEnumFields())
+                    {
+                        if (field.Name.Equals("value__", StringComparison.InvariantCultureIgnoreCase)) { continue; }
+                        var value = field.GetCustomAttribute<EnumMemberAttribute>()?.Value ?? field.Name;
+                        attr.Enums.Add(new KeyValuePair<string, string>(field.Name, value));
+                    }
+                }
+
+                attr.propName = x.Name;
+                root.Properties.Add(attr);
+            });
+
+            root.Properties = root.Properties
+                                .GroupBy(x => x.group)
+                                .SelectMany(x => x)
+                                .ToList();
+
+            root.Properties.Where(x => x.form == EnumForm.HIDDEN).ToList().ForEach(property =>
+            {
+                property.lGrid = 0;
+                property.Row = 0;
+            });
+
+            var properties = root.Properties.Where(x => x.form != EnumForm.HIDDEN).ToList();
+            properties.ForEach(property =>
+            {
+                if (tablet)
+                {
+                    property.lGrid *= 2;
+                }
+
+                if (property.lGrid == 0 || property.lGrid > 12) { property.lGrid = 12; }
+                property.Row = 0;
+            });
+
+            {
+                var grid = 0;
+                var row = 1;
+                properties.ForEach(x =>
+                {
+                    if (grid + x.lGrid > 12)
+                    {
+                        row++;
+                        grid = x.lGrid;
+                    }
+                    else
+                    {
+                        grid += x.lGrid;
+                    }
+
+                    x.Row = row;
+                });
+            }
+
+            {
+                var props = new List<FluentJsonPropertyAttribute>();
+                var row = 1;
+
+                properties.ForEach(property =>
+                {
+                    if (row != property.Row)
+                    {
+                        CustomJsonResult.AdjustColumns(props, row);
+                        props.Clear();
+                        row++;
+                    }
+
+                    props.Add(property);
+
+                });
+
+                if (props.Count > 0)
+                {
+                    CustomJsonResult.AdjustColumns(props, row);
+                }
+            }
+
+            return root;
         }
 
         public static bool IsNullableEnum(this Type t)

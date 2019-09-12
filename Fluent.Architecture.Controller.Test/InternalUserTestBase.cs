@@ -1,4 +1,5 @@
 ﻿using Fluent.Architecture;
+using Fluent.Architecture.Core.Util;
 using Fluent.Architecture.EntityFramework;
 using Fluent.Architecture.EntityFramework.Oracle;
 using Fluent.Architecture.EntityFramework.SqLite;
@@ -32,7 +33,7 @@ internal class InternalUserTestBase : FluentTest<User>
 
     public override User GetNew()
     {
-        var rand = TestUtil.NextRandom();
+        var rand = RandomUtil.NextRandom();
         if (Category == 0) { Category = rand; }
 
         return new User

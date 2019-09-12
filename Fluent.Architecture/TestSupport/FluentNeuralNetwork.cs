@@ -68,7 +68,7 @@ namespace Fluent.Architecture.Core.TestSupport
                                     property = p,
                                     isList = p.PropertyType.Name == "List`1",
                                     type = p.PropertyType.Name == "List`1" ? p.PropertyType.GenericTypeArguments[0] : p.PropertyType,
-                                    attr = p.GetCustomAttribute<FluentAggregationAttribute>()
+                                    attr = p.GetCustomAttribute<FluentAggregationAttribute>(true)
                                 })
                             .Where(x => x.attr != null)
                             .ToList();
@@ -114,7 +114,7 @@ namespace Fluent.Architecture.Core.TestSupport
                 node = new FluentNode { EntityType = type };
                 DictionaryOfAggregations.Add(type, node);
 
-                var properties = node.EntityType.GetProperties().Where(x => x.GetCustomAttribute<FluentAggregationAttribute>() != null).ToList();
+                var properties = node.EntityType.GetProperties().Where(x => x.GetCustomAttribute<FluentAggregationAttribute>(true) != null).ToList();
                 var types = properties.Select(x => x.PropertyType).ToList();
                 if (types.Count == 0)
                 {

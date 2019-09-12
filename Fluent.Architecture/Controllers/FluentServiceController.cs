@@ -53,7 +53,8 @@ namespace Fluent.Architecture.Controllers
             return JsonConvert.DeserializeObject(JsonConvert.SerializeObject(element,
                          Formatting.Indented, new JsonSerializerSettings
                          {
-                             ContractResolver = new PropertySelectorDynamicContractJsonResolver(propertyToIgnoreValues, propertyToShowValues)
+                             ContractResolver = new PropertySelectorDynamicContractJsonResolver(propertyToIgnoreValues, propertyToShowValues),
+                             ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                          }));
         }
 

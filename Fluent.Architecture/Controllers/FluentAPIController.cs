@@ -5,6 +5,7 @@ using Fluent.Architecture.Entities;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Specifications;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Fluent.Architecture.Controllers
 {
@@ -56,7 +57,8 @@ namespace Fluent.Architecture.Controllers
 
         // GET api/user/Find?id=5
         [HttpGet]
-        public virtual DefaultResult Find([FromQuery]T value)
+        [HttpPost]
+        public virtual DefaultResult Find(T value)
         {
             return Result(Service.Find(value, false));
         }
@@ -72,6 +74,13 @@ namespace Fluent.Architecture.Controllers
 
         // GET api/user/Count
         [HttpGet]
+        public virtual DefaultResult Count()
+        {
+            return Result(Service.Count());
+        }
+
+        // GET api/user/Count
+        [HttpPost]
         public virtual DefaultResult Count([FromBody] Filter[] filters)
         {
             FluentSpecification<T> spec;
@@ -112,11 +121,11 @@ namespace Fluent.Architecture.Controllers
             return Result(list, LastRequestPagination);
         }
 
-        // GET api/user/Count
-        [HttpPost]
-        public virtual DefaultResult Count()
+        [HttpGet]
+        public string JsonForm(bool tablet = false)
         {
-            return Result(Service.Count());
+            var data = typeof(T).GetFluentJsonSchema(tablet);
+            return JsonConvert.SerializeObject(data, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, Formatting = Formatting.None });
         }
 
         // POST api/user/Add/

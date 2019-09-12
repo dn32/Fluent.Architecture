@@ -13,6 +13,7 @@ using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
@@ -21,6 +22,11 @@ public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
     {
         filterContext.ExceptionHandled = true;
         filterContext.HttpContext.Response.Clear();
+
+        if (filterContext?.Exception is DbUpdateException exception1)
+        {
+            filterContext.Exception = exception1.InnerException;
+        }
 
         if (filterContext?.Exception is ContextFluentValidationException exception)
         {

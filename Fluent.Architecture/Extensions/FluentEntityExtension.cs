@@ -74,7 +74,7 @@ namespace Fluent.Architecture.Extensions
 
         public static string GetUiPropertyName(this PropertyInfo property)
         {
-            return property.GetCustomAttribute<FluentJsonFormAttribute>()?.name ??
+            return property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.name ??
                    property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ??
                    property.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName ??
                    property?.Name;
@@ -126,8 +126,8 @@ namespace Fluent.Architecture.Extensions
         {
             if (property.PropertyType.IsNumeric())
             {
-                var min = property.GetCustomAttribute<FluentJsonFormAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
-                var max = property.GetCustomAttribute<FluentJsonFormAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
+                var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
+                var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
                 if (min == null || max == null) { return null; }
 
                 return ((min as int?).Value, (max as int?).Value);
@@ -135,8 +135,8 @@ namespace Fluent.Architecture.Extensions
 
             if (property.PropertyType == typeof(string) && property.PropertyType == typeof(String))
             {
-                var min = property.GetCustomAttribute<FluentJsonFormAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
-                var max = property.GetCustomAttribute<FluentJsonFormAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length;
+                var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
+                var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length;
                 if (min == null || max == null) { return null; }
 
                 return (min.Value, max.Value);

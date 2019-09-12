@@ -1,6 +1,7 @@
 ﻿using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Core.Extensions;
 using Fluent.Architecture.Core.Filters;
+using Fluent.Architecture.Core.Util;
 using Fluent.Architecture.Test;
 using Fluent.Architecture.Test.Mock;
 using Microsoft.AspNetCore.Http;
@@ -71,7 +72,7 @@ internal class UserControllerTest : InternalUserTestBase
     {
 
         //Preparation
-        var category = TestUtil.NextRandom();
+        var category = RandomUtil.NextRandom();
         base.SetCategory(category);
         var user1 = base.GetNew();
         var user2 = base.GetNew();
@@ -108,7 +109,7 @@ internal class UserControllerTest : InternalUserTestBase
     public void AddRangeSucess()
     {
         //Preparation
-        var category = TestUtil.NextRandom();
+        var category = RandomUtil.NextRandom();
         base.SetCategory(category);
         var user1 = base.GetNew();
         var user2 = base.GetNew();
@@ -141,7 +142,7 @@ internal class UserControllerTest : InternalUserTestBase
     public void CountSucess()
     {
         //Preparation
-        var category = TestUtil.NextRandom();
+        var category = RandomUtil.NextRandom();
         base.SetCategory(category);
         var user1 = base.GetNew();
         var user2 = base.GetNew();
@@ -206,7 +207,7 @@ internal class UserControllerTest : InternalUserTestBase
     [Test]
     public void ListSucess()
     {
-        var category = TestUtil.NextRandom();
+        var category = RandomUtil.NextRandom();
         //Preparation
         var currentController = GetNewController<UserController>();
         base.SetCategory(category);
@@ -253,7 +254,7 @@ internal class UserControllerTest : InternalUserTestBase
     {
         //Preparation
         var currentController = GetNewController<UserController>();
-        var category = TestUtil.NextRandom();
+        var category = RandomUtil.NextRandom();
         List<User> users = new List<User>();
         for (int i = 0; i < 40; i++)
         {
@@ -308,7 +309,7 @@ internal class UserControllerTest : InternalUserTestBase
         /* A categoria foi usada para não conflitar os testes simultâneos que são executados aqui*/
 
         //Preparation
-        var category = TestUtil.NextRandom();
+        var category = RandomUtil.NextRandom();
         var users = new List<User>();
         for (int i = 0; i < 10; i++)
         {
@@ -393,7 +394,7 @@ internal class UserControllerTest : InternalUserTestBase
         //Preparation
         var currentController = GetNewController<UserController>();
         var users = new List<User>();
-        var category = TestUtil.NextRandom();
+        var category = RandomUtil.NextRandom();
 
         {
             var user = base.GetNew();
@@ -496,7 +497,7 @@ internal class UserControllerTest : InternalUserTestBase
         /* A categoria foi usada para não conflitar os testes simultâneos que são executados aqui*/
 
         //Preparation
-        var category = TestUtil.NextRandom();
+        var category = RandomUtil.NextRandom();
         var user = base.GetNew();
         user.ZipCode = 65001;
         user.Name = "Padro Santos";
@@ -546,7 +547,7 @@ internal class UserControllerTest : InternalUserTestBase
         /* A categoria foi usada para não conflitar os testes simultâneos que são executados aqui*/
 
         //Preparation
-        var category = TestUtil.NextRandom();
+        var category = RandomUtil.NextRandom();
         var user = base.GetNew();
         user.ZipCode = 65001;
         user.Name = "Padro Santos";
@@ -607,7 +608,7 @@ internal class UserControllerTest : InternalUserTestBase
         /* A categoria foi usada para não conflitar os testes simultâneos que são executados aqui*/
 
         //Preparation
-        var category = TestUtil.NextRandom();
+        var category = RandomUtil.NextRandom();
         var user = base.GetNew();
         user.ZipCode = 65001;
         user.Name = "Padro Santos";
@@ -662,7 +663,7 @@ internal class UserControllerTest : InternalUserTestBase
         /* A categoria foi usada para não conflitar os testes simultâneos que são executados aqui*/
 
         //Preparation
-        var category = TestUtil.NextRandom();
+        var category = RandomUtil.NextRandom();
         var user = base.GetNew();
         user.ZipCode = 65001;
         user.Name = "Padro Santos";
@@ -721,7 +722,7 @@ internal class UserControllerTest : InternalUserTestBase
         /* A categoria foi usada para não conflitar os testes simultâneos que são executados aqui*/
 
         //Preparation
-        var category = TestUtil.NextRandom();
+        var category = RandomUtil.NextRandom();
         var user = base.GetNew();
         user.ZipCode = 65001;
         user.Name = "Padro Santos";

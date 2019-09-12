@@ -172,11 +172,26 @@ namespace Fluent.Architecture.EntityFramework
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
-        internal bool ExistsSql(string sql)
+        internal bool ExistsSql(string sql, bool includeExcludedLogically = false)
         {
-            return this.Input.FromSql(sql).Any();
-        }
+            if (includeExcludedLogically)
+            {
+                lock (SessionRequest)
+                {
+                    Session.EnableLogicalDeletion = false;
+                }
+            }
 
+            var ret = this.Input.FromSql(sql).Any();
+
+            lock (SessionRequest)
+            {
+                Session.EnableLogicalDeletion = true;
+            }
+
+            return ret;
+        }
+        
         internal TE FindSingleOrDefaultSql(string sql)
         {
             return this.Input.FromSql(sql).SingleOrDefault();
@@ -317,10 +332,10 @@ namespace Fluent.Architecture.EntityFramework
             return FindSingleOrDefaultSql(sql);
         }
 
-        public virtual bool Exists(TE entity)
+        public virtual bool Exists(TE entity, bool includeExcludedLogically = false)
         {
             var sql = CreateSqlFromKeyOrFluentUniqueKeys(entity);
-            return this.ExistsSql(sql);
+            return this.ExistsSql(sql, includeExcludedLogically);
         }
 
         public virtual void AddRange(params TE[] entities)
@@ -348,9 +363,20 @@ namespace Fluent.Architecture.EntityFramework
         {
             RunTheContextValidation();
 
+            lock (SessionRequest)
+            {
+                Session.EnableLogicalDeletion = false;
+            }
+
             var currentEntity = Service.Find(entity);
-            //Input.Attach(currentEntity);
+           
             TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
+
+            lock (SessionRequest)
+            {
+                Session.EnableLogicalDeletion = true;
+            }
+
             return entity;
         }
 

@@ -3,6 +3,7 @@ using Fluent.Architecture.Entities;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Specifications;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -45,22 +46,22 @@ namespace Fluent.Architecture.Core.Specifications
                 switch (filter.FilterType)
                 {
                     case EnumFilterType.CONTAINS:
-                        expression = ExpressionUtil.Contains<T>(property.Name, filter.Value, property.PropertyType);
+                        expression = ExpressionUtil.Contains<T>(property.Name, filter.Value.ToUpper(CultureInfo.InvariantCulture), property.PropertyType);
                         break;
                     case EnumFilterType.GREATER:
-                        expression = ExpressionUtil.Greate<T>(property.Name, filter.Value, filter.Including, property.PropertyType);
+                        expression = ExpressionUtil.Greate<T>(property.Name, filter.Value.ToUpper(CultureInfo.InvariantCulture), filter.Including, property.PropertyType);
                         break;
                     case EnumFilterType.SMALLER:
-                        expression = ExpressionUtil.Smaller<T>(property.Name, filter.Value, filter.Including, property.PropertyType);
+                        expression = ExpressionUtil.Smaller<T>(property.Name, filter.Value.ToUpper(CultureInfo.InvariantCulture), filter.Including, property.PropertyType);
                         break;
                     case EnumFilterType.START_WITH:
-                        expression = ExpressionUtil.StartWith<T>(property.Name, filter.Value, property.PropertyType);
+                        expression = ExpressionUtil.StartWith<T>(property.Name, filter.Value.ToUpper(CultureInfo.InvariantCulture), property.PropertyType);
                         break;
                     case EnumFilterType.ENDS_WITH:
-                        expression = ExpressionUtil.EndsWith<T>(property.Name, filter.Value, property.PropertyType);
+                        expression = ExpressionUtil.EndsWith<T>(property.Name, filter.Value.ToUpper(CultureInfo.InvariantCulture), property.PropertyType);
                         break;
                     case EnumFilterType.EQUAL:
-                        expression = ExpressionUtil.Equals<T>(property.Name, filter.Value, property.PropertyType);
+                        expression = ExpressionUtil.Equals<T>(property.Name, filter.Value.ToUpper(CultureInfo.InvariantCulture), property.PropertyType);
                         break;
                     case EnumFilterType.TRUE:
                         expression = ExpressionUtil.IsTrue<T>(property.Name, property.PropertyType);

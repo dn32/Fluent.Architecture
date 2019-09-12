@@ -2,6 +2,7 @@
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Entities;
+using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -58,8 +59,20 @@ namespace Fluent.Architecture.EntityFramework
                 if (type.IsSubclassOf(typeof(FluentEntity)))
                 {
                     var keys = type.GetProperties().Where(x => x.GetCustomAttribute<KeyAttribute>() != null).Select(x => x.Name).ToArray();
+                    if (keys.Length == 0)
+                    {
+                        throw new Exception($"The entity {type.Name} must contains a least one key");
+                    }
+
                     var entity = modelBuilder.Entity(type);
                     entity.HasKey(keys);
+
+                    if (UseLogicalDeletion)
+                    {
+                        entity.AddQueryFilter(IsAvailable());
+                    }
+
+                    SetEntity(entity, type);
 
                     var navigations = entity.Metadata.GetNavigations();
                     foreach (var property in type.GetProperties())
@@ -83,7 +96,7 @@ namespace Fluent.Architecture.EntityFramework
                             continue;
                         }
 
-                        SetEntity(entity, type, property);
+                        SetEntityProperty(entity, type, property);
                     }
                 }
             }
@@ -91,12 +104,16 @@ namespace Fluent.Architecture.EntityFramework
             base.OnModelCreating(modelBuilder);
         }
 
-        protected virtual void SetEntity(EntityTypeBuilder entity, Type type, PropertyInfo property) { }
+        protected virtual void SetEntityProperty(EntityTypeBuilder entity, Type type, PropertyInfo property) { }
+
+        protected virtual void SetEntity(EntityTypeBuilder entity, Type type) { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
         public override int SaveChanges()
         {
+            UpdateLogicalDeletion(ChangeTracker.Entries());
+
             BeforeSave(out var changedEntities, out var eventChange);
 
             var ret = base.SaveChanges();
@@ -105,6 +122,17 @@ namespace Fluent.Architecture.EntityFramework
 
             return ret;
         }
+
+        protected virtual void UpdateLogicalDeletion(IEnumerable<EntityEntry> entries) { }
+
+        protected virtual LambdaExpression IsAvailable()
+        {
+            throw new IncorrectDevelopmentException($"The Enable {nameof(UseLogicalDeletion)} property set to 'true' requires the override of the {nameof(IsAvailable)} method in the context of the entity framework. Do not invoke the base.");
+        }
+
+        protected virtual bool UseLogicalDeletion => false;
+
+        public virtual bool EnableLogicalDeletion { get; set; }
 
         private void AfterSave(List<EntityEntry> changedEntities, List<FluentEventEntity> eventChange)
         {

@@ -115,7 +115,7 @@ namespace Fluent.Architecture.Validation
 
             if (KeyValuesOk)
             {
-                EntityMustExistInDatabase(entity);
+                EntityMustExistInDatabase(entity, true);
             }
 
             this.RunTheContextValidation();
@@ -282,8 +282,8 @@ namespace Fluent.Architecture.Validation
                 var value = property.GetValue(entity);
                 if (property.PropertyType.IsNumeric())
                 {
-                    var min = property.GetCustomAttribute<FluentJsonFormAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
-                    var max = property.GetCustomAttribute<FluentJsonFormAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
+                    var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
+                    var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
                     if (min == null || max == null) { continue; }
                     var mindouble = double.Parse(min.ToString(), CultureInfo.InvariantCulture);
                     var maxdouble = double.Parse(max.ToString(), CultureInfo.InvariantCulture);
@@ -296,14 +296,14 @@ namespace Fluent.Architecture.Validation
 
                 if (property.PropertyType == typeof(string) && property.PropertyType == typeof(String))
                 {
-                    var requ = property.GetCustomAttribute<RequiredAttribute>() != null;
+                    var requ = property.GetCustomAttribute<RequiredAttribute>() != null || property.GetCustomAttribute<FluentRequiredAttribute>() != null;
                     if (requ && property.GetValue(entity).IsFluentNull())
                     {//Nesse caso já há uma inconsistência de requerido adicionada
                         return;
                     }
 
-                    var min = property.GetCustomAttribute<FluentJsonFormAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
-                    var max = property.GetCustomAttribute<FluentJsonFormAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length;
+                    var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
+                    var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length;
                     if (min == null || max == null) { continue; }
 
                     if (!new MinLengthAttribute(min.Value).IsValid(value))
@@ -328,6 +328,16 @@ namespace Fluent.Architecture.Validation
             }
 
             var properties = typeof(T).GetPropertiesByAttribute<RequiredAttribute>();
+            var properties2 = typeof(T).GetPropertiesByAttribute<FluentRequiredAttribute>();
+
+            properties2.ForEach(x =>
+            {
+                if (!properties.Contains(x))
+                {
+                    properties.Add(x);
+                }
+            });
+
             foreach (var property in properties)
             {
                 if (property.GetValue(entity).IsFluentNull())
@@ -392,14 +402,14 @@ namespace Fluent.Architecture.Validation
             }
         }
 
-        private void EntityMustExistInDatabase(T entity)
+        private void EntityMustExistInDatabase(T entity, bool includeExcludedLogically = false)
         {
             if (!this.NullParameterOk)
             {
                 return;
             }
 
-            if (!this.Service.Exists(entity, this.KeyValuesOk))
+            if (!this.Service.Exists(entity, KeyValuesOk, includeExcludedLogically))
             {
                 var keys = entity.GetKeyValues().Select(x => $"{{{x.Property.Name}:{x.Value}}}").ToArray();
                 var keyValues = string.Join(", ", keys);

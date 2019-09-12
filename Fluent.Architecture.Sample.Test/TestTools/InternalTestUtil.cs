@@ -6,9 +6,9 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
+using Fluent.Architecture.Core.Util;
 using Fluent.Architecture.Sample.Test.SupportElements;
 using Fluent.Architecture.Sample.Test.SupportElements.Model;
-using Fluent.Architecture.Test;
 using System.Runtime.InteropServices;
 
 namespace Fluent.Architecture.Sample.Test.TestTools
@@ -19,7 +19,7 @@ namespace Fluent.Architecture.Sample.Test.TestTools
     {
         public static User GetNewUser()
         {
-            var rand = TestUtil.NextRandom();
+            var rand = RandomUtil.NextRandom();
             return new User
             {
                 PersonType = EnumPersonType.User,
@@ -35,7 +35,7 @@ namespace Fluent.Architecture.Sample.Test.TestTools
 
         public static Student GetNewStudent()
         {
-            var rand = TestUtil.NextRandom();
+            var rand = RandomUtil.NextRandom();
             return new Student
             {
                 Name = $"Name {rand}",
