@@ -8,11 +8,11 @@ public class ArchitectureInit
     public static void Setup(IServiceProvider serviceProvider)
     {
         Fluent.Architecture.Setup
-        .Init()
-        .SetServiceProvider(serviceProvider)
-        .UseEntityFramework()
-        .AddConnectionString("Data Source=sample.db;", createDatabaseIfNotExists: true, typeof(EfContextSqLite))
-        .Build()
-        .Run();
+            .Init()
+            .SetServiceProvider(serviceProvider)
+            .UseEntityFramework()
+            .AddConnectionString("Data Source=sample.db;", createDatabaseIfNotExists: true, typeof(EfContextSqLite))
+            .Build()
+            .Run();
     }
 }

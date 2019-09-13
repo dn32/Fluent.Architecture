@@ -42,7 +42,7 @@ order by UTL_MATCH.jaro_winkler_similarity(lower({ColumnName}), lower({{0}})) DE
             return dbSet.FromSqlRaw(sql, Term);
 #else
             return dbSet.FromSql(sql, Term);
-#endif  
+#endif
         }
 
         public override IOrderedQueryable<TE> Order(IQueryable<TE> query) => throw new NotImplementedException();
