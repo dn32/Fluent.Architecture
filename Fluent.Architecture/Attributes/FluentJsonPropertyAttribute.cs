@@ -11,7 +11,7 @@ namespace Fluent.Architecture.Core.Attributes
     {
         [DisplayName("Required")]
         [JsonProperty("Required")]
-        public bool required;
+        public bool required { get; set; }
 
         [DisplayName("Minimum")]
         [JsonProperty("Minimum")]

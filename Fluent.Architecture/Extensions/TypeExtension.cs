@@ -235,6 +235,11 @@ namespace Fluent.Architecture.Extensions
 
                 if (attr.FluentAggregation != null)
                 {
+                    if (x.PropertyType.Name == "List`1")
+                    {
+                        return; //Ignorando agregação em lista enquanto não é implementada
+                    }
+
                     attr.FluentAggregation.SetType(x.PropertyType.Name);
                     attr.FluentAggregation.SetName(x.Name);
                 }
