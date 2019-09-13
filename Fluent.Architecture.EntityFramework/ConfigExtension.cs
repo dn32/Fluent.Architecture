@@ -22,13 +22,13 @@ namespace Fluent.Architecture.EntityFramework
                 expression.Parameters.Single(), parameterType, expression.Body);
 
             var internalEntityTypeBuilder = entityTypeBuilder.GetInternalEntityTypeBuilder();
-            if (internalEntityTypeBuilder.Metadata.QueryFilter != null)
-            {
-                var currentQueryFilter = internalEntityTypeBuilder.Metadata.QueryFilter;
-                var currentExpressionFilter = ReplacingExpressionVisitor.Replace(
-                    currentQueryFilter.Parameters.Single(), parameterType, currentQueryFilter.Body);
-                expressionFilter = Expression.AndAlso(currentExpressionFilter, expressionFilter);
-            }
+            //if (internalEntityTypeBuilder.Metadata.QueryFilter != null)
+            //{
+            //    var currentQueryFilter = internalEntityTypeBuilder.Metadata.QueryFilter;
+            //    var currentExpressionFilter = ReplacingExpressionVisitor.Replace(
+            //        currentQueryFilter.Parameters.Single(), parameterType, currentQueryFilter.Body);
+            //    expressionFilter = Expression.AndAlso(currentExpressionFilter, expressionFilter);
+            //}
 
             var lambdaExpression = Expression.Lambda(expressionFilter, parameterType);
             entityTypeBuilder.HasQueryFilter(lambdaExpression);

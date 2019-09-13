@@ -37,7 +37,12 @@ select * from {TableName}
 where UTL_MATCH.jaro_winkler_similarity(lower({ColumnName}), lower({{0}})) > {Tolerance}
 order by UTL_MATCH.jaro_winkler_similarity(lower({ColumnName}), lower({{0}})) DESC
 ";
+
+#if NETCOREAPP3_0
+            return dbSet.FromSqlRaw(sql, Term);
+#else
             return dbSet.FromSql(sql, Term);
+#endif  
         }
 
         public override IOrderedQueryable<TE> Order(IQueryable<TE> query) => throw new NotImplementedException();

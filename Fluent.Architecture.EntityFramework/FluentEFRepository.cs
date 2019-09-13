@@ -182,7 +182,11 @@ namespace Fluent.Architecture.EntityFramework
                 }
             }
 
+#if NETCOREAPP3_0
+            var ret = this.Input.FromSqlRaw(sql).Any();
+#else
             var ret = this.Input.FromSql(sql).Any();
+#endif
 
             lock (SessionRequest)
             {
@@ -202,8 +206,11 @@ namespace Fluent.Architecture.EntityFramework
                 }
             }
 
+#if NETCOREAPP3_0
+            var ret = this.Input.FromSqlRaw(sql).Count();
+#else
             var ret = this.Input.FromSql(sql).Count();
-
+#endif
             lock (SessionRequest)
             {
                 Session.EnableLogicalDeletion = true;
@@ -216,10 +223,13 @@ namespace Fluent.Architecture.EntityFramework
         {
             try
             {
-                return this.Input.FromSql(sql).SingleOrDefault();
-
+#if NETCOREAPP3_0
+            return this.Input.FromSqlRaw(sql).SingleOrDefault();
+#else
+            return this.Input.FromSql(sql).SingleOrDefault();
+#endif  
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
                 throw new InvalidOperationException($"More than one record was found with the given keys. This is an indication of data with duplicate keys in the database. The table is {typeof(TE).GetTableName()}");
             }
@@ -356,7 +366,7 @@ namespace Fluent.Architecture.EntityFramework
 
         public virtual TE Find(TE entity)
         {
-            return FindSingleOrDefaultSql(GetKeyFilterSql(entity)) ?? 
+            return FindSingleOrDefaultSql(GetKeyFilterSql(entity)) ??
                    FindSingleOrDefaultSql(GetFluentUniqueKeyFilterSql(entity));
         }
 

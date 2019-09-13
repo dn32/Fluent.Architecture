@@ -55,7 +55,8 @@ namespace Fluent.Architecture.EntityFramework
             if (createDatabaseIfNotExists)
             {
                 efContext.Database.EnsureCreated();
-                efContext.Database.Migrate();
+                //Todo - Fix to net core 3
+               // efContext.Database.Migrate();
             }
         }
     }
