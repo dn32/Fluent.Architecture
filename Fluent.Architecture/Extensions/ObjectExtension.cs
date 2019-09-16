@@ -47,7 +47,7 @@ namespace Fluent.Architecture.Extensions
             {
                 if (property != null)
                 {
-                    return $"'{property.PropertyType.GetDefaultValue()}'";
+                    return $"'{property.PropertyType.GetDefaultValue()?.ToString()?.Replace("'","´")}'";
                 }
 
                 return null;
@@ -57,7 +57,7 @@ namespace Fluent.Architecture.Extensions
 
             if (type == typeof(string) || type == typeof(String))
             {
-                return $"'{value}'";
+                return $"'{value?.ToString()?.Replace("'", "´")}'";
             }
 
             if (type == typeof(int))
