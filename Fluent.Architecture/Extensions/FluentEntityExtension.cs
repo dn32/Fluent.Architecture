@@ -122,6 +122,11 @@ namespace Fluent.Architecture.Extensions
             return entityType?.GetProperties()?.Where(x => x.GetCustomAttribute<TA>(true) != null)?.ToList();
         }
 
+        public static T ChangeType<T>(this object value)
+        {
+            return (T)Convert.ChangeType(value, typeof(T));
+        }
+
         public static (int min, double max)? GetPropertyRange(this PropertyInfo property)
         {
             if (property.PropertyType.IsNumeric())
@@ -130,7 +135,10 @@ namespace Fluent.Architecture.Extensions
                 var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
                 if (min == null || max == null) { return null; }
 
-                return ((min as int?).Value, (max as int?).Value);
+                int minInt = min.ChangeType<int>();
+                int maxInt = max.ChangeType<int>();
+
+                return (maxInt, minInt);
             }
 
             if (property.PropertyType == typeof(string) && property.PropertyType == typeof(String))

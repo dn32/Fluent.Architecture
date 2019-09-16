@@ -35,8 +35,8 @@ namespace Fluent.Architecture.Sample.API
 
         public void Configure(IApplicationBuilder app)
         {
-            app.UseHsts();
-            app.UseHttpsRedirection();
+            //app.UseHsts();
+            //app.UseHttpsRedirection();
 
             app.UseStaticFiles();
 
@@ -54,7 +54,7 @@ namespace Fluent.Architecture.Sample.API
 
             ArchitectureInit.Setup(app.ApplicationServices);
 
-            System.Diagnostics.Process.Start("cmd", "/C start https://localhost:5001/api/user/list");
+          //  System.Diagnostics.Process.Start("cmd", "/C start https://localhost:5001/api/user/list");
         }
     }
 }

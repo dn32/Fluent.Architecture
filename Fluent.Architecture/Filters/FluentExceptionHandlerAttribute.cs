@@ -14,6 +14,7 @@ using Fluent.Architecture.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using System.Linq;
 
 public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
@@ -21,7 +22,7 @@ public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
     public override void OnException(ExceptionContext filterContext)
     {
         filterContext.ExceptionHandled = true;
-        filterContext.HttpContext.Response.Clear();
+        filterContext.HttpContext.Response.Clear();            
 
         if (filterContext?.Exception is DbUpdateException exception1)
         {
@@ -78,10 +79,17 @@ public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
         }
         else
         {
+            var stackTrace = new StackTrace(filterContext.Exception, true);
+            var frame = stackTrace.GetFrame(0);
+            var line = frame.GetFileLineNumber();
+
             filterContext.Result = new CustomJsonResult(new
             {
                 Error = true,
-                filterContext.Exception.Message
+                filterContext.Exception.Message,
+                stackTrace,
+                frame,
+                line
             });
 
             filterContext.HttpContext.Response.StatusCode = 500;

@@ -235,7 +235,8 @@ namespace Fluent.Architecture
             {
                 try
                 {
-                    typeList.Add(assembly.GetTypes());
+                    if (assembly.IsDynamic) { continue; }
+                    typeList.Add(assembly.ExportedTypes.ToArray());
                 }
                 catch
                 {

@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 public class User : FluentEntity
 {
     [Key]
-    public int Code { get; set; }
+    public long Code { get; set; }
 
     [FluentUniqueKey]
     public string Email { get; set; }

@@ -21,9 +21,6 @@ namespace Fluent.Architecture.Controllers
             return typeof(T).GetExampleValue() as T;
         }
 
-
-
-
         //       [HttpGet]
         //       public virtual string Schema()
         //       {
@@ -122,10 +119,15 @@ namespace Fluent.Architecture.Controllers
         }
 
         [HttpGet]
-        public string JsonForm(bool tablet = false)
+        public virtual JsonResult JsonForm(bool tablet = false)
         {
             var data = typeof(T).GetFluentJsonSchema(tablet);
-            return JsonConvert.SerializeObject(data, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, Formatting = Formatting.None });
+            return Json(data, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, Formatting = Formatting.None });
+            //#if NETCOREAPP3_0
+            //            return System.Text.Json.JsonSerializer.Serialize(data, new JsonSerializerOptions { IgnoreNullValues = true });
+            //#else
+            //return JsonConvert.SerializeObject(data, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, Formatting = Formatting.None });
+            //#endif
         }
 
         // POST api/user/Add/
