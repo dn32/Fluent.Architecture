@@ -39,17 +39,27 @@ namespace Fluent.Architecture
     internal class ConfigClassValidado : IConfigValidate
     {
         public Config Config { get; set; }
+
+        public ConfigClassValidado()
+        {
+            Config = new Config();
+        }
     }
 
     public class Config
     {
-        public List<Connection> Connections { get; internal set; } = new List<Connection>();
+        public List<Connection> Connections { get; private set; }
         public IServiceProvider ServiceProvider { get; internal set; }
         public Type UserSessionRequestType { get; internal set; }
         public Type GenericServiceType { get; internal set; }
         public Type GenericRepositoryType { get; internal set; }
         public Type GenericValidationType { get; internal set; }
         internal IRepositoryFactory RepositoryFactory { get; set; }
+
+        public Config()
+        {
+            Connections = new List<Connection>();
+        }
     }
 
     public static class Setup

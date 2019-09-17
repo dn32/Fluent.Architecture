@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Fluent.Architecture.Extensions;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Remotion.Linq.Parsing.ExpressionVisitors;
 using System;
@@ -36,10 +37,10 @@ namespace Fluent.Architecture.EntityFramework
 
         internal static InternalEntityTypeBuilder GetInternalEntityTypeBuilder(this EntityTypeBuilder entityTypeBuilder)
         {
-            var internalEntityTypeBuilder = typeof(EntityTypeBuilder)
-                .GetProperty("Builder", BindingFlags.NonPublic | BindingFlags.Instance)?
-                .GetValue(entityTypeBuilder) as InternalEntityTypeBuilder;
-
+            var property = typeof(EntityTypeBuilder).GetProperty("Builder", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (property == null) { throw new NotImplementedException($"property Builder not found in {nameof(entityTypeBuilder)}"); }
+            var internalEntityTypeBuilder = property.GetValue(entityTypeBuilder)?.FluentCast<InternalEntityTypeBuilder>();
+            if (internalEntityTypeBuilder == null) { throw new NotImplementedException($"property Builder has no value"); }
             return internalEntityTypeBuilder;
         }
     }

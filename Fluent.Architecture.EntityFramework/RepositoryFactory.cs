@@ -10,6 +10,7 @@ using Fluent.Architecture.Core.Factory;
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions;
+using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Services;
 using System;
 using System.Linq;
@@ -103,7 +104,7 @@ namespace Fluent.Architecture.EntityFramework
 
         internal IFluentRepository<T> Create<T>(Type repositoryType) where T : BaseEntity
         {
-            return Activator.CreateInstance(repositoryType) as IFluentRepository<T>;
+            return Activator.CreateInstance(repositoryType)?.FluentCast<IFluentRepository<T>>() ?? throw new InvalidOperationException($"Unable to build {repositoryType.Name}");
         }
 
         //Todo - validar no boot se todas as entidades tem tipo de BD,ou se só tem um tipo de bd instanciado na aplicação

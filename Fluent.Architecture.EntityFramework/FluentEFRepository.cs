@@ -54,7 +54,7 @@ namespace Fluent.Architecture.EntityFramework
         /// <summary>
         /// A referência da sessão do EF.
         /// </summary>
-        protected internal EfContext Session => TransactionObjects.Session as EfContext;
+        protected internal EfContext Session => TransactionObjects.Session.FluentCast<EfContext>();
 
         /// <summary>
         /// A query contem a referência de todas as tabelas/documentos do banco de dados.
@@ -234,7 +234,7 @@ namespace Fluent.Architecture.EntityFramework
 #if NETCOREAPP3_0
             return this.Input.FromSqlRaw(sql).SingleOrDefault();
 #else
-            return this.Input.FromSql(sql).SingleOrDefault();
+                return this.Input.FromSql(sql).SingleOrDefault();
 #endif  
             }
             catch (InvalidOperationException)
@@ -304,7 +304,7 @@ namespace Fluent.Architecture.EntityFramework
         /// A lista paginada de resultados.
         /// </returns>
 
-        public virtual List<TE> List(IFluentSpecification ispec, FluentPagination pagination = null)
+        public virtual List<TE> List(IFluentSpecification ispec, FluentPagination pagination)
         {
             var spec = GetSpec(ispec);
             var query = spec.ToIQueryable(Query);
@@ -510,7 +510,7 @@ namespace Fluent.Architecture.EntityFramework
                     throw new IncorrectDevelopmentException($"The type of output reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.FluentEntityType}.\r\nRequisition Type: {typeof(TO)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
                 }
 
-                return spec as FluentSelectSpecification<TE, TO>;
+                return spec.FluentCast<FluentSelectSpecification<TE, TO>>();
             }
 
             throw new IncorrectDevelopmentException("The specification is of a different type than expected");
@@ -590,17 +590,18 @@ namespace Fluent.Architecture.EntityFramework
             return $"select * from {tableName} where {sql}";
         }
 
-        protected IQueryable<TX> FluentPaginate<TX>(IQueryable<TX> query, FluentPagination pagination = null)
+        protected IQueryable<TX> FluentPaginate<TX>(IQueryable<TX> query, FluentPagination pagination)
         {
-            if (pagination == null)
-            {
-                pagination = GetPagination() ?? new FluentPagination(0, true, 20);
-            }
-
             pagination.TotalQuantityOfItems = query.Count();
             SessionRequest.Pagination = pagination;
 
             return query.Skip(pagination.Skip).Take(pagination.ItemsPerPage);
+        }
+
+        protected IQueryable<TX> FluentPaginate<TX>(IQueryable<TX> query)
+        {
+            var pagination = GetPagination() ?? new FluentPagination(0, true, 20);
+            return FluentPaginate(query, pagination);
         }
 
         #endregion

@@ -8,6 +8,7 @@
 // ReSharper disable CommentTypo
 
 using Fluent.Architecture.Entities;
+using Fluent.Architecture.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Runtime.CompilerServices;
@@ -39,7 +40,7 @@ namespace Fluent.Architecture.EntityFramework
 
 
             var dbContextType = connection.DbContextType;
-            var efContext = Activator.CreateInstance(dbContextType, new object[] { connectionString }) as EfContext;
+            var efContext = Activator.CreateInstance(dbContextType, new object[] { connectionString })?.FluentCast<EfContext>() ?? throw new InvalidOperationException($"Unable to build {dbContextType.Name}");
 
             CreateDB(connectionString, createDatabaseIfNotExists, efContext);
 
