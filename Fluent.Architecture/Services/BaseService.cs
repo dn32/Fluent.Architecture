@@ -25,7 +25,7 @@ namespace Fluent.Architecture.Services
         //Temporariamente fora do escopo
         //protected internal virtual Type RepositoryType => null;
 
-        protected virtual Type ValidationType => null;
+        //protected virtual Type ValidationType => null;
 
         protected virtual BaseValidation Validation { get; set; }
 

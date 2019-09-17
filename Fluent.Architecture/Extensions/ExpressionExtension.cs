@@ -157,7 +157,7 @@ namespace Fluent.Architecture.Extensions
 
             protected override Expression VisitParameter(ParameterExpression node)
             {
-                return Subst.TryGetValue(node, out Expression newValue) ? newValue : node;
+                return Subst.TryGetValue(node, out Expression? newValue) ? newValue : node;
             }
         }
 
@@ -231,7 +231,7 @@ namespace Fluent.Architecture.Extensions
             else if (type.IsNullableEnum())
             {
                 var localType = type.GetTypeByNullType();
-                if (Enum.TryParse(localType, value, out object enumObject))
+                if (Enum.TryParse(localType, value, out object? enumObject))
                 {
                     containsCall = Expression.Equal(property, Expression.Constant(enumObject, type));
                 }

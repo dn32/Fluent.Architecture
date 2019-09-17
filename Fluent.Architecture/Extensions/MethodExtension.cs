@@ -32,12 +32,6 @@ namespace Fluent.Architecture.Extensions
         }
 
         // Todo2 doc
-        public static object[] GetAllParameters(this MethodBase method)
-        {
-            return method.GetParameters().Select(x => x.DefaultValue).ToArray();
-        }
-
-        // Todo2 doc
         public static MethodInfo GetMethodWithoutAmbiguity(this Type classType, string methodName, object[] parameters, params Type[] generics)
         {
             var methods = classType.GetMethods().Where(x =>
@@ -55,7 +49,7 @@ namespace Fluent.Architecture.Extensions
                     continue;
                 }
 
-                var currentMethod = method.IsGenericMethod && (generics == null || generics.Length == 0) ? method.MakeGenericMethod(generics) : method;
+                var currentMethod = method.IsGenericMethod && (generics != null && generics.Length > 0) ? method.MakeGenericMethod(generics) : method;
                 var parametersOfMethodType = currentMethod.GetParameters().Select(x => x.ParameterType).ToList();
                 var parametersListType = parameters.Select(x => x.GetType()).ToList();
 
@@ -69,16 +63,21 @@ namespace Fluent.Architecture.Extensions
         }
 
         // Todo2 doc
-        public static object FluentInvoke(this MethodInfo method, object entity, object[] parameters)//, params Type[] generics)
+        public static object? FluentInvoke(this MethodInfo method, object entity, object[] parameters)//, params Type[] generics)
         {
             if (parameters == null) { parameters = Array.Empty<object>(); }
-            var localParameters = method.GetAllParameters();
+            var localParameters = method.GetParameters().Select(x => x.DefaultValue).ToArray();
             for (var i = 0; i < parameters.Length; i++)
             {
                 if (parameters[i] != null)
                 {
                     localParameters[i] = parameters[i];
                 }
+            }
+
+            if (method == null)
+            {
+                throw new InvalidOperationException("The method is null");
             }
 
             try

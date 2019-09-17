@@ -29,7 +29,7 @@ namespace Fluent.Architecture.Factory.Proxy
             var dynamicClass = CreateClass(parent, assembly);
             CreateConstructor(dynamicClass);
             OverwriteProperties(dynamicClass, sessionId);
-            var type = dynamicClass.CreateType();
+            var type = dynamicClass.CreateType() ?? throw new InvalidOperationException($"Building failed {dynamicClass.Name}");
             return Activator.CreateInstance(type) ?? throw new InvalidOperationException($"Building failed {type.Name}");
         }
 
@@ -42,13 +42,13 @@ namespace Fluent.Architecture.Factory.Proxy
 
         private static void OverwriteProperties(TypeBuilder typeBuilder, Guid sessionId)
         {
+            if (typeBuilder.BaseType == null)
+            {
+                throw new InvalidOperationException("typeBuilder not contains a BaseType");
+            }
+
             var serviceProperties = typeBuilder.BaseType.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).Where(x => x.PropertyType.IsSubclassOf(typeof(BaseService))).ToList();
-
-            //if (serviceProperties == null)
-            //{
-            //    throw new InvalidOperationException("typeBuilder not contains a BaseType");
-            //}
-
+                     
             foreach (var property in serviceProperties)
             {
                 OverwriteProperty(typeBuilder.BaseType, property, typeBuilder, sessionId);
@@ -58,6 +58,7 @@ namespace Fluent.Architecture.Factory.Proxy
         private static void OverwriteProperty(Type baseType, PropertyInfo property, TypeBuilder typeBuilder, Guid sessionId)
         {
             var method = property.GetGetMethod(true);
+            if(method == null) { throw new InvalidOperationException($"Property {property.Name} of class {baseType.Name} should have a get method"); }
             var propertyBuilder = typeBuilder.DefineProperty(
                 property.Name,
                 PropertyAttributes.HasDefault,
@@ -73,10 +74,10 @@ namespace Fluent.Architecture.Factory.Proxy
             var getIl = getProp.GetILGenerator();
             getIl.Emit(OpCodes.Ldarg_0);
             var methodInfo = baseType.GetMethod(nameof(BaseService.GetServiceDependency));
-            //if (methodInfo == null)
-            //{
-            //    throw new MethodNotFoundException(nameof(BaseService.GetServiceDependency));
-            //}
+            if (methodInfo == null)
+            {
+                throw new InvalidCastException($"Method not found {nameof(BaseService.GetServiceDependency)}");
+            }
 
             methodInfo = methodInfo.MakeGenericMethod(property.PropertyType);
             getIl.Emit(OpCodes.Ldstr, sessionId.ToString());

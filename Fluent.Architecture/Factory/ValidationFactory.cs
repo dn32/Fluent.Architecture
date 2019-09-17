@@ -48,8 +48,7 @@ namespace Fluent.Architecture.Factory
                 }
             }
 
-            return Activator.CreateInstance(localType).FluentCast<TransactionalValidation>();
+            return Activator.CreateInstance(localType)?.FluentCast<TransactionalValidation>() ?? throw new InvalidOperationException($"Unable to build {validationType.Name}");
         }
-
     }
 }

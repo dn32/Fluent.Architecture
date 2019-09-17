@@ -43,7 +43,7 @@ namespace Fluent.Architecture.Util
             {
                 if (type == typeof(object))
                 {
-                    return null;
+                    throw new InvalidOperationException($"{objectTypeToCheck.Name} is not FLuentEntity");
                 }
 
                 if (type.Name == expectedType.Name)
@@ -82,7 +82,7 @@ namespace Fluent.Architecture.Util
             {
                 if (type == null || type == typeof(object))
                 {
-                    return null;
+                    throw new InvalidOperationException($"{currentType.Name} is not FluentEntity");
                 }
 
                 if (!FluentEntityNames.Contains(type.Name))

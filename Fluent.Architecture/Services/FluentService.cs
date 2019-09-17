@@ -351,8 +351,8 @@ namespace Fluent.Architecture.Services
         /// </summary>
         private static void ValidateInit()
         {
-            var mth = new StackTrace().GetFrame(2).GetMethod();
-            var name = mth.ReflectedType?.Name;
+            var mth = new StackTrace()?.GetFrame(2)?.GetMethod();
+            var name = mth?.ReflectedType?.Name;
             if (name == nameof(ServiceFactory))
             {
                 return;

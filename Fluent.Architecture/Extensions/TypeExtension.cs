@@ -10,6 +10,7 @@ using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Core.Entities;
 using Fluent.Architecture.Core.Enumerator;
 using Fluent.Architecture.Core.Extensions;
+using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Util;
 using System;
@@ -38,7 +39,7 @@ namespace Fluent.Architecture.Extensions
         /// <returns>O valor padrão do tipo.</returns>
         public static object GetDefaultValue(this Type type)
         {
-            return TypeDefaults.GetOrAdd(type, Activator.CreateInstance);
+            return TypeDefaults.GetOrAdd(type, (Type t) => Activator.CreateInstance(t) ?? throw new InvalidOperationException($"Unable to build {type.Name}"));
         }
 
         public static bool GetCustomAttributeAny<T>(this Type type, bool inherit = false) where T : Attribute
@@ -92,7 +93,7 @@ namespace Fluent.Architecture.Extensions
         public static object GetExampleValue(this Type type)
         {
             var obj = Activator.CreateInstance(type);
-
+            if (obj == null) { throw new InvalidOperationException($"Unable to build {type.Name}"); };
             //if (type.Name == "List`1")
             //{//Todo - implementar para lista
             //    return Activator;
@@ -223,6 +224,7 @@ namespace Fluent.Architecture.Extensions
             }
 
             var form = type.GetCustomAttribute<FluentJsonFormAttribute>();
+            if (form == null) { throw new IncorrectDevelopmentException($"The type {type.Name} must be decorated with {nameof(FluentJsonFormAttribute)}"); }
             form.propName = type.Name;
 
             var root = new FluentJsonSchema
@@ -447,7 +449,11 @@ namespace Fluent.Architecture.Extensions
             if (args.Any())
             {
                 var entityType = args.First();
-                if (!Setup.Services.TryGetValue(entityType, out serviceType))
+                if (Setup.Services.TryGetValue(entityType, out Type? serviceTypeOut))
+                {
+                    return serviceTypeOut;
+                }
+                else
                 {
                     var type = (Setup.Config.Config.GenericServiceType) ?? typeof(FluentService<>);
                     serviceType = type.MakeGenericType(entityType);

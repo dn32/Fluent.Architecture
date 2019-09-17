@@ -343,7 +343,7 @@ namespace Fluent.Architecture
             foreach (var type in types)
             {
                 var serviceProperties = type?.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
-                    .Where(x => !x.GetMethod.IsPrivate && x.GetMethod.IsVirtual && x.PropertyType.IsSubclassOf(typeof(BaseService))).ToList();
+                    .Where(x => x.GetMethod != null && !x.GetMethod.IsPrivate && x.GetMethod.IsVirtual && x.PropertyType.IsSubclassOf(typeof(BaseService))).ToList();
 
                 if (serviceProperties == null)
                 {
@@ -365,7 +365,7 @@ namespace Fluent.Architecture
             foreach (var type in types)
             {
                 var serviceProperties = type?.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
-                    .Where(x => !x.GetMethod.IsVirtual && x.PropertyType.IsSubclassOf(typeof(BaseService))).ToList();
+                    .Where(x => x.GetMethod != null && !x.GetMethod.IsVirtual && x.PropertyType.IsSubclassOf(typeof(BaseService))).ToList();
 
                 if (serviceProperties != null && serviceProperties.Any())
                 {
@@ -379,7 +379,7 @@ namespace Fluent.Architecture
             foreach (var type in types)
             {
                 var serviceProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
-                    .Where(x => x.GetMethod.IsPublic && x.PropertyType.IsSubclassOf(typeof(BaseService))).ToList();
+                    .Where(x => x.GetMethod != null && x.GetMethod.IsPublic && x.PropertyType.IsSubclassOf(typeof(BaseService))).ToList();
 
                 if (serviceProperties != null && serviceProperties.Any())
                 {

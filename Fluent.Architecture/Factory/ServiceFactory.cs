@@ -121,7 +121,11 @@ namespace Fluent.Architecture.Factory
             if (args.Any())
             {
                 var entityType = args.First();
-                if (!Setup.Services.TryGetValue(entityType, out serviceType))
+                if (Setup.Services.TryGetValue(entityType, out Type? serviceTypeOut))
+                {
+                    return serviceTypeOut;
+                }
+                else
                 {
                     var type = (Setup.Config.Config.GenericServiceType) ?? typeof(FluentService<>);
                     serviceType = type.MakeGenericType(entityType);
@@ -139,7 +143,7 @@ namespace Fluent.Architecture.Factory
             var serviceType = GetSpecializedService(service.GetType());
 
             var type = Setup.Config.Config.UserSessionRequestType ?? typeof(UserSessionRequest);
-            var userSession = Activator.CreateInstance(type).FluentCast<UserSessionRequest>() ?? throw new InvalidOperationException($"Building failed {type.Name}");
+            var userSession = Activator.CreateInstance(type)?.FluentCast<UserSessionRequest>() ?? throw new InvalidOperationException($"Building failed {type.Name}");
             //  userSession.TransactionObjects = transactionObjects;
             userSession.SessionRequestId = sessionId;
             userSession.Services = new Dictionary<Type, BaseService>();

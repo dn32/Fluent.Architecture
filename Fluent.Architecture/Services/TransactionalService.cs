@@ -39,13 +39,13 @@ namespace Fluent.Architecture.Services
         {
             base.SetUserSession(sessionRequest);
 
-            if (ValidationType == null)
-            {
-                return;
-            }
+            //if (ValidationType == null)
+            //{
+            //    return;
+            //}
 
-            Validation = ValidationFactory.Create(ValidationType);
-            Validation.Init(this);
+            //Validation = ValidationFactory.Create(ValidationType);
+            //Validation.Init(this);
         }
 
         /// <summary>

@@ -23,7 +23,7 @@ public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
     {
         base.OnException(filterContext);
 
-        if (filterContext == null)
+        if (filterContext?.Exception == null)
         {
             return;
         }
@@ -84,10 +84,10 @@ public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
 
             filterContext.HttpContext.Response.StatusCode = 422;
         }
-        else
+        else if (filterContext?.Exception != null)
         {
             var stackTrace = new StackTrace(filterContext.Exception, true);
-            var frame = stackTrace.GetFrame(0);
+            var frame = stackTrace.GetFrame(0) ?? new StackFrame();
             var line = frame.GetFileLineNumber();
 
             filterContext.Result = new CustomJsonResult(new

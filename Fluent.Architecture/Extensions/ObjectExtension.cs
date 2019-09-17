@@ -138,7 +138,7 @@ namespace Fluent.Architecture.Extensions
         /// <returns>A lista com nome e valor de todos os campos do objeto.</returns>
         private static void GetAllFieldsDataOfObject(this object obj, List<NameAndValue> propertyData)
         {
-            if (obj == null || obj is IQueryable)
+            if (obj is IQueryable)
             {
                 return;
             }
@@ -149,7 +149,10 @@ namespace Fluent.Architecture.Extensions
             {
                 foreach (var el in collection)
                 {
-                    GetAllFieldsDataOfObject(el, propertyData);
+                    if (el != null)
+                    {
+                        GetAllFieldsDataOfObject(el, propertyData);
+                    }
                 }
             }
             else
@@ -167,11 +170,19 @@ namespace Fluent.Architecture.Extensions
                 {
                     if (item.FieldType.IsPrimitive || item.FieldType.IsValueType || item.FieldType == typeof(string))
                     {
-                        propertyData.Add(new NameAndValue { Name = item.Name.Replace("k__BackingField", string.Empty, StringComparison.OrdinalIgnoreCase) ?? "", Value = item.GetValue(obj) });
+                        var data = item.GetValue(obj);
+                        if (data != null)
+                        {
+                            propertyData.Add(new NameAndValue { Name = item.Name.Replace("k__BackingField", string.Empty, StringComparison.OrdinalIgnoreCase) ?? "", Value = data });
+                        }
                     }
                     else if (item.FieldType.IsClass && !typeof(IEnumerable).IsAssignableFrom(item.FieldType))
                     {
-                        GetAllFieldsDataOfObject(item.GetValue(obj), propertyData);
+                        var data = item.GetValue(obj);
+                        if (data != null)
+                        {
+                            GetAllFieldsDataOfObject(data, propertyData);
+                        }
                     }
                     else
                     {
@@ -182,7 +193,10 @@ namespace Fluent.Architecture.Extensions
 
                         foreach (var propItem in enumerablePropObj1)
                         {
-                            GetAllFieldsDataOfObject(propItem, propertyData);
+                            if (propItem != null)
+                            {
+                                GetAllFieldsDataOfObject(propItem, propertyData);
+                            }
                         }
                     }
                 }
