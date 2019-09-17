@@ -100,11 +100,11 @@ namespace Fluent.Architecture.Core.TestSupport
                         var typeList = typeof(List<>).MakeGenericType(item.type);
                         if (value == null)
                         {
-                            value = Activator.CreateInstance(typeList);
+                            value = Activator.CreateInstance(typeList) ?? throw new InvalidOperationException($"Building failed {typeList.Name}");
                         }
                         else
                         {
-                            value = Activator.CreateInstance(typeList, value);
+                            value = Activator.CreateInstance(typeList, value) ?? throw new InvalidOperationException($"Building failed {typeList.Name}"); ;
                         }
                     }
 
@@ -113,7 +113,7 @@ namespace Fluent.Architecture.Core.TestSupport
             }
         }
 
-        private void ExplainToTheTree(Type type, FluentNode parent = null)
+        private void ExplainToTheTree(Type type, FluentNode? parent = null)
         {
             var node = GetTreeNode(type);
             if (node == null)
@@ -148,7 +148,7 @@ namespace Fluent.Architecture.Core.TestSupport
             SortedAggregations.Add(node);
         }
 
-        private FluentNode GetTreeNode(Type entityType)
+        private FluentNode? GetTreeNode(Type entityType)
         {
             DictionaryOfAggregations.TryGetValue(entityType, out FluentNode value);
             return value;

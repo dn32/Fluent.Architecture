@@ -37,15 +37,10 @@ namespace Fluent.Architecture.Util
         /// </returns>
         internal static Tuple<Type, Type> GetFluentEntityType(Type objectTypeToCheck, Type expectedType)
         {
-            return new Tuple<Type, Type>(GetBase(objectTypeToCheck.BaseType), objectTypeToCheck);
+            return new Tuple<Type, Type>(GetBase(objectTypeToCheck.BaseType ?? objectTypeToCheck), objectTypeToCheck);
 
             Type GetBase(Type type)
             {
-                if (type == null)
-                {
-                    return null;
-                }
-
                 if (type == typeof(object))
                 {
                     return null;
@@ -57,7 +52,7 @@ namespace Fluent.Architecture.Util
                     return args.Length == 0 ? type : type.GetGenericArguments()[0];
                 }
 
-                return GetBase(type.BaseType);
+                return GetBase(type.BaseType ?? type);
             }
         }
 
@@ -92,7 +87,7 @@ namespace Fluent.Architecture.Util
 
                 if (!FluentEntityNames.Contains(type.Name))
                 {
-                    return GetBase(type.BaseType);
+                    return GetBase(type.BaseType ?? type);
                 }
 
                 var localType = type.GetGenericArguments().First();

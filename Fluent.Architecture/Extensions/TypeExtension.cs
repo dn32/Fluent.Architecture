@@ -38,9 +38,29 @@ namespace Fluent.Architecture.Extensions
         /// <returns>O valor padrão do tipo.</returns>
         public static object GetDefaultValue(this Type type)
         {
-            if (type == null) { throw new ArgumentNullException(nameof(type)); }
-            return type.IsValueType ? TypeDefaults.GetOrAdd(type, Activator.CreateInstance) : null;
+            return TypeDefaults.GetOrAdd(type, Activator.CreateInstance);
         }
+
+        public static bool GetCustomAttributeAny<T>(this Type type, bool inherit = false) where T : Attribute
+        {
+            return type.GetCustomAttribute<T>(inherit) != null;
+        }
+
+        public static bool GetCustomAttributeAny<T>(this PropertyInfo property, bool inherit = false) where T : Attribute
+        {
+            return property.GetCustomAttribute<T>(inherit) != null;
+        }
+
+        public static bool GetCustomAttributeAny<T>(this TypeInfo typeInfo, bool inherit = false) where T : Attribute
+        {
+            return typeInfo.GetCustomAttribute<T>(inherit) != null;
+        }
+
+        public static bool GetCustomAttributeAny<T>(this MethodInfo methodInfo, bool inherit = false) where T : Attribute
+        {
+            return methodInfo.GetCustomAttribute<T>(inherit) != null;
+        }
+
 
         //Todo2 doc
         public static TX GetDefaultValue<TX>()
@@ -51,8 +71,6 @@ namespace Fluent.Architecture.Extensions
         //Todo2 doc
         public static TX Next<TX>(this List<TX> list)
         {
-            if (list == null) { throw new ArgumentNullException(nameof(list)); }
-
             if (list.Count == 0)
             {
                 return GetDefaultValue<TX>();
@@ -66,9 +84,6 @@ namespace Fluent.Architecture.Extensions
         //Todo2 doc
         public static bool Is(this Type t1, Type t2)
         {
-            if (t1 == null) { throw new ArgumentNullException(nameof(t1)); }
-            if (t2 == null) { throw new ArgumentNullException(nameof(t2)); }
-
             return t1.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == t2) ||
                    t2.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == t1) ||
                    t1 == t2 || t1.IsSubclassOf(t2) || t2.IsAssignableFrom(t1) || t2.IsSubclassOf(t1) || t1.IsAssignableFrom(t2);
@@ -76,7 +91,6 @@ namespace Fluent.Architecture.Extensions
 
         public static object GetExampleValue(this Type type)
         {
-            if (type == null) { throw new ArgumentNullException(nameof(type)); }
             var obj = Activator.CreateInstance(type);
 
             //if (type.Name == "List`1")
@@ -203,8 +217,6 @@ namespace Fluent.Architecture.Extensions
 
         public static FluentJsonSchema GetFluentJsonSchema(this Type type, bool tablet)
         {
-            if (type == null) { throw new ArgumentNullException(nameof(type)); }
-
             if (type.Name == "List`1")
             {
                 type = type.GenericTypeArguments[0];
@@ -275,7 +287,7 @@ namespace Fluent.Architecture.Extensions
 
             root.Properties.Where(x => x.form == EnumForm.HIDDEN).ToList().ForEach(property =>
             {
-                property.lGrid = 0;
+                property.LGrid = 0;
                 property.Row = 0;
             });
 
@@ -284,10 +296,10 @@ namespace Fluent.Architecture.Extensions
             {
                 if (tablet)
                 {
-                    property.lGrid *= 2;
+                    property.LGrid *= 2;
                 }
 
-                if (property.lGrid == 0 || property.lGrid > 12) { property.lGrid = 12; }
+                if (property.LGrid == 0 || property.LGrid > 12) { property.LGrid = 12; }
                 property.Row = 0;
             });
 
@@ -296,14 +308,14 @@ namespace Fluent.Architecture.Extensions
                 var row = 1;
                 properties.ForEach(x =>
                 {
-                    if (grid + x.lGrid > 12)
+                    if (grid + x.LGrid > 12)
                     {
                         row++;
-                        grid = x.lGrid;
+                        grid = x.LGrid;
                     }
                     else
                     {
-                        grid += x.lGrid;
+                        grid += x.LGrid;
                     }
 
                     x.Row = row;
@@ -338,7 +350,7 @@ namespace Fluent.Architecture.Extensions
 
         public static bool IsNullableEnum(this Type t)
         {
-            if (t?.IsEnum == true) { return true; }
+            if (t.IsEnum == true) { return true; }
             var u = Nullable.GetUnderlyingType(t);
             return (u != null) && u.IsEnum;
         }
@@ -375,11 +387,10 @@ namespace Fluent.Architecture.Extensions
             }
         }
 
-        // Todo - Documentar
         public static object[] GetConstructorParameters(this Type classType)
         {
-            var parameters = classType?.GetConstructors()?.First()?.GetParameters();
-            return parameters?.Select(x => x?.ParameterType?.GetDefaultValue())?.ToArray();
+            var parameters = classType.GetConstructors().First().GetParameters();
+            return parameters.Select(x => x.ParameterType.GetDefaultValue()).ToArray();
         }
 
         /// <summary>
@@ -412,11 +423,23 @@ namespace Fluent.Architecture.Extensions
             return friendlyName;
         }
 
+        public static T FluentCast<T>(this object obj)
+        {
+            if (obj is T value)
+            {
+                return value;
+            }
+            else
+            {
+                throw new InvalidOperationException($"{obj.GetType().Name} is not a {typeof(T).Name}.");
+            }
+        }
+
         public static Type GetSpecializedService(this Type serviceType)
         {
-            if (serviceType?.Name == "FluentDynamicProxy")
+            if (serviceType.Name == "FluentDynamicProxy")
             {
-                serviceType = serviceType.BaseType;
+                serviceType = serviceType.BaseType ?? serviceType; ;
             }
 
             var args = serviceType.GetGenericArguments();

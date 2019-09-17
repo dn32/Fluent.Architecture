@@ -9,6 +9,7 @@ namespace Fluent.Architecture.Core.Attributes
     [AttributeUsage(AttributeTargets.Property)]
     public class FluentJsonPropertyAttribute : FluentJsoSchemaAttribute
     {
+#pragma warning disable IDE1006 // Naming Styles
         [DisplayName("Required")]
         [JsonProperty("Required")]
         public bool required { get; set; }
@@ -27,7 +28,7 @@ namespace Fluent.Architecture.Core.Attributes
 
         [DisplayName("LayoutGrid")]
         [JsonProperty("LayoutGrid")]
-        public int lGrid { get; set; }
+        public int LGrid { get; set; }
 
         [DisplayName("GridTitle")]
         [JsonProperty("GridTitle")]
@@ -45,9 +46,9 @@ namespace Fluent.Architecture.Core.Attributes
         [JsonProperty("DefaultValue")]
         public object value { get; set; }
 
-        public FluentCompositionAttribute FluentComposition { get; set; }
+        public FluentCompositionAttribute? FluentComposition { get; set; }
 
-        public FluentAggregationAttribute FluentAggregation { get; set; }
+        public FluentAggregationAttribute? FluentAggregation { get; set; }
 
         public bool IsEnum { get; set; }
         public bool IsKey { get; set; }
@@ -56,5 +57,6 @@ namespace Fluent.Architecture.Core.Attributes
         public List<KeyValuePair<string, string>> Enums { get; set; }
 
         public int Row { get; set; }
+#pragma warning restore IDE1006 // Naming Styles
     }
 }

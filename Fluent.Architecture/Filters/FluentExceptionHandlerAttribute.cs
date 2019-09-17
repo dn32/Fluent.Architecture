@@ -21,15 +21,22 @@ public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
 {
     public override void OnException(ExceptionContext filterContext)
     {
-        filterContext.ExceptionHandled = true;
-        filterContext.HttpContext.Response.Clear();            
+        base.OnException(filterContext);
 
-        if (filterContext?.Exception is DbUpdateException exception1)
+        if (filterContext == null)
+        {
+            return;
+        }
+
+        filterContext.ExceptionHandled = true;
+        filterContext.HttpContext.Response.Clear();
+
+        if (filterContext.Exception is DbUpdateException exception1)
         {
             filterContext.Exception = exception1.InnerException;
         }
 
-        if (filterContext?.Exception is ContextFluentValidationException exception)
+        if (filterContext.Exception is ContextFluentValidationException exception)
         {
             var inconsistencies = exception.Inconsistencies.Select(inconsistence =>
             {

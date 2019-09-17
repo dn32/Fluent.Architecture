@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Fluent.Architecture.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Reflection;
@@ -9,13 +10,13 @@ namespace Fluent.Architecture.Filters
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            var action = context?.ActionDescriptor as ControllerActionDescriptor;
-            if (action?.ControllerTypeInfo.GetCustomAttribute<AllowAnonymousAttribute>() != null)
+            var action = context.ActionDescriptor as ControllerActionDescriptor;
+            if (action?.ControllerTypeInfo.GetCustomAttributeAny<AllowAnonymousAttribute>() == true)
             {
                 return;
             }
 
-            if (action?.MethodInfo.GetCustomAttribute<AllowAnonymousAttribute>() != null)
+            if (action?.MethodInfo.GetCustomAttributeAny<AllowAnonymousAttribute>() == true)
             {
                 return;
             }

@@ -145,12 +145,8 @@ namespace Fluent.Architecture.Extensions
 
         public static Expression<Func<T, bool>> Not<T>(this Expression<Func<T, bool>> a)
         {
-            if (a == null)
-            {
-                return a;
-            }
             var p = a.Parameters[0];
-            var visitor = new SubstExpressionVisitor { Subst = { [a.Parameters[0]] = p } };
+           // var visitor = new SubstExpressionVisitor { Subst = { [a.Parameters[0]] = p } };
             var body = Expression.Not(a.Body);
             return Expression.Lambda<Func<T, bool>>(body, p);
         }
@@ -274,12 +270,12 @@ namespace Fluent.Architecture.Extensions
 
         public static Expression<Func<T, bool>> Smaller<T>(string propertyName, string value, bool including, Type type)
         {
-            return SmallerOrGreater<T>(propertyName, value, including, type ?? null, false);
+            return SmallerOrGreater<T>(propertyName, value, including, type, false);
         }
 
         public static Expression<Func<T, bool>> Greate<T>(string propertyName, string value, bool including, Type type)
         {
-            return SmallerOrGreater<T>(propertyName, value, including, type ?? null, true);
+            return SmallerOrGreater<T>(propertyName, value, including, type, true);
         }
 
         private static Expression<Func<T, bool>> SmallerOrGreater<T>(
@@ -292,8 +288,8 @@ namespace Fluent.Architecture.Extensions
         {
             var parameter = Expression.Parameter(typeof(T), "x");
             var property = Expression.Property(parameter, propertyName);
-            object valueObj = null;
-            BinaryExpression containsCall = null;
+            object valueObj;
+            BinaryExpression containsCall;
 
             if (type == typeof(DateTime) || type == typeof(DateTime?))
             {

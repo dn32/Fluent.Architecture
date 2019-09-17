@@ -12,6 +12,7 @@ using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Exceptions.ValidationException;
+using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Validation;
@@ -36,7 +37,7 @@ namespace Fluent.Architecture.Services
         ///// </summary>
         protected internal new IFluentRepository<T> Repository
         {
-            get => base.Repository as IFluentRepository<T>;
+            get => base.Repository.FluentCast<IFluentRepository<T>>();
             set => base.Repository = value;
         }
 
@@ -45,7 +46,7 @@ namespace Fluent.Architecture.Services
         /// </summary>
         protected internal new FluentValidation<T> Validation
         {
-            get => base.Validation as FluentValidation<T>;
+            get => base.Validation.FluentCast<FluentValidation<T>>();
             set => base.Validation = value;
         }
 
@@ -82,10 +83,15 @@ namespace Fluent.Architecture.Services
         /// </param>
         /// <returns>
         /// A lista paginada de resultados.
-        /// </returns>    
-        public virtual List<TO> ListSelect<TO>(IFluentSpecification<TO> spec, FluentPagination pagination = null)
+        /// </returns>
+        public virtual List<TO> ListSelect<TO>(IFluentSpecification<TO> spec, FluentPagination pagination)
         {
             return Repository.ListSelect(spec, pagination);
+        }
+
+        public virtual List<TO> ListSelect<TO>(IFluentSpecification<TO> spec)
+        {
+            return Repository.ListSelect(spec);
         }
 
         /// <summary>
@@ -100,9 +106,14 @@ namespace Fluent.Architecture.Services
         /// <returns>
         /// A lista paginada de resultados.
         /// </returns>
-        public virtual List<T> List(IFluentSpecification spec, FluentPagination pagination = null)
+        public virtual List<T> List(IFluentSpecification spec, FluentPagination pagination)
         {
             return Repository.List(spec, pagination);
+        }
+
+        public virtual List<T> List(IFluentSpecification spec)
+        {
+            return Repository.List(spec);
         }
 
         /// <summary>
@@ -244,7 +255,7 @@ namespace Fluent.Architecture.Services
         {
             this.Validation.Add(entity);
 
-            if(Exists(entity, true, true))
+            if (Exists(entity, true, true))
             {
                 return Update(entity); // Restore deleted
             }

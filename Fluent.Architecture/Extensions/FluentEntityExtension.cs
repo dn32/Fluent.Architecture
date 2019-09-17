@@ -22,54 +22,29 @@ namespace Fluent.Architecture.Extensions
 {
     public static class FluentEntityExtension
     {
-        // Todo2 documentar
         public static string GetTypeName(this object entity)
         {
-            if (entity == null) { throw new ArgumentNullException(nameof(entity)); }
             return entity.GetType().Name;
         }
 
-        // Todo2 documentar
         public static string GetTableName(this object entity)
         {
-            if (entity == null) { throw new ArgumentNullException(nameof(entity)); }
             return entity.GetType().GetTableName();
         }
 
-        // Todo2 documentar
         public static string GetTableName(this Type entityType)
         {
-            if (entityType == null) { throw new ArgumentNullException(nameof(entityType)); }
-            var name = entityType.GetCustomAttribute<TableAttribute>()?.Name;
-            if (string.IsNullOrEmpty(name))
-            {
-                name = entityType.Name;
-            }
-
-            return name;
+            return entityType.GetCustomAttribute<TableAttribute>()?.Name ?? entityType.Name;
         }
 
-        // Todo2 documentar
         public static string GetColumnName(this PropertyInfo property)
         {
-            var name = property.GetCustomAttribute<ColumnAttribute>()?.Name;
-            if (string.IsNullOrEmpty(name))
-            {
-                name = property?.Name;
-            }
-
-            return name;
+            return property.GetCustomAttribute<ColumnAttribute>()?.Name ?? property.Name;
         }
 
         public static string GetJsonPropertyName(this PropertyInfo property)
         {
-            var name = property.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName;
-            if (string.IsNullOrEmpty(name))
-            {
-                name = property?.Name;
-            }
-
-            return name;
+            return property.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName ?? property.Name;
         }
 
         public static string GetUiPropertyName(this PropertyInfo property)
@@ -77,18 +52,20 @@ namespace Fluent.Architecture.Extensions
             return property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.name ??
                    property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ??
                    property.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName ??
-                   property?.Name;
+                   property.Name;
         }
 
         public static PropertyInfo GetKeyProperty(this Type entityType)
         {
-            var properties = entityType?.GetProperties();
-            return properties?.Length == 0 ? null : properties?.Where(x => x.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || x.GetCustomAttribute<KeyAttribute>(true) != null)?.First();
+            return entityType
+                 .GetProperties()
+                 .Where(x => x.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || x.GetCustomAttributeAny<KeyAttribute>(true))
+                 .First();
         }
 
         public static int GetKeyValue(this object entity)
         {
-            if (int.TryParse(entity?.GetType()?.GetKeyProperty()?.GetValue(entity).ToString(), out var id))
+            if (int.TryParse(entity.GetType().GetKeyProperty().GetValue(entity).ToString(), out var id))
             {
                 return id;
             }
@@ -98,28 +75,30 @@ namespace Fluent.Architecture.Extensions
 
         public static List<PropertyInfo> GetKeyProperties(this Type entityType)
         {
-            return entityType?.GetProperties()?.Where(x => x.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || x.GetCustomAttribute<KeyAttribute>(true) != null)?.ToList();
+            return entityType.GetProperties().Where(x =>
+                                                        x.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) ||
+                                                        x.GetCustomAttribute<KeyAttribute>(true) != null).ToList();
         }
 
         public static List<PropertyInfo> GetFluentUniqueKeyProperties(this Type entityType)
         {
-            return entityType?.GetProperties()?.Where(x => x.GetCustomAttribute<FluentUniqueKeyAttribute>(true) != null)?.ToList();
+            return entityType.GetProperties().Where(x => x.GetCustomAttribute<FluentUniqueKeyAttribute>(true) != null).ToList();
         }
 
         public static List<PropertyInfo> GetKeyAndFluentUniqueKeyProperties(this Type entityType)
         {
-            return entityType?.GetProperties()?.Where(x => x.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || x?.GetCustomAttribute<KeyAttribute>(true) != null || x?.GetCustomAttribute<FluentUniqueKeyAttribute>(true) != null)?.ToList();
+            return entityType.GetProperties().Where(x => x.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || x.GetCustomAttributeAny<KeyAttribute>(true) || x.GetCustomAttributeAny<FluentUniqueKeyAttribute>(true)).ToList();
         }
 
         public static List<KeyValue> GetKeyAndFluentUniqueKeyValues(this object entity)
         {
-            var properties = entity?.GetType()?.GetKeyAndFluentUniqueKeyProperties();
+            var properties = entity.GetType().GetKeyAndFluentUniqueKeyProperties();
             return PropertiesToKeyValueList(entity, properties);
         }
 
         public static List<PropertyInfo> GetPropertiesByAttribute<TA>(this Type entityType) where TA : Attribute
         {
-            return entityType?.GetProperties()?.Where(x => x.GetCustomAttribute<TA>(true) != null)?.ToList();
+            return entityType.GetProperties().Where(x => x.GetCustomAttributeAny<TA>(true)).ToList();
         }
 
         public static T ChangeType<T>(this object value)
@@ -156,32 +135,27 @@ namespace Fluent.Architecture.Extensions
         // Todo2 documentar
         public static List<KeyValue> GetFluentUniqueKeyValues(this object entity)
         {
-            var properties = entity?.GetType()?.GetFluentUniqueKeyProperties();
+            var properties = entity.GetType().GetFluentUniqueKeyProperties();
             return PropertiesToKeyValueList(entity, properties);
         }
 
         // Todo2 documentar
         public static List<KeyValue> GetKeyValues(this object entity)
         {
-            var properties = entity?.GetType()?.GetKeyProperties();
+            var properties = entity.GetType().GetKeyProperties();
             return PropertiesToKeyValueList(entity, properties);
         }
 
         private static List<KeyValue> PropertiesToKeyValueList(object entity, List<PropertyInfo> properties)
         {
-            var returnList = new List<KeyValue>();
-
-            foreach (var property in properties)
-            {
-                returnList.Add(new KeyValue
-                {
-                    Property = property,
-                    ColumnName = property.GetColumnName(),
-                    Value = property.GetValue(entity).GetDbValue(property)
-                });
-            }
-
-            return returnList;
+            return properties
+                .Select(property =>
+                        new KeyValue(
+                            property,
+                            property.GetDbValue(property.GetValue(entity)),
+                            property.GetColumnName()
+                        ))
+                .ToList();
         }
     }
 }

@@ -11,12 +11,12 @@ namespace Fluent.Architecture.Extensions
     {
         public static TransactionalService GetServiceInstanceByServiceType(this Type serviceType, UserSessionRequest SessionRequest)
         {
-            if (serviceType == null) { throw new ArgumentNullException(nameof(serviceType)); }
-            if (SessionRequest == null) { throw new ArgumentNullException(nameof(SessionRequest)); }
+            //if (serviceType == null) { throw new ArgumentNullException(nameof(serviceType)); }
+            //if (SessionRequest == null) { throw new ArgumentNullException(nameof(SessionRequest)); }
 
             if (serviceType.Name == "FluentDynamicProxy")
             {
-                serviceType = serviceType.BaseType;
+                serviceType = serviceType.BaseType?? serviceType;
             }
 
             if (!serviceType.IsSubclassOf(typeof(TransactionalService)))
@@ -26,7 +26,7 @@ namespace Fluent.Architecture.Extensions
 
             if (SessionRequest.Services.TryGetValue(serviceType, out var ser))
             {
-                return ser as TransactionalService;
+                return ser.FluentCast<TransactionalService>();
             }
 
             var service = ServiceFactory.Create(serviceType, SessionRequest.LocalHttpContext, SessionRequest);

@@ -20,26 +20,18 @@ namespace Fluent.Architecture.Core.Util
         protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
         {
             IList<JsonProperty> properties = base.CreateProperties(type, memberSerialization);
-            IList<JsonProperty> propertiesResult = null;
 
             if (PropertyToIgnore != null && PropertyToIgnore.Length > 0)
             {
-                propertiesResult = properties.Where(x => !PropertyToIgnore.Contains(x.PropertyName, StringComparer.InvariantCultureIgnoreCase)).ToList();
+                return properties.Where(x => !PropertyToIgnore.Contains(x.PropertyName, StringComparer.InvariantCultureIgnoreCase)).ToList();
             }
 
             if (PropertyToShow != null && PropertyToShow.Length > 0)
             {
-                propertiesResult = properties.Where(x => PropertyToShow.Contains(x.PropertyName, StringComparer.InvariantCultureIgnoreCase)).ToList();
+                return properties.Where(x => PropertyToShow.Contains(x.PropertyName, StringComparer.InvariantCultureIgnoreCase)).ToList();
             }
 
-            if(propertiesResult == null || propertiesResult.Count == 0)
-            {
-                return properties;
-            }
-            else
-            {
-                return propertiesResult;
-            }
+            return properties;
         }
     }
 }

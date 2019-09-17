@@ -9,9 +9,11 @@
 
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Entities;
+using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Validation;
+using System;
 
 namespace Fluent.Architecture.Services
 {
@@ -23,13 +25,13 @@ namespace Fluent.Architecture.Services
     {
         protected internal new TransactionalValidation Validation
         {
-            get => base.Validation as TransactionalValidation;
+            get => base.Validation.FluentCast<TransactionalValidation>();
             set => base.Validation = value;
         }
 
         protected internal new ITransactionlRepository Repository
         {
-            get => base.Repository as ITransactionlRepository;
+            get => base.Repository.FluentCast<ITransactionlRepository>();
             set => base.Repository = value;
         }
 

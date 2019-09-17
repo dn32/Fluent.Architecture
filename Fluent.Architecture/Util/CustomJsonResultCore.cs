@@ -18,14 +18,14 @@ namespace Fluent.Architecture.Util
 
         public static void AdjustColumns(List<FluentJsonPropertyAttribute> props, int row)
         {
-            var sum = props.Sum(y => y.lGrid);
+            var sum = props.Sum(y => y.LGrid);
             var count = props.Count();
             int i = 0;
 
             while (sum < 12)
             {
-                props[i].lGrid++;
-                sum = props.Sum(y => y.lGrid);
+                props[i].LGrid++;
+                sum = props.Sum(y => y.LGrid);
                 if (i + 1 == count) { i = 0; } else { i++; }
             }
         }

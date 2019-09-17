@@ -8,6 +8,7 @@
 // ReSharper disable CommentTypo
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Entities;
+using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Validation;
 using Microsoft.AspNetCore.Http;
@@ -72,10 +73,10 @@ namespace Fluent.Architecture.Services
 
             if (this.SessionRequest.Services.TryGetValue(typeof(TS), out var ser))
             {
-                return ser as TS;
+                return ser.FluentCast<TS>();
             }
 
-            var service = ServiceFactory.CreateInternalServiceRuntime(typeof(TS), sessionIdGuid) as TS;
+            var service = ServiceFactory.CreateInternalServiceRuntime(typeof(TS), sessionIdGuid).FluentCast<TS>();
             this.SessionRequest.Services.Add(typeof(TS), service);
             return service;
         }

@@ -6,6 +6,7 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
+using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Factory.Proxy;
 using Fluent.Architecture.Services;
 using System;
@@ -32,7 +33,7 @@ namespace Fluent.Architecture.Factory
         /// </returns>
         internal static TransactionalService Create(Type serviceType, Guid sessionId)
         {
-            return ServiceLazyClassBuilder.CreateObject(serviceType, sessionId) as TransactionalService;
+            return ServiceLazyClassBuilder.CreateObject(serviceType, sessionId).FluentCast<TransactionalService>();
         }
     }
 }

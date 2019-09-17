@@ -43,7 +43,7 @@ namespace Fluent.Architecture
 
     public class Config
     {
-        public List<Connection> Connections { get; internal set; }
+        public List<Connection> Connections { get; internal set; } = new List<Connection>();
         public IServiceProvider ServiceProvider { get; internal set; }
         public Type UserSessionRequestType { get; internal set; }
         public Type GenericServiceType { get; internal set; }
@@ -80,41 +80,25 @@ namespace Fluent.Architecture
 
         public static Config SetServiceProvider(this Config configClass, IServiceProvider serviceProvider)
         {
-            if (configClass != null)
-            {
-                configClass.ServiceProvider = serviceProvider;
-            }
-
+            configClass.ServiceProvider = serviceProvider;
             return configClass;
         }
 
         public static Config SetGenericServiceType(this Config configClass, Type serviceType)
         {
-            if (configClass != null)
-            {
-                configClass.GenericServiceType = serviceType;
-            }
-
+            configClass.GenericServiceType = serviceType;
             return configClass;
         }
 
         public static Config SetGenericRepositoryType(this Config configClass, Type repositoryType)
         {
-            if (configClass != null)
-            {
-                configClass.GenericRepositoryType = repositoryType;
-            }
-
+            configClass.GenericRepositoryType = repositoryType;
             return configClass;
         }
 
         public static Config SetGenericValidationType(this Config configClass, Type ValidationType)
         {
-            if (configClass != null)
-            {
-                configClass.GenericValidationType = ValidationType;
-            }
-
+            configClass.GenericValidationType = ValidationType;
             return configClass;
         }
 
@@ -132,11 +116,7 @@ namespace Fluent.Architecture
         public static Config SetUserSessionRequestType(this Config configClass, Type userSessionRequestType)
         {
             //Todo - checar se o tipo informado é um UserSessionRequest
-            if (configClass != null)
-            {
-                configClass.UserSessionRequestType = userSessionRequestType;
-            }
-
+            configClass.UserSessionRequestType = userSessionRequestType;
             return configClass;
         }
 
@@ -157,16 +137,6 @@ namespace Fluent.Architecture
                 Type dbContextType,
                 string identifier = "")
         {
-            if (configClass == null)
-            {
-                return configClass;
-            }
-
-            if (configClass.Connections == null)
-            {
-                configClass.Connections = new List<Connection>();
-            }
-
             configClass.Connections.Add(
                 new Connection
                 {
@@ -408,7 +378,7 @@ namespace Fluent.Architecture
         {
             foreach (var type in types)
             {
-                var serviceProperties = type?.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
+                var serviceProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
                     .Where(x => x.GetMethod.IsPublic && x.PropertyType.IsSubclassOf(typeof(BaseService))).ToList();
 
                 if (serviceProperties != null && serviceProperties.Any())

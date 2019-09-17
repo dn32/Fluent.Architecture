@@ -35,7 +35,7 @@ namespace Fluent.Architecture.Validation
         /// </summary>
         protected internal new FluentService<T> Service
         {
-            get => base.Service as FluentService<T>;
+            get => base.Service.FluentCast<FluentService<T>>();
             set => base.Service = value;
         }
 
@@ -287,12 +287,11 @@ namespace Fluent.Architecture.Validation
                 var value = property.GetValue(entity);
                 if (property.PropertyType.IsNumeric())
                 {
-                    var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
-                    var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
-                    if (min == null || max == null) { continue; }
-                    var mindouble = double.Parse(min.ToString(), CultureInfo.InvariantCulture);
-                    var maxdouble = double.Parse(max.ToString(), CultureInfo.InvariantCulture);
-                    var valuedoble = double.Parse(value.ToString(), CultureInfo.InvariantCulture);
+                    var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum ?? 0;
+                    var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum ?? double.MaxValue;
+                    var mindouble = int.Parse(min?.ToString() ?? "0", CultureInfo.InvariantCulture);
+                    var maxdouble = double.Parse(max?.ToString() ?? "0", CultureInfo.InvariantCulture);
+                    var valuedoble = double.Parse(value?.ToString() ?? "0", CultureInfo.InvariantCulture);
                     if (!new RangeAttribute(mindouble, maxdouble).IsValid(valuedoble))
                     {
                         AddInconsistency(new UiFieldLenghtFluentValidationException(property));
@@ -307,19 +306,18 @@ namespace Fluent.Architecture.Validation
                         return;
                     }
 
-                    var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
-                    var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length;
-                    if (min == null || max == null) { continue; }
+                    var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length ?? 0;
+                    var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length ?? int.MaxValue;
 
-                    if (!new MinLengthAttribute(min.Value).IsValid(value))
+                    if (!new MinLengthAttribute(min).IsValid(value))
                     {
-                        this.AddInconsistency(new UiFieldLenghtFluentValidationException(property));
+                        AddInconsistency(new UiFieldLenghtFluentValidationException(property));
                     }
 
-                    var maxint = Convert.ChangeType(max, typeof(int), CultureInfo.InvariantCulture) as int?;
-                    if (!new MaxLengthAttribute(maxint.Value).IsValid(value))
+                    var maxint = max > int.MaxValue ? int.MaxValue : int.Parse(max.ToString());
+                    if (!new MaxLengthAttribute(maxint).IsValid(value))
                     {
-                        this.AddInconsistency(new UiFieldLenghtFluentValidationException(property));
+                        AddInconsistency(new UiFieldLenghtFluentValidationException(property));
                     }
                 }
             }

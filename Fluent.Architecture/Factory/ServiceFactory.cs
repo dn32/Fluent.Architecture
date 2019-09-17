@@ -10,6 +10,7 @@ using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions;
+using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Services;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ namespace Fluent.Architecture.Factory
         /// </returns>
         internal static TS Create<TS>(object httpContext) where TS : TransactionalService, new()
         {
-            return Create(typeof(TS), httpContext) as TS;
+            return Create(typeof(TS), httpContext).FluentCast<TS>();
         }
 
         internal static TransactionalService Create(Type serviceType, UserSessionRequest sessionRequest)
@@ -46,7 +47,7 @@ namespace Fluent.Architecture.Factory
             return Create(serviceType, sessionRequest.HttpContext, sessionRequest);
         }
 
-        internal static TransactionalService Create(Type serviceType, object httpContext, UserSessionRequest sessionRequest = null)
+        internal static TransactionalService Create(Type serviceType, object httpContext, UserSessionRequest? sessionRequest = null)
         {
             var sessionId = Guid.NewGuid();
             serviceType = GetSpecializedService(serviceType);
@@ -133,13 +134,13 @@ namespace Fluent.Architecture.Factory
         private static UserSessionRequest CreateUserSession(object httpContext, Guid sessionId, BaseService service)
         {
             //Todo arrumar
-            ITransactionObjects transactionObjects = null;// ITransactionObjects.Create();
+            //   ITransactionObjects transactionObjects = ITransactionObjects.Create();
 
             var serviceType = GetSpecializedService(service.GetType());
 
             var type = Setup.Config.Config.UserSessionRequestType ?? typeof(UserSessionRequest);
-            var userSession = Activator.CreateInstance(type) as UserSessionRequest;
-            userSession.TransactionObjects = transactionObjects;
+            var userSession = Activator.CreateInstance(type).FluentCast<UserSessionRequest>() ?? throw new InvalidOperationException($"Building failed {type.Name}");
+            //  userSession.TransactionObjects = transactionObjects;
             userSession.SessionRequestId = sessionId;
             userSession.Services = new Dictionary<Type, BaseService>();
             userSession.HttpContext = httpContext;

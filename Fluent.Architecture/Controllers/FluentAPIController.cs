@@ -18,7 +18,7 @@ namespace Fluent.Architecture.Controllers
         [HttpGet]
         public virtual T ExampleData()
         {
-            return typeof(T).GetExampleValue() as T;
+            return typeof(T).GetExampleValue().FluentCast<T>();
         }
 
         //       [HttpGet]
@@ -48,7 +48,7 @@ namespace Fluent.Architecture.Controllers
         [HttpGet]
         public virtual DefaultPaginationResult List()
         {
-            return List(null);
+            return List(new Filter[] { });
         }
 
 

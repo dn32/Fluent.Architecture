@@ -41,16 +41,11 @@ namespace Fluent.Architecture.Extensions
             return obj1.GetAllDataOfObject() == obj2.GetAllDataOfObject();
         }
 
-        public static object GetDbValue(this object value, PropertyInfo property = null)
+        public static object GetDbValue(this PropertyInfo property, object? value)
         {
             if (value == null)
             {
-                if (property != null)
-                {
-                    return $"'{property.PropertyType.GetDefaultValue()?.ToString()?.Replace("'","´")}'";
-                }
-
-                return null;
+                return $"'{property.PropertyType.GetDefaultValue()?.ToString()?.Replace("'", "´")}'";
             }
 
             var type = value.GetType();
@@ -87,7 +82,7 @@ namespace Fluent.Architecture.Extensions
         /// <returns>
         /// Se o objeto é nulo ou vazio.
         /// </returns>
-        public static bool IsFluentNull(this object value)
+        public static bool IsFluentNull(this object? value)
         {
             if (value == null)
             {
@@ -164,7 +159,7 @@ namespace Fluent.Architecture.Extensions
 
                 while (type.Is(typeof(object)) && type != typeof(object))
                 {
-                    type = type.BaseType;
+                    type = type.BaseType ?? type;
                     items.AddRange(type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic));
                 }
 
@@ -172,7 +167,7 @@ namespace Fluent.Architecture.Extensions
                 {
                     if (item.FieldType.IsPrimitive || item.FieldType.IsValueType || item.FieldType == typeof(string))
                     {
-                        propertyData.Add(new NameAndValue { Name = item?.Name?.Replace("k__BackingField", string.Empty, StringComparison.OrdinalIgnoreCase) ?? "", Value = item.GetValue(obj) });
+                        propertyData.Add(new NameAndValue { Name = item.Name.Replace("k__BackingField", string.Empty, StringComparison.OrdinalIgnoreCase) ?? "", Value = item.GetValue(obj) });
                     }
                     else if (item.FieldType.IsClass && !typeof(IEnumerable).IsAssignableFrom(item.FieldType))
                     {

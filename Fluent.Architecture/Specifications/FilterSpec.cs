@@ -33,8 +33,9 @@ namespace Fluent.Architecture.Core.Specifications
         private Expression<Func<T, bool>> FiltersToExtression(Filter[] filters)
         {
             var properties = typeof(T).GetProperties().ToList();
-            Expression<Func<T, bool>> allExpression = null;
+            Expression<Func<T, bool>> allExpression = x => true;
             EnumJunctionType LastJunctionType = EnumJunctionType.OR;
+            var first = true;
 
             foreach (var filter in filters)
             {
@@ -79,9 +80,10 @@ namespace Fluent.Architecture.Core.Specifications
                     expression = expression.Not();
                 }
 
-                if (allExpression == null)
+                if (first)
                 {
                     allExpression = expression;
+                    first = false;
                 }
                 else
                 {
@@ -97,8 +99,6 @@ namespace Fluent.Architecture.Core.Specifications
 
                 LastJunctionType = filter.JunctionType;
             }
-
-            if (allExpression == null) { allExpression = x => true; }
 
             return allExpression;
         }

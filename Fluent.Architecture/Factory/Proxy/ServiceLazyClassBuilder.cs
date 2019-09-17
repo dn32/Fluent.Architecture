@@ -30,7 +30,7 @@ namespace Fluent.Architecture.Factory.Proxy
             CreateConstructor(dynamicClass);
             OverwriteProperties(dynamicClass, sessionId);
             var type = dynamicClass.CreateType();
-            return Activator.CreateInstance(type);
+            return Activator.CreateInstance(type) ?? throw new InvalidOperationException($"Building failed {type.Name}");
         }
 
         private static TypeBuilder CreateClass(Type parent, AssemblyName assembly)
@@ -42,7 +42,7 @@ namespace Fluent.Architecture.Factory.Proxy
 
         private static void OverwriteProperties(TypeBuilder typeBuilder, Guid sessionId)
         {
-            var serviceProperties = typeBuilder.BaseType?.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).Where(x => x.PropertyType.IsSubclassOf(typeof(BaseService))).ToList();
+            var serviceProperties = typeBuilder.BaseType.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).Where(x => x.PropertyType.IsSubclassOf(typeof(BaseService))).ToList();
 
             //if (serviceProperties == null)
             //{

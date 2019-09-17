@@ -113,11 +113,19 @@ namespace Fluent.Architecture.EntityFramework
         /// <returns>
         /// A lista paginada de resultados.
         /// </returns>
-        public virtual List<TO> ListSelect<TO>(IFluentSpecification<TO> ispec, FluentPagination pagination = null)
+        public virtual List<TO> ListSelect<TO>(IFluentSpecification<TO> ispec, FluentPagination pagination)
         {
             var spec = GetSpecSelect<TO>(ispec);
             var query = spec.ToIQueryable(Query);
             var fluentPagination = FluentPaginate(query, pagination);
+            return fluentPagination.ToList();
+        }
+
+        public virtual List<TO> ListSelect<TO>(IFluentSpecification<TO> ispec)
+        {
+            var spec = GetSpecSelect<TO>(ispec);
+            var query = spec.ToIQueryable(Query);
+            var fluentPagination = FluentPaginate(query);
             return fluentPagination.ToList();
         }
 
@@ -253,36 +261,30 @@ namespace Fluent.Architecture.EntityFramework
         /// <returns></returns>
         protected List<T> RawSqlQuery<T>(string query, Func<DbDataReader, T> map)
         {
-            using (var command = Session.Database.GetDbConnection().CreateCommand())
+            using var command = Session.Database.GetDbConnection().CreateCommand();
+            command.CommandText = query;
+            command.CommandType = CommandType.Text;
+
+            Session.Database.OpenConnection();
+
+            using var result = command.ExecuteReader();
+            var entities = new List<T>();
+
+            while (result.Read())
             {
-                command.CommandText = query;
-                command.CommandType = CommandType.Text;
-
-                Session.Database.OpenConnection();
-
-                using (var result = command.ExecuteReader())
-                {
-                    var entities = new List<T>();
-
-                    while (result.Read())
-                    {
-                        entities.Add(map(result));
-                    }
-
-                    return entities;
-                }
+                entities.Add(map(result));
             }
+
+            return entities;
         }
 
         protected int ExecuteSqlQuery(string query)
         {
-            using (var command = Session.Database.GetDbConnection().CreateCommand())
-            {
-                command.CommandText = query;
-                command.CommandType = CommandType.Text;
-                Session.Database.OpenConnection();
-                return command.ExecuteNonQuery();
-            }
+            using var command = Session.Database.GetDbConnection().CreateCommand();
+            command.CommandText = query;
+            command.CommandType = CommandType.Text;
+            Session.Database.OpenConnection();
+            return command.ExecuteNonQuery();
         }
 
         #endregion
@@ -307,6 +309,13 @@ namespace Fluent.Architecture.EntityFramework
             var spec = GetSpec(ispec);
             var query = spec.ToIQueryable(Query);
             return FluentPaginate(query, pagination).ToList();
+        }
+
+        public virtual List<TE> List(IFluentSpecification ispec)
+        {
+            var spec = GetSpec(ispec);
+            var query = spec.ToIQueryable(Query);
+            return FluentPaginate(query).ToList();
         }
 
         /// <summary>

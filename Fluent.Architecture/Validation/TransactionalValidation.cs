@@ -6,6 +6,7 @@
 // -----------------------------------------------------------------------
 
 using Fluent.Architecture.Exceptions.ValidationException;
+using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Services;
 
 namespace Fluent.Architecture.Validation
@@ -17,7 +18,7 @@ namespace Fluent.Architecture.Validation
         /// </summary>
         protected internal new TransactionalService Service
         {
-            get => base.Service as TransactionalService;
+            get => base.Service.FluentCast<TransactionalService>();
             set => base.Service = value;
         }
 

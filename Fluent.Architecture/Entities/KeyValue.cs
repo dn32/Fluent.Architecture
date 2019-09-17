@@ -17,5 +17,12 @@ namespace Fluent.Architecture.Entities
         public PropertyInfo Property { get; set; }
         public object Value { get; set; }
         public string ColumnName { get; set; }
+
+        public KeyValue(PropertyInfo property, object value, string columnName)
+        {
+            Property = property;
+            Value = value;
+            ColumnName = columnName;
+        }
     }
 }

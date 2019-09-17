@@ -13,21 +13,17 @@ namespace Fluent.Architecture.Core.Extensions
         {
             if (property.PropertyType.IsNumeric())
             {
-                var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
-                var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
-                if (min == null || max == null) { return RandomUtil.NextRandom(int.MaxValue); }
-
-                return RandomUtil.NextRandom((min as int?).Value, (max as double?).Value);
+                var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum ?? 0;
+                var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum ?? double.MaxValue;
+                return RandomUtil.NextRandom(int.Parse(min.ToString() ?? "0"), double.Parse(max.ToString() ?? "0"));
             }
 
             if (property.PropertyType == typeof(string) && property.PropertyType == typeof(String))
             {
-                var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
-                var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length;
-                if (min == null && max == null) { return RandomUtil.NextRandom(12); }
-                if (min == null) { return RandomUtil.NextRandomString(max.Value); }
-                if (max == null) { return RandomUtil.NextRandomString(min.Value); }
-                return RandomUtil.NextRandomString(max.Value);
+                //var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length ?? 0;
+                var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length ?? double.MaxValue;
+                max = max > 12 ? 12 : max;
+                return RandomUtil.NextRandomString(max);
             }
 
             return property.PropertyType.GetDefaultValue();

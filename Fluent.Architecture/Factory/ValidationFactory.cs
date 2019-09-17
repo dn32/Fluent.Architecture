@@ -7,6 +7,7 @@
 
 // ReSharper disable CommentTypo
 using Fluent.Architecture.Entities;
+using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
 using System;
@@ -30,8 +31,8 @@ namespace Fluent.Architecture.Factory
         /// </returns>
         internal static FluentValidation<T> Create<T>() where T : BaseEntity
         {
-            var localType = Setup.Config?.Config?.GenericValidationType?.MakeGenericType(typeof(T)) ?? typeof(FluentValidation<T>);
-            return Create(localType) as FluentValidation<T>;
+            var localType = Setup.Config.Config.GenericValidationType?.MakeGenericType(typeof(T)) ?? typeof(FluentValidation<T>);
+            return Create(localType).FluentCast<FluentValidation<T>>();
         }
 
         internal static TransactionalValidation Create(Type validationType)
@@ -47,7 +48,7 @@ namespace Fluent.Architecture.Factory
                 }
             }
 
-            return Activator.CreateInstance(localType) as TransactionalValidation;
+            return Activator.CreateInstance(localType).FluentCast<TransactionalValidation>();
         }
 
     }

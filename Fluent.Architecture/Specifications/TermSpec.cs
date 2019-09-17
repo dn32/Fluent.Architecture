@@ -32,7 +32,7 @@ namespace Fluent.Architecture.Core.Specifications
 
         private Expression<Func<T, bool>> TermToExpression(string term)
         {
-            Expression<Func<T, bool>> allExpression = null;
+            Expression<Func<T, bool>> allExpression = x => true;
 
             if (!string.IsNullOrEmpty(term))
             {
@@ -44,7 +44,7 @@ namespace Fluent.Architecture.Core.Specifications
                 }
             }
 
-            return allExpression ?? (x => true);
+            return allExpression;
         }
     }
 }

@@ -12,9 +12,14 @@ namespace Fluent.Architecture.Extensions
             return (bool)spec.Execute(nameof(Exists));
         }
 
-        public static object List(this ISpec spec, FluentPagination pagination = null)
+        public static object List(this ISpec spec, FluentPagination pagination)
         {
             return spec.Execute(nameof(List), new object[] { pagination });
+        }
+
+        public static object List(this ISpec spec)
+        {
+            return spec.Execute(nameof(List), new object[] { });
         }
 
         public static object FirstOrDefault(this ISpec spec)

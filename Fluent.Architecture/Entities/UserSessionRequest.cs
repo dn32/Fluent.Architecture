@@ -7,6 +7,7 @@
 
 // ReSharper disable CommentTypo
 using Fluent.Architecture.Core.Interfaces;
+using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Validation;
 using Microsoft.AspNetCore.Http;
@@ -37,7 +38,7 @@ namespace Fluent.Architecture.Entities
         /// HttpContext da requisição vinda do controller.
         /// </summary>
 
-        public HttpContext LocalHttpContext => this.HttpContext as HttpContext;
+        public HttpContext LocalHttpContext => this.HttpContext.FluentCast<HttpContext>();
 
         public void Dispose(bool primaryService)
         {

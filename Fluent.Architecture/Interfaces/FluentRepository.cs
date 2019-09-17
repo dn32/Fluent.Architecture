@@ -19,10 +19,12 @@ namespace Fluent.Architecture.Core.Interfaces
         TE Remove(TE entity);
         TE Update(TE entity);
         void UpdateRange(TE[] entities);
-        List<TO> ListSelect<TO>(IFluentSpecification<TO> spec, FluentPagination pagination = null);
+        List<TO> ListSelect<TO>(IFluentSpecification<TO> spec, FluentPagination pagination);
+        List<TO> ListSelect<TO>(IFluentSpecification<TO> spec);
         int Count();
         TO FirstOrDefaultSelect<TO>(IFluentSpecification<TO> spec);
-        List<TE> List(IFluentSpecification spec, FluentPagination pagination = null);
+        List<TE> List(IFluentSpecification spec, FluentPagination pagination);
+        List<TE> List(IFluentSpecification spec);
         TE FirstOrDefault(IFluentSpecification spec);
         int CountSelect<TO>(IFluentSpecification<TO> spec);
         bool ExistsSelect<TO>(ISpec spec);
