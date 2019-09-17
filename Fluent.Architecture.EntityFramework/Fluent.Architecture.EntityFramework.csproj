@@ -6,7 +6,7 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Fluent.Architecture.EntityFramework.snk</AssemblyOriginatorKeyFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.0.0-RC-302</Version>
+    <Version>2.0.0-RC-303</Version>
     <PackageProjectUrl>https://dn32.github.io/Fluent.Architecture/</PackageProjectUrl>
     <RepositoryUrl>https://dn32.github.io/Fluent.Architecture/</RepositoryUrl>
   </PropertyGroup>

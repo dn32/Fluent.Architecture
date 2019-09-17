@@ -106,7 +106,7 @@ namespace Fluent.Architecture.Controllers
             FluentSpecification<T> spec;
             if (filters != null && filters.Length > 0)
             {
-                spec = CreateSpec<FilterSpec<T>>().SetParameter(filters);
+                spec = CreateSpec<FluentFilterIncludeSpec<T>>().SetParameter(filters);
             }
             else
             {

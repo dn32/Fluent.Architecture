@@ -48,6 +48,26 @@ namespace Fluent.Architecture.Extensions
             return (TX)typeof(TX).GetDefaultValue();
         }
 
+        public static bool GetCustomAttributeAny<T>(this Type type, bool inherit = false) where T : Attribute
+        {
+            return type.GetCustomAttribute<T>(inherit) != null;
+        }
+
+        public static bool GetCustomAttributeAny<T>(this PropertyInfo property, bool inherit = false) where T : Attribute
+        {
+            return property.GetCustomAttribute<T>(inherit) != null;
+        }
+
+        public static bool GetCustomAttributeAny<T>(this TypeInfo typeInfo, bool inherit = false) where T : Attribute
+        {
+            return typeInfo.GetCustomAttribute<T>(inherit) != null;
+        }
+
+        public static bool GetCustomAttributeAny<T>(this MethodInfo methodInfo, bool inherit = false) where T : Attribute
+        {
+            return methodInfo.GetCustomAttribute<T>(inherit) != null;
+        }
+
         //Todo2 doc
         public static TX Next<TX>(this List<TX> list)
         {

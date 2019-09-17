@@ -1,7 +1,9 @@
-﻿using Fluent.Architecture.Core.Filters;
+﻿using Fluent.Architecture.Core.Attributes;
+using Fluent.Architecture.Core.Filters;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Specifications;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -9,6 +11,49 @@ using System.Linq.Expressions;
 
 namespace Fluent.Architecture.Core.Specifications
 {
+    public class FluentAllIncludeSpec<T> : AllSpec<T> where T : FluentEntity
+    {
+        public override IQueryable<T> Where(IQueryable<T> query)
+        {
+            typeof(T).GetProperties()
+                .Where(x => x.GetCustomAttributeAny<FluentCompositionAttribute>())
+                .ToList()
+                .ForEach(x => { query = query.Include(x.Name); });
+
+            return query;
+        }
+
+        public override IOrderedQueryable<T> Order(IQueryable<T> query)
+        {
+            return query.OrderBy(x => x);
+        }
+    }
+
+    public class FluentFilterIncludeSpec<T> : FilterSpec<T> where T : FluentEntity
+    {
+        public override IQueryable<T> Where(IQueryable<T> query)
+        {
+            query = base.Where(query);
+            return GetInclusions(query);
+        }
+
+        private IQueryable<T> GetInclusions(IQueryable<T> query)
+        {
+            typeof(T)
+                .GetProperties()
+                .Where(x => x.GetCustomAttributeAny<FluentCompositionAttribute>())
+                .ToList()
+                .ForEach(x => { query = query.Include(x.Name); });
+
+            return query;
+        }
+
+        public override IOrderedQueryable<T> Order(IQueryable<T> query)
+        {
+            return query.OrderBy(x => x);
+        }
+    }
+
     public class FilterSpec<T> : FluentSpecification<T> where T : FluentEntity
     {
         private Filter[] Filters { get; set; }
