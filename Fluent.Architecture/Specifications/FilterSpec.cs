@@ -45,6 +45,12 @@ namespace Fluent.Architecture.Core.Specifications
                 .ToList()
                 .ForEach(x => { query = query.Include(x.Name); });
 
+            if (typeof(T).Is(typeof(IFluentInclusionEntity)))
+            {
+                var inclusions = Activator.CreateInstance(typeof(T)).FluentCast<IFluentInclusionEntity>().Inclusions();
+                inclusions.ForEach(x => { query = query.Include(x); });
+            }
+
             return query;
         }
 

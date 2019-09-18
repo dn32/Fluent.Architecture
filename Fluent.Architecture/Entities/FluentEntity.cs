@@ -13,4 +13,9 @@ namespace Fluent.Architecture.Entities
     public abstract class FluentEntity : BaseEntity
     {
     }
+
+    public interface IFluentInclusionEntity
+    {
+        string[] Inclusions { get; }
+    }
 }
