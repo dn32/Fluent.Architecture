@@ -24,6 +24,7 @@ namespace Fluent.Architecture.Core.Interfaces
         TO FirstOrDefaultSelect<TO>(IFluentSpecification<TO> spec);
         List<TE> List(IFluentSpecification spec, FluentPagination pagination = null);
         TE FirstOrDefault(IFluentSpecification spec);
+        TE SingleOrDefault(IFluentSpecification spec);
         int CountSelect<TO>(IFluentSpecification<TO> spec);
         bool ExistsSelect<TO>(ISpec spec);
         bool Exists(ISpec spec);

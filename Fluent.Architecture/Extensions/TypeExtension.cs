@@ -432,6 +432,18 @@ namespace Fluent.Architecture.Extensions
             return friendlyName;
         }
 
+        public static T FluentCast<T>(this object obj)
+        {
+            if (obj is T value)
+            {
+                return value;
+            }
+            else
+            {
+                throw new InvalidOperationException($"{obj.GetType().Name} is not a {typeof(T).Name}.");
+            }
+        }
+
         public static Type GetSpecializedService(this Type serviceType)
         {
             if (serviceType?.Name == "FluentDynamicProxy")

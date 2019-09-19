@@ -13,46 +13,20 @@ namespace Fluent.Architecture.Controllers
     [ApiController]
     public class FluentAPIController<T> : FluentController<T> where T : FluentEntity, new()
     {
-
-
         [HttpGet]
         public virtual T ExampleData()
         {
             return typeof(T).GetExampleValue() as T;
         }
 
-        //       [HttpGet]
-        //       public virtual string Schema()
-        //       {
-        //           var type = typeof(T);
-        //           var settings = new JsonSchemaGeneratorSettings { GenerateExamples = true };
-        //           var schema = JsonSchema.FromType(type, settings);
-        //           schema.SchemaVersion = "http://json-schema.org/schema#";
-        //           schema.Id = $"{Request.Scheme}://{Request.Host}{Request.Path}{type.Name}";
-        //           var properties = type.GetRuntimeProperties().ToList();
-
-        //           foreach (var jsonProperty in schema.Properties)
-        //           {
-        //               var property = properties.FirstOrDefault(x =>
-        //x.Name.Equals(jsonProperty.Value.Name, StringComparison.InvariantCultureIgnoreCase) ||
-        //x.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName?.Equals(jsonProperty.Value.Name, StringComparison.InvariantCultureIgnoreCase) == true);
-
-        //               jsonProperty.Value.Id = $"#{type.Name}/{jsonProperty.Value.Name}";
-        //               jsonProperty.Value.ExtensionData.Add("property", $"{property?.Name}");
-        //           }
-
-        //           return schema.ToJson();
-        //       }
-
-        // GET api/user/list
         [HttpGet]
         public virtual DefaultPaginationResult List()
         {
-            return List(null);
+            var spec = CreateSpec<FluentAllSpec<T>>().SetParameter(isList: true);
+            var list = Service.List(spec);
+            return Result(list, LastRequestPagination);
         }
 
-
-        // GET api/user/Find?id=5
         [HttpGet]
         [HttpPost]
         public virtual DefaultResult Find(T value)
@@ -60,7 +34,14 @@ namespace Fluent.Architecture.Controllers
             return Result(Service.Find(value, false));
         }
 
-        // GET api/user/FindByTerm?term=myterm
+        [HttpPost]
+        public virtual DefaultResult FindByFilter([FromBody] Filter[] filters)
+        {
+            var spec = CreateSpec<FluentFilterSpec<T>>().SetParameter(filters, isList: false);
+            var item = Service.SingleOrDefault(spec);
+            return Result(item, LastRequestPagination);
+        }
+
         [HttpGet]
         public virtual DefaultPaginationTermResult FindByTerm(string term)
         {
@@ -69,31 +50,19 @@ namespace Fluent.Architecture.Controllers
             return Result(list, LastRequestPagination, term);
         }
 
-        // GET api/user/Count
         [HttpGet]
         public virtual DefaultResult Count()
         {
             return Result(Service.Count());
         }
 
-        // GET api/user/Count
         [HttpPost]
-        public virtual DefaultResult Count([FromBody] Filter[] filters)
+        public virtual DefaultResult CountByFilter([FromBody] Filter[] filters)
         {
-            FluentSpecification<T> spec;
-            if (filters != null && filters.Length > 0)
-            {
-                spec = CreateSpec<FilterSpec<T>>().SetParameter(filters);
-            }
-            else
-            {
-                spec = CreateSpec<AllSpec<T>>();
-            }
-
+            var spec = CreateSpec<FluentFilterSpec<T>>().SetParameter(filters, isList: true);
             return Result(Service.Count(spec));
         }
 
-        // GET api/user/Exists/?id=5
         [HttpGet]
         public virtual DefaultResult Exists(T value)
         {
@@ -101,21 +70,10 @@ namespace Fluent.Architecture.Controllers
         }
 
         [HttpPost]
-        public virtual DefaultPaginationResult List([FromBody] Filter[] filters)
+        public virtual DefaultPaginationResult ListByFilter([FromBody] Filter[] filters)
         {
-            FluentSpecification<T> spec;
-            if (filters != null && filters.Length > 0)
-            {
-                spec = CreateSpec<FluentFilterIncludeSpec<T>>().SetParameter(filters);
-            }
-            else
-            {
-                spec = CreateSpec<AllSpec<T>>();
-            }
-
-            var list = Service.List(spec);
-
-            return Result(list, LastRequestPagination);
+            var spec = CreateSpec<FluentFilterSpec<T>>().SetParameter(filters, isList: true);
+            return Result(Service.List(spec), LastRequestPagination);
         }
 
         [HttpGet]

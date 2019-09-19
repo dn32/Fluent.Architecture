@@ -94,6 +94,20 @@ namespace Fluent.Architecture.EntityFramework
             return val.FirstOrDefault();
         }
 
+        public virtual TE SingleOrDefault(IFluentSpecification spec)
+        {
+            var val = GetSpec(spec).ToIQueryable(Query);
+          
+            try
+            {
+                return val.SingleOrDefault();
+            }
+            catch (InvalidOperationException)
+            {
+                throw new InvalidOperationException($"More than one record was found with the given keys. This is an indication of data with duplicate keys in the database. The table is {typeof(TE).GetTableName()}");
+            }
+        }
+
         #endregion
 
         #region SPEC OUT
@@ -226,8 +240,8 @@ namespace Fluent.Architecture.EntityFramework
 #if NETCOREAPP3_0
             return this.Input.FromSqlRaw(sql).SingleOrDefault();
 #else
-            return this.Input.FromSql(sql).SingleOrDefault();
-#endif  
+                return this.Input.FromSql(sql).SingleOrDefault();
+#endif
             }
             catch (InvalidOperationException)
             {

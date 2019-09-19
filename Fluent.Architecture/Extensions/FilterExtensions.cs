@@ -1,87 +1,15 @@
-﻿using Fluent.Architecture.Core.Attributes;
-using Fluent.Architecture.Core.Filters;
-using Fluent.Architecture.Entities;
+﻿using Fluent.Architecture.Core.Filters;
 using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Specifications;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Fluent.Architecture.Core.Specifications
+namespace Fluent.Architecture.Core.Extensions
 {
-    public class FluentAllIncludeSpec<T> : AllSpec<T> where T : FluentEntity
+    internal static class FilterExtensions
     {
-        public override IQueryable<T> Where(IQueryable<T> query)
-        {
-            typeof(T).GetProperties()
-                .Where(x => x.GetCustomAttributeAny<FluentCompositionAttribute>())
-                .ToList()
-                .ForEach(x => { query = query.Include(x.Name); });
-
-            return query;
-        }
-
-        public override IOrderedQueryable<T> Order(IQueryable<T> query)
-        {
-            return query.OrderBy(x => x);
-        }
-    }
-
-    public class FluentFilterIncludeSpec<T> : FilterSpec<T> where T : FluentEntity
-    {
-        public override IQueryable<T> Where(IQueryable<T> query)
-        {
-            query = base.Where(query);
-            return GetInclusions(query);
-        }
-
-        private IQueryable<T> GetInclusions(IQueryable<T> query)
-        {
-            typeof(T)
-                .GetProperties()
-                .Where(x => x.GetCustomAttributeAny<FluentCompositionAttribute>())
-                .ToList()
-                .ForEach(x => { query = query.Include(x.Name); });
-
-            if (typeof(T).Is(typeof(IFluentInclusionEntity)))
-            {
-                var inclusions = Activator.CreateInstance(typeof(T)).FluentCast<IFluentInclusionEntity>().Inclusions();
-                inclusions.ForEach(x => { query = query.Include(x); });
-            }
-
-            return query;
-        }
-
-        public override IOrderedQueryable<T> Order(IQueryable<T> query)
-        {
-            return query.OrderBy(x => x);
-        }
-    }
-
-    public class FilterSpec<T> : FluentSpecification<T> where T : FluentEntity
-    {
-        private Filter[] Filters { get; set; }
-
-        public FilterSpec<T> SetParameter(Filter[] filters)
-        {
-            Filters = filters;
-            return this;
-        }
-
-        public override IQueryable<T> Where(IQueryable<T> query)
-        {
-            var expression = FiltersToExtression(Filters);
-            return query.Where(expression);
-        }
-
-        public override IOrderedQueryable<T> Order(IQueryable<T> query)
-        {
-            return query.OrderBy(x => x);
-        }
-
-        private Expression<Func<T, bool>> FiltersToExtression(Filter[] filters)
+        internal static Expression<Func<T, bool>> FiltersToExtression<T>(this Filter[] filters)
         {
             var properties = typeof(T).GetProperties().ToList();
             Expression<Func<T, bool>> allExpression = null;

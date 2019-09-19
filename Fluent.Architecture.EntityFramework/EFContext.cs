@@ -89,7 +89,7 @@ namespace Fluent.Architecture.EntityFramework
                             }
                         }
 
-                        if (property.GetCustomAttribute<NotMappedAttribute>() != null)
+                        if (property.GetCustomAttributeAny<NotMappedAttribute>(true))
                         {
                             entity.Ignore(property.Name);
                             continue;

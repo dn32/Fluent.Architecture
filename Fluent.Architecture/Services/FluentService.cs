@@ -137,6 +137,11 @@ namespace Fluent.Architecture.Services
             return Repository.FirstOrDefault(spec);
         }
 
+        public virtual T SingleOrDefault(IFluentSpecification spec)
+        {
+            return Repository.SingleOrDefault(spec);
+        }
+
         /// <summary>
         /// Retorna a quantidade de itens existentes que satisfaçam a uma especificação
         /// </summary>
