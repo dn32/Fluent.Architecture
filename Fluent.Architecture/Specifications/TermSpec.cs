@@ -1,4 +1,5 @@
 ﻿using Fluent.Architecture.Core.Attributes;
+using Fluent.Architecture.Core.Extensions;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Specifications;
@@ -13,16 +14,20 @@ namespace Fluent.Architecture.Core.Specifications
     {
         private string Term { get; set; }
 
-        public TermSpec<T> SetParameter(string term)
+        public bool IsList { get; set; }
+
+        public TermSpec<T> SetParameter(string term, bool isList)
         {
             Term = term;
+            IsList = isList;
             return this;
         }
 
         public override IQueryable<T> Where(IQueryable<T> query)
         {
             var expression = TermToExpression(Term);
-            return query.Where(expression);
+            query = query.Where(expression);
+            return query.GetInclusions(IsList);
         }
 
         public override IOrderedQueryable<T> Order(IQueryable<T> query)

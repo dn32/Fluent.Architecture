@@ -3,21 +3,16 @@ using Fluent.Architecture.Core.Filters;
 using Fluent.Architecture.Core.Specifications;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Specifications;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace Fluent.Architecture.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("/api/[controller]/[action]")]
     [ApiController]
     public class FluentAPIController<T> : FluentController<T> where T : FluentEntity, new()
     {
-        [HttpGet]
-        public virtual T ExampleData()
-        {
-            return typeof(T).GetExampleValue() as T;
-        }
+        #region MANY
 
         [HttpGet]
         public virtual DefaultPaginationResult List()
@@ -28,26 +23,88 @@ namespace Fluent.Architecture.Controllers
         }
 
         [HttpGet]
+        [Route("/api/[controller]/ListByFilter")]
+        public virtual DefaultPaginationResult ListByFilterGet([FromQuery] Filter[] filters)
+        {
+            return InternalListByFilter(filters);
+        }
+
         [HttpPost]
-        public virtual DefaultResult Find(T value)
+        [Route("/api/[controller]/ListByFilter")]
+        public virtual DefaultPaginationResult ListByFilterPost([FromBody] Filter[] filters)
+        {
+            return InternalListByFilter(filters);
+        }
+
+        private DefaultPaginationResult InternalListByFilter([FromBody] Filter[] filters)
+        {
+            var spec = CreateSpec<FluentFilterSpec<T>>().SetParameter(filters, isList: true);
+            return Result(Service.List(spec), LastRequestPagination);
+        }
+
+        [HttpGet]
+        public virtual DefaultPaginationTermResult ListByTerm(string term)
+        {
+            var spec = CreateSpec<TermSpec<T>>().SetParameter(term, isList: true);
+            var list = Service.List(spec);
+            return Result(list, LastRequestPagination, term);
+        }
+
+        #endregion
+
+        #region ONE
+
+        [HttpGet]
+        [Route("/api/[controller]/FindByEntity")]
+        public virtual DefaultResult FindByEntityGet([FromQuery] T value)
         {
             return Result(Service.Find(value, false));
         }
 
         [HttpPost]
-        public virtual DefaultResult FindByFilter([FromBody] Filter[] filters)
+        [Route("/api/[controller]/FindByEntity")]
+        public virtual DefaultResult FindByEntityPost([FromBody] T value)
         {
-            var spec = CreateSpec<FluentFilterSpec<T>>().SetParameter(filters, isList: false);
-            var item = Service.SingleOrDefault(spec);
-            return Result(item, LastRequestPagination);
+            return Result(Service.Find(value, false));
         }
 
         [HttpGet]
-        public virtual DefaultPaginationTermResult FindByTerm(string term)
+        [Route("/api/[controller]/FindByFilter")]
+        public virtual DefaultResult FindByFilterGet([FromQuery] Filter[] filters)
         {
-            var spec = CreateSpec<TermSpec<T>>().SetParameter(term);
-            var list = Service.List(spec);
-            return Result(list, LastRequestPagination, term);
+            return InternalFindByFilter(filters);
+        }
+
+        [HttpPost]
+        [Route("/api/[controller]/FindByFilter")]
+        public virtual DefaultResult FindByFilterPost([FromBody] Filter[] filters)
+        {
+            return InternalFindByFilter(filters);
+        }
+
+        private DefaultResult InternalFindByFilter([FromBody] Filter[] filters)
+        {
+            var spec = CreateSpec<FluentFilterSpec<T>>().SetParameter(filters, isList: false);
+            var item = Service.SingleOrDefault(spec);
+            return Result(item);
+        }
+
+        [HttpGet]
+        public virtual DefaultResult FindByTerm(string term)
+        {
+            var spec = CreateSpec<TermSpec<T>>().SetParameter(term, isList: false);
+            var item = Service.SingleOrDefault(spec);
+            return Result(item);
+        }
+
+        #endregion
+
+        #region ANOTHER
+
+        [HttpGet]
+        public virtual T ExampleData()
+        {
+            return typeof(T).GetExampleValue() as T;
         }
 
         [HttpGet]
@@ -64,16 +121,17 @@ namespace Fluent.Architecture.Controllers
         }
 
         [HttpGet]
-        public virtual DefaultResult Exists(T value)
+        [Route("/api/[controller]/ExistsByEntity")]
+        public virtual DefaultResult ExistsByEntityGet([FromQuery] T value)
         {
             return Result(Service.Exists(value));
         }
 
         [HttpPost]
-        public virtual DefaultPaginationResult ListByFilter([FromBody] Filter[] filters)
+        [Route("/api/[controller]/ExistsByEntity")]
+        public virtual DefaultResult ExistsByEntityPost([FromBody] T value)
         {
-            var spec = CreateSpec<FluentFilterSpec<T>>().SetParameter(filters, isList: true);
-            return Result(Service.List(spec), LastRequestPagination);
+            return Result(Service.Exists(value));
         }
 
         [HttpGet]
@@ -87,6 +145,8 @@ namespace Fluent.Architecture.Controllers
             //return JsonConvert.SerializeObject(data, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, Formatting = Formatting.None });
             //#endif
         }
+
+        #endregion               
 
         // POST api/user/Add/
         [HttpPost]

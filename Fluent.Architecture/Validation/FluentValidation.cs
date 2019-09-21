@@ -49,6 +49,27 @@ namespace Fluent.Architecture.Validation
 
         #endregion
 
+        public void FluentValidateAttribute(T entity)
+        {
+            if (!this.NullParameterOk)
+            {
+                return;
+            }
+
+            var properties = entity.GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                var FluentValidateAttribute = property.GetCustomAttribute<FluentValidateAttribute>(true)?.FluentCast<FluentValidateAttribute>();
+                if (FluentValidateAttribute == null) { continue; }
+
+                var value = property.GetValue(entity);
+                if (!FluentValidateAttribute.IsValidWhen(value))
+                {
+                    AddInconsistency(new FluentGenericAttributeValidateException(property, false, FluentValidateAttribute.InvalidMessage));
+                }
+            }
+        }
+
         /// <summary>
         /// Validate add operation.
         /// </summary>
@@ -58,6 +79,7 @@ namespace Fluent.Architecture.Validation
         public virtual void Add(T entity)
         {
             this.ParameterMustBeInformed(entity);
+            this.FluentValidateAttribute(entity);
             this.RequiredPropertyMustBeInformed(entity);
             this.MaxMinLenghtPropertyMustBeInformed(entity);
             this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
@@ -73,6 +95,7 @@ namespace Fluent.Architecture.Validation
         public virtual void AddOrUpdate(T entity)
         {
             this.ParameterMustBeInformed(entity);
+            this.FluentValidateAttribute(entity);
             this.RequiredPropertyMustBeInformed(entity);
             this.MaxMinLenghtPropertyMustBeInformed(entity);
             this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
@@ -92,6 +115,7 @@ namespace Fluent.Architecture.Validation
                 foreach (var entity in entities)
                 {
                     this.ParameterMustBeInformed(entity);
+                    this.FluentValidateAttribute(entity);
                     this.RequiredPropertyMustBeInformed(entity);
                     this.MaxMinLenghtPropertyMustBeInformed(entity);
                     this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
@@ -109,6 +133,7 @@ namespace Fluent.Architecture.Validation
         public virtual void Update(T entity)
         {
             this.ParameterMustBeInformed(entity);
+            this.FluentValidateAttribute(entity);
             this.RequiredPropertyMustBeInformed(entity);
             this.MaxMinLenghtPropertyMustBeInformed(entity);
             this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, isUpdate: true);
@@ -125,6 +150,7 @@ namespace Fluent.Architecture.Validation
         internal void UpdateAlter(UpdateAlter<T> value)
         {
             ParameterMustBeInformed(value);
+            FluentValidateAttribute(value.Final);
             ParameterMustBeInformed(value.Original);
             ParameterMustBeInformed(value.Final);
             RequiredPropertyMustBeInformed(value.Original);
@@ -151,6 +177,7 @@ namespace Fluent.Architecture.Validation
                 foreach (var entity in entities)
                 {
                     this.ParameterMustBeInformed(entity);
+                    this.FluentValidateAttribute(entity);
                     this.RequiredPropertyMustBeInformed(entity);
                     this.MaxMinLenghtPropertyMustBeInformed(entity);
                     this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, isUpdate: true);
@@ -429,9 +456,9 @@ namespace Fluent.Architecture.Validation
                 return;
             }
 
-            if (this.Service.Count(entity) > 1)
+            if (this.Service.Count(entity, includeExcludedLogically) > 1)
             {
-                var keys = entity.GetKeyValues().Select(x => $"{{{x.Property.Name}:{x.Value}}}").ToArray();
+                var keys = entity.GetKeyValues().Select(x => $"-{{{x.Property.Name}:{x.Value}}}").ToArray();
                 var keyValues = string.Join(", ", keys);
                 this.AddInconsistency(new EntityExistsFluentValidationException(keyValues));
             }

@@ -5,7 +5,7 @@ using Fluent.Architecture.EntityFramework;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-[Table("Users"), DbType(FluentDbType.SQLITE)]
+[Table("Users"), DbType(FluentDbType.SQL_SERVER)]
 public class User : FluentEntity
 {
     [Key]

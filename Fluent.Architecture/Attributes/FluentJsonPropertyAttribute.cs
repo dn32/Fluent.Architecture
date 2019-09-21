@@ -56,5 +56,7 @@ namespace Fluent.Architecture.Core.Attributes
         public List<KeyValuePair<string, string>> Enums { get; set; }
 
         public int Row { get; set; }
+        
+        public Type Type { get; internal set; }
     }
 }

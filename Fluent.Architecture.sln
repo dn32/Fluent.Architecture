@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.645
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.Core", "Fluent.Architecture\Fluent.Architecture.Core.csproj", "{BFABD6C5-8AFD-4D50-9127-6CAA35CF23A4}"
 EndProject
@@ -30,6 +30,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.EntityFramework.SqLite", "Fluent.Architecture.EntityFramework.SqLite\Fluent.Architecture.EntityFramework.SqLite.csproj", "{83544903-F9F7-4DB3-A444-3D191BBB4D10}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent.Architecture.Controller.Test", "Fluent.Architecture.Controller.Test\Fluent.Architecture.Controller.Test.csproj", "{E5E65A3A-5BEF-4522-97E4-B84AA9707297}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent.Architecture.Core.Doc", "Fluent.Architecture.Core.Doc\Fluent.Architecture.Core.Doc.csproj", "{D64F1786-68BF-47D9-8AA8-8758E75386A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +87,10 @@ Global
 		{E5E65A3A-5BEF-4522-97E4-B84AA9707297}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5E65A3A-5BEF-4522-97E4-B84AA9707297}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5E65A3A-5BEF-4522-97E4-B84AA9707297}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D64F1786-68BF-47D9-8AA8-8758E75386A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D64F1786-68BF-47D9-8AA8-8758E75386A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D64F1786-68BF-47D9-8AA8-8758E75386A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D64F1786-68BF-47D9-8AA8-8758E75386A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

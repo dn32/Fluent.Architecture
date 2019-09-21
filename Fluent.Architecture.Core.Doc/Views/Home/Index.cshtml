@@ -1,0 +1,24 @@
+﻿@using Fluent.Architecture.Core.Entities
+
+@model List<FluentJsonSchema>
+
+    @{
+        ViewData["Title"] = "Serviços disponíveis";
+    }
+
+    <div class="services-container">
+        <span class="general-title">Serviços disponíveis</span>
+
+        @{
+            foreach (var entity in Model)
+            {
+                var name = entity.FluentJsonForm.name;
+                var description = entity.FluentJsonForm.desc;
+                var propName = entity.FluentJsonForm.propName;
+                <div class="service">
+                    <span class="title"><a href="/Home/Service?name=@propName">@name</a></span>
+                    <span class="description">@description</span>
+                </div>
+            }
+        }
+    </div>

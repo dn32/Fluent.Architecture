@@ -1,0 +1,69 @@
+﻿@using Fluent.Architecture.Core.Entities
+@using Fluent.Architecture.Extensions
+@using System.Text.Json
+
+@model FluentJsonSchema
+
+@{
+    ViewData["Title"] = Model.FluentJsonForm.name;
+}
+
+    <div class="one-service-container">
+        <h4 class="general-title">@Model.FluentJsonForm.name</h4>
+
+        @{
+            string Is(bool operation, string text)
+            {
+                return operation ? text : "";
+            }
+
+                <div class="properties-container">
+                    <span class="title">Properties</span>
+                    <div class="properties">
+
+                        @foreach (var property in Model.Properties)
+                        {
+                        <div class="property">
+
+                            <span class="name">@property.propName</span>
+                            <span class="description">@property.name</span>
+                            <span class="type">@property.Type.Name</span>
+                            <span class="range">Range: @property.min,@property.min </span>
+
+                            @Html.Raw(Is(property.IsEnum, "<span><img src='/img/ok.png'/>enum</span>"))
+                            @Html.Raw(Is(property.IsKey, "<span><img src='/img/ok.png'/> key</span>"))
+                            @Html.Raw(Is(property.IsList, "<span><img src='/img/ok.png'/> list</span>"))
+                            @Html.Raw(Is(property.IsNullable, "<span><img src='/img/ok.png'/> nullable</span>"))
+                            @Html.Raw(Is(property.required, "<span><img src='/img/ok.png'/> required</span>"))
+
+                            @*<span class="value">Default value: @property.value</span>*@
+                            @*<span class="name">@property.desc</span>*@
+
+                            @*
+        <span class="grid">grid: @property.grid</span>
+        <span class="form">form: @property.form</span>
+        <span class="lGrid">lGrid: @property.lGrid</span>
+        <span class="Enums">Enums: @property.Enums</span>
+        <span class="FluentAggregation">FluentAggregation: @property.FluentAggregation</span>
+        <span class="FluentComposition">FluentComposition: @property.FluentComposition</span>
+        <span class="reference">reference: @property.reference</span>
+        <span class="Row">Row: @property.Row</span>
+        <span class="tgroup">tgroup: @property.tgroup</span>
+                            *@
+
+                        </div>
+                        }
+                    </div>
+                </div>
+                    <div class="example-value-container">
+                        <span>Example value</span>
+
+                        @{
+                            var exampleValue = Model.FluentJsonForm.Type.GetExampleValue();
+                            var json = JsonSerializer.Serialize(exampleValue, new JsonSerializerOptions { IgnoreNullValues = true, WriteIndented = true });
+
+                            <pre class="example-value">@json</pre>
+                        }
+                    </div>
+                    }
+                </div>

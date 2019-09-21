@@ -39,6 +39,7 @@ namespace Fluent.Architecture.Extensions
         public static object GetDefaultValue(this Type type)
         {
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
+            type = type.GetNonNullableType();
             return type.IsValueType ? TypeDefaults.GetOrAdd(type, Activator.CreateInstance) : null;
         }
 
@@ -116,7 +117,7 @@ namespace Fluent.Architecture.Extensions
                     var value = property.GetExampleValue();
                     if (value != null)
                     {
-                        var newValue = Convert.ChangeType(value, property.PropertyType, CultureInfo.InvariantCulture);
+                        var newValue = Convert.ChangeType(value, property.PropertyType.GetNonNullableType(), CultureInfo.InvariantCulture);
                         if (property.SetMethod != null)
                         {
                             property.SetValue(obj, newValue);
@@ -131,6 +132,11 @@ namespace Fluent.Architecture.Extensions
         public static bool IsOfNullableType(this Type type)
         {
             return Nullable.GetUnderlyingType(type) != null;
+        }
+
+        public static Type GetNonNullableType(this Type type)
+        {
+            return Nullable.GetUnderlyingType(type) ?? type;
         }
 
         public static FieldInfo[] GetEnumFields(this Type type)
@@ -231,7 +237,13 @@ namespace Fluent.Architecture.Extensions
             }
 
             var form = type.GetCustomAttribute<FluentJsonFormAttribute>();
+            if(form == null)
+            {
+                return null;
+            }
+
             form.propName = type.Name;
+            form.Type = type.GetNonNullableType();
 
             var root = new FluentJsonSchema
             {
@@ -252,6 +264,7 @@ namespace Fluent.Architecture.Extensions
                 attr.IsKey = x.GetCustomAttribute<KeyAttribute>() != null;
                 attr.IsList = x.PropertyType.Name == "List`1";
                 attr.IsNullable = x.PropertyType.Equals(typeof(string)) || x.PropertyType.IsOfNullableType();
+                attr.Type = x.PropertyType;
 
                 if (attr.FluentAggregation != null)
                 {

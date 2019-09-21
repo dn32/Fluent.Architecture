@@ -14,7 +14,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5000/api/user/count",
+							"raw": "http://154.ip-51-83-33.eu/api/user/count",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -46,7 +46,7 @@
 							"raw": "{\n\t\"Code\": 0,\n\t\"Email\":\"dn@dn32.com.br\",\n\t\"Name\":\"Marcelo Souza\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:5000/api/user",
+							"raw": "http://154.ip-51-83-33.eu/api/user",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -77,7 +77,7 @@
 							"raw": "{\n\t\"Code\": 1,\n\t\"Email\":\"alex.smith@gmail.com\",\n\t\"Name\":\"Alex Smith\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:5000/api/user",
+							"raw": "http://154.ip-51-83-33.eu/api/user",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -108,7 +108,7 @@
 							"raw": "{\n\t\"Code\": 1\n}"
 						},
 						"url": {
-							"raw": "http://localhost:5000/api/user",
+							"raw": "http://154.ip-51-83-33.eu/api/user",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -135,7 +135,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:5000/api/user/Find?code=2",
+							"raw": "http://154.ip-51-83-33.eu/api/user/Find?code=2",
 							"protocol": "http",
 							"host": [
 								"localhost"

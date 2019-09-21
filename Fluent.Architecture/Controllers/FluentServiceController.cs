@@ -108,7 +108,10 @@ namespace Fluent.Architecture.Controllers
             {
                 if (Service.SessionRequest.ContextFluentValidationException.IsValid)
                 {
-                    Service.TransactionObjects.Session.SaveChanges();
+                    if (Service.TransactionObjects.Session.ChangeTracker.HasChanges())
+                    {
+                        Service.TransactionObjects.Session.SaveChanges();
+                    }
                     //Transaction.Commit();
                 }
 
