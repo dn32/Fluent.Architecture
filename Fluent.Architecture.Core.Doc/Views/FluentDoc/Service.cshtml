@@ -1,0 +1,82 @@
+﻿@using Fluent.Architecture.Core.Entities
+@using Fluent.Architecture.Extensions
+@using System.Text.Json
+
+@model FluentJsonSchema
+
+@{
+    ViewData["Title"] = Model.FluentJsonForm.name;
+}
+
+<div class="one-service-container">
+    <h4 class="general-title">@Model.FluentJsonForm.name</h4>
+
+    @{
+        string Is(bool operation, string text)
+        {
+            return operation ? text : "";
+        }
+
+        <div class="properties-container">
+            <span class="title">Properties</span>
+            <table class="properties">
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Others</th>
+                    </tr>
+                </thead>
+                @foreach (var property in Model.Properties)
+                {
+                    if (property.form == Fluent.Architecture.Core.Enumerator.EnumForm.NONE) { continue; }
+                    if (property.FluentAggregation != null) { continue; }
+                    // property.key
+
+                    var range = (property.min == property.max ? property.min.ToString() : property.min + ", " + property.max);
+
+                    <tr class="property">
+                        <td class="name">@property.propName</td>
+                        <td class="description">@property.name</td>
+                        <td class="type">@property.Type.Name (@range)</td>
+                        @*<span class="range">Range: @property.min,@property.min </span>*@
+                        <td>
+                            @Html.Raw(Is(property.IsEnum, "<span><img src='/img/ok.png'/>enum</span>"))
+                            @Html.Raw(Is(property.IsKey, "<span><img src='/img/ok.png'/> key</span>"))
+                            @Html.Raw(Is(property.IsList, "<span><img src='/img/ok.png'/> list</span>"))
+                            @Html.Raw(Is(property.IsNullable, "<span><img src='/img/ok.png'/> nullable</span>"))
+                            @Html.Raw(Is(property.required, "<span><img src='/img/ok.png'/> required</span>"))
+                            @Html.Raw(Is(property.IsFk, "<span><img src='/img/ok.png'/> fk <a href=\"/FluentDoc/Service?name=" + property.FkDestinal?.Type?.Name + "\">" + property.FkDestinal?.name + "</a></span>"))
+                        </td>
+                        @*<span class="value">Default value: @property.value</span>*@
+                        @*<span class="name">@property.desc</span>*@
+
+                        @*
+                    <span class="grid">grid: @property.grid</span>
+                    <span class="form">form: @property.form</span>
+                    <span class="lGrid">lGrid: @property.lGrid</span>
+                    <span class="Enums">Enums: @property.Enums</span>
+                    <span class="FluentAggregation">FluentAggregation: @property.FluentAggregation</span>
+                    <span class="FluentComposition">FluentComposition: @property.FluentComposition</span>
+                    <span class="reference">reference: @property.reference</span>
+                    <span class="Row">Row: @property.Row</span>
+                    <span class="tgroup">tgroup: @property.tgroup</span>
+                        *@
+
+                    </tr>
+                }
+            </table>
+            <div class="example-value-container">
+                <span>Example value</span>
+
+                @{
+                    var exampleValue = Model.FluentJsonForm.Type.GetExampleValue();
+                    var json = JsonSerializer.Serialize(exampleValue, new JsonSerializerOptions { IgnoreNullValues = true, WriteIndented = true });
+
+                    <pre class="example-value">@json</pre>
+                }
+            </div>
+        </div>
+    }
+</div>

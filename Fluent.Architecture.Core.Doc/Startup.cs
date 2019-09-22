@@ -51,7 +51,7 @@ namespace Fluent.Architecture.Core.Doc
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=FluentDoc}/{action=Index}/{id?}");
             });
 
 

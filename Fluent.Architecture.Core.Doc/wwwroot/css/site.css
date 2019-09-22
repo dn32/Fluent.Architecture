@@ -25,24 +25,32 @@
 }
 
     .one-service-container .properties-container .properties {
-        display: inline-flex;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 20px;
     }
+
+        .one-service-container .properties-container .properties thead tr {
+            border: solid 1px #ddd;
+            text-align: center;
+            background: rgba(58, 42, 42, 0.075);
+            color: #004085;
+        }
 
     .one-service-container .properties-container .title {
         color: #004085;
         font-size: 24px;
-        text-transform: uppercase;
         text-align: center;
         display: block
     }
 
 .one-service-container .property {
-    display: block;
-    border: solid 1px #ddd;
-    border-radius: 4px;
+    /*display: inline-flex;*/
     padding: 8px 8px 9px 8px;
+    border: solid 1px #ddd;
+    /*border-radius: 4px;
     margin: 6px 6px 6px 6px;
-    min-width: 144px;
+    min-width: 144px;*/
 }
 
     .one-service-container .property img {
@@ -50,16 +58,15 @@
         margin: 0px 0px 3px -1px;
     }
 
-.one-service-container .property .name {
-    border: solid 1px #ddd;
-    border-radius: 4px;
-    background: #597d8e3d;
-    text-align: center;
-    font-weight: bold;
-    padding: 0px 10px 0px 10px;
-}
+    .one-service-container .property .name {
+        border: solid 1px #ddd;
+        background: #adb5bd21;
+        font-weight: bold;
+        text-align: center;
+        padding: 0px 10px 0px 10px;
+    }
 
-    .one-service-container .property span:not(.name) {
+    .one-service-container .property td:not(.name) {
         padding: 2px 11px 2px 11px;
     }
 

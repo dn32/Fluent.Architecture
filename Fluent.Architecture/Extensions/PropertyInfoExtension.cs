@@ -11,22 +11,28 @@ namespace Fluent.Architecture.Core.Extensions
     {
         public static object GetExampleValue(this PropertyInfo property)
         {
-            if (property.PropertyType.IsNumeric())
+            if (property.PropertyType.GetNonNullableType().IsNumeric())
             {
                 var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
                 var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
                 if (min == null || max == null) { return RandomUtil.NextRandom(int.MaxValue); }
 
+                if (max.ToString() == "0" && property.PropertyType.IsNumeric())
+                {
+                    max = property.PropertyType.GetMaxValueOfNumber().FluentCast<double>();
+                }
+
                 return RandomUtil.NextRandom((min as int?).Value, (max as double?).Value);
             }
 
-            if (property.PropertyType == typeof(string) && property.PropertyType == typeof(String))
+            if (property.PropertyType.GetNonNullableType() == typeof(string) && property.PropertyType.GetNonNullableType() == typeof(String))
             {
                 var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
                 var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length;
                 if (min == null && max == null) { return RandomUtil.NextRandom(12); }
                 if (min == null) { return RandomUtil.NextRandomString(max.Value); }
                 if (max == null) { return RandomUtil.NextRandomString(min.Value); }
+
                 return RandomUtil.NextRandomString(max.Value);
             }
 

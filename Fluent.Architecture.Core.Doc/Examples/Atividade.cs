@@ -68,7 +68,6 @@ namespace Max.Services.Model.Crud
                 name = "Calcular ST",
                 desc = "Informar calcular st",
                 min = 1,
-                max = 1,
                 lGrid = 3,
                 value = "",
                 group = "Informações gerais",
