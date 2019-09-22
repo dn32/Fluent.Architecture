@@ -67,6 +67,8 @@ namespace Fluent.Architecture
         internal static Dictionary<Type, Type> Validations { get; set; }
 
         public static Dictionary<Type, Type> Model { get; private set; }
+        
+        public static Dictionary<Type, Type> Controllers { get; private set; }
 
         public static bool Initialized { get; set; }
 
@@ -220,10 +222,12 @@ namespace Fluent.Architecture
             Repositories = new Dictionary<Type, Type>();
             Validations = new Dictionary<Type, Type>();
             Model = new Dictionary<Type, Type>();
+            Controllers = new Dictionary<Type, Type>();
             UserSessionList = new Dictionary<Guid, UserSessionRequest>();
             Services.Add(typeof(FluentEntity), typeof(FluentService<FluentEntity>));
             Repositories.Add(typeof(FluentEntity), typeof(IFluentRepository<FluentEntity>));
             Validations.Add(typeof(FluentEntity), typeof(FluentValidation<FluentEntity>));
+            Controllers.Add(typeof(FluentEntity), typeof(FluentController<FluentEntity>));
         }
 
         private static List<Type[]> LoadAssemblies()
@@ -272,6 +276,10 @@ namespace Fluent.Architecture
                 types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentValidation<BaseEntity>)))
                    .Where(x => x.Item1 != null).ToList()
                    .ForEach(AddValidation);
+
+                types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentController<BaseEntity>)))
+                   .Where(x => x.Item1 != null).ToList()
+                   .ForEach(AddController);
 
                 types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(BaseEntity)))
                     .Where(x => x.Item1 != null && x.Item2 != typeof(BaseEntity)).ToList()
@@ -446,6 +454,16 @@ namespace Fluent.Architecture
             }
 
             Validations.Add(validation.Item1, validation.Item2);
+        }
+
+        private static void AddController(Tuple<Type, Type> controller)
+        {
+            if (Model.ContainsKey(controller.Item1))
+            {
+                throw new IncorrectDevelopmentException($"There are two controller classes with the same name {controller.Item1} - {controller.Item2}. This is not allowed.");
+            }
+
+            Controllers.Add(controller.Item1, controller.Item2);
         }
 
         private static void AddRepository(Tuple<Type, Type> repository)

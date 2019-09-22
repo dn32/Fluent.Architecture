@@ -13,7 +13,7 @@ namespace Fluent.Architecture.Core.Doc.Examples
   //  [DbType(FluentDbType.SQL_SERVER)]
     [Display(Name = "Estados (UF)")]
     [FluentJsonForm(name = "Estados (UF)", desc = "Cadastro de Estado (UF)", group = "Cadastros")]
-    public partial class Estado : FluentEntity
+    public partial class Estado : MaxEntidade
     {
 
         [FluentRequired, Key, Searchable, FluentJsonProperty(

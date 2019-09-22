@@ -5,6 +5,7 @@ using Fluent.Architecture.Entities;
 using Fluent.Architecture.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.ComponentModel;
 
 namespace Fluent.Architecture.Controllers
 {
@@ -15,6 +16,7 @@ namespace Fluent.Architecture.Controllers
         #region MANY
 
         [HttpGet]
+        [Description("Get a paged list of all items")]
         public virtual DefaultPaginationResult List()
         {
             var spec = CreateSpec<FluentAllSpec<T>>().SetParameter(isList: true);
@@ -24,6 +26,7 @@ namespace Fluent.Architecture.Controllers
 
         [HttpGet]
         [Route("/api/[controller]/ListByFilter")]
+        [Description("Get a paginated list of items based on filters")]
         public virtual DefaultPaginationResult ListByFilterGet([FromQuery] Filter[] filters)
         {
             return InternalListByFilter(filters);
@@ -31,6 +34,7 @@ namespace Fluent.Architecture.Controllers
 
         [HttpPost]
         [Route("/api/[controller]/ListByFilter")]
+        [Description("Get a paginated list of items based on filters")]
         public virtual DefaultPaginationResult ListByFilterPost([FromBody] Filter[] filters)
         {
             return InternalListByFilter(filters);
@@ -43,6 +47,7 @@ namespace Fluent.Architecture.Controllers
         }
 
         [HttpGet]
+        [Description("Get a paginated list of items based on a term")]
         public virtual DefaultPaginationTermResult ListByTerm(string term)
         {
             var spec = CreateSpec<TermSpec<T>>().SetParameter(term, isList: true);
@@ -56,6 +61,7 @@ namespace Fluent.Architecture.Controllers
 
         [HttpGet]
         [Route("/api/[controller]/FindByEntity")]
+        [Description("Get an item based on its identifiers")]
         public virtual DefaultResult FindByEntityGet([FromQuery] T value)
         {
             return Result(Service.Find(value, false));
@@ -63,6 +69,7 @@ namespace Fluent.Architecture.Controllers
 
         [HttpPost]
         [Route("/api/[controller]/FindByEntity")]
+        [Description("Get an item based on its identifiers")]
         public virtual DefaultResult FindByEntityPost([FromBody] T value)
         {
             return Result(Service.Find(value, false));
@@ -70,6 +77,7 @@ namespace Fluent.Architecture.Controllers
 
         [HttpGet]
         [Route("/api/[controller]/FindByFilter")]
+        [Description("Get an item based on its filters")]
         public virtual DefaultResult FindByFilterGet([FromQuery] Filter[] filters)
         {
             return InternalFindByFilter(filters);
@@ -77,6 +85,7 @@ namespace Fluent.Architecture.Controllers
 
         [HttpPost]
         [Route("/api/[controller]/FindByFilter")]
+        [Description(" Get an item based on filters")]
         public virtual DefaultResult FindByFilterPost([FromBody] Filter[] filters)
         {
             return InternalFindByFilter(filters);
@@ -90,6 +99,7 @@ namespace Fluent.Architecture.Controllers
         }
 
         [HttpGet]
+        [Description(" Get an item based on a term")]
         public virtual DefaultResult FindByTerm(string term)
         {
             var spec = CreateSpec<TermSpec<T>>().SetParameter(term, isList: false);
@@ -102,18 +112,21 @@ namespace Fluent.Architecture.Controllers
         #region ANOTHER
 
         [HttpGet]
+        [Description("Get an example of the item")]
         public virtual T ExampleData()
         {
             return typeof(T).GetExampleValue() as T;
         }
 
         [HttpGet]
+        [Description("Get total amount of items")]
         public virtual DefaultResult Count()
         {
             return Result(Service.Count());
         }
 
         [HttpPost]
+        [Description("Get the number of items based on filters.")]
         public virtual DefaultResult CountByFilter([FromBody] Filter[] filters)
         {
             var spec = CreateSpec<FluentFilterSpec<T>>().SetParameter(filters, isList: true);
@@ -122,6 +135,7 @@ namespace Fluent.Architecture.Controllers
 
         [HttpGet]
         [Route("/api/[controller]/ExistsByEntity")]
+        [Description("Get the number of items based on filters.")]
         public virtual DefaultResult ExistsByEntityGet([FromQuery] T value)
         {
             return Result(Service.Exists(value));
@@ -129,12 +143,14 @@ namespace Fluent.Architecture.Controllers
 
         [HttpPost]
         [Route("/api/[controller]/ExistsByEntity")]
+        [Description("Checks if an item exists based on its IDs")]
         public virtual DefaultResult ExistsByEntityPost([FromBody] T value)
         {
             return Result(Service.Exists(value));
         }
 
         [HttpGet]
+        [Description("Get item type schema")]
         public virtual JsonResult JsonForm(bool tablet = false)
         {
             var data = typeof(T).GetFluentJsonSchema(tablet);
@@ -150,6 +166,7 @@ namespace Fluent.Architecture.Controllers
 
         // POST api/user/Add/
         [HttpPost]
+        [Description("Add an item")]
         public virtual DefaultResult Add([FromBody] T value)
         {
             return Result(Service.Add(value));
@@ -157,6 +174,7 @@ namespace Fluent.Architecture.Controllers
 
         // POST api/user/AddOrUpdate/
         [HttpPost]
+        [Description("Add an item")]
         public virtual DefaultResult AddOrUpdate([FromBody] T value)
         {
             return Result(Service.AddOrUpdate(value));
@@ -164,6 +182,7 @@ namespace Fluent.Architecture.Controllers
 
         // POST api/user/AddRange
         [HttpPost]
+        [Description("Add or update an item")]
         public virtual DefaultResult AddRange([FromBody] T[] values)
         {
             Service.AddRange(values);
@@ -172,6 +191,7 @@ namespace Fluent.Architecture.Controllers
 
         // PUT api/user/Update
         [HttpPut]
+        [Description("Update an item")]
         public virtual DefaultResult Update([FromBody] T value)
         {
             Service.Update(value);
@@ -180,6 +200,7 @@ namespace Fluent.Architecture.Controllers
 
         // PUT api/user/UpdateAlter
         [HttpPut]
+        [Description("Updates an item based on another item's identifiers")]
         public virtual DefaultResult UpdateAlter([FromBody] UpdateAlter<T> value)
         {
             Service.UpdateAlter(value);
@@ -188,6 +209,7 @@ namespace Fluent.Architecture.Controllers
 
         // PUT api/user/UpdateRange
         [HttpPut]
+        [Description("Update a list of items")]
         public virtual DefaultResult UpdateRange([FromBody] T[] values)
         {
             Service.UpdateRange(values);
@@ -196,6 +218,7 @@ namespace Fluent.Architecture.Controllers
 
         // DELETE api/user/Remove
         [HttpDelete]
+        [Description("Remove item based on their identifiers")]
         public virtual DefaultResult Remove([FromBody] T value)
         {
             Service.Remove(value);
@@ -204,6 +227,7 @@ namespace Fluent.Architecture.Controllers
 
         // DELETE api/user/RemoveRange
         [HttpDelete]
+        [Description("Remove a list of items based on their identifiers")]
         public virtual DefaultResult RemoveRange([FromBody] T[] values)
         {
             Service.RemoveRange(values);
@@ -211,6 +235,7 @@ namespace Fluent.Architecture.Controllers
         }
 
         [HttpDelete]
+        [Description("Physically deletes all elements of a set")]
         public virtual DefaultResult Truncate([FromHeader] string ERASE_ALL_DATA = "false")
         {
             Service.Truncate(ERASE_ALL_DATA);

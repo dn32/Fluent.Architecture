@@ -17,7 +17,7 @@ namespace Max.Services.Model.Crud
     //[DbType(FluentDbType.SQL_SERVER)]
     [Display(Name = "Cidades")]
     [FluentJsonForm(name = "Cidades", desc = "Cadastro de Cidade", group = "Cadastros")]
-    public partial class Cidade : FluentEntity
+    public partial class Cidade : MaxEntidade
     {
 
         [FluentRequired, Key, Searchable, FluentJsonProperty(

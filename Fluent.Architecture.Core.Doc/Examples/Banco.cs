@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Fluent.Architecture.Entities;
+using Fluent.Architecture.Core.Doc.Examples;
 
 namespace Max.Services.Model.Crud
 {
@@ -13,7 +14,7 @@ namespace Max.Services.Model.Crud
     //[DbType(FluentDbType.SQL_SERVER)]
     [Display(Name = "Bancos")]
     [FluentJsonForm(name = "Bancos", desc = "Cadastro de Bancos (Financeiro)", group = "Financeiro")]
-    public partial class Banco : FluentEntity
+    public partial class Banco : MaxEntidade
     {
 
         [FluentRequired, Key, Searchable, FluentJsonProperty(

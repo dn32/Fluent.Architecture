@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Fluent.Architecture.Entities;
+using Fluent.Architecture.Core.Doc.Examples;
 
 namespace Max.Services.Model.Crud
 {
@@ -16,7 +17,7 @@ namespace Max.Services.Model.Crud
     //[DbType(FluentDbType.SQL_SERVER)]
     [Display(Name = "Atividades")]
     [FluentJsonForm(name = "Atividades", desc = "Cadastro de Ramo de Atividade", group = "Clientes")]
-    public partial class Atividade : FluentEntity
+    public partial class Atividade : MaxEntidade
     {
 
         [FluentRequired, Key, Searchable, FluentJsonProperty(

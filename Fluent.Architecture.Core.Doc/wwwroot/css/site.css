@@ -17,7 +17,6 @@
 }
 
 
-
 .one-service-container .properties-container {
     padding: 6px 6px 6px 6px;
     border: solid 1px #ddd;
@@ -45,12 +44,8 @@
     }
 
 .one-service-container .property {
-    /*display: inline-flex;*/
     padding: 8px 8px 9px 8px;
     border: solid 1px #ddd;
-    /*border-radius: 4px;
-    margin: 6px 6px 6px 6px;
-    min-width: 144px;*/
 }
 
     .one-service-container .property img {
@@ -81,6 +76,68 @@
     padding: 10px 10px 10px 10px;
 }
 
+.actions-container .action .name {
+    font-weight: bold;
+    color: #004085;
+    font-size: 18px;
+}
+
+.actions-container .action .method {
+    /*border: solid 1px;*/
+    border-radius: 4px;
+    padding: 0px 4px 0px 4px;
+    font-weight: bold;
+    font-size: 13px;
+    min-width: 42px;
+    display: inline-block;
+    text-align: center;
+}
+
+    .actions-container .action .method.get {
+        color: white;
+        background-color: #17a2b8;
+    }
+
+    .actions-container .action .method.del {
+        color: white;
+        background-color: red;
+    }
+
+
+    .actions-container .action .method.post {
+        color: white;
+        background-color: #004085;
+    }
+
+    .actions-container .action .method.put {
+        color: white;
+        background-color: #6c757d;
+    }
+
+.actions-container .action {
+    border: solid 1px #ddd;
+    margin: 0px 0px 4px 0px;
+    padding: 1px 7px 1px 7px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+    .actions-container .action:hover {
+        background: #2125290f;
+    }
+
+    .actions-container .action span.route {
+        font-size: 12px;
+        color: #383d41;
+        text-transform: lowercase;
+    }
+
+    .actions-container .action span.route {
+        float: right;
+    }
+    .actions-container .action span.parameters {
+        color: #3862fb;
+    }
 
 /* Provide sufficient contrast against white background */
 a {
