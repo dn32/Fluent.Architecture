@@ -24,7 +24,7 @@ namespace Fluent.Architecture.Core.Doc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,11 +47,12 @@ namespace Fluent.Architecture.Core.Doc
 
             app.UseAuthorization();
 
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=FluentDoc}/{action=Index}/{id?}");
+                endpoints.MapControllers(); // Map attribute-routed API controllers
+                endpoints.MapDefaultControllerRoute(); // Map conventional MVC controllers using the default route
+                endpoints.MapRazorPages();
             });
 
 

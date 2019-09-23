@@ -58,7 +58,7 @@ namespace Fluent.Architecture.Test
         public virtual bool Exists(TModel model)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluentAPIController<TModel>, bool>(newController, (FluentAPIController<TModel> controller) => controller.Exists(model));
+            return TestUtil.Execute<FluentAPIController<TModel>, bool>(newController, (FluentAPIController<TModel> controller) => controller.ExistsByEntityGet(model));
         }
 
         public virtual TModel[] AddRange(TModel[] models)
@@ -76,7 +76,7 @@ namespace Fluent.Architecture.Test
         public virtual TModel[] List(Filter[] filters)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluentAPIController<TModel>, TModel[]>(newController, (FluentAPIController<TModel> controller) => controller.List(filters));
+            return TestUtil.Execute<FluentAPIController<TModel>, TModel[]>(newController, (FluentAPIController<TModel> controller) => controller.ListByFilterGet(filters));
         }
         public virtual int Count()
         {
@@ -87,7 +87,7 @@ namespace Fluent.Architecture.Test
         public virtual int Count(Filter[] filters)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluentAPIController<TModel>, int>(newController, (FluentAPIController<TModel> controller) => controller.Count(filters));
+            return TestUtil.Execute<FluentAPIController<TModel>, int>(newController, (FluentAPIController<TModel> controller) => controller.CountByFilter(filters));
         }
 
         public virtual bool UpdateRange(TModel[] models)
@@ -98,7 +98,7 @@ namespace Fluent.Architecture.Test
 
         public virtual TModel Find(TModel model)
         {
-            return Execute((FluentAPIController<TModel> controller) => controller.Find(model));
+            return Execute((FluentAPIController<TModel> controller) => controller.FindByEntityPost(model));
         }
 
         public virtual bool RemoveRange(TModel[] models)

@@ -1,14 +1,66 @@
 ﻿using Fluent.Architecture.Extensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
 namespace Fluent.Architecture.Core.Doc.Controllers
 {
+    internal class DocEmbeddedStaticFileProvider : IFileProvider
+    {
+        public EmbeddedFileProvider EmbeddedFileProvider { get; set; }
+
+        public DocEmbeddedStaticFileProvider()
+        {
+            EmbeddedFileProvider = new EmbeddedFileProvider(typeof(FluentDocController).Assembly);
+        }
+
+        public IDirectoryContents GetDirectoryContents(string subpath)
+        {
+            return EmbeddedFileProvider.GetDirectoryContents(subpath);
+        }
+
+        public IFileInfo GetFileInfo(string subpath)
+        {
+            if (!subpath.StartsWith("FluentDoc"))
+            {
+                var info = GetFileInfo(subpath);
+                return info;
+            }
+
+            var path = subpath.Replace("\\", "/");
+            if (path.StartsWith("/")) { path = path.Substring(1, path.Length - 1); };
+            path = Path.Combine("wwwroot", path);
+            path = path.Replace("/", ".").Replace("\\", ".");
+            return EmbeddedFileProvider.GetFileInfo(path);
+        }
+
+        public IChangeToken Watch(string filter)
+        {
+            return EmbeddedFileProvider.Watch(filter);
+        }
+    }
+
+    public static class FluentDoc
+    {
+        public static void AddFluentDoc(this IServiceCollection services)
+        {
+            services.Configure<StaticFileOptions>(opts =>
+            {
+                opts.FileProvider = new DocEmbeddedStaticFileProvider();
+            });
+        }
+    }
+
+
     public class FluentDocController : Controller
     {
         public static Dictionary<string, Type> Models { get; private set; }
@@ -20,7 +72,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
                 Models = new Dictionary<string, Type>();
                 Setup.Model.Values.ToList().ForEach(x =>
                 {
-                    Models.Add(x.Name, x);
+                    Models.TryAdd(x.Name, x);
                 });
             }
         }
@@ -29,10 +81,23 @@ namespace Fluent.Architecture.Core.Doc.Controllers
         public IActionResult Index()
         {
             var models = Setup.Model.Values.Select(x => x.GetFluentJsonSchema(false)).Where(x => x?.FluentJsonForm != null).ToList();
+
+            //var assembly = GetType().GetTypeInfo().Assembly;
+            ////var resource = assembly.GetManifestResourceStream("MyLibrary._fonts.OpenSans.ttf");
+
+            //var embeddedProvider = new EmbeddedFileProvider(Assembly.GetExecutingAssembly());
+            //var all = embeddedProvider.GetAllDataOfObject();
+            //var lista = embeddedProvider.GetDirectoryContents("wwwroot.css.site.css");
+
+            //using (var reader = embeddedProvider.GetFileInfo("index.html").CreateReadStream())
+            //{
+            //    // some logic with stream reader
+            //}
+
             return View(models);
         }
 
-        // [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Client)]
+        [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Client)]
         public IActionResult Service(string name)
         {
             if (Models.TryGetValue(name, out Type type))
@@ -65,7 +130,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
                                   "DEL" => 4,
                                   _ => 5,
                               };
-                              
+
                               var parameters = action.GetParameters().Select(x => x.ParameterType);
                               var description = action.GetCustomAttribute<DescriptionAttribute>()?.Description;
 
@@ -95,25 +160,5 @@ namespace Fluent.Architecture.Core.Doc.Controllers
                 throw new InvalidOperationException($"Service {name} not found");
             }
         }
-    }
-
-    public static class stringExtension
-    {
-        public static string Remove(this string initialText, string removeText)
-        {
-            return initialText.Replace(removeText, "");
-        }
-    }
-    public class FluentActionSchema
-    {
-        public Type EntityType { get; set; }
-        public Type ControllerType { get; set; }
-        public MethodInfo Action { get; set; }
-        public string Method { get; set; }
-        public string Name { get; set; }
-        public string Route { get; set; }
-        public int OrderMethod { get; internal set; }
-        public IEnumerable<Type> Parameters { get; internal set; }
-        public string Description { get; internal set; }
     }
 }
