@@ -33,7 +33,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent.Architecture.Control
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.Core.Doc", "Fluent.Architecture.Core.Doc\Fluent.Architecture.Core.Doc.csproj", "{D64F1786-68BF-47D9-8AA8-8758E75386A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent.Architecture.Core.Doc.Sample", "Fluent.Architecture.Core.Doc.Sample\Fluent.Architecture.Core.Doc.Sample.csproj", "{55F7FD0C-6CEF-4F51-B644-F374F75A9899}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.Core.Doc.Sample", "Fluent.Architecture.Core.Doc.Sample\Fluent.Architecture.Core.Doc.Sample.csproj", "{55F7FD0C-6CEF-4F51-B644-F374F75A9899}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Public", "Public", "{DCA683DC-EB06-4A4C-9248-965C07B682DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Public.SimpleApiSample", "Public\Public.Sample\Public.SimpleApiSample.csproj", "{BA974029-C137-455F-B465-797C7FF3ED7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,6 +101,10 @@ Global
 		{55F7FD0C-6CEF-4F51-B644-F374F75A9899}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55F7FD0C-6CEF-4F51-B644-F374F75A9899}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55F7FD0C-6CEF-4F51-B644-F374F75A9899}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA974029-C137-455F-B465-797C7FF3ED7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA974029-C137-455F-B465-797C7FF3ED7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA974029-C137-455F-B465-797C7FF3ED7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA974029-C137-455F-B465-797C7FF3ED7F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -107,6 +115,7 @@ Global
 		{D3B68587-57C1-4EC4-B201-79A3F746320D} = {B8A70513-1332-4DC5-88EB-B9FB43D556AF}
 		{E5E65A3A-5BEF-4522-97E4-B84AA9707297} = {3CDE6F00-CAA7-48F5-9E60-1D1A6A81667C}
 		{55F7FD0C-6CEF-4F51-B644-F374F75A9899} = {B8A70513-1332-4DC5-88EB-B9FB43D556AF}
+		{BA974029-C137-455F-B465-797C7FF3ED7F} = {DCA683DC-EB06-4A4C-9248-965C07B682DB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {123E34D5-DA60-4929-9110-E760ECAC5050}

@@ -19,3 +19,18 @@ public class User : FluentEntity
 
     public string Andress { get; set; }
 }
+
+[Table("Clients"), DbType(FluentDbType.SQL_SERVER)]
+public class Client : FluentEntity
+{
+    [Key]
+    public long Code { get; set; }
+
+    [FluentUniqueKey]
+    public string Email { get; set; }
+
+    [Searchable]
+    public string Name { get; set; }
+
+    public string Andress { get; set; }
+}

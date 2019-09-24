@@ -29,13 +29,20 @@
                 var parameters = action.Parameters?.Select(x => x.GetFriendlyName(false)).ToArray() ?? new string[] { };
                 var paramString = string.Join(", ", parameters);
 
-                <div class="action">
-                    <span class="method @action.Method.ToLower()">@action.Method</span>
-                    <span class="name">@action.Name</span>
-                    <span class="parameters">@paramString</span>
-                    <span class="description">@action.Description</span>
+            <div class="action">
+                <span class="method @action.Method.ToLower()">@action.Method</span>
+                <span class="name">@action.Name</span>
+                <span class="parameters">@paramString</span>
+                <span class="description">@action.Description</span>
+                @if (@action.Method == "GET")
+                {
+                    <span class="route"><a href="@action.Route" target="_blank">@action.Route</a></span>
+                }
+                else
+                {
                     <span class="route">@action.Route</span>
-                </div>
+                }
+            </div>
             }
 
         </div>

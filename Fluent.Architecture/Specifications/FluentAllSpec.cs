@@ -7,7 +7,7 @@ namespace Fluent.Architecture.Core.Specifications
 {
     public class FluentAllSpec<T> : FluentSpecification<T> where T : FluentEntity
     {
-        public bool IsList { get; set; }
+        public bool IsList { get; set; } = true;
 
         public FluentAllSpec<T> SetParameter(bool isList)
         {

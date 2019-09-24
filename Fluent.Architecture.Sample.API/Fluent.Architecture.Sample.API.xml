@@ -4,17 +4,5 @@
         <name>Fluent.Architecture.Sample.API</name>
     </assembly>
     <members>
-        <member name="T:Fluent.Architecture.Sample.API.Startup.AuthorizationHeaderParameterOperationFilter">
-            <summary>
-            Classe AuthorizationHeaderParameterOperationFilter
-            </summary>
-        </member>
-        <member name="M:Fluent.Architecture.Sample.API.Startup.AuthorizationHeaderParameterOperationFilter.Apply(Microsoft.OpenApi.Models.OpenApiOperation,Swashbuckle.AspNetCore.SwaggerGen.OperationFilterContext)">
-            <summary>
-            Construtor Apply
-            </summary>
-            <param name="operation">Operação</param>
-            <param name="context">OperationFilterContext</param>
-        </member>
     </members>
 </doc>

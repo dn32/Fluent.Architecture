@@ -26,13 +26,16 @@ namespace Fluent.Architecture.Core.Doc.Controllers
         }
 
         [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Client)]
+        [Route("FluentDoc")]
+        [Route("FluentDoc/Index")]
         public IActionResult Index()
         {
-            var models = Setup.Model.Values.Select(x => x.GetFluentJsonSchema(false)).Where(x => x?.FluentJsonForm != null).ToList();
+            var models = Setup.Model.Values.Where(x => x.IsPublic && !x.IsAbstract).Select(x => x.GetFluentJsonSchema(false)).Where(x => x?.FluentJsonForm != null).ToList();
             return View(models);
         }
 
         [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Client)]
+        [Route("FluentDoc/Service")]
         public IActionResult Service(string name)
         {
             if (Models.TryGetValue(name, out Type type))

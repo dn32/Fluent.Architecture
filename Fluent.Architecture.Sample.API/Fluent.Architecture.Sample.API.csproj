@@ -30,6 +30,7 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\Fluent.Architecture.Core.Doc\Fluent.Architecture.Core.Doc.csproj" />
     <ProjectReference Include="..\Fluent.Architecture.EntityFramework.MemoryDatabase\Fluent.Architecture.EntityFramework.MemoryDatabase.csproj" />
     <ProjectReference Include="..\Fluent.Architecture.EntityFramework.MySQL\Fluent.Architecture.EntityFramework.MySQL.csproj" />
     <ProjectReference Include="..\Fluent.Architecture.EntityFramework.SqLite\Fluent.Architecture.EntityFramework.SqLite.csproj" />

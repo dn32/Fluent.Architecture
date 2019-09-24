@@ -7,6 +7,7 @@
 
 // ReSharper disable CommentTypo
 using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Core.Factory;
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions;
@@ -14,6 +15,8 @@ using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,38 +26,12 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo(@"Fluent.Architecture.EntityFramework, PublicKey=002400000480000094000000060200000024000052534131000400000100010001e5fbcd7e6f1d70524fc7b787a6ba4d8f332e822c5506e1831f4e59ab41e930c56bbf8cc29fa91f1270f4e873c036335c5aa4ccfc76ab13bfa7372de9d4e17de6c2d188fae9e6842d7d90d51e123836fd9f5d6be5580a32d1a12e59489519c6b93cdcf7ecd782042db1f31190350fbf937bbd6a5ae61d648773b46b9a706ccf")]
 namespace Fluent.Architecture
 {
-    public class Connection
-    {
-        public string Identifier { get; internal set; }
-        public Func<UserSessionRequest, string> GetConnectionString { get; internal set; }
-        public bool CreateDatabaseIfNotExists { get; set; }
-        public Type DbContextType { get; set; }
-    }
-
-    public interface IConfigValidate
-    {
-        Config Config { get; set; }
-    }
-
-    internal class ConfigClassValidado : IConfigValidate
-    {
-        public Config Config { get; set; }
-    }
-
-    public class Config
-    {
-        public List<Connection> Connections { get; internal set; }
-        public IServiceProvider ServiceProvider { get; internal set; }
-        public Type UserSessionRequestType { get; internal set; }
-        public Type GenericServiceType { get; internal set; }
-        public Type GenericRepositoryType { get; internal set; }
-        public Type GenericValidationType { get; internal set; }
-        internal IRepositoryFactory RepositoryFactory { get; set; }
-    }
-
     public static class Setup
     {
         #region PROPERTIES
+
+
+        internal static IServiceCollection ClientServices { get; set; }
 
         public static IServiceProvider ServiceProvider { get; set; }
 
@@ -67,7 +44,7 @@ namespace Fluent.Architecture
         internal static Dictionary<Type, Type> Validations { get; set; }
 
         public static Dictionary<Type, Type> Model { get; private set; }
-        
+
         public static Dictionary<Type, Type> Controllers { get; private set; }
 
         public static bool Initialized { get; set; }
@@ -79,16 +56,6 @@ namespace Fluent.Architecture
         #endregion
 
         #region PUBLIC METHODS
-
-        public static Config SetServiceProvider(this Config configClass, IServiceProvider serviceProvider)
-        {
-            if (configClass != null)
-            {
-                configClass.ServiceProvider = serviceProvider;
-            }
-
-            return configClass;
-        }
 
         public static Config SetGenericServiceType(this Config configClass, Type serviceType)
         {
@@ -120,6 +87,16 @@ namespace Fluent.Architecture
             return configClass;
         }
 
+        public static Config SetGenericControllerType(this Config configClass, Type controllerType)
+        {
+            if (configClass != null)
+            {
+                configClass.GenericControllerType = controllerType;
+            }
+
+            return configClass;
+        }
+
         internal static Config SetRepositoryFactory(this Config configClass, IRepositoryFactory repositoryFactory)
         {
             configClass.RepositoryFactory = repositoryFactory;
@@ -128,8 +105,11 @@ namespace Fluent.Architecture
 
         public static Config Init()
         {
-            return new Config();
+            ConfigInstance ??= new Config();
+            return ConfigInstance;
         }
+
+        internal static Config ConfigInstance { get; set; }
 
         public static Config SetUserSessionRequestType(this Config configClass, Type userSessionRequestType)
         {
@@ -181,24 +161,22 @@ namespace Fluent.Architecture
             return configClass;
         }
 
-        public static void Run(this IConfigValidate configClassValidado)
-        {
-            Config = configClassValidado;
-            InternalInitialize();
-        }
+        //Todo no boot da aplicação, checar se os tipos de contexto possuem o atrubuto do tipo de BD
+        //Todo - checar ainda se não tem identificador igual
 
-        public static IConfigValidate Build(this Config configClass)
+        public static IServiceCollection Build(this Config configClass)
         {
-            //Todo no boot da aplicação, checar se os tipos de contexto possuem o atrubuto do tipo de BD
-            //Todo - checar ainda se não tem identificador igual
-
-            return new ConfigClassValidado
+            var configClassValidado = new ConfigClassValidado
             {
                 Config = configClass
             };
+
+            Config = configClassValidado;
+
+            return ClientServices;
         }
 
-        private static void InternalInitialize()
+        internal static void InternalInitialize()
         {
             lock (LockInitialization)
             {
@@ -277,13 +255,14 @@ namespace Fluent.Architecture
                    .Where(x => x.Item1 != null).ToList()
                    .ForEach(AddValidation);
 
+                types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(BaseEntity)))
+                    .Where(x => x.Item1 != null && x.Item2 != typeof(BaseEntity)).ToList()
+                    .ForEach(AddModel);
+
                 types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentController<BaseEntity>)))
                    .Where(x => x.Item1 != null).ToList()
                    .ForEach(AddController);
 
-                types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(BaseEntity)))
-                    .Where(x => x.Item1 != null && x.Item2 != typeof(BaseEntity)).ToList()
-                    .ForEach(AddModel);
             }
 
             // Todo - Não me recordo o motivo de estar comentado, mas acredito que tenha que descomentar

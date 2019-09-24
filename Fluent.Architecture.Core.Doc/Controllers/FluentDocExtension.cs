@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Fluent.Architecture.Core.Doc.Controllers;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Fluent.Architecture.Core.Doc.Controllers
+namespace Fluent.Architecture
 {
-    public static class FluentDoc
+    public static class FluentDocExtension
     {
         public static void AddFluentDoc(this IServiceCollection services)
         {
@@ -11,6 +12,11 @@ namespace Fluent.Architecture.Core.Doc.Controllers
             {
                 opts.FileProvider = new DocEmbeddedStaticFileProvider();
             });
+        }
+
+        public static void UseFluentDoc(this IApplicationBuilder app)
+        {
+            app.UseStaticFiles();
         }
     }
 }

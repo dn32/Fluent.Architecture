@@ -25,20 +25,13 @@ namespace Fluent.Architecture.Factory.Proxy
 
         internal static object CreateObject(Type parent, Guid sessionId)
         {
-            var assembly = new AssemblyName(AssemblyName);
-            var dynamicClass = CreateClass(parent, assembly);
-            CreateConstructor(dynamicClass);
+            var dynamicClass = BuilderClassUtil.CreateClass(parent, AssemblyName, ModuleName);
+            BuilderClassUtil.CreateConstructor(dynamicClass);
             OverwriteProperties(dynamicClass, sessionId);
             var type = dynamicClass.CreateType();
             return Activator.CreateInstance(type);
         }
 
-        private static TypeBuilder CreateClass(Type parent, AssemblyName assembly)
-        {
-            var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assembly, AssemblyBuilderAccess.Run);
-            var moduleBuilder = assemblyBuilder.DefineDynamicModule(ModuleName);
-            return moduleBuilder.DefineType(assembly.FullName, TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.AutoClass | TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.AutoLayout, parent);
-        }
 
         private static void OverwriteProperties(TypeBuilder typeBuilder, Guid sessionId)
         {
@@ -86,11 +79,5 @@ namespace Fluent.Architecture.Factory.Proxy
             getIl.Emit(OpCodes.Ret);
             propertyBuilder.SetGetMethod(getProp);
         }
-
-        private static void CreateConstructor(TypeBuilder typeBuilder)
-        {
-            typeBuilder.DefineDefaultConstructor(MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName);
-        }
     }
-
 }

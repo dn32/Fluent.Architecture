@@ -15,6 +15,7 @@ using Fluent.Architecture.Util;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
@@ -227,6 +228,11 @@ namespace Fluent.Architecture.Extensions
             return nut != null && nut.IsEnum;
         }
 
+        public static bool IsList(this Type type)
+        {
+            return type.Name.StartsWith("List`");
+        }
+
         public static object GetMaxValueOfNumber(this Type numberType)
         {
             numberType = numberType.GetNonNullableType();
@@ -242,6 +248,68 @@ namespace Fluent.Architecture.Extensions
             }
         }
 
+        private static FluentJsonFormAttribute GetFluentJsonFormAttributeByType(this Type type)
+        {
+            var form = type.GetCustomAttribute<FluentJsonFormAttribute>();
+            if (form == null)
+            {
+                form = new FluentJsonFormAttribute
+                {
+                    desc = type.GetCustomAttribute<DescriptionAttribute>()?.Description ?? type.Name,
+                    group = "",
+                    name = type.Name,
+                    propName = type.Name,
+                    Type = type
+                };
+            }
+
+            return form;
+        }
+
+        private static FluentJsonPropertyAttribute GetFluentJsonPropertyAttributeByProperty(PropertyInfo property)
+        {
+            var attr = property.GetCustomAttribute<FluentJsonPropertyAttribute>();
+            if (attr == null)
+            {
+                attr = new FluentJsonPropertyAttribute
+                {
+                    desc = property.GetCustomAttribute<DescriptionAttribute>()?.Description ?? property.Name,
+                    group = "",
+                    name = property.Name,
+                    propName = property.Name,
+                    Type = property.PropertyType,
+                    Enums = null,
+                    FkDestinal = null,
+                    FluentAggregation = null,
+                    FluentComposition = null,
+                    form = EnumForm.TEXTBOX,
+                    grid = property.Name,
+                    IsEnum = property.PropertyType.IsNullableEnum(),
+                    IsFk = false,
+                    IsKey = false,
+                    IsList = property.PropertyType.IsList(),
+                    IsNullable = property.PropertyType.IsOfNullableType(),
+                    min = property.GetCustomAttribute<MinLengthAttribute>(true)?.Length ?? 0,
+                    max = property.GetCustomAttribute<MaxLengthAttribute>(true)?.Length ?? 0,
+                };
+            }
+
+            attr.FluentAggregation = property.GetCustomAttribute<FluentAggregationAttribute>(true);
+            attr.FluentComposition = property.GetCustomAttribute<FluentCompositionAttribute>(true);
+            attr.IsKey = property.GetCustomAttributeAny<KeyAttribute>();
+            attr.IsList = property.PropertyType.IsList();
+            attr.required = attr.required || property.GetCustomAttributeAny<RequiredAttribute>(true);
+            attr.IsNullable = (property.PropertyType.IsOfNullableType() && !attr.required);
+            attr.Type = property.PropertyType.GetNonNullableType();
+
+            if (attr.max == 0 && property.PropertyType.IsNumeric())
+            {
+                attr.max = property.PropertyType.GetMaxValueOfNumber().FluentCast<double>();
+            }
+
+            return attr;
+        }
+
         public static FluentJsonSchema GetFluentJsonSchema(this Type type, bool tablet)
         {
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
@@ -251,11 +319,7 @@ namespace Fluent.Architecture.Extensions
                 type = type.GenericTypeArguments[0];
             }
 
-            var form = type.GetCustomAttribute<FluentJsonFormAttribute>();
-            if (form == null)
-            {
-                return null;
-            }
+            var form = GetFluentJsonFormAttributeByType(type);
 
             form.propName = type.Name;
             form.Type = type.GetNonNullableType();
@@ -268,23 +332,10 @@ namespace Fluent.Architecture.Extensions
 
             type.GetProperties().ToList().ForEach(property =>
             {
-                var attr = property.GetCustomAttribute<FluentJsonPropertyAttribute>();
-                if (attr == null || attr.form == EnumForm.NONE)
+                var attr = GetFluentJsonPropertyAttributeByProperty(property);
+                if (attr.form == EnumForm.NONE)
                 {
                     return;
-                }
-
-                attr.FluentAggregation = property.GetCustomAttribute<FluentAggregationAttribute>(true);
-                attr.FluentComposition = property.GetCustomAttribute<FluentCompositionAttribute>(true);
-                attr.IsKey = property.GetCustomAttribute<KeyAttribute>() != null;
-                attr.IsList = property.PropertyType.Name == "List`1";
-                attr.required = attr.required || property.GetCustomAttributeAny<RequiredAttribute>(true);
-                attr.IsNullable = (property.PropertyType.IsOfNullableType() && !attr.required);
-                attr.Type = property.PropertyType.GetNonNullableType();
-
-                if (attr.max == 0 && property.PropertyType.IsNumeric())
-                {
-                    attr.max = property.PropertyType.GetMaxValueOfNumber().FluentCast<double>();
                 }
 
                 if (attr.FluentAggregation != null)
