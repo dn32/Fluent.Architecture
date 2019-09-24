@@ -62,6 +62,7 @@ namespace Fluent.Architecture.Core.Doc.Sample
             });
 
             ArchitectureInit.Setup(app.ApplicationServices);
+            ArchitectureInit.Setup(app.ApplicationServices);
         }
     }
 }

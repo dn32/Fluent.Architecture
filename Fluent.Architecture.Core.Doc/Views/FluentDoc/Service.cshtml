@@ -1,8 +1,8 @@
 ﻿@using Fluent.Architecture.Core.Entities
 @using Fluent.Architecture.Extensions
-@using System.Text.Json
 @using Fluent.Architecture.Core.Doc.Controllers
-@using Fluent.Architecture.Extensions
+<link rel="stylesheet" href="/FluentDoc/lib/bootstrap.min.css" />
+<link rel="stylesheet" href="/FluentDoc/css/site.css" />
 
 @model FluentJsonSchema
 
@@ -13,7 +13,7 @@
 }
 
 <div class="one-service-container">
-    <h4 class="general-title">@Model.FluentJsonForm.name</h4>
+    <h4 class="general-title">@Model.FluentJsonForm?.name</h4>
 
     @{
         string Is(bool operation, string text)
@@ -25,22 +25,23 @@
 
             @foreach (var action in actions)
             {
-                    var parameters = action.Parameters.Select(x => x.GetFriendlyName(false)).ToArray();
-                    var paramString = string.Join(", ", parameters);
+                if (action == null) { continue; }
+                var parameters = action.Parameters?.Select(x => x.GetFriendlyName(false)).ToArray() ?? new string[] { };
+                var paramString = string.Join(", ", parameters);
 
-            <div class="action">
-                <span class="method @action.Method.ToLower()">@action.Method</span>
-                <span class="name">@action.Name</span>
-                <span class="parameters">@paramString</span>
-                <span class="description">@action.Description</span>
-                <span class="route">@action.Route</span>
-            </div>
+                <div class="action">
+                    <span class="method @action.Method.ToLower()">@action.Method</span>
+                    <span class="name">@action.Name</span>
+                    <span class="parameters">@paramString</span>
+                    <span class="description">@action.Description</span>
+                    <span class="route">@action.Route</span>
+                </div>
             }
 
         </div>
 
         <div class="properties-container">
-            <span class="title">@Model.FluentJsonForm.name Properties</span>
+            <span class="title">@Model.FluentJsonForm?.name Properties</span>
             <table class="properties">
                 <thead>
                     <tr>
@@ -53,7 +54,7 @@
                 @foreach (var property in Model.Properties)
                 {
                     if (property.form == Fluent.Architecture.Core.Enumerator.EnumForm.NONE) { continue; }
-                    if (property.FluentAggregation != null) { continue; }
+                   // if (property.FluentAggregation != null) { continue; }
                     // property.key
 
                     var range = (property.min == property.max ? property.min.ToString() : property.min + ", " + property.max);
@@ -64,12 +65,12 @@
                         <td class="type">@property.Type.Name (@range)</td>
                         @*<span class="range">Range: @property.min,@property.min </span>*@
                         <td>
-                            @Html.Raw(Is(property.IsEnum, "<span><img src='/img/ok.png'/>enum</span>"))
-                            @Html.Raw(Is(property.IsKey, "<span><img src='/img/ok.png'/> key</span>"))
-                            @Html.Raw(Is(property.IsList, "<span><img src='/img/ok.png'/> list</span>"))
-                            @Html.Raw(Is(property.IsNullable, "<span><img src='/img/ok.png'/> nullable</span>"))
-                            @Html.Raw(Is(property.required, "<span><img src='/img/ok.png'/> required</span>"))
-                            @Html.Raw(Is(property.IsFk, "<span><img src='/img/ok.png'/> fk <a href=\"/FluentDoc/Service?name=" + property.FkDestinal?.Type?.Name + "\">" + property.FkDestinal?.name + "</a></span>"))
+                            @Html.Raw(Is(property.IsEnum, "<span><img src='/FluentDoc/img/ok.png'/>enum</span>"))
+                            @Html.Raw(Is(property.IsKey, "<span><img src='/FluentDoc/img/ok.png'/> key</span>"))
+                            @Html.Raw(Is(property.IsList, "<span><img src='/FluentDoc/img/ok.png'/> list</span>"))
+                            @Html.Raw(Is(property.IsNullable, "<span><img src='/FluentDoc/img/ok.png'/> nullable</span>"))
+                            @Html.Raw(Is(property.required, "<span><img src='/FluentDoc/img/ok.png'/> required</span>"))
+                            @Html.Raw(Is(property.IsFk, "<span><img src='/FluentDoc/img/ok.png'/> fk <a href=\"/FluentDoc/Service?name=" + property.FkDestinal?.Type?.Name + "\">" + property.FkDestinal?.name + "</a></span>"))
                         </td>
                         @*<span class="value">Default value: @property.value</span>*@
                         @*<span class="name">@property.desc</span>*@
@@ -93,10 +94,15 @@
                 <span>Example value</span>
 
                 @{
-                    var exampleValue = Model.FluentJsonForm.Type.GetExampleValue();
-                    var json = JsonSerializer.Serialize(exampleValue, new JsonSerializerOptions { IgnoreNullValues = true, WriteIndented = true });
+                    var exampleValue = Model.FluentJsonForm?.Type?.GetExampleValue() ?? "";
+#if NETCOREAPP3_0
 
-                    <pre class="example-value">@json</pre>
+                                            var json = System.Text.Json.JsonSerializer.Serialize(exampleValue, new System.Text.Json.JsonSerializerOptions { IgnoreNullValues = true, WriteIndented = true });
+#else
+                    var json = Newtonsoft.Json.JsonConvert.SerializeObject(exampleValue, Newtonsoft.Json.Formatting.Indented);
+
+#endif
+        <pre class="example-value">@json</pre>
                 }
             </div>
         </div>

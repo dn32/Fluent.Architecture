@@ -438,7 +438,7 @@ namespace Fluent.Architecture
 
         private static void AddService(Tuple<Type, Type> service)
         {
-            if (Model.ContainsKey(service.Item1))
+            if (Services.ContainsKey(service.Item1))
             {
                 throw new IncorrectDevelopmentException($"There are two service classes with the same name {service.Item1} -  {service.Item2}. This is not allowed.");
             }
@@ -448,7 +448,7 @@ namespace Fluent.Architecture
 
         private static void AddValidation(Tuple<Type, Type> validation)
         {
-            if (Model.ContainsKey(validation.Item1))
+            if (Validations.ContainsKey(validation.Item1))
             {
                 throw new IncorrectDevelopmentException($"There are two validation classes with the same name {validation.Item1} - {validation.Item2}. This is not allowed.");
             }
@@ -458,7 +458,7 @@ namespace Fluent.Architecture
 
         private static void AddController(Tuple<Type, Type> controller)
         {
-            if (Model.ContainsKey(controller.Item1))
+            if (Controllers.ContainsKey(controller.Item1))
             {
                 throw new IncorrectDevelopmentException($"There are two controller classes with the same name {controller.Item1} - {controller.Item2}. This is not allowed.");
             }
@@ -468,7 +468,7 @@ namespace Fluent.Architecture
 
         private static void AddRepository(Tuple<Type, Type> repository)
         {
-            if (Model.ContainsKey(repository.Item1))
+            if (Repositories.ContainsKey(repository.Item1))
             {
                 throw new IncorrectDevelopmentException($"There are two entity repository with the same name {repository.Item1} - {repository.Item2}. This is not allowed.");
             }
