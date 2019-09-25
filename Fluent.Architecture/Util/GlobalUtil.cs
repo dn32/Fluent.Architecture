@@ -61,6 +61,19 @@ namespace Fluent.Architecture.Util
             }
         }
 
+        internal static Tuple<Type, Type> GetFluentEntityTypeByInterface(Type objectTypeToCheck, Type expectedType)
+        {
+            var ints = objectTypeToCheck.GetInterfaces();
+            var interface_ = ints.FirstOrDefault(x => x.Name == expectedType.Name);
+            if (interface_ != null)
+            {
+                var args = interface_.GetGenericArguments();
+                return args.Length == 0 ? null : new Tuple<Type, Type>(interface_.GetGenericArguments()[0], objectTypeToCheck);
+            }
+
+            return null;
+        }
+
         private static string[] FluentEntityNames => new[]
         {
             typeof(FluentController<FluentEntity>).Name,

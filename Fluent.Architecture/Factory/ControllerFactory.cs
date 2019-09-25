@@ -1,8 +1,10 @@
 ﻿using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Factory.Proxy;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -14,7 +16,7 @@ namespace Fluent.Architecture.Core.Factory
         public void PopulateFeature(IEnumerable<ApplicationPart> parts, ControllerFeature feature)
         {
             var baseController = (Setup.Config.Config.GenericControllerType) ?? typeof(FluentAPIController<>);
-            var entities = Setup.Model.Values.ToList().Where(x => !x.IsAbstract && x.IsPublic).ToList();
+            var entities = Setup.GetFluentApiEntity();
 
             foreach (var entity in entities)
             {

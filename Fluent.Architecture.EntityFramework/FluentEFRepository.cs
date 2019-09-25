@@ -7,6 +7,7 @@
 
 // ReSharper disable CommentTypo
 
+using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Core.Controllers.ControllerModel;
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Entities;
@@ -18,11 +19,14 @@ using Fluent.Architecture.Specifications;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo(@"Fluent.Architecture.EntityFramework.SqlServer, PublicKey=00240000048000009400000006020000002400005253413100040000010001002d98533364f3b3fbd11e7a3f14cd73d169e1daabd62ba2d1e5bc6a48a9bc709a503960db0e76c190e7a8dcefaed037e539682d6a891b242ddb91a3ab20fbfa0c04fb6304c8903857e1ed75399850fca4037dd2c810749e75770e5d455e950ccb9d06cf6fea5f30b00557a29408ce4c45021c412eca32616f47809bfe2cf404cc")]
@@ -97,7 +101,7 @@ namespace Fluent.Architecture.EntityFramework
         public virtual TE SingleOrDefault(IFluentSpecification spec)
         {
             var val = GetSpec(spec).ToIQueryable(Query);
-          
+
             try
             {
                 return val.SingleOrDefault();
@@ -179,6 +183,55 @@ namespace Fluent.Architecture.EntityFramework
 
         #endregion
 
+        #region COMPOSITION
+
+        protected void DefineForeignKeyOfCompositions(TE entity)
+        {
+            var localProperties = entity.GetType().GetProperties();
+
+            localProperties.ToList().ForEach(LocalProperty =>
+            {
+                var composition = LocalProperty.GetCustomAttribute<FluentCompositionAttribute>();
+                if (composition == null) { return; }
+                for (int i = 0; i < composition.ExternalKeys.Length; i++)
+                {
+                    var externalKey = composition.ExternalKeys[i];
+                    var localKey = composition.LocalKeys[i];
+                    var localValue = localProperties.Single(x => x.Name == localKey).GetValue(entity);
+
+                    for (int i2 = 0; i < composition.ExternalKeys.Length; i++)
+                    {
+                        var ext = composition.ExternalKeys[i2];
+                        var loca = composition.LocalKeys[i2];
+
+                        if (LocalProperty.PropertyType.IsList())
+                        {
+                            var List = LocalProperty.GetValue(entity) as ICollection;
+                            if (List != null)
+                            {
+                                foreach (var item in List)
+                                {
+                                    var property = item.GetType().GetProperty(ext);
+                                    property.SetValue(item, localValue);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var externalProperty = LocalProperty.PropertyType.GetProperty(ext);
+                            var propertyValue = LocalProperty.GetValue(entity);
+                            if (propertyValue != null)
+                            {
+                                externalProperty.SetValue(propertyValue, localValue);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        #endregion
+
         #region SQL
 
         /// <summary>
@@ -232,7 +285,45 @@ namespace Fluent.Architecture.EntityFramework
 
             return ret;
         }
+        internal TO FindSingleOrDefaultSql<TO>(string sql) where TO : BaseEntity
+        {
+            try
+            {
+#if NETCOREAPP3_0
+                return TransactionObjects.GetObjectInputDataInternal<TO>().FromSqlRaw(sql).SingleOrDefault();
+#else
+                return TransactionObjects.GetObjectInputDataInternal<TO>().FromSql(sql).SingleOrDefault();
+#endif
+            }
+            catch (InvalidOperationException)
+            {
+                throw new InvalidOperationException($"More than one record was found with the given keys. This is an indication of data with duplicate keys in the database. The table is {typeof(TE).GetTableName()}");
+            }
+        }
 
+        internal ICollection ListAllNotPaginate(string sql, Type outType)
+        {
+            try
+            {
+#if NETCOREAPP3_0
+                return TransactionObjects.GetObjectInputDataInternal<TO>().FromSqlRaw(sql).ToList();
+
+                var q = this.Session.GetType().GetMethod("Set").MakeGenericMethod(outType).Invoke(this.Session, new object[] { sql });
+                var list = q.GetType().GetMethod("ToList").Invoke(q, null) as ICollection;
+                return list;
+
+#else
+                var q = this.Session.GetType().GetMethod("Set").MakeGenericMethod(outType).Invoke(this.Session, new object[] { sql });
+                var list = q.GetType().GetMethod("ToList").Invoke(q, null) as ICollection;
+                return list;
+                //return TransactionObjects.GetObjectInputDataInternal<TO>().FromSql(sql).ToList();
+#endif
+            }
+            catch (InvalidOperationException)
+            {
+                throw new InvalidOperationException($"More than one record was found with the given keys. This is an indication of data with duplicate keys in the database. The table is {typeof(TE).GetTableName()}");
+            }
+        }
         internal TE FindSingleOrDefaultSql(string sql)
         {
             try
@@ -378,27 +469,63 @@ namespace Fluent.Architecture.EntityFramework
             return Query.Count();
         }
 
-        public virtual TE Find(TE entity)
+        public virtual TE Find(TE entity) => Find<TE>(entity);
+
+        public virtual TO Find<TO>(TO entity) where TO : BaseEntity
         {
-            return FindSingleOrDefaultSql(GetKeyFilterSql(entity)) ??
-                   FindSingleOrDefaultSql(GetFluentUniqueKeyFilterSql(entity));
+            {
+                var sql = RepositoryUtil.GetKeyFilterSql(entity, out bool nonKeys);
+                if (nonKeys == false)
+                {
+                    var valueFound = FindSingleOrDefaultSql<TO>(sql);
+                    if (valueFound != null)
+                    {
+                        return valueFound;
+                    }
+                }
+            }
+
+            {
+                var sql = RepositoryUtil.GetFluentUniqueKeyFilterSql(entity, out bool nonKeys);
+                if (nonKeys == false)
+                {
+                    var valueFound = FindSingleOrDefaultSql<TO>(sql);
+                    if (valueFound != null)
+                    {
+                        return valueFound;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public virtual ICollection ListAllByForeignKey(TE entity, Type outType)
+        {
+            var sql = RepositoryUtil.GetForeignKeyFilterSql(entity, outType, out bool nonKeys);
+            if (nonKeys == false)
+            {
+                return ListAllNotPaginate(sql, outType);
+            }
+
+            return default;
         }
 
         public virtual bool Exists(TE entity, bool includeExcludedLogically = false)
         {
-            var sql = GetKeyAndFluentUniqueKeyFilterSql(entity);
+            var sql = RepositoryUtil.GetKeyAndFluentUniqueKeyFilterSql(entity);
             return this.ExistsSql(sql, includeExcludedLogically);
         }
 
         public virtual bool ExistsOnlyOne(TE entity, bool includeExcludedLogically = false)
         {
-            var sql = GetKeyAndFluentUniqueKeyFilterSql(entity);
+            var sql = RepositoryUtil.GetKeyAndFluentUniqueKeyFilterSql(entity);
             return CountSql(sql, includeExcludedLogically) == 1;
         }
 
         public virtual int Count(TE entity, bool includeExcludedLogically = false)
         {
-            var sql = GetKeyAndFluentUniqueKeyFilterSql(entity);
+            var sql = RepositoryUtil.GetKeyAndFluentUniqueKeyFilterSql(entity);
             return CountSql(sql, includeExcludedLogically);
         }
 
@@ -408,7 +535,6 @@ namespace Fluent.Architecture.EntityFramework
 
             entities.ToList().ForEach(x => Input.Add(x));
         }
-
 
         public virtual TE Add(TE entity)
         {
@@ -563,36 +689,6 @@ namespace Fluent.Architecture.EntityFramework
             }
 
             return Service.SessionRequest.LocalHttpContext.Request?.Form[key];
-        }
-
-        protected virtual string GetFluentUniqueKeyFilterSql(TE entity)
-        {
-            var tableName = entity.GetTableName();
-            var fluentUniqueKeyValues = entity.GetFluentUniqueKeyValues().Select(x => $"{x.ColumnName} = {x.Value}").ToArray();
-            return $"select * from {tableName} where ({string.Join(" and ", fluentUniqueKeyValues)})";// O and está no lugar certo sim
-        }
-
-        protected virtual string GetKeyFilterSql(TE entity)
-        {
-            var tableName = entity.GetTableName();
-            var keyValues = entity.GetKeyValues().Select(x => $"{x.ColumnName} = {x.Value}").ToArray();
-            return $"select * from {tableName} where ({string.Join(" and ", keyValues)})"; // O and está no lugar certo sim
-        }
-
-        protected virtual string GetKeyAndFluentUniqueKeyFilterSql(TE entity)
-        {
-            var tableName = entity.GetTableName();
-            var keyValues = entity.GetKeyValues().Select(x => $"{x.ColumnName} = {x.Value}").ToArray();
-            var fluentUniqueKeyValues = entity.GetFluentUniqueKeyValues().Select(x => $"{x.ColumnName} = {x.Value}").ToArray();
-
-            var sql = $"({string.Join(" and ", keyValues)})";// O and está no lugar certo sim
-
-            if (fluentUniqueKeyValues.Length > 0)
-            {
-                sql += $" or ({string.Join(" or ", fluentUniqueKeyValues)})";
-            }
-
-            return $"select * from {tableName} where {sql}";
         }
 
         protected IQueryable<TX> FluentPaginate<TX>(IQueryable<TX> query, FluentPagination pagination = null)

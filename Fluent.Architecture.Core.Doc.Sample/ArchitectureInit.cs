@@ -7,11 +7,7 @@ namespace Fluent.Architecture.Core.Doc.Sample
     {
         public static void Setup(IServiceProvider serviceProvider)
         {
-            Fluent.Architecture.Setup
-                .Init()
-                .SetServiceProvider(serviceProvider)
-                .Build()
-                .Run();
+            Fluent.Architecture.Setup.Init().Build();
         }
     }
 }

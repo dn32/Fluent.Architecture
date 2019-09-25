@@ -9,6 +9,7 @@
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Entities;
+using Fluent.Architecture.Exceptions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -103,7 +104,7 @@ namespace Fluent.Architecture.Extensions
 
         public static List<PropertyInfo> GetFluentUniqueKeyProperties(this Type entityType)
         {
-            return entityType?.GetProperties()?.Where(x => x.GetCustomAttribute<FluentUniqueKeyAttribute>(true) != null)?.ToList();
+            return entityType?.GetProperties()?.Where(x => x.GetCustomAttributeAny<FluentUniqueKeyAttribute>(true))?.ToList();
         }
 
         public static List<PropertyInfo> GetKeyAndFluentUniqueKeyProperties(this Type entityType)
@@ -158,6 +159,55 @@ namespace Fluent.Architecture.Extensions
         {
             var properties = entity?.GetType()?.GetFluentUniqueKeyProperties();
             return PropertiesToKeyValueList(entity, properties);
+        }
+
+        public static List<KeyValue> GetForeignKeyValues(this object entity, Type outType)
+        {
+            var returnList = new List<KeyValue>();
+            var localType = entity.GetType();
+            var elements = entity
+                        .GetType()
+                        .GetProperties()
+                        .Select(x => new { compositionAttr = x.GetCustomAttribute<FluentCompositionAttribute>(true), property = x })
+                        .Where(x => x.compositionAttr != null).ToList();
+
+            foreach (var element in elements)
+            {
+                var externalKeys = element.compositionAttr.ExternalKeys;
+                var localKeys = element.compositionAttr.LocalKeys;
+                var destinalType = element.property.PropertyType.IsList() ? element.property.PropertyType.GenericTypeArguments[0] : element.property.PropertyType;
+                if (outType != destinalType) { continue; }
+
+                for (int i = 0; i < externalKeys.Length; i++)
+                {
+                    var externalKey = externalKeys[i];
+                    var localKey = localKeys[i];
+
+                    var destinalKeyProperty = destinalType.GetProperty(externalKey);
+                    if (destinalKeyProperty == null)
+                    {
+                        throw new IncorrectDevelopmentException($"Entity {entity.GetType().Name} has an incorrectly named foreign key because the reference property could not be found in entity {destinalType.Name}. The key in question has the name: '{externalKey}'.");
+                    }
+
+                    var localKeylProperty = localType.GetProperty(localKey);
+                    if (localKeylProperty == null)
+                    {
+                        throw new IncorrectDevelopmentException($"Entity {localType.Name} has an incorrectly named foreign key because the reference property could not be found in entity {localType.Name}. The key in question has the name: '{localKey}'.");
+                    }
+
+                    var columnName = destinalKeyProperty.GetColumnName();
+                    var value = localKeylProperty.GetValue(entity);
+
+                    returnList.Add(new KeyValue
+                    {
+                        Property = element.property,
+                        ColumnName = columnName,
+                        Value = value
+                    });
+                }
+            }
+
+            return returnList;
         }
 
         // Todo2 documentar

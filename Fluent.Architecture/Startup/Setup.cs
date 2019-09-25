@@ -7,6 +7,7 @@
 
 // ReSharper disable CommentTypo
 using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Core.Factory;
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Entities;
@@ -56,6 +57,19 @@ namespace Fluent.Architecture
         #endregion
 
         #region PUBLIC METHODS
+
+        public static List<Type> GetFluentApiEntity()
+        {
+            var entities = Setup.Model.Values.ToList().Where(x => !x.IsAbstract && x.IsPublic).ToList();
+            var list = entities
+           .SelectMany(x => x.GetProperties()
+                             .Select(p => new { type = p.PropertyType, attr = p.GetCustomAttribute<FluentCompositionAttribute>() }))
+                             .Where(x => x.attr != null)
+                             .Select(x => x.type.Name == "List`1" ? x.type.GenericTypeArguments[0] : x.type)
+                             .ToList();
+
+            return entities.Where(x => !list.Any(y => y.Name == x.Name)).ToList();
+        }
 
         public static Config SetGenericServiceType(this Config configClass, Type serviceType)
         {
@@ -247,8 +261,8 @@ namespace Fluent.Architecture
                     .Where(x => x.Item1 != null).ToList()
                     .ForEach(AddService);
 
-                types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(IFluentRepository<BaseEntity>)))
-                   .Where(x => x.Item1 != null).ToList()
+                types.Select(x => GlobalUtil.GetFluentEntityTypeByInterface(x, typeof(IFluentRepository<BaseEntity>)))
+                   .Where(x => x?.Item1 != null).ToList()
                    .ForEach(AddRepository);
 
                 types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentValidation<BaseEntity>)))

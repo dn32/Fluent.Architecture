@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -23,8 +24,26 @@ namespace Fluent.Architecture.Extensions
     {
         public static T FluentClone<T>(this object obj1)
         {
-            var json = JsonConvert.SerializeObject(obj1);
-            return JsonConvert.DeserializeObject<T>(json);
+            if (!typeof(T).IsSerializable)
+            {
+                throw new ArgumentException("The type must be serializable.", "source");
+            }
+
+            if (Object.ReferenceEquals(obj1, null))
+            {
+                return default(T);
+            }
+
+            System.Runtime.Serialization.IFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            Stream stream = new MemoryStream();
+            using (stream)
+            {
+                formatter.Serialize(stream, obj1);
+                stream.Seek(0, SeekOrigin.Begin);
+                return (T)formatter.Deserialize(stream);
+            }
+            //var json = JsonConvert.SerializeObject(obj1);
+            //return JsonConvert.DeserializeObject<T>(json);
         }
 
         /// <summary>
@@ -47,7 +66,7 @@ namespace Fluent.Architecture.Extensions
             {
                 if (property != null)
                 {
-                    return $"'{property.PropertyType.GetDefaultValue()?.ToString()?.Replace("'","´")}'";
+                    return $"'{property.PropertyType.GetDefaultValue()?.ToString()?.Replace("'", "´")}'";
                 }
 
                 return null;

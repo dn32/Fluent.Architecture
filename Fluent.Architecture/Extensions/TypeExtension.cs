@@ -14,6 +14,7 @@ using Fluent.Architecture.Services;
 using Fluent.Architecture.Util;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -231,7 +232,8 @@ namespace Fluent.Architecture.Extensions
 
         public static bool IsList(this Type type)
         {
-            return type.Name.StartsWith("List`");
+            return (type.GetInterface(nameof(IEnumerable)) != null);
+            //return type.Name.StartsWith("List`");
         }
 
         public static object GetMaxValueOfNumber(this Type numberType)
@@ -429,7 +431,7 @@ namespace Fluent.Architecture.Extensions
                 {
                     if (row != property.Row)
                     {
-                        CustomJsonResult.AdjustColumns(props, row);
+                        AdjustColumns(props, row);
                         props.Clear();
                         row++;
                     }
@@ -440,13 +442,28 @@ namespace Fluent.Architecture.Extensions
 
                 if (props.Count > 0)
                 {
-                    CustomJsonResult.AdjustColumns(props, row);
+                    AdjustColumns(props, row);
                 }
             }
 
             MappForengKey(root);
             return root;
         }
+
+        private static void AdjustColumns(List<FluentJsonPropertyAttribute> props, int row)
+        {
+            var sum = props.Sum(y => y.lGrid);
+            var count = props.Count();
+            int i = 0;
+
+            while (sum < 12)
+            {
+                props[i].lGrid++;
+                sum = props.Sum(y => y.lGrid);
+                if (i + 1 == count) { i = 0; } else { i++; }
+            }
+        }
+
         private static void MappForengKey(FluentJsonSchema schema)
         {
             schema.Properties.ForEach(property =>

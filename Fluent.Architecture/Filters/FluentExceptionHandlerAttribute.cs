@@ -12,8 +12,10 @@ using Fluent.Architecture.Exceptions.ValidationException;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Linq;
 
@@ -22,7 +24,7 @@ public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
     public override void OnException(ExceptionContext filterContext)
     {
         filterContext.ExceptionHandled = true;
-        filterContext.HttpContext.Response.Clear();            
+        filterContext.HttpContext.Response.Clear();
 
         if (filterContext?.Exception is DbUpdateException exception1)
         {
@@ -68,13 +70,21 @@ public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
 
             inconsistencies.ForEach(GetGlobalization);
 
-            filterContext.Result = new CustomJsonResult(new ValidationReturn
+            // filterContext.Result =
+            var result = new ValidationReturn
             {
                 Inconsistencies = inconsistencies,
                 Message = exception.Message,
                 ValidationError = true
-            });
+            };
 
+            ContentResult content = new ContentResult
+            {
+                ContentType = "application/json",
+                Content = JsonConvert.SerializeObject(result)
+            };
+
+            filterContext.Result = content;
             filterContext.HttpContext.Response.StatusCode = 422;
         }
         else
@@ -83,14 +93,22 @@ public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
             var frame = stackTrace.GetFrame(0);
             var line = frame.GetFileLineNumber();
 
-            filterContext.Result = new CustomJsonResult(new
+            var result = new
             {
                 Error = true,
                 filterContext.Exception.Message,
                 stackTrace,
                 frame,
                 line
-            });
+            };
+
+            ContentResult content = new ContentResult
+            {
+                ContentType = "application/json",
+                Content = JsonConvert.SerializeObject(result)
+            };
+
+            filterContext.Result = content;
 
             filterContext.HttpContext.Response.StatusCode = 500;
         }

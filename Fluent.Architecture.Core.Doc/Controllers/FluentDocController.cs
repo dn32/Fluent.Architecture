@@ -18,7 +18,8 @@ namespace Fluent.Architecture.Core.Doc.Controllers
             if (Models == null)
             {
                 Models = new Dictionary<string, Type>();
-                Setup.Model.Values.ToList().ForEach(x =>
+                var entities = Setup.GetFluentApiEntity();
+                entities.ForEach(x =>
                 {
                     Models.TryAdd(x.Name, x);
                 });
@@ -30,7 +31,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
         [Route("FluentDoc/Index")]
         public IActionResult Index()
         {
-            var models = Setup.Model.Values.Where(x => x.IsPublic && !x.IsAbstract).Select(x => x.GetFluentJsonSchema(false)).Where(x => x?.FluentJsonForm != null).ToList();
+            var models = Models.Values.Select(x => x.GetFluentJsonSchema(false)).ToList();
             return View(models);
         }
 
