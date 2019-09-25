@@ -12,6 +12,7 @@ using Fluent.Architecture.Core.Enumerator;
 using Fluent.Architecture.Core.Extensions;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Util;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -267,7 +268,7 @@ namespace Fluent.Architecture.Extensions
         }
 
         private static FluentJsonPropertyAttribute GetFluentJsonPropertyAttributeByProperty(PropertyInfo property)
-        {
+        {          
             var attr = property.GetCustomAttribute<FluentJsonPropertyAttribute>();
             if (attr == null)
             {
@@ -305,6 +306,11 @@ namespace Fluent.Architecture.Extensions
             if (attr.max == 0 && property.PropertyType.IsNumeric())
             {
                 attr.max = property.PropertyType.GetMaxValueOfNumber().FluentCast<double>();
+            }
+
+            if (property.GetCustomAttributeAny<JsonIgnoreAttribute>())
+            {
+                attr.form = EnumForm.NONE;
             }
 
             return attr;

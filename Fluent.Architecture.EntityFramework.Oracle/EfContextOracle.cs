@@ -11,7 +11,7 @@ namespace Fluent.Architecture.EntityFramework.Oracle
     [DbType(FluentDbType.ORACLE)]
     public class EfContextOracle : EfContext
     {
-        public static readonly LoggerFactory _myLoggerFactory =new LoggerFactory(new[] {new Microsoft.Extensions.Logging.Debug.DebugLoggerProvider()});
+        public static readonly LoggerFactory _myLoggerFactory = new LoggerFactory(new[] { new Microsoft.Extensions.Logging.Debug.DebugLoggerProvider() });
 
         public EfContextOracle(string connectionString) : base(connectionString)
         {
@@ -19,7 +19,12 @@ namespace Fluent.Architecture.EntityFramework.Oracle
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+#if NETCOREAPP3_0
+            throw new System.Exception("Oracle is not compatible net.core 3");
+#else
             optionsBuilder.UseOracle(ConnectionString);
+#endif
+
 
 #if DEBUG
             optionsBuilder

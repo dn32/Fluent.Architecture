@@ -52,7 +52,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
                               .Where(method => !method.Name.StartsWith("get_") && !method.Name.Equals("Dispose") && !method.Name.Equals("GetType") && !method.Name.StartsWith("set_"))
                               .Select(action =>
                               {
-                                  var met = action.GetCustomAttribute<HttpMethodAttribute>();
+                                  var met = action.GetCustomAttribute<HttpMethodAttribute>()?? new HttpGetAttribute();
                                   var routeAtributeAction = action.GetCustomAttribute<RouteAttribute>();
                                   var routerAttribute = routeAtributeAction?.Template ?? routeAtributeController?.Template;
                                   var template = routerAttribute ?? met.Template ?? action.Name;
