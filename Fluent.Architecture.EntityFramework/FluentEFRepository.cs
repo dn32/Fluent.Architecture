@@ -470,9 +470,16 @@ namespace Fluent.Architecture.EntityFramework
             return Query.Count();
         }
 
-        public virtual TE Find(TE entity) => Find<TE>(entity);
+        public virtual object Find(object entity)
+        {
+            var type = entity.GetType();
+            var method = GetType().GetMethod(nameof(FindSelect)).MakeGenericMethod(type);
+            return method.Invoke(this, new object[] { entity });
+        }
 
-        public virtual TO Find<TO>(TO entity) where TO : BaseEntity
+        public virtual TE Find(TE entity) => FindSelect<TE>(entity);
+
+        public TO FindSelect<TO>(TO entity) where TO : BaseEntity
         {
             {
                 var sql = RepositoryUtil.GetKeyFilterSql(entity, out bool nonKeys);
