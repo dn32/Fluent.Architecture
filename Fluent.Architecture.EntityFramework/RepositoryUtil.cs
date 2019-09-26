@@ -1,14 +1,12 @@
-﻿using Fluent.Architecture.Entities;
-using Fluent.Architecture.Extensions;
+﻿using Fluent.Architecture.Extensions;
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace Fluent.Architecture.EntityFramework
 {
     internal static class RepositoryUtil
     {
-        internal static string GetForeignKeyFilterSql( object entity, Type outType, out bool nonKeys)
+        internal static string GetForeignKeyFilterSql(object entity, Type outType, out bool nonKeys)
         {
             var tableName = outType.GetTableName();
             var fluentUniqueKeyValues = entity.GetForeignKeyValues(outType).Select(x => $"{x.ColumnName} = {x.Value}").ToArray();

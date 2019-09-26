@@ -21,6 +21,7 @@ using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.Common;
 using System.Dynamic;
@@ -185,6 +186,98 @@ namespace Fluent.Architecture.EntityFramework
 
         #region COMPOSITION
 
+        protected void UpdateCompositionList(TE entity)
+        {
+            var compositionProperties = entity.GetType().GetProperties().Where(x => x.GetCustomAttributeAny<FluentCompositionAttribute>());
+            foreach (var compositionProperty in compositionProperties)
+            {
+                var compositionValue = compositionProperty.GetValue(entity);
+                var compositionPropertyType = compositionProperty.PropertyType;
+
+                if (compositionPropertyType.IsList())
+                {
+                    var listType = compositionPropertyType.GenericTypeArguments[0];
+                    var allPersistedForThisEntity = ListAllByForeignKey(entity, listType).FluentCast<IList>();
+                    var compositionListValue = compositionValue.FluentCast<IList>();
+
+                    var allPersistedForThisEntityForRemove = allPersistedForThisEntity;
+                    if (compositionListValue != null)
+                    {
+                        foreach (var item in compositionListValue)
+                        {
+                            allPersistedForThisEntityForRemove.Remove(item);
+                        }
+                    }
+
+                    if (allPersistedForThisEntityForRemove.Count > 0)
+                    {
+                        foreach (var entityToRemove in allPersistedForThisEntityForRemove)
+                        {
+                            Session.Remove(entityToRemove);
+                        }
+                    }
+
+                    if (compositionListValue != null)
+                    {
+                        foreach (var auth in compositionListValue)
+                        {
+                            var currentEntity = Find(auth);
+                            if (currentEntity == null)
+                            { //Add
+                                Session.Add(auth);
+                            }
+                            else
+                            { //update
+                                TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(auth);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    var list = ListAllByForeignKey(entity, compositionPropertyType).FluentCast<IList>();
+                    var currentEntity = list.Count == 1 ? list[0] : null;
+
+                    if (currentEntity == null)
+                    {
+                        if (compositionValue == null)
+                        { // Não tem no bd e nem no objeto
+                            continue;
+                        }
+                        else
+                        { // Não tem no BD e precisa adicionar
+                            Session.Add(compositionValue);
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        if (compositionValue == null)
+                        { // Tem no bd, mas precisa ser removido
+                            Session.RemoveRange(currentEntity);
+                            continue;
+                        }
+                        else
+                        { // Tem no bd e precisa ser atualizado
+
+                            var keyProperties = currentEntity.GetType().GetProperties().Where(x => x.GetCustomAttributeAny<KeyAttribute>()).ToList();
+                            foreach (var p in keyProperties)
+                            {
+                                var value = p.GetValue(currentEntity);
+                                if (value != null)
+                                {
+                                    p.SetValue(compositionValue, value);
+                                }
+                            }
+
+                            TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(compositionValue);
+                            continue;
+                        }
+                    }
+                }
+            }
+        }
+
         protected void DefineForeignKeyOfCompositions(TE entity)
         {
             var localProperties = entity.GetType().GetProperties();
@@ -239,7 +332,7 @@ namespace Fluent.Architecture.EntityFramework
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
-        internal bool ExistsSql(string sql, bool includeExcludedLogically = false)
+        internal protected bool ExistsSql(string sql, bool includeExcludedLogically = false)
         {
             if (includeExcludedLogically)
             {
@@ -249,11 +342,7 @@ namespace Fluent.Architecture.EntityFramework
                 }
             }
 
-#if NETCOREAPP3_0
-            var ret = this.Input.FromSqlRaw(sql).Any();
-#else
-            var ret = this.Input.FromSql(sql).Any();
-#endif
+            var ret = FromSql(sql).Any();
 
             lock (SessionRequest)
             {
@@ -263,7 +352,7 @@ namespace Fluent.Architecture.EntityFramework
             return ret;
         }
 
-        internal int CountSql(string sql, bool includeExcludedLogically = false)
+        internal protected int CountSql(string sql, bool includeExcludedLogically = false)
         {
             if (includeExcludedLogically)
             {
@@ -273,11 +362,8 @@ namespace Fluent.Architecture.EntityFramework
                 }
             }
 
-#if NETCOREAPP3_0
-            var ret = this.Input.FromSqlRaw(sql).Count();
-#else
-            var ret = this.Input.FromSql(sql).Count();
-#endif
+            var ret = FromSql(sql).Count();
+
             lock (SessionRequest)
             {
                 Session.EnableLogicalDeletion = true;
@@ -285,15 +371,12 @@ namespace Fluent.Architecture.EntityFramework
 
             return ret;
         }
-        internal TO FindSingleOrDefaultSql<TO>(string sql) where TO : BaseEntity
+
+        internal protected TO FindSingleOrDefaultSql<TO>(string sql) where TO : BaseEntity
         {
             try
             {
-#if NETCOREAPP3_0
-                return TransactionObjects.GetObjectInputDataInternal<TO>().FromSqlRaw(sql).SingleOrDefault();
-#else
-                return TransactionObjects.GetObjectInputDataInternal<TO>().FromSql(sql).SingleOrDefault();
-#endif
+                return FromSqlSelect<TO>(sql).SingleOrDefault();
             }
             catch (InvalidOperationException)
             {
@@ -301,39 +384,38 @@ namespace Fluent.Architecture.EntityFramework
             }
         }
 
-        internal ICollection ListAllNotPaginate(string sql, Type outType)
+        private IQueryable FromSqlByType(string sql, Type outType, params object[] parameters)
         {
-            try
-            {
-#if NETCOREAPP3_0
-                var dbSet = TransactionObjects.GetObjectInputDataInternal(outType);
-                var query = typeof(RelationalQueryableExtensions).GetMethod(nameof(RelationalQueryableExtensions.FromSqlRaw)).MakeGenericMethod(outType).Invoke(null, new object[] { dbSet, sql, new object[] { } });
-                var list = typeof(Enumerable).GetMethod(nameof(Enumerable.ToList)).MakeGenericMethod(outType).Invoke(null, new object[] { query }).FluentCast<ICollection>();
-                return list;
-#else
-                //var q = this.Session.GetType().GetMethod("Set").MakeGenericMethod(outType).Invoke(this.Session, new object[] { sql });
-                //var list = q.GetType().GetMethod("ToList").Invoke(q, null) as ICollection;
-                //return list;
-                var dbSet = TransactionObjects.GetObjectInputDataInternal(outType);
-                var query = typeof(RelationalQueryableExtensions).GetMethod(nameof(RelationalQueryableExtensions.FromSql)).Invoke(null, new object[] { dbSet, sql });
-                var list = typeof(Enumerable).GetMethod(nameof(Enumerable.ToList)).Invoke(null, new object[] { query }).FluentCast<ICollection>();
-                return list;
-#endif
-            }
-            catch (InvalidOperationException)
-            {
-                throw new InvalidOperationException($"More than one record was found with the given keys. This is an indication of data with duplicate keys in the database. The table is {typeof(TE).GetTableName()}");
-            }
+            return GetType().GetMethod(nameof(FromSqlSelect), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(outType).Invoke(this, new object[] { sql, parameters }).FluentCast<IQueryable>();
         }
-        internal TE FindSingleOrDefaultSql(string sql)
+
+        internal protected IQueryable<TE> FromSql(string sql, params object[] parameters)
+        {
+            return FromSqlSelect<TE>(sql, parameters);
+        }
+
+        internal protected IQueryable<TO> FromSqlSelect<TO>(string sql, params object[] parameters) where TO : BaseEntity
+        {
+            var source = TransactionObjects.GetObjectInputDataInternal<TO>();
+
+#if NETCOREAPP3_0
+            return source.FromSqlRaw(sql, parameters);
+#else
+            return source.FromSql(sql, parameters);
+#endif
+        }
+
+        internal protected ICollection ListAllNotPaginate(string sql, Type outType)
+        {
+            var query = FromSqlByType(sql, outType);
+            return typeof(Enumerable).GetMethod(nameof(Enumerable.ToList)).MakeGenericMethod(outType).Invoke(null, new object[] { query }).FluentCast<ICollection>();
+        }
+
+        internal protected TE FindSingleOrDefaultSql(string sql)
         {
             try
             {
-#if NETCOREAPP3_0
-                return this.Input.FromSqlRaw(sql).SingleOrDefault();
-#else
-                return this.Input.FromSql(sql).SingleOrDefault();
-#endif
+                return FromSql(sql).SingleOrDefault();
             }
             catch (InvalidOperationException)
             {
@@ -541,12 +623,18 @@ namespace Fluent.Architecture.EntityFramework
         {
             RunTheContextValidation();
 
-            entities.ToList().ForEach(x => Input.Add(x));
+            foreach (var entity in entities)
+            {
+                DefineForeignKeyOfCompositions(entity);
+            }
+
+            Input.AddRange(entities);
         }
 
         public virtual TE Add(TE entity)
         {
             RunTheContextValidation();
+            DefineForeignKeyOfCompositions(entity);
             return Input.Add(entity).Entity;
         }
 
@@ -560,6 +648,8 @@ namespace Fluent.Architecture.EntityFramework
         public virtual TE Update(TE entity)
         {
             RunTheContextValidation();
+
+            DefineForeignKeyOfCompositions(entity);
 
             lock (SessionRequest)
             {
@@ -575,26 +665,33 @@ namespace Fluent.Architecture.EntityFramework
                 Session.EnableLogicalDeletion = true;
             }
 
+            UpdateCompositionList(entity);
+
             return entity;
         }
-
+   
+        //Todo - tratar recuperação de exclusão lógica, como foi feito no Update
         public TE UpdateAlter(UpdateAlter<TE> value)
         {
             RunTheContextValidation();
 
+            DefineForeignKeyOfCompositions(value.Final);
             var currentEntity = Service.Find(value.Original);
-            //Input.Attach(currentEntity);
             TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(value.Final);
+            UpdateCompositionList(value.Final);
             return value.Final;
         }
 
+        //Todo - tratar recuperação de exclusão lógica, como foi feito no Update
         public virtual void UpdateRange(TE[] entities)
         {
             RunTheContextValidation();
             foreach (var entity in entities)
             {
+                DefineForeignKeyOfCompositions(entity);
                 var currentEntity = Service.Find(entity);
                 TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
+                UpdateCompositionList(entity);
             }
         }
 

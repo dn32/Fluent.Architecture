@@ -557,6 +557,11 @@ namespace Fluent.Architecture.Extensions
 
         public static T FluentCast<T>(this object obj)
         {
+            if(obj == null)
+            {
+                return default;
+            }
+
             if (obj is T value)
             {
                 return value;
