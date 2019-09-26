@@ -8,6 +8,7 @@
 // ReSharper disable CommentTypo
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Core.Attributes;
+using Fluent.Architecture.Core.Extensions;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions;
 using Newtonsoft.Json;
@@ -67,7 +68,7 @@ namespace Fluent.Architecture.Extensions
             var name = property.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName;
             if (string.IsNullOrEmpty(name))
             {
-                name = property?.Name;
+                name = property?.Name?.ToFluentJsonStringNormalized();
             }
 
             return name;
@@ -78,7 +79,7 @@ namespace Fluent.Architecture.Extensions
             return property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.name ??
                    property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ??
                    property.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName ??
-                   property?.Name;
+                   property?.Name.ToFluentJsonStringNormalized();
         }
 
         public static PropertyInfo GetKeyProperty(this Type entityType)

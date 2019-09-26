@@ -1,4 +1,5 @@
 ﻿using Fluent.Architecture.Core.Controllers.ControllerModel;
+using Fluent.Architecture.Core.Extensions;
 using Fluent.Architecture.Core.Filters;
 using Fluent.Architecture.Core.Specifications;
 using Fluent.Architecture.Entities;
@@ -151,15 +152,9 @@ namespace Fluent.Architecture.Controllers
 
         [HttpGet]
         [Description("Get item type schema")]
-        public virtual JsonResult JsonForm(bool tablet = false)
+        public virtual string JsonForm(bool tablet = false)
         {
-            var data = typeof(T).GetFluentJsonSchema(tablet);
-            return Json(data, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, Formatting = Formatting.None });
-            //#if NETCOREAPP3_0
-            //            return System.Text.Json.JsonSerializer.Serialize(data, new JsonSerializerOptions { IgnoreNullValues = true });
-            //#else
-            //return JsonConvert.SerializeObject(data, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, Formatting = Formatting.None });
-            //#endif
+            return typeof(T).GetFluentJsonSchema(tablet).ToFluentJson();
         }
 
         #endregion               

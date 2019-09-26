@@ -6,6 +6,11 @@ namespace Fluent.Architecture
 {
     public static class FluentDocExtension
     {
+        public static void AddFluentDoc(this IMvcBuilder builder)
+        {
+            builder.Services.AddFluentDoc();
+        }
+
         public static void AddFluentDoc(this IServiceCollection services)
         {
             services.Configure<StaticFileOptions>(opts =>

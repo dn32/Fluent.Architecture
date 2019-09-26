@@ -232,7 +232,7 @@ namespace Fluent.Architecture.Extensions
 
         public static bool IsList(this Type type)
         {
-            return (type.GetInterface(nameof(IEnumerable)) != null);
+            return (type.GetInterface(nameof(ICollection)) != null);
             //return type.Name.StartsWith("List`");
         }
 
@@ -260,8 +260,8 @@ namespace Fluent.Architecture.Extensions
                 {
                     desc = type.GetCustomAttribute<DescriptionAttribute>()?.Description ?? type.Name,
                     group = "",
-                    name = type.Name,
-                    propName = type.Name,
+                    name = type.Name.ToFluentJsonStringNormalized(),
+                    propName = type.Name.ToFluentJsonStringNormalized(),
                     Type = type
                 };
             }
@@ -270,7 +270,7 @@ namespace Fluent.Architecture.Extensions
         }
 
         private static FluentJsonPropertyAttribute GetFluentJsonPropertyAttributeByProperty(PropertyInfo property)
-        {          
+        {
             var attr = property.GetCustomAttribute<FluentJsonPropertyAttribute>();
             if (attr == null)
             {
@@ -279,7 +279,7 @@ namespace Fluent.Architecture.Extensions
                     desc = property.GetCustomAttribute<DescriptionAttribute>()?.Description ?? property.Name,
                     group = "",
                     name = property.Name,
-                    propName = property.Name,
+                    propName = property.Name.ToFluentJsonStringNormalized(),
                     Type = property.PropertyType,
                     Enums = null,
                     FkDestinal = null,
@@ -329,7 +329,7 @@ namespace Fluent.Architecture.Extensions
 
             var form = GetFluentJsonFormAttributeByType(type);
 
-            form.propName = type.Name;
+            form.propName = type.Name.ToFluentJsonStringNormalized();
             form.Type = type.GetNonNullableType();
 
             var root = new FluentJsonSchema
@@ -377,7 +377,7 @@ namespace Fluent.Architecture.Extensions
                     }
                 }
 
-                attr.propName = property.Name;
+                attr.propName = property.Name.ToFluentJsonStringNormalized();
                 root.Properties.Add(attr);
             });
 
@@ -557,7 +557,7 @@ namespace Fluent.Architecture.Extensions
 
         public static T FluentCast<T>(this object obj)
         {
-            if(obj == null)
+            if (obj == null)
             {
                 return default;
             }

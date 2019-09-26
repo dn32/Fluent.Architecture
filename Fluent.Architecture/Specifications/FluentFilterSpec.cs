@@ -22,8 +22,9 @@ namespace Fluent.Architecture.Core.Specifications
         public override IQueryable<T> Where(IQueryable<T> query)
         {
             var expression = Filters.FiltersToExtression<T>();
+            query = query.GetInclusions(IsList);
             query = query.Where(expression);
-            return query.GetInclusions(IsList);
+            return query;
         }
 
         public override IOrderedQueryable<T> Order(IQueryable<T> query)

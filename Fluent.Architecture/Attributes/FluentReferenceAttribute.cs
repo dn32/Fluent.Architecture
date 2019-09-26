@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Fluent.Architecture.Core.Extensions;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 
@@ -39,7 +40,7 @@ namespace Fluent.Architecture.Core.Attributes
 
         public void SetType(string type) => Type = type;
 
-        public void SetName(string propertyName) => PropertyName = propertyName;
+        public void SetName(string propertyName) => PropertyName = propertyName.ToFluentJsonStringNormalized();
 
         public string Type { get; private set; }
 

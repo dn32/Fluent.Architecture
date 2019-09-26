@@ -17,6 +17,7 @@ using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

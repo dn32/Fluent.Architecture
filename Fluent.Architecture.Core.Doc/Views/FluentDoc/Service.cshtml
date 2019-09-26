@@ -1,6 +1,8 @@
 ﻿@using Fluent.Architecture.Core.Entities
 @using Fluent.Architecture.Extensions
 @using Fluent.Architecture.Core.Doc.Controllers
+@using Fluent.Architecture.Core.Extensions
+
 <link rel="stylesheet" href="/FluentDoc/lib/bootstrap.min.css" />
 <link rel="stylesheet" href="/FluentDoc/css/site.css" />
 
@@ -29,20 +31,20 @@
                 var parameters = action.Parameters?.Select(x => x.GetFriendlyName(false)).ToArray() ?? new string[] { };
                 var paramString = string.Join(", ", parameters);
 
-            <div class="action">
-                <span class="method @action.Method.ToLower()">@action.Method</span>
-                <span class="name">@action.Name</span>
-                <span class="parameters">@paramString</span>
-                <span class="description">@action.Description</span>
-                @if (@action.Method == "GET")
-                {
-                    <span class="route"><a href="@action.Route" target="_blank">@action.Route</a></span>
-                }
-                else
-                {
-                    <span class="route">@action.Route</span>
-                }
-            </div>
+                <div class="action">
+                    <span class="method @action.Method.ToLower()">@action.Method</span>
+                    <span class="name">@action.Name</span>
+                    <span class="parameters">@paramString</span>
+                    <span class="description">@action.Description</span>
+                    @if (@action.Method == "GET")
+                    {
+                        <span class="route"><a href="@action.Route" target="_blank">@action.Route</a></span>
+                    }
+                    else
+                    {
+                        <span class="route">@action.Route</span>
+                    }
+                </div>
             }
 
         </div>
@@ -61,7 +63,7 @@
                 @foreach (var property in Model.Properties)
                 {
                     if (property.form == Fluent.Architecture.Core.Enumerator.EnumForm.NONE) { continue; }
-                   // if (property.FluentAggregation != null) { continue; }
+                    // if (property.FluentAggregation != null) { continue; }
                     // property.key
 
                     var range = (property.min == property.max ? property.min.ToString() : property.min + ", " + property.max);
@@ -102,14 +104,10 @@
 
                 @{
                     var exampleValue = Model.FluentJsonForm?.Type?.GetExampleValue() ?? "";
-#if NETCOREAPP3_0
 
-                                            var json = System.Text.Json.JsonSerializer.Serialize(exampleValue, new System.Text.Json.JsonSerializerOptions { IgnoreNullValues = true, WriteIndented = true });
-#else
-                    var json = Newtonsoft.Json.JsonConvert.SerializeObject(exampleValue, Newtonsoft.Json.Formatting.Indented);
+                    var json = exampleValue.ToFluentJson(Newtonsoft.Json.Formatting.Indented);
 
-#endif
-        <pre class="example-value">@json</pre>
+                    <pre class="example-value">@json</pre>
                 }
             </div>
         </div>

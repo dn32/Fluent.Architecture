@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
@@ -34,19 +35,21 @@ namespace Fluent.Architecture.Sample.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var jsonSerializerSettings = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+
             services
-                .AddFluentArchitecture()
+                .AddMvc()
+                .AddNewtonsoftJson(x => x.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver())
+                .AddFluentArchitecture(jsonSerializerSettings)
                 .UseEntityFramework()
                 .AddConnectionString("Data Source=sample.db;", createDatabaseIfNotExists: true, typeof(EfContextSqLite))
                 .AddConnectionString("Data Source=51.83.33.154;Initial Catalog=sample;User ID=sa;Password=miGcp1926*;", createDatabaseIfNotExists: true, typeof(EfContextSQLServer))
                 .SetGenericControllerType(typeof(FluentAPIController<>))
-                .Build();
-            
-            services.AddFluentDoc();
-
-            services
-                .AddMvc()
-                .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+                .Build()
+                .AddFluentDoc();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -63,6 +66,8 @@ namespace Fluent.Architecture.Sample.API
             {
                 endpoints.MapDefaultControllerRoute();
             });
+
+            app.UseFluentDoc();
         }
     }
 }

@@ -42,8 +42,6 @@ namespace Fluent.Architecture.Extensions
                 stream.Seek(0, SeekOrigin.Begin);
                 return (T)formatter.Deserialize(stream);
             }
-            //var json = JsonConvert.SerializeObject(obj1);
-            //return JsonConvert.DeserializeObject<T>(json);
         }
 
         /// <summary>

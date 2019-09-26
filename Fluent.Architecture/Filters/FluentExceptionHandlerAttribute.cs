@@ -6,6 +6,7 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
+using Fluent.Architecture.Core.Extensions;
 using Fluent.Architecture.Core.Inconsistences;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions.ValidationException;
@@ -81,7 +82,7 @@ public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
             ContentResult content = new ContentResult
             {
                 ContentType = "application/json",
-                Content = JsonConvert.SerializeObject(result)
+                Content = result.ToFluentJson()
             };
 
             filterContext.Result = content;
@@ -105,7 +106,7 @@ public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
             ContentResult content = new ContentResult
             {
                 ContentType = "application/json",
-                Content = JsonConvert.SerializeObject(result)
+                Content = result.ToFluentJson()
             };
 
             filterContext.Result = content;
