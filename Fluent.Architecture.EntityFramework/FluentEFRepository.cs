@@ -306,17 +306,18 @@ namespace Fluent.Architecture.EntityFramework
             try
             {
 #if NETCOREAPP3_0
-                return TransactionObjects.GetObjectInputDataInternal<TO>().FromSqlRaw(sql).ToList();
-
-                var q = this.Session.GetType().GetMethod("Set").MakeGenericMethod(outType).Invoke(this.Session, new object[] { sql });
-                var list = q.GetType().GetMethod("ToList").Invoke(q, null) as ICollection;
+                var dbSet = TransactionObjects.GetObjectInputDataInternal(outType);
+                var query = typeof(RelationalQueryableExtensions).GetMethod(nameof(RelationalQueryableExtensions.FromSqlRaw)).MakeGenericMethod(outType).Invoke(null, new object[] { dbSet, sql, new object[] { } });
+                var list = typeof(Enumerable).GetMethod(nameof(Enumerable.ToList)).MakeGenericMethod(outType).Invoke(null, new object[] { query }).FluentCast<ICollection>();
                 return list;
-
 #else
-                var q = this.Session.GetType().GetMethod("Set").MakeGenericMethod(outType).Invoke(this.Session, new object[] { sql });
-                var list = q.GetType().GetMethod("ToList").Invoke(q, null) as ICollection;
+                //var q = this.Session.GetType().GetMethod("Set").MakeGenericMethod(outType).Invoke(this.Session, new object[] { sql });
+                //var list = q.GetType().GetMethod("ToList").Invoke(q, null) as ICollection;
+                //return list;
+                var dbSet = TransactionObjects.GetObjectInputDataInternal(outType);
+                var query = typeof(RelationalQueryableExtensions).GetMethod(nameof(RelationalQueryableExtensions.FromSql)).Invoke(null, new object[] { dbSet, sql });
+                var list = typeof(Enumerable).GetMethod(nameof(Enumerable.ToList)).Invoke(null, new object[] { query }).FluentCast<ICollection>();
                 return list;
-                //return TransactionObjects.GetObjectInputDataInternal<TO>().FromSql(sql).ToList();
 #endif
             }
             catch (InvalidOperationException)
@@ -329,7 +330,7 @@ namespace Fluent.Architecture.EntityFramework
             try
             {
 #if NETCOREAPP3_0
-            return this.Input.FromSqlRaw(sql).SingleOrDefault();
+                return this.Input.FromSqlRaw(sql).SingleOrDefault();
 #else
                 return this.Input.FromSql(sql).SingleOrDefault();
 #endif

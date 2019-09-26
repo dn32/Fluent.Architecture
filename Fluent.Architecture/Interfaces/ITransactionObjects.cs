@@ -12,5 +12,7 @@ namespace Fluent.Architecture.Core.Interfaces
         IQueryable<TX> GetObjectQueryInternal<TX>() where TX : BaseEntity;
 
         DbSet<T> GetObjectInputDataInternal<T>() where T : class;
+
+        IQueryable GetObjectInputDataInternal(Type type);
     }
 }
