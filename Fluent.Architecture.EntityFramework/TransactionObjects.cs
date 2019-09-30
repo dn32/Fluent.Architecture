@@ -50,7 +50,7 @@ namespace Fluent.Architecture.EntityFramework
             this.Session = ContextFactory.Create(connection, UserSessionRequest);
         }
 
-        public DbSet<TX> GetObjectInputDataInternal<TX>() where TX : class
+        public DbSet<TX> GetObjectInputDataInternal<TX>() where TX : BaseEntity
         {
             return this.Session.Set<TX>();
         }

@@ -10,14 +10,14 @@ namespace Fluent.Architecture.EntityFramework
 {
     internal static class RepositoryUtil
     {
-        internal static string ListToInSql(Type outType, object[] elements, PropertyInfo property)
+        internal static string ListToInSql(Type dbEntityType, object[] elements, PropertyInfo property)
         {
             if (elements is null || elements.Length == 0)
             {
                 throw new ArgumentNullException(nameof(elements));
             }
 
-            var tableName = outType.GetTableName();
+            var tableName = dbEntityType.GetTableName();
             var collumnName = property.GetColumnName();
 
             var elementsList = new List<string>();
@@ -28,7 +28,7 @@ namespace Fluent.Architecture.EntityFramework
             }
 
             var elementsStirng = string.Join(",", elementsList.ToArray());
-            var sql = $"select {collumnName} from {tableName} where ${collumnName} in ({elementsStirng})";
+            var sql = $"select {collumnName} from {tableName} where {collumnName} in ({elementsStirng})";
             return sql;
         }
 

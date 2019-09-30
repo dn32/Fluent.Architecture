@@ -24,12 +24,12 @@ namespace Fluent.Architecture.Test
         public virtual bool Remove(TModel model)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluentAPIController<TModel>, bool>(newController, (FluentAPIController<TModel> controller) => controller.RemoveAsync(model));
+            return TestUtil.Execute<FluentAPIController<TModel>, bool>(newController, (FluentAPIController<TModel> controller) => controller.Remove(model).Result);
         }
 
         public virtual TModel Add(TModel model)
         {
-            return Execute((FluentAPIController<TModel> controller) => controller.AddAsync(model));
+            return Execute((FluentAPIController<TModel> controller) => controller.Add(model).Result);
         }
 
         //public virtual string Schema()
@@ -41,59 +41,59 @@ namespace Fluent.Architecture.Test
         public virtual bool Update(TModel model)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluentAPIController<TModel>, bool>(newController, (FluentAPIController<TModel> controller) => controller.UpdateAsync(model));
+            return TestUtil.Execute<FluentAPIController<TModel>, bool>(newController, (FluentAPIController<TModel> controller) => controller.Update(model).Result);
         }
 
         public virtual bool UpdateAlter(UpdateAlter<TModel> model)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluentAPIController<TModel>, bool>(newController, (FluentAPIController<TModel> controller) => controller.UpdateAlterAsync(model));
+            return TestUtil.Execute<FluentAPIController<TModel>, bool>(newController, (FluentAPIController<TModel> controller) => controller.UpdateAlter(model).Result);
         }
 
         public virtual TModel Add()
         {
-            return Execute((FluentAPIController<TModel> controller) => controller.AddAsync(GetNew()));
+            return Execute((FluentAPIController<TModel> controller) => controller.Add(GetNew()).Result);
         }
 
         public virtual bool Exists(TModel model)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluentAPIController<TModel>, bool>(newController, (FluentAPIController<TModel> controller) => controller.ExistsByEntityGetAsync(model));
+            return TestUtil.Execute<FluentAPIController<TModel>, bool>(newController, (FluentAPIController<TModel> controller) => controller.ExistsByEntityGet(model).Result);
         }
 
         public virtual TModel[] AddRange(TModel[] models)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluentAPIController<TModel>, TModel[]>(newController, (FluentAPIController<TModel> controller) => controller.AddRangeAsync(models));
+            return TestUtil.Execute<FluentAPIController<TModel>, TModel[]>(newController, (FluentAPIController<TModel> controller) => controller.AddRange(models).Result);
         }
 
         public virtual TModel[] List()
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluentAPIController<TModel>, TModel[]>(newController, (FluentAPIController<TModel> controller) => controller.ListAsync());
+            return TestUtil.Execute<FluentAPIController<TModel>, TModel[]>(newController, (FluentAPIController<TModel> controller) => controller.List().Result);
         }
 
         public virtual TModel[] List(Filter[] filters)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluentAPIController<TModel>, TModel[]>(newController, (FluentAPIController<TModel> controller) => controller.ListByFilterGetAsync(filters));
+            return TestUtil.Execute<FluentAPIController<TModel>, TModel[]>(newController, (FluentAPIController<TModel> controller) => controller.ListByFilterGet(filters).Result);
         }
         public virtual int Count()
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluentAPIController<TModel>, int>(newController, (FluentAPIController<TModel> controller) => controller.CountAsync());
+            return TestUtil.Execute<FluentAPIController<TModel>, int>(newController, (FluentAPIController<TModel> controller) => controller.Count().Result);
         }
 
         public virtual int Count(Filter[] filters)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluentAPIController<TModel>, int>(newController, (FluentAPIController<TModel> controller) => controller.CountByFilterAsync(filters));
+            return TestUtil.Execute<FluentAPIController<TModel>, int>(newController, (FluentAPIController<TModel> controller) => controller.CountByFilter(filters).Result);
         }
 
         public virtual bool UpdateRange(TModel[] models)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluentAPIController<TModel>, bool>(newController, (FluentAPIController<TModel> controller) => controller.UpdateRangeAsync(models));
+            return TestUtil.Execute<FluentAPIController<TModel>, bool>(newController, (FluentAPIController<TModel> controller) => controller.UpdateRange(models).Result);
         }
 
         public virtual TModel Find(TModel model)
@@ -104,13 +104,13 @@ namespace Fluent.Architecture.Test
         public virtual bool RemoveRange(TModel[] models)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluentAPIController<TModel>, bool>(newController, (FluentAPIController<TModel> controller) => controller.RemoveRangeAsync(models));
+            return TestUtil.Execute<FluentAPIController<TModel>, bool>(newController, (FluentAPIController<TModel> controller) => controller.RemoveRange(models).Result);
         }
 
         public virtual bool Truncate(string ERASE_ALL_DATA = "no")
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluentAPIController<TModel>, bool>(newController, (FluentAPIController<TModel> controller) => controller.TruncateAsync(ERASE_ALL_DATA));
+            return TestUtil.Execute<FluentAPIController<TModel>, bool>(newController, (FluentAPIController<TModel> controller) => controller.Truncate(ERASE_ALL_DATA).Result);
         }
 
         public virtual TModel GetNew()
@@ -123,7 +123,7 @@ namespace Fluent.Architecture.Test
             var newController = GetNewController();
             newController.OnActionExecuting(MockActionExecutingContextFactory.Create(newController));
             var ret = actionMethod(newController);
-            newController.OnActionExecutedAsync(MockActionExecutedContextFactory.Create(newController));
+            newController.OnActionExecuted(MockActionExecutedContextFactory.Create(newController));
             return JsonConvert.DeserializeObject<TModel>(JsonConvert.SerializeObject(ret.Data));
         }
     }

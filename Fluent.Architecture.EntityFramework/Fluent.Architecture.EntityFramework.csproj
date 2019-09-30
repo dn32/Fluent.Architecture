@@ -6,9 +6,6 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Fluent.Architecture.EntityFramework.snk</AssemblyOriginatorKeyFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.0.0.4-beta04</Version>
-    <PackageProjectUrl>https://dn32.github.io/Fluent.Architecture/</PackageProjectUrl>
-    <RepositoryUrl>https://dn32.github.io/Fluent.Architecture/</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.2' ">
@@ -29,5 +26,5 @@
   <ItemGroup>
     <PackageReference Include="Remotion.Linq" Version="2.2.0" />
   </ItemGroup>
-
+  
 </Project>

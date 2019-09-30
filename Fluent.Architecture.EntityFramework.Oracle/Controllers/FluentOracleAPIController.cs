@@ -11,7 +11,7 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Controllers
     {
         // GET api/user/FindByProximity?property=name&term=jon&tolerance=40
         [HttpGet]
-        public virtual async Task<DefaultPaginationResult> FindByProximityAsync(string property, string term, int tolerance)
+        public virtual async Task<DefaultPaginationResult> FindByProximity(string property, string term, int tolerance)
         {
             var spec = CreateSpec<TermByProximitySpec<T>>().AddParameter(property, term, tolerance);
             var list = await Service.ListAsync(spec);

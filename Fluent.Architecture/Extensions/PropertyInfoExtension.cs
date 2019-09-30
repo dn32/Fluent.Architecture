@@ -29,14 +29,14 @@ namespace Fluent.Architecture.Core.Extensions
             {
                 var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
                 var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length;
-                if (min == null && max == null) { return RandomUtil.NextRandom(64); }
+                if (min == null && max == null) { return RandomUtil.NextRandomString(64); }
                 if (min == null) { return RandomUtil.NextRandomString(max.Value); }
                 if (max == null) { return RandomUtil.NextRandomString(min.Value); }
 
                 return RandomUtil.NextRandomString(max.Value);
             }
 
-            return property.PropertyType.GetDefaultValue();
+            return property.PropertyType.GetFluentDefaultValue();
         }
     }
 }

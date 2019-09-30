@@ -4,6 +4,7 @@
     <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
     <LangVersion>8</LangVersion>
     <PublishTrimmed>true</PublishTrimmed>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

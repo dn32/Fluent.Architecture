@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Fluent.Architecture.Extensions
 {
@@ -22,6 +23,34 @@ namespace Fluent.Architecture.Extensions
     /// </summary>
     public static class ObjectExtension
     {
+        public static bool TryGetValue<TKey, TValue>(this Dictionary<string, TValue> dictionary, string key, StringComparison comparisonType, out TValue value)
+        {
+            value = dictionary.SingleOrDefault(x => string.Equals(x.Key, key, comparisonType)).Value;
+            return value != null;
+        }
+
+        public static object FluentResultOrValue(this object data)
+        {
+            if (data != null)
+            {
+                var type = data.GetType();
+                if (type == typeof(Task))
+                {
+                    data.GetType().GetMethod(nameof(Task.Wait)).Invoke(data, null);
+                    return null;
+                }
+
+                if (type.IsGenericType && data.GetType().GetGenericTypeDefinition() == typeof(Task<>))
+                {
+                    return data.GetType().GetProperty("Result").GetValue(data);
+                }
+
+                return data;
+            }
+
+            return null;
+        }
+
         public static T FluentClone<T>(this object obj1)
         {
             if (!typeof(T).IsSerializable)
@@ -64,7 +93,7 @@ namespace Fluent.Architecture.Extensions
             {
                 if (property != null)
                 {
-                    return $"'{property.PropertyType.GetDefaultValue()?.ToString()?.Replace("'", "´")}'";
+                    return $"'{property.PropertyType.GetFluentDefaultValue()?.ToString()?.Replace("'", "´")}'";
                 }
 
                 return null;
@@ -133,7 +162,7 @@ namespace Fluent.Architecture.Extensions
                 return (int)value == 0;
             }
 
-            return value == value.GetType().GetDefaultValue();
+            return value == value.GetType().GetFluentDefaultValue();
         }
 
         /// <summary>

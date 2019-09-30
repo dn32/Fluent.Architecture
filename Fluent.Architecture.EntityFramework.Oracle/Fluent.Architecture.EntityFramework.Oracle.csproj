@@ -3,10 +3,6 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.2;netcoreapp3.0</TargetFrameworks>
     <LangVersion>8</LangVersion>
-    <Version>2.0.0.2-beta02</Version>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageProjectUrl>https://dn32.github.io/Fluent.Architecture/</PackageProjectUrl>
-    <RepositoryUrl>https://dn32.github.io/Fluent.Architecture/</RepositoryUrl>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Fluent.Architecture.EntityFramework.Oracle.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>

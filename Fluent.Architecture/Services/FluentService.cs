@@ -163,15 +163,12 @@ namespace Fluent.Architecture.Services
         public virtual async Task<int> CountAsync() => await Repository.CountAsync();
 
         // Todo2 documentar
-        public virtual void RemoveRange(IFluentSpecification spec)
-        {
-            Repository.RemoveRange(spec);
-        }
+        public virtual void RemoveRange(IFluentSpecification spec) => Repository.RemoveRange(spec);
 
-        public virtual void Truncate(string ERASE_ALL_DATA)
+        public virtual async Task TruncateAsync(string ERASE_ALL_DATA)
         {
             Validation.Truncate(ERASE_ALL_DATA);
-            Repository.TruncateAsync();
+            await Repository.TruncateAsync();
         }
 
         /// <summary>
@@ -202,7 +199,7 @@ namespace Fluent.Architecture.Services
 
         public virtual async Task AddRangeAsync(params T[] entities)
         {
-            await  Validation.AddRangeAsync(entities);
+            await Validation.AddRangeAsync(entities);
             await Repository.AddRangeAsync(entities);
         }
 
@@ -215,11 +212,11 @@ namespace Fluent.Architecture.Services
 
         public virtual async Task<T> AddAsync(T entity)
         {
-            await  Validation.AddAsync(entity);
+            await Validation.AddAsync(entity);
 
             if (await ExistsAsync(entity, true, true))
             {
-                return await  UpdateAsync(entity); // Restore deleted
+                return await UpdateAsync(entity); // Restore deleted
             }
             else
             {
@@ -231,7 +228,7 @@ namespace Fluent.Architecture.Services
 
         public virtual async Task<T> AddOrUpdateAsync(T entity)
         {
-            await  Validation.AddOrUpdateAsync(entity);
+            await Validation.AddOrUpdateAsync(entity);
             var exists = SessionRequest.ContextFluentValidationException.Inconsistencies.Any(x => x.ExceptionType == nameof(EntityExistsFluentValidationException));
             SessionRequest.ContextFluentValidationException.Inconsistencies.Clear();
 
@@ -260,14 +257,14 @@ namespace Fluent.Architecture.Services
 
         public virtual async Task<T> UpdateAsync(T entity)
         {
-            await  Validation.UpdateAsync(entity);
-            return this.Repository.Update(entity);
+            await Validation.UpdateAsync(entity);
+            return await Repository.UpdateAsync(entity);
         }
 
         internal async Task<T> UpdateAlterAsync(UpdateAlter<T> value)
         {
-            await  Validation.UpdateAlterAsync(value);
-            return Repository.UpdateAlter(value);
+            await Validation.UpdateAlterAsync(value);
+            return await Repository.UpdateAlterAsync(value);
         }
 
         /// <summary>
@@ -279,8 +276,8 @@ namespace Fluent.Architecture.Services
 
         public virtual async Task UpdateRangeAsync(params T[] entities)
         {
-            await  Validation.UpdateRangeAsync(entities);
-            Repository.UpdateRange(entities);
+            await Validation.UpdateRangeAsync(entities);
+            await Repository.UpdateRangeAsync(entities);
         }
 
         /// <summary>
@@ -292,7 +289,7 @@ namespace Fluent.Architecture.Services
 
         public virtual async Task<T> RemoveAsync(T entity)
         {
-            await  Validation.RemoveAsync(entity);
+            await Validation.RemoveAsync(entity);
             return await Repository.RemoveAsync(entity);
         }
 

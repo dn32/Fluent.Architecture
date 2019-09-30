@@ -86,13 +86,19 @@ namespace Fluent.Architecture.EntityFramework
 
         #region COMPOSITION
 
-        protected void UpdateCompositionList(TE entity)
+
+        /* Unmerged change from project 'Fluent.Architecture.EntityFramework (netcoreapp3.0)'
+        Before:
+                protected void UpdateCompositionList(TE entity)
+        After:
+                protected void UpdateCompositionListAsync(TE entity)
+        */
+        protected async Task UpdateCompositionListAsync(TE entity)
         {
             var compositionProperties = entity.GetType().GetProperties().Where(x => x.GetCustomAttributeAny<FluentCompositionAttribute>());
             foreach (var compositionProperty in compositionProperties)
             {
                 var compositionValue = compositionProperty.GetValue(entity);
-                CompleteEmptyKeys(compositionValue);
 
                 var compositionPropertyType = compositionProperty.PropertyType;
 
@@ -107,6 +113,7 @@ namespace Fluent.Architecture.EntityFramework
                     {
                         foreach (var item in compositionListValue)
                         {
+                            await CompleteEmptyKeysAsync(item);
                             allPersistedForThisEntityForRemove.Remove(item);
                         }
                     }
@@ -123,7 +130,7 @@ namespace Fluent.Architecture.EntityFramework
                     {
                         foreach (var auth in compositionListValue)
                         {
-                            var currentEntity = Find(auth);
+                            var currentEntity = await FindAsync(auth);
                             if (currentEntity == null)
                             { //Add
                                 Session.Add(auth);
@@ -137,6 +144,8 @@ namespace Fluent.Architecture.EntityFramework
                 }
                 else
                 {
+                    await CompleteEmptyKeysAsync(compositionValue);
+
                     var list = ListAllByForeignKey(entity, compositionPropertyType).FluentCast<IList>();
                     var currentEntity = list.Count == 1 ? list[0] : null;
 
@@ -224,7 +233,7 @@ namespace Fluent.Architecture.EntityFramework
             });
         }
 
-        private void CompleteEmptyKeys(object compositionValue)
+        private async Task CompleteEmptyKeysAsync(object compositionValue)
         {
             if (compositionValue == null) { return; }
             var keyPoroperties = compositionValue.GetType().GetProperties().Where(x => x.GetCustomAttributeAny<FluentRandomKeyValueOnAdd>()).ToList();
@@ -233,45 +242,66 @@ namespace Fluent.Architecture.EntityFramework
             {
                 var type = property.PropertyType;
                 var value = property.GetValue(compositionValue);
-                if (value == type.GetDefaultValue())
+                if (value == null || value.FluentEquals(type.GetFluentDefaultValue()))
                 {
-                    List<object> notExists;
-
-                    do
-                    {
-                        var list = new object[10];
-                        for (int i = 0; i < list.Length; i++)
-                        {
-                            list[i] = RandomUtil.GetRandomValue(property);
-                        }
-                        //Essa operação deve ser async
-                        var exists = ExistOnList(property, list).FluentCast<IEnumerable<object>>(); // Verificar se esse cast vai funcionar
-                        notExists = list.Except(exists).ToList();
-                    }
-                    while (notExists.Count == 0);
-
-                    value = notExists.First();
-                    property.SetValue(compositionValue, value);
+                    if (GetExistinEntityCode(compositionValue, property)) { return; }
+                    await GenerateNewEntityCodes(compositionValue, property);
                 }
             }
+        }
+
+        private async Task GenerateNewEntityCodes(object compositionValue, PropertyInfo property)
+        {
+            List<object> notExists;
+            do
+            {
+                var list = new object[10];
+                for (int i = 0; i < list.Length; i++)
+                {
+                    list[i] = RandomUtil.GetRandomValue(property);
+                }
+
+                notExists = await ExistOnListAsync(property, compositionValue.GetType(), list); // Verificar se esse cast vai funcionar
+            }
+            while (notExists.Count == 0);
+
+            var value = notExists.Next();
+            SessionRequest.SetCodeAvailableForEntity(compositionValue.GetType().FullName + property.Name, notExists);
+            property.SetValue(compositionValue, value);
+        }
+
+        private bool GetExistinEntityCode(object compositionValue, PropertyInfo property)
+        {
+            var code = SessionRequest.GetCodeAvailableForEntity(compositionValue.GetType().FullName + property.Name);
+            if (code != null)
+            {
+                property.SetValue(compositionValue, code);
+            }
+
+            return code != null;
         }
 
         #endregion
 
         #region SQL
 
-        internal ICollection ExistOnList(PropertyInfo property, object[] elements)
+        internal async Task<List<object>> ExistOnListAsync(PropertyInfo property, Type dbEntityType, object[] elements)
         {
             var outType = property.PropertyType;
-            var sql = RepositoryUtil.ListToInSql(outType, elements, property);
-            var query = FromSqlByType(sql, outType);
-            var list = typeof(Enumerable).GetMethod(nameof(Enumerable.ToList)).MakeGenericMethod(outType).Invoke(null, new object[] { query }).FluentCast<ICollection>();
-            return list;
+            var sql = RepositoryUtil.ListToInSql(dbEntityType, elements, property);
+
+            static object reader(DbDataReader reader)
+            {
+                return reader[0];
+            }
+
+            var list = await RawSqlQueryAsync(sql, reader);
+            return elements.Except(list).ToList();
         }
 
-        private IQueryable FromSqlByType(string sql, Type outType, params object[] parameters)
+        private IQueryable FromSqlByType(string sql, Type dbEntityType, params object[] parameters)
         {
-            return GetType().GetMethod(nameof(FromSqlSelect), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(outType).Invoke(this, new object[] { sql, parameters }).FluentCast<IQueryable>();
+            return GetType().GetMethod(nameof(FromSqlSelect), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(dbEntityType).Invoke(this, new object[] { sql, parameters }).FluentCast<IQueryable>();
         }
 
         internal protected IQueryable<TE> FromSql(string sql, params object[] parameters)
@@ -290,32 +320,31 @@ namespace Fluent.Architecture.EntityFramework
 #endif
         }
 
-        internal protected ICollection ListAllNotPaginate(string sql, Type outType)
+        internal protected ICollection ListAllNotPaginate(string sql, Type dbEntityType)
         {
-            var query = FromSqlByType(sql, outType);
-            return typeof(Enumerable).GetMethod(nameof(Enumerable.ToList)).MakeGenericMethod(outType).Invoke(null, new object[] { query }).FluentCast<ICollection>();
+            var query = FromSqlByType(sql, dbEntityType);
+            return typeof(Enumerable).GetMethod(nameof(Enumerable.ToList)).MakeGenericMethod(dbEntityType).Invoke(null, new object[] { query }).FluentCast<ICollection>();
         }
-
-
 
         #endregion
 
         #region ENTITY ITEMS
 
-        public virtual object Find(object entity)
+        public virtual async Task<object> FindAsync(object entity)
         {
             var type = entity.GetType();
             var method = GetType().GetMethod(nameof(FindSelectAsync)).MakeGenericMethod(type);
-            return method.Invoke(this, new object[] { entity });
+            dynamic task = method.Invoke(this, new object[] { entity });
+            return await task;
         }
 
 
-        public virtual ICollection ListAllByForeignKey(TE entity, Type outType)
+        public virtual ICollection ListAllByForeignKey(TE entity, Type dnEntityType)
         {
-            var sql = RepositoryUtil.GetForeignKeyFilterSql(entity, outType, out bool nonKeys);
+            var sql = RepositoryUtil.GetForeignKeyFilterSql(entity, dnEntityType, out bool nonKeys);
             if (nonKeys == false)
             {
-                return ListAllNotPaginate(sql, outType);
+                return ListAllNotPaginate(sql, dnEntityType);
             }
 
             return default;
@@ -329,7 +358,7 @@ namespace Fluent.Architecture.EntityFramework
         /// </param>
 
 
-        public virtual TE Update(TE entity)
+        public virtual async Task<TE> UpdateAsync(TE entity)
         {
             RunTheContextValidation();
 
@@ -349,26 +378,13 @@ namespace Fluent.Architecture.EntityFramework
                 Session.EnableLogicalDeletion = true;
             }
 
-            UpdateCompositionList(entity);
+            await UpdateCompositionListAsync(entity);
 
             return entity;
         }
 
-
         //Todo - tratar recuperação de exclusão lógica, como foi feito no Update
-        public TE UpdateAlter(UpdateAlter<TE> value)
-        {
-            RunTheContextValidation();
-
-            DefineForeignKeyOfCompositions(value.Final);
-            var currentEntity = Service.FindAsync(value.Original);
-            TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(value.Final);
-            UpdateCompositionList(value.Final);
-            return value.Final;
-        }
-
-        //Todo - tratar recuperação de exclusão lógica, como foi feito no Update
-        public virtual void UpdateRange(TE[] entities)
+        public virtual async Task UpdateRangeAsync(TE[] entities)
         {
             RunTheContextValidation();
             foreach (var entity in entities)
@@ -376,7 +392,7 @@ namespace Fluent.Architecture.EntityFramework
                 DefineForeignKeyOfCompositions(entity);
                 var currentEntity = Service.FindAsync(entity);
                 TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
-                UpdateCompositionList(entity);
+                await UpdateCompositionListAsync(entity);
             }
         }
 
@@ -398,13 +414,6 @@ namespace Fluent.Architecture.EntityFramework
         {
             var list = GetSpec(spec).ToIQueryable(Query).ToList();
             this.Input.RemoveRange(list);
-        }
-
-        public virtual async Task TruncateAsync()
-        {
-            var tableName = typeof(TE).GetTableName();
-            var sql = $"TRUNCATE TABLE {tableName}";
-            await ExecuteSqlQueryAsync(sql);
         }
 
 

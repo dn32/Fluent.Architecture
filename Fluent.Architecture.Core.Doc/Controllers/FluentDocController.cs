@@ -39,7 +39,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
         [Route("FluentDoc/Service")]
         public IActionResult Service(string name)
         {
-            if (Models.TryGetValue(name, out Type type))
+            if (Models.TryGetValue<string, Type>(name, StringComparison.InvariantCultureIgnoreCase, out Type type))
             {
                 if (Setup.Controllers.TryGetValue(type, out Type controllerType))
                 {

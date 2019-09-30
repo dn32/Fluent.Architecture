@@ -234,7 +234,11 @@ namespace Fluent.Architecture.EntityFramework
         public virtual async Task AddRangeAsync(params TE[] entities)
         {
             RunTheContextValidation();
-            foreach (var entity in entities) { DefineForeignKeyOfCompositions(entity); }
+            foreach (var entity in entities)
+            {
+                DefineForeignKeyOfCompositions(entity);
+                await UpdateCompositionListAsync(entity);
+            }
 
             await Input.AddRangeAsync(entities);
         }
@@ -256,6 +260,7 @@ namespace Fluent.Architecture.EntityFramework
         {
             RunTheContextValidation();
             DefineForeignKeyOfCompositions(entity);
+            await UpdateCompositionListAsync(entity);
             var ret = await Input.AddAsync(entity);
             return ret.Entity;
         }
@@ -272,17 +277,37 @@ namespace Fluent.Architecture.EntityFramework
         }
 
 
+        public virtual async Task TruncateAsync()
+        {
+            var tableName = typeof(TE).GetTableName();
+            var sql = $"TRUNCATE TABLE {tableName}";
+            await ExecuteSqlQueryAsync(sql);
+        }
+
+
+
+        //Todo - tratar recuperação de exclusão lógica, como foi feito no Update
+        public async Task<TE> UpdateAlterAsync(UpdateAlter<TE> value)
+        {
+            RunTheContextValidation();
+
+            DefineForeignKeyOfCompositions(value.Final);
+            var currentEntity = await Service.FindAsync(value.Original);
+            TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(value.Final);
+            await UpdateCompositionListAsync(value.Final);
+            return value.Final;
+        }
 
         /// <summary>
         /// Exemplo:
-        ///   public int ProximoId()
+        ///   public async Task<int> ProximoId()
         ///   {
         ///       int Leitor(DbDataReader reader)
         ///       {
         ///           return (int)reader[0];
         ///       }
         ///
-        ///       return RawSqlQuery("SELECT TOP 10 Name, COUNT(*) FROM Users", Leitor).FirstOrDefault();
+        ///       return await RawSqlQueryAsync("SELECT TOP 10 Name, COUNT(*) FROM Users", Leitor).FirstOrDefault();
         ///   }
         /// </summary>
         /// <typeparam name="T"></typeparam>

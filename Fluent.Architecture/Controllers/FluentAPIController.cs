@@ -181,7 +181,7 @@ namespace Fluent.Architecture.Controllers
         [Description("Add or update an item")]
         public virtual async Task<DefaultResult> AddRange([FromBody] T[] values)
         {
-            await  Service.AddRangeAsync(values);
+            await Service.AddRangeAsync(values);
             return await ResultAsync(values);
         }
 
@@ -190,7 +190,7 @@ namespace Fluent.Architecture.Controllers
         [Description("Update an item")]
         public virtual async Task<DefaultResult> Update([FromBody] T value)
         {
-            await  Service.UpdateAsync(value);
+            await Service.UpdateAsync(value);
             return await ResultAsync(true);
         }
 
@@ -199,7 +199,7 @@ namespace Fluent.Architecture.Controllers
         [Description("Updates an item based on another item's identifiers")]
         public virtual async Task<DefaultResult> UpdateAlter([FromBody] UpdateAlter<T> value)
         {
-            await  Service.UpdateAlterAsync(value);
+            await Service.UpdateAlterAsync(value);
             return await ResultAsync(true);
         }
 
@@ -208,7 +208,7 @@ namespace Fluent.Architecture.Controllers
         [Description("Update a list of items")]
         public virtual async Task<DefaultResult> UpdateRange([FromBody] T[] values)
         {
-            await  Service.UpdateRangeAsync(values);
+            await Service.UpdateRangeAsync(values);
             return await ResultAsync(true);
         }
 
@@ -226,7 +226,7 @@ namespace Fluent.Architecture.Controllers
         [Description("Remove a list of items based on their identifiers")]
         public virtual async Task<DefaultResult> RemoveRange([FromBody] T[] values)
         {
-            await  Service.RemoveRangeAsync(values);
+            await Service.RemoveRangeAsync(values);
             return await ResultAsync(true);
         }
 
@@ -234,7 +234,7 @@ namespace Fluent.Architecture.Controllers
         [Description("Physically deletes all elements of a set")]
         public virtual async Task<DefaultResult> Truncate([FromHeader] string ERASE_ALL_DATA = "false")
         {
-            Service.Truncate(ERASE_ALL_DATA);
+            await Service.TruncateAsync(ERASE_ALL_DATA);
             return await ResultAsync(true);
         }
     }

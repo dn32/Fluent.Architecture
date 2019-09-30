@@ -39,17 +39,23 @@ namespace Fluent.Architecture.Extensions
         /// </summary>
         /// <param name="type">O tipo a ser avaliado.</param>
         /// <returns>O valor padrão do tipo.</returns>
-        public static object GetDefaultValue(this Type type)
+        public static object GetFluentDefaultValue(this Type type)
         {
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
             type = type.GetNonNullableType();
             return type.IsValueType ? TypeDefaults.GetOrAdd(type, Activator.CreateInstance) : null;
         }
 
+        public static bool FluentEquals(this object value1, object value2)
+        {
+            if (value1 == null && value2 == null) { return true; }
+            return value1?.ToString() == value2?.ToString();
+        }
+
         //Todo2 doc
         public static TX GetDefaultValue<TX>()
         {
-            return (TX)typeof(TX).GetDefaultValue();
+            return (TX)typeof(TX).GetFluentDefaultValue();
         }
 
         public static bool GetCustomAttributeAny<T>(this Type type, bool inherit = false) where T : Attribute
@@ -227,7 +233,7 @@ namespace Fluent.Architecture.Extensions
 
         public static bool IsList(this Type type)
         {
-            return (type.GetInterface(nameof(ICollection)) != null);
+            return (type.GetNonNullableType().GetInterface(nameof(ICollection)) != null);
             //return type.Name.StartsWith("List`");
         }
 
@@ -426,7 +432,7 @@ namespace Fluent.Architecture.Extensions
                 {
                     if (row != property.Row)
                     {
-                        AdjustColumns(props, row);
+                        AdjustColumns(props);
                         props.Clear();
                         row++;
                     }
@@ -437,7 +443,7 @@ namespace Fluent.Architecture.Extensions
 
                 if (props.Count > 0)
                 {
-                    AdjustColumns(props, row);
+                    AdjustColumns(props);
                 }
             }
 
@@ -445,7 +451,7 @@ namespace Fluent.Architecture.Extensions
             return root;
         }
 
-        private static void AdjustColumns(List<FluentJsonPropertyAttribute> props, int row)
+        private static void AdjustColumns(List<FluentJsonPropertyAttribute> props)
         {
             var sum = props.Sum(y => y.lGrid);
             var count = props.Count();
@@ -517,7 +523,7 @@ namespace Fluent.Architecture.Extensions
         public static object[] GetConstructorParameters(this Type classType)
         {
             var parameters = classType?.GetConstructors()?.First()?.GetParameters();
-            return parameters?.Select(x => x?.ParameterType?.GetDefaultValue())?.ToArray();
+            return parameters?.Select(x => x?.ParameterType?.GetFluentDefaultValue())?.ToArray();
         }
 
         /// <summary>

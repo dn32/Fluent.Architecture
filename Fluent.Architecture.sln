@@ -37,6 +37,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.Core.Do
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Public", "Public", "{DCA683DC-EB06-4A4C-9248-965C07B682DB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Automatic", "Automatic", "{A8119674-A9A5-4E65-83B0-4A925629878C}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		restore.ps1 = restore.ps1
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "06_Composition", "..\Fluent.Infrastructure.Doc\Samples\06-Composition\06_Composition.csproj", "{96CEF29F-76D5-47C3-BA82-673646CE64E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +107,10 @@ Global
 		{55F7FD0C-6CEF-4F51-B644-F374F75A9899}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55F7FD0C-6CEF-4F51-B644-F374F75A9899}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55F7FD0C-6CEF-4F51-B644-F374F75A9899}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96CEF29F-76D5-47C3-BA82-673646CE64E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96CEF29F-76D5-47C3-BA82-673646CE64E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96CEF29F-76D5-47C3-BA82-673646CE64E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96CEF29F-76D5-47C3-BA82-673646CE64E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -109,6 +121,7 @@ Global
 		{D3B68587-57C1-4EC4-B201-79A3F746320D} = {B8A70513-1332-4DC5-88EB-B9FB43D556AF}
 		{E5E65A3A-5BEF-4522-97E4-B84AA9707297} = {3CDE6F00-CAA7-48F5-9E60-1D1A6A81667C}
 		{55F7FD0C-6CEF-4F51-B644-F374F75A9899} = {B8A70513-1332-4DC5-88EB-B9FB43D556AF}
+		{96CEF29F-76D5-47C3-BA82-673646CE64E2} = {DCA683DC-EB06-4A4C-9248-965C07B682DB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {123E34D5-DA60-4929-9110-E760ECAC5050}

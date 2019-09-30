@@ -90,6 +90,7 @@ namespace Fluent.Architecture.Controllers
         protected async Task<DefaultResult> ResultAsync(object data)
         {
             await CloseTransactionAsync();
+            data = data.FluentResultOrValue();
             return new DefaultResult(PropertySelector(data));
         }
 
@@ -97,6 +98,7 @@ namespace Fluent.Architecture.Controllers
         protected async Task<DefaultPaginationResult> ResultAsync(object data, FluentPagination pagination)
         {
             await CloseTransactionAsync();
+            data = data.FluentResultOrValue();
             return new DefaultPaginationResult(PropertySelector(data), pagination);
         }
 
@@ -104,6 +106,7 @@ namespace Fluent.Architecture.Controllers
         protected async Task<DefaultPaginationTermResult> ResultAsync(object data, FluentPagination pagination, string term)
         {
             await CloseTransactionAsync();
+            data = data.FluentResultOrValue();
             return new DefaultPaginationTermResult(PropertySelector(data), pagination, term);
         }
 

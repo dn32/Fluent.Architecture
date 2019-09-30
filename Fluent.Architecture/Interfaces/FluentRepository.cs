@@ -11,17 +11,23 @@ namespace Fluent.Architecture.Core.Interfaces
 {
     public interface IFluentRepository<TE> : ITransactionlRepository where TE : BaseEntity
     {
+        #region PROPERTIES
+
         FluentService<TE> Service { get; set; }
         ITransactionObjects TransactionObjects { get; set; }
         Type TransactionObjectsType { get; }
+
+        #endregion
+
         void RemoveRange(IFluentSpecification spec);
         void RemoveRange(TE[] entities);
-        TE Update(TE entity);
-        void UpdateRange(TE[] entities);
 
 
+        Task<TE> UpdateAsync(TE entity);
 
-        TE UpdateAlter(UpdateAlter<TE> value);
+        Task UpdateRangeAsync(TE[] entities);
+
+        Task<TE> UpdateAlterAsync(UpdateAlter<TE> value);
 
         Task TruncateAsync();
         Task<TE> RemoveAsync(TE entity);
