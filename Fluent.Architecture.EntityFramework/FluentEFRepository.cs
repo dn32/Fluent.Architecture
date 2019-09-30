@@ -10,6 +10,7 @@
 using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Core.Controllers.ControllerModel;
 using Fluent.Architecture.Core.Interfaces;
+using Fluent.Architecture.Core.Util;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Extensions;
@@ -29,6 +30,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo(@"Fluent.Architecture.EntityFramework.SqlServer, PublicKey=00240000048000009400000006020000002400005253413100040000010001002d98533364f3b3fbd11e7a3f14cd73d169e1daabd62ba2d1e5bc6a48a9bc709a503960db0e76c190e7a8dcefaed037e539682d6a891b242ddb91a3ab20fbfa0c04fb6304c8903857e1ed75399850fca4037dd2c810749e75770e5d455e950ccb9d06cf6fea5f30b00557a29408ce4c45021c412eca32616f47809bfe2cf404cc")]
 [assembly: InternalsVisibleTo(@"Fluent.Architecture.EntityFramework.PostgreSQL, PublicKey=0024000004800000940000000602000000240000525341310004000001000100192d4ee01ba583399ab1d381c4301592f8520d29c628f3220e1550b2068e540e26886fa8d8b52618553f89fed1dccb18d5d3c07c548fca3c916a10823f411c23ef0e85bf0526ed94aa3cfbdf79a9595861348cfc369670f8ed9f7c4afd08de5f3cd87a0c7c6b1d8a0b94622c163a764813ba95d39dc44ea1baf7b663800a49bc")]
@@ -42,7 +44,7 @@ namespace Fluent.Architecture.EntityFramework
     /// <typeparam name="TE">
     /// O tipo de entidade do repositório.
     /// </typeparam>
-    public class FluentEFRepository<TE> : IFluentRepository<TE> where TE : BaseEntity
+    public partial class FluentEFRepository<TE> : IFluentRepository<TE> where TE : BaseEntity
     {
         public FluentEFRepository()
         {
@@ -82,108 +84,6 @@ namespace Fluent.Architecture.EntityFramework
 
         #endregion
 
-        #region SPEC TE
-
-        /// <summary>
-        /// Executa uma solicitação baseada em uma especificação e retorna um resultado ou nulo quando a consulta não é satisfeita.
-        /// </summary>
-        /// <param name="spec">
-        /// A especificação de requisição.
-        /// </param>
-        /// <returns>
-        /// O item referente à consulta ou nulo.
-        /// </returns>
-        public virtual TE FirstOrDefault(IFluentSpecification spec)
-        {
-            var val = GetSpec(spec).ToIQueryable(Query);
-            return val.FirstOrDefault();
-        }
-
-        public virtual TE SingleOrDefault(IFluentSpecification spec)
-        {
-            var val = GetSpec(spec).ToIQueryable(Query);
-
-            try
-            {
-                return val.SingleOrDefault();
-            }
-            catch (InvalidOperationException)
-            {
-                throw new InvalidOperationException($"More than one record was found with the given keys. This is an indication of data with duplicate keys in the database. The table is {typeof(TE).GetTableName()}");
-            }
-        }
-
-        #endregion
-
-        #region SPEC OUT
-
-        /// <summary>
-        /// Executa uma solicitação baseada em uma especificação e retorna uma lista paginada de resultados.
-        /// </summary>
-        /// <typeparam name="TO">
-        /// O tipo de saida desejada. Deve ser o mesmo definido na saida da especificação.
-        /// </typeparam>
-        /// <param name="ispec">
-        /// A especificação de requisição.
-        /// </param>
-        /// <param name="pagination">
-        /// A paginação desejada.
-        /// </param>
-        /// <returns>
-        /// A lista paginada de resultados.
-        /// </returns>
-        public virtual List<TO> ListSelect<TO>(IFluentSpecification<TO> ispec, FluentPagination pagination = null)
-        {
-            var spec = GetSpecSelect<TO>(ispec);
-            var query = spec.ToIQueryable(Query);
-            var fluentPagination = FluentPaginate(query, pagination);
-            return fluentPagination.ToList();
-        }
-
-        /// <summary>
-        /// Executa uma solicitação baseada em uma especificação e retorna um resultado ou nulo quando a consulta não é satisfeita.
-        /// </summary>
-        /// <typeparam name="TO">
-        /// O tipo de saida desejada. Deve ser o mesmo definido na saida da especificação.
-        /// </typeparam>
-        /// <param name="ispec">
-        /// A especificação de requisição.
-        /// </param>
-        /// <returns>
-        /// O item referente à consulta ou nulo.
-        /// </returns>
-        public virtual TO FirstOrDefaultSelect<TO>(IFluentSpecification<TO> ispec)
-        {
-            var spec = GetSpecSelect<TO>(ispec);
-            var iquerie = spec.ToIQueryable(Query);
-            return iquerie.FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Retorna a quantidade de itens existentes que satisfaçam a uma especificação
-        /// </summary>
-        /// <typeparam name="TO">
-        /// O tipo de saida desejada. Deve ser o mesmo definido na saida da especificação.
-        /// </typeparam>
-        /// <param name="spec">
-        /// A especificação de requisição.
-        /// </param>
-        /// <returns>
-        /// A quantidade de itens.
-        /// </returns>
-        public virtual int CountSelect<TO>(IFluentSpecification<TO> spec)
-        {
-            if (spec.FluentEntityType != typeof(TE))
-            {
-                var serviceName = $"{spec.FluentEntityType.Name}Service";
-                throw new IncorrectDevelopmentException($"The type of input reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.FluentEntityType}.\r\nRequisition Type: {typeof(TE)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
-            }
-
-            return GetSpecSelect<TO>(spec).ToIQueryable(Query).Count();
-        }
-
-        #endregion
-
         #region COMPOSITION
 
         protected void UpdateCompositionList(TE entity)
@@ -192,6 +92,8 @@ namespace Fluent.Architecture.EntityFramework
             foreach (var compositionProperty in compositionProperties)
             {
                 var compositionValue = compositionProperty.GetValue(entity);
+                CompleteEmptyKeys(compositionValue);
+
                 var compositionPropertyType = compositionProperty.PropertyType;
 
                 if (compositionPropertyType.IsList())
@@ -299,8 +201,7 @@ namespace Fluent.Architecture.EntityFramework
 
                         if (LocalProperty.PropertyType.IsList())
                         {
-                            var List = LocalProperty.GetValue(entity) as ICollection;
-                            if (List != null)
+                            if (LocalProperty.GetValue(entity) is ICollection List)
                             {
                                 foreach (var item in List)
                                 {
@@ -323,65 +224,49 @@ namespace Fluent.Architecture.EntityFramework
             });
         }
 
+        private void CompleteEmptyKeys(object compositionValue)
+        {
+            if (compositionValue == null) { return; }
+            var keyPoroperties = compositionValue.GetType().GetProperties().Where(x => x.GetCustomAttributeAny<FluentRandomKeyValueOnAdd>()).ToList();
+            //Todo - Permitir esse atributo somente em tipos primitivos
+            foreach (var property in keyPoroperties)
+            {
+                var type = property.PropertyType;
+                var value = property.GetValue(compositionValue);
+                if (value == type.GetDefaultValue())
+                {
+                    List<object> notExists;
+
+                    do
+                    {
+                        var list = new object[10];
+                        for (int i = 0; i < list.Length; i++)
+                        {
+                            list[i] = RandomUtil.GetRandomValue(property);
+                        }
+                        //Essa operação deve ser async
+                        var exists = ExistOnList(property, list).FluentCast<IEnumerable<object>>(); // Verificar se esse cast vai funcionar
+                        notExists = list.Except(exists).ToList();
+                    }
+                    while (notExists.Count == 0);
+
+                    value = notExists.First();
+                    property.SetValue(compositionValue, value);
+                }
+            }
+        }
+
         #endregion
 
         #region SQL
 
-        /// <summary>
-        /// Todo - Muito cuidado, pois se definir esse método como público, pode permitir vilnerabilidades no sistema por ser string sql.
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <returns></returns>
-        internal protected bool ExistsSql(string sql, bool includeExcludedLogically = false)
+        internal ICollection ExistOnList(PropertyInfo property, object[] elements)
         {
-            if (includeExcludedLogically)
-            {
-                lock (SessionRequest)
-                {
-                    Session.EnableLogicalDeletion = false;
-                }
-            }
-
-            var ret = FromSql(sql).Any();
-
-            lock (SessionRequest)
-            {
-                Session.EnableLogicalDeletion = true;
-            }
-
-            return ret;
-        }
-
-        internal protected int CountSql(string sql, bool includeExcludedLogically = false)
-        {
-            if (includeExcludedLogically)
-            {
-                lock (SessionRequest)
-                {
-                    Session.EnableLogicalDeletion = false;
-                }
-            }
-
-            var ret = FromSql(sql).Count();
-
-            lock (SessionRequest)
-            {
-                Session.EnableLogicalDeletion = true;
-            }
-
-            return ret;
-        }
-
-        internal protected TO FindSingleOrDefaultSql<TO>(string sql) where TO : BaseEntity
-        {
-            try
-            {
-                return FromSqlSelect<TO>(sql).SingleOrDefault();
-            }
-            catch (InvalidOperationException)
-            {
-                throw new InvalidOperationException($"More than one record was found with the given keys. This is an indication of data with duplicate keys in the database. The table is {typeof(TE).GetTableName()}");
-            }
+            var outType = property.PropertyType;
+            var sql = RepositoryUtil.ListToInSql(outType, elements, property);
+            var query = FromSqlByType(sql, outType);
+            var list = typeof(Enumerable).GetMethod(nameof(Enumerable.ToList)).MakeGenericMethod(outType).Invoke(null, new object[] { query }).FluentCast<ICollection>();
+            return list;
         }
 
         private IQueryable FromSqlByType(string sql, Type outType, params object[] parameters)
@@ -411,184 +296,19 @@ namespace Fluent.Architecture.EntityFramework
             return typeof(Enumerable).GetMethod(nameof(Enumerable.ToList)).MakeGenericMethod(outType).Invoke(null, new object[] { query }).FluentCast<ICollection>();
         }
 
-        internal protected TE FindSingleOrDefaultSql(string sql)
-        {
-            try
-            {
-                return FromSql(sql).SingleOrDefault();
-            }
-            catch (InvalidOperationException)
-            {
-                throw new InvalidOperationException($"More than one record was found with the given keys. This is an indication of data with duplicate keys in the database. The table is {typeof(TE).GetTableName()}");
-            }
-        }
 
-        /// <summary>
-        /// Exemplo:
-        ///   public int ProximoId()
-        ///   {
-        ///       int Leitor(DbDataReader reader)
-        ///       {
-        ///           return (int)reader[0];
-        ///       }
-        ///
-        ///       return RawSqlQuery("SELECT TOP 10 Name, COUNT(*) FROM Users", Leitor).FirstOrDefault();
-        ///   }
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="query"></param>
-        /// <param name="map"></param>
-        /// <returns></returns>
-        protected List<T> RawSqlQuery<T>(string query, Func<DbDataReader, T> map)
-        {
-            using (var command = Session.Database.GetDbConnection().CreateCommand())
-            {
-                command.CommandText = query;
-                command.CommandType = CommandType.Text;
-
-                Session.Database.OpenConnection();
-
-                using (var result = command.ExecuteReader())
-                {
-                    var entities = new List<T>();
-
-                    while (result.Read())
-                    {
-                        entities.Add(map(result));
-                    }
-
-                    return entities;
-                }
-            }
-        }
-
-        protected int ExecuteSqlQuery(string query)
-        {
-            using (var command = Session.Database.GetDbConnection().CreateCommand())
-            {
-                command.CommandText = query;
-                command.CommandType = CommandType.Text;
-                Session.Database.OpenConnection();
-                return command.ExecuteNonQuery();
-            }
-        }
 
         #endregion
 
         #region ENTITY ITEMS
 
-        /// <summary>
-        /// Executa uma solicitação baseada em uma especificação e retorna uma lista paginada de resultados.
-        /// </summary>
-        /// <param name="ispec">
-        /// A especificação de requisição.
-        /// </param>
-        /// <param name="pagination">
-        /// A paginação desejada.
-        /// </param>
-        /// <returns>
-        /// A lista paginada de resultados.
-        /// </returns>
-
-        public virtual List<TE> List(IFluentSpecification ispec, FluentPagination pagination = null)
-        {
-            var spec = GetSpec(ispec);
-            var query = spec.ToIQueryable(Query);
-            return FluentPaginate(query, pagination).ToList();
-        }
-
-        /// <summary>
-        /// Avalia se um item existe no banco de dados, baseado em uma especificação.
-        /// </summary>
-        /// <param name="spec">
-        /// A especificação de requisição.
-        /// </param>
-        /// <returns>
-        /// Se o item existe ou não.
-        /// </returns>
-
-        public virtual bool Exists(ISpec spec)
-        {
-            return GetSpec(spec).ToIQueryable(Query).Any();
-        }
-
-        /// <summary>
-        /// Avalia se um item existe no banco de dados, baseado em uma especificação.
-        /// </summary>
-        /// <typeparam name="TO">
-        /// O tipo de saida desejada. Deve ser o mesmo definido na saida da especificação.
-        /// </typeparam>
-        /// <param name="spec">
-        /// A especificação de requisição.
-        /// </param>
-        /// <returns>
-        /// Se o item existe ou não.
-        /// </returns>
-
-        public virtual bool ExistsSelect<TO>(ISpec spec)
-        {
-            return GetSpecSelect<TO>(spec).ToIQueryable(Query).Any();
-        }
-
-        /// <summary>
-        /// Retorna a quantidade de itens existentes que satisfaçam a uma especificação
-        /// </summary>
-        /// <param name="spec">
-        /// A especificação de requisição.
-        /// </param>
-        /// <returns>
-        /// A quantidade de itens.
-        /// </returns>
-
-        public virtual int Count(IFluentSpecification spec)
-        {
-            return GetSpec(spec).ToIQueryable(Query).Count();
-        }
-
-        //Todo2 doc
-
-        public virtual int Count()
-        {
-            return Query.Count();
-        }
-
         public virtual object Find(object entity)
         {
             var type = entity.GetType();
-            var method = GetType().GetMethod(nameof(FindSelect)).MakeGenericMethod(type);
+            var method = GetType().GetMethod(nameof(FindSelectAsync)).MakeGenericMethod(type);
             return method.Invoke(this, new object[] { entity });
         }
 
-        public virtual TE Find(TE entity) => FindSelect<TE>(entity);
-
-        public TO FindSelect<TO>(TO entity) where TO : BaseEntity
-        {
-            {
-                var sql = RepositoryUtil.GetKeyFilterSql(entity, out bool nonKeys);
-                if (nonKeys == false)
-                {
-                    var valueFound = FindSingleOrDefaultSql<TO>(sql);
-                    if (valueFound != null)
-                    {
-                        return valueFound;
-                    }
-                }
-            }
-
-            {
-                var sql = RepositoryUtil.GetFluentUniqueKeyFilterSql(entity, out bool nonKeys);
-                if (nonKeys == false)
-                {
-                    var valueFound = FindSingleOrDefaultSql<TO>(sql);
-                    if (valueFound != null)
-                    {
-                        return valueFound;
-                    }
-                }
-            }
-
-            return null;
-        }
 
         public virtual ICollection ListAllByForeignKey(TE entity, Type outType)
         {
@@ -601,49 +321,13 @@ namespace Fluent.Architecture.EntityFramework
             return default;
         }
 
-        public virtual bool Exists(TE entity, bool includeExcludedLogically = false)
-        {
-            var sql = RepositoryUtil.GetKeyAndFluentUniqueKeyFilterSql(entity);
-            return this.ExistsSql(sql, includeExcludedLogically);
-        }
-
-        public virtual bool ExistsOnlyOne(TE entity, bool includeExcludedLogically = false)
-        {
-            var sql = RepositoryUtil.GetKeyAndFluentUniqueKeyFilterSql(entity);
-            return CountSql(sql, includeExcludedLogically) == 1;
-        }
-
-        public virtual int Count(TE entity, bool includeExcludedLogically = false)
-        {
-            var sql = RepositoryUtil.GetKeyAndFluentUniqueKeyFilterSql(entity);
-            return CountSql(sql, includeExcludedLogically);
-        }
-
-        public virtual void AddRange(params TE[] entities)
-        {
-            RunTheContextValidation();
-
-            foreach (var entity in entities)
-            {
-                DefineForeignKeyOfCompositions(entity);
-            }
-
-            Input.AddRange(entities);
-        }
-
-        public virtual TE Add(TE entity)
-        {
-            RunTheContextValidation();
-            DefineForeignKeyOfCompositions(entity);
-            return Input.Add(entity).Entity;
-        }
-
         /// <summary>
         /// Atualiza um item do banco de dados baseado em seu identificador.
         /// </summary>
         /// <param name="entity">
         /// Entidade a ser atualizada com o identificador preenchido.
         /// </param>
+
 
         public virtual TE Update(TE entity)
         {
@@ -656,7 +340,7 @@ namespace Fluent.Architecture.EntityFramework
                 Session.EnableLogicalDeletion = false;
             }
 
-            var currentEntity = Service.Find(entity);
+            var currentEntity = Service.FindAsync(entity);
 
             TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
 
@@ -669,14 +353,15 @@ namespace Fluent.Architecture.EntityFramework
 
             return entity;
         }
-   
+
+
         //Todo - tratar recuperação de exclusão lógica, como foi feito no Update
         public TE UpdateAlter(UpdateAlter<TE> value)
         {
             RunTheContextValidation();
 
             DefineForeignKeyOfCompositions(value.Final);
-            var currentEntity = Service.Find(value.Original);
+            var currentEntity = Service.FindAsync(value.Original);
             TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(value.Final);
             UpdateCompositionList(value.Final);
             return value.Final;
@@ -689,7 +374,7 @@ namespace Fluent.Architecture.EntityFramework
             foreach (var entity in entities)
             {
                 DefineForeignKeyOfCompositions(entity);
-                var currentEntity = Service.Find(entity);
+                var currentEntity = Service.FindAsync(entity);
                 TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
                 UpdateCompositionList(entity);
             }
@@ -702,10 +387,11 @@ namespace Fluent.Architecture.EntityFramework
         /// Entidate a ser removida.
         /// </param>
 
-        public virtual TE Remove(TE entity)
+        public virtual async Task<TE> RemoveAsync(TE entity)
         {
-            this.RunTheContextValidation();
-            return this.Input.Remove(Service.Find(entity, false)).Entity;
+            RunTheContextValidation();
+            var teEntity = await Service.FindAsync(entity, false);
+            return Input.Remove(teEntity).Entity;
         }
 
         public virtual void RemoveRange(IFluentSpecification spec)
@@ -714,17 +400,19 @@ namespace Fluent.Architecture.EntityFramework
             this.Input.RemoveRange(list);
         }
 
-        public virtual void Truncate()
+        public virtual async Task TruncateAsync()
         {
             var tableName = typeof(TE).GetTableName();
             var sql = $"TRUNCATE TABLE {tableName}";
-            ExecuteSqlQuery(sql);
+            await ExecuteSqlQueryAsync(sql);
         }
 
+
         public virtual void RemoveRange(params TE[] entities)
-        {
-            entities.ToList().ForEach(x => this.Remove(x));
+        {//Todo melhorar isso e tornar async
+            entities.ToList().ForEach(async x => await RemoveAsync(x));
         }
+
 
         #endregion
 
@@ -796,18 +484,6 @@ namespace Fluent.Architecture.EntityFramework
             return Service.SessionRequest.LocalHttpContext.Request?.Form[key];
         }
 
-        protected IQueryable<TX> FluentPaginate<TX>(IQueryable<TX> query, FluentPagination pagination = null)
-        {
-            if (pagination == null)
-            {
-                pagination = GetPagination() ?? new FluentPagination(0, true, 20);
-            }
-
-            pagination.TotalQuantityOfItems = query.Count();
-            SessionRequest.Pagination = pagination;
-
-            return query.Skip(pagination.Skip).Take(pagination.ItemsPerPage);
-        }
 
         #endregion
     }

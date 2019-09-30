@@ -1,11 +1,36 @@
 ﻿using Fluent.Architecture.Extensions;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Fluent.Architecture.EntityFramework
 {
     internal static class RepositoryUtil
     {
+        internal static string ListToInSql(Type outType, object[] elements, PropertyInfo property)
+        {
+            if (elements is null || elements.Length == 0)
+            {
+                throw new ArgumentNullException(nameof(elements));
+            }
+
+            var tableName = outType.GetTableName();
+            var collumnName = property.GetColumnName();
+
+            var elementsList = new List<string>();
+            foreach (var element in elements)
+            {
+                var value = element.GetDbValue().ToString();
+                elementsList.Add(value);
+            }
+
+            var elementsStirng = string.Join(",", elementsList.ToArray());
+            var sql = $"select {collumnName} from {tableName} where ${collumnName} in ({elementsStirng})";
+            return sql;
+        }
+
         internal static string GetForeignKeyFilterSql(object entity, Type outType, out bool nonKeys)
         {
             var tableName = outType.GetTableName();

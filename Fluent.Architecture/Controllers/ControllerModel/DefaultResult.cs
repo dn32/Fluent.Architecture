@@ -7,6 +7,8 @@
 
 // ReSharper disable CommentTypo
 
+using System.Threading.Tasks;
+
 namespace Fluent.Architecture.Controllers
 {
     public class DefaultResult
@@ -15,7 +17,17 @@ namespace Fluent.Architecture.Controllers
 
         public DefaultResult(object data)
         {
-            Data = data;
+            if (data != null)
+            {
+                if(data.GetType().GetGenericTypeDefinition() == typeof(Task<>))
+                {
+                    Data = data.GetType().GetProperty("Result").GetValue(data);
+                }
+                else
+                {
+                    Data = data;
+                }
+            }
         }
     }
 }

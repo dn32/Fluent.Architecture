@@ -5,6 +5,7 @@ using Fluent.Architecture.Services;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Threading.Tasks;
 
 namespace Fluent.Architecture.Core.Interfaces
 {
@@ -14,27 +15,33 @@ namespace Fluent.Architecture.Core.Interfaces
         ITransactionObjects TransactionObjects { get; set; }
         Type TransactionObjectsType { get; }
         void RemoveRange(IFluentSpecification spec);
-        void Truncate();
         void RemoveRange(TE[] entities);
-        TE Remove(TE entity);
         TE Update(TE entity);
         void UpdateRange(TE[] entities);
-        List<TO> ListSelect<TO>(IFluentSpecification<TO> spec, FluentPagination pagination = null);
-        int Count();
-        TO FirstOrDefaultSelect<TO>(IFluentSpecification<TO> spec);
-        List<TE> List(IFluentSpecification spec, FluentPagination pagination = null);
-        TE FirstOrDefault(IFluentSpecification spec);
-        TE SingleOrDefault(IFluentSpecification spec);
-        int CountSelect<TO>(IFluentSpecification<TO> spec);
-        bool ExistsSelect<TO>(ISpec spec);
-        bool Exists(ISpec spec);
-        bool Exists(TE entity, bool includeExcludedLogically = false);
-        bool ExistsOnlyOne(TE entity, bool includeExcludedLogically);
-        int Count(TE entity, bool includeExcludedLogically);
-        TE Find(TE entity);
-        TE Add(TE entity);
-        void AddRange(TE[] entities);
-        int Count(IFluentSpecification spec);
+
+
+
         TE UpdateAlter(UpdateAlter<TE> value);
+
+        Task TruncateAsync();
+        Task<TE> RemoveAsync(TE entity);
+
+        Task<bool> ExistsSelectAsync<TO>(ISpec spec);
+        Task<bool> ExistsAsync(ISpec spec);
+        Task<List<TE>> ListAsync(IFluentSpecification spec, FluentPagination pagination = null);
+        Task<List<TO>> ListSelectAsync<TO>(IFluentSpecification<TO> spec, FluentPagination pagination = null);
+        Task<TO> FirstOrDefaultSelectAsync<TO>(IFluentSpecification<TO> spec);
+        Task<TE> FirstOrDefaultAsync(IFluentSpecification spec);
+        Task<TE> SingleOrDefaultAsync(IFluentSpecification spec);
+        Task<bool> ExistsAsync(TE entity, bool includeExcludedLogically = false);
+        Task<TE> FindAsync(TE entity);
+        Task<TE> AddAsync(TE entity);
+        Task AddRangeAsync(TE[] entities);
+
+        Task<bool> ExistsOnlyOneAsync(TE entity, bool includeExcludedLogically);
+        Task<int> CountSelectAsync<TO>(IFluentSpecification<TO> spec);
+        Task<int> CountAsync(TE entity, bool includeExcludedLogically);
+        Task<int> CountAsync(IFluentSpecification spec);
+        Task<int> CountAsync();
     }
 }

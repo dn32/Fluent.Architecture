@@ -103,11 +103,6 @@ namespace Fluent.Architecture.Extensions
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
             var obj = Activator.CreateInstance(type);
 
-            //if (type.Name == "List`1")
-            //{//Todo - implementar para lista
-            //    return Activator;
-            //}
-
             foreach (var property in type.GetProperties())
             {
                 if (property.PropertyType.IsNullableEnum())

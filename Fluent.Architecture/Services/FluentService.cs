@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Fluent.Architecture.Services
 {
@@ -83,9 +84,9 @@ namespace Fluent.Architecture.Services
         /// <returns>
         /// A lista paginada de resultados.
         /// </returns>    
-        public virtual List<TO> ListSelect<TO>(IFluentSpecification<TO> spec, FluentPagination pagination = null)
+        public virtual async Task<List<TO>> ListSelectAsync<TO>(IFluentSpecification<TO> spec, FluentPagination pagination = null)
         {
-            return Repository.ListSelect(spec, pagination);
+            return await Repository.ListSelectAsync(spec, pagination);
         }
 
         /// <summary>
@@ -100,9 +101,9 @@ namespace Fluent.Architecture.Services
         /// <returns>
         /// A lista paginada de resultados.
         /// </returns>
-        public virtual List<T> List(IFluentSpecification spec, FluentPagination pagination = null)
+        public virtual async Task<List<T>> ListAsync(IFluentSpecification spec, FluentPagination pagination = null)
         {
-            return Repository.List(spec, pagination);
+            return await Repository.ListAsync(spec, pagination);
         }
 
         /// <summary>
@@ -117,10 +118,7 @@ namespace Fluent.Architecture.Services
         /// <returns>
         /// O item referente à consulta ou nulo.
         /// </returns>
-        public virtual TO FirstOrDefaultSelect<TO>(IFluentSpecification<TO> spec)
-        {
-            return this.Repository.FirstOrDefaultSelect(spec);
-        }
+        public virtual async Task<TO> FirstOrDefaultSelectAsync<TO>(IFluentSpecification<TO> spec) => await Repository.FirstOrDefaultSelectAsync(spec);
 
         /// <summary>
         /// Executa uma solicitação baseada em uma especificação e retorna um resultado ou nulo quando a consulta não é satisfeita.
@@ -132,15 +130,9 @@ namespace Fluent.Architecture.Services
         /// O item referente à consulta ou nulo.
         /// </returns>
 
-        public virtual T FirstOrDefault(IFluentSpecification spec)
-        {
-            return Repository.FirstOrDefault(spec);
-        }
+        public virtual async Task<T> FirstOrDefaultAsync(IFluentSpecification spec) => await Repository.FirstOrDefaultAsync(spec);
 
-        public virtual T SingleOrDefault(IFluentSpecification spec)
-        {
-            return Repository.SingleOrDefault(spec);
-        }
+        public virtual async Task<T> SingleOrDefaultAsync(IFluentSpecification spec) => await Repository.SingleOrDefaultAsync(spec);
 
         /// <summary>
         /// Retorna a quantidade de itens existentes que satisfaçam a uma especificação
@@ -154,10 +146,7 @@ namespace Fluent.Architecture.Services
         /// <returns>
         /// A quantidade de itens.
         /// </returns>
-        public virtual int CountSelect<TO>(IFluentSpecification<TO> spec)
-        {
-            return this.Repository.CountSelect(spec);
-        }
+        public virtual async Task<int> CountSelectAsync<TO>(IFluentSpecification<TO> spec) => await Repository.CountSelectAsync(spec);
 
         /// <summary>
         /// Retorna a quantidade de itens existentes que satisfaçam a uma especificação
@@ -168,16 +157,10 @@ namespace Fluent.Architecture.Services
         /// <returns>
         /// A quantidade de itens.
         /// </returns>
-        public virtual int Count(IFluentSpecification spec)
-        {
-            return this.Repository.Count(spec);
-        }
+        public virtual async Task<int> CountAsync(IFluentSpecification spec) => await Repository.CountAsync(spec);
 
         // Todo2 documentar
-        public virtual int Count()
-        {
-            return Repository.Count();
-        }
+        public virtual async Task<int> CountAsync() => await Repository.CountAsync();
 
         // Todo2 documentar
         public virtual void RemoveRange(IFluentSpecification spec)
@@ -188,7 +171,7 @@ namespace Fluent.Architecture.Services
         public virtual void Truncate(string ERASE_ALL_DATA)
         {
             Validation.Truncate(ERASE_ALL_DATA);
-            Repository.Truncate();
+            Repository.TruncateAsync();
         }
 
         /// <summary>
@@ -200,30 +183,15 @@ namespace Fluent.Architecture.Services
         /// <returns>
         /// Se o item existe ou não.
         /// </returns>
-        public virtual bool Exists(ISpec spec)
-        {
-            return this.Repository.Exists(spec);
-        }
+        public virtual async Task<bool> ExistsAsync(ISpec spec) => await Repository.ExistsAsync(spec);
 
-        public virtual bool Exists(T entity, bool checkId = true, bool includeExcludedLogically = false)
-        {
-            return this.Repository.Exists(entity, includeExcludedLogically);
-        }
+        public virtual async Task<bool> ExistsAsync(T entity, bool checkId = true, bool includeExcludedLogically = false) => await Repository.ExistsAsync(entity, includeExcludedLogically);
 
-        public virtual bool ExistsOnlyOne(T entity, bool includeExcludedLogically = false)
-        {
-            return this.Repository.ExistsOnlyOne(entity, includeExcludedLogically);
-        }
+        public virtual async Task<bool> ExistsOnlyOneAsync(T entity, bool includeExcludedLogically = false) => await Repository.ExistsOnlyOneAsync(entity, includeExcludedLogically).ConfigureAwait(false);
 
-        public virtual int Count(T entity, bool includeExcludedLogically = false)
-        {
-            return this.Repository.Count(entity, includeExcludedLogically);
-        }
+        public virtual async Task<int> CountAsync(T entity, bool includeExcludedLogically = false) => await Repository.CountAsync(entity, includeExcludedLogically);
 
-        public virtual bool ExistsSelect<TO>(ISpec spec)
-        {
-            return this.Repository.ExistsSelect<TO>(spec);
-        }
+        public virtual async Task<bool> ExistsSelectAsync<TO>(ISpec spec) => await Repository.ExistsSelectAsync<TO>(spec);
 
         /// <summary>
         /// Adiciona vários itens de um mesmo tipo ao banco de dados.
@@ -232,10 +200,10 @@ namespace Fluent.Architecture.Services
         /// Itens a serem adicionados.
         /// </param>
 
-        public virtual void AddRange(params T[] entities)
+        public virtual async Task AddRangeAsync(params T[] entities)
         {
-            Validation.AddRange(entities);
-            this.Repository.AddRange(entities);
+            await  Validation.AddRangeAsync(entities);
+            await Repository.AddRangeAsync(entities);
         }
 
         /// <summary>
@@ -245,42 +213,42 @@ namespace Fluent.Architecture.Services
         /// Item a ser adicionado.
         /// </param>
 
-        public virtual T Add(T entity)
+        public virtual async Task<T> AddAsync(T entity)
         {
-            this.Validation.Add(entity);
+            await  Validation.AddAsync(entity);
 
-            if(Exists(entity, true, true))
+            if (await ExistsAsync(entity, true, true))
             {
-                return Update(entity); // Restore deleted
+                return await  UpdateAsync(entity); // Restore deleted
             }
             else
             {
-                return Repository.Add(entity);
+                return await Repository.AddAsync(entity);
             }
         }
 
         // Todo2 documentar
 
-        public virtual T AddOrUpdate(T entity)
+        public virtual async Task<T> AddOrUpdateAsync(T entity)
         {
-            Validation.AddOrUpdate(entity);
+            await  Validation.AddOrUpdateAsync(entity);
             var exists = SessionRequest.ContextFluentValidationException.Inconsistencies.Any(x => x.ExceptionType == nameof(EntityExistsFluentValidationException));
             SessionRequest.ContextFluentValidationException.Inconsistencies.Clear();
 
             if (exists)
             {
-                return Update(entity);
+                return await UpdateAsync(entity);
             }
             else
             {
-                return Add(entity);
+                return await AddAsync(entity);
             }
         }
 
-        public virtual T Find(T entity, bool checkId = true)
+        public virtual async Task<T> FindAsync(T entity, bool checkId = true)
         {
             Validation.Find(entity, checkId);
-            return Repository.Find(entity);
+            return await Repository.FindAsync(entity);
         }
 
         /// <summary>
@@ -290,15 +258,15 @@ namespace Fluent.Architecture.Services
         /// Entidade a ser atualizada com o identificador preenchido.
         /// </param>
 
-        public virtual T Update(T entity)
+        public virtual async Task<T> UpdateAsync(T entity)
         {
-            this.Validation.Update(entity);
+            await  Validation.UpdateAsync(entity);
             return this.Repository.Update(entity);
         }
 
-        internal T UpdateAlter(UpdateAlter<T> value)
+        internal async Task<T> UpdateAlterAsync(UpdateAlter<T> value)
         {
-            Validation.UpdateAlter(value);
+            await  Validation.UpdateAlterAsync(value);
             return Repository.UpdateAlter(value);
         }
 
@@ -309,9 +277,9 @@ namespace Fluent.Architecture.Services
         /// Entidades a serem atualizadas com o identificador preenchido.
         /// </param>
 
-        public virtual void UpdateRange(params T[] entities)
+        public virtual async Task UpdateRangeAsync(params T[] entities)
         {
-            Validation.UpdateRange(entities);
+            await  Validation.UpdateRangeAsync(entities);
             Repository.UpdateRange(entities);
         }
 
@@ -322,18 +290,18 @@ namespace Fluent.Architecture.Services
         /// Entidade a ser removida.
         /// </param>
 
-        public virtual T Remove(T entity)
+        public virtual async Task<T> RemoveAsync(T entity)
         {
-            this.Validation.Remove(entity);
-            return this.Repository.Remove(entity);
+            await  Validation.RemoveAsync(entity);
+            return await Repository.RemoveAsync(entity);
         }
 
         // Todo2 documentar
 
-        public virtual void RemoveRange(params T[] entities)
+        public virtual async Task RemoveRangeAsync(params T[] entities)
         {
-            this.Validation.RemoveRange(entities);
-            this.Repository.RemoveRange(entities);
+            await Validation.RemoveRangeAsync(entities);
+            Repository.RemoveRange(entities);
         }
 
         #endregion

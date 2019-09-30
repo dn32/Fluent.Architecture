@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo(@"Fluent.Architecture.Controller.Test, PublicKey= 00240000048000009400000006020000002400005253413100040000010001006d1cca26da4daf8230bb524d15453c319d38c381589ab07912b8ab6afff8174aad961a74f171790b60e5ed604bc7bad410214a7d59ed6e101c03440e3b1cd055e2bdba377915b076aa15ac9cd6da1acf488a633cb9bc2bb34536b62593950249111ac7c572e02523978ac82d829fe8be29fba6cc4f4e5b668a6cd57d39eee2aa ")]
 namespace Fluent.Architecture.Controllers
@@ -86,23 +87,23 @@ namespace Fluent.Architecture.Controllers
         }
 
         [NonAction]
-        protected DefaultResult Result(object data)
+        protected async Task<DefaultResult> ResultAsync(object data)
         {
-            CloseTransaction();
+            await CloseTransactionAsync();
             return new DefaultResult(PropertySelector(data));
         }
 
         [NonAction]
-        protected DefaultPaginationResult Result(object data, FluentPagination pagination)
+        protected async Task<DefaultPaginationResult> ResultAsync(object data, FluentPagination pagination)
         {
-            CloseTransaction();
+            await CloseTransactionAsync();
             return new DefaultPaginationResult(PropertySelector(data), pagination);
         }
 
         [NonAction]
-        protected DefaultPaginationTermResult Result(object data, FluentPagination pagination, string term)
+        protected async Task<DefaultPaginationTermResult> ResultAsync(object data, FluentPagination pagination, string term)
         {
-            CloseTransaction();
+            await CloseTransactionAsync();
             return new DefaultPaginationTermResult(PropertySelector(data), pagination, term);
         }
 
@@ -113,12 +114,18 @@ namespace Fluent.Architecture.Controllers
             base.OnActionExecuting(context);
         }
 
-        [NonAction]
-        public override void OnActionExecuted(ActionExecutedContext filterContext)
+        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            CloseTransaction();
-            base.OnActionExecuted(filterContext);
+            await CloseTransactionAsync();
+            await base.OnActionExecutionAsync(context, next);
         }
+
+        //[NonAction]
+        //public override async Task OnActionExecutionAsync(ActionExecutingContext filterContext, ActionExecutionDelegate next)
+        //{
+        //    await CloseTransactionAsync();
+        //    return base.OnActionExecutionAsync(filterContext, next);
+        //}
 
         [NonAction]
         internal protected void OpenTransaction()
@@ -129,7 +136,7 @@ namespace Fluent.Architecture.Controllers
         }
 
         [NonAction]
-        internal protected void CloseTransaction()
+        internal protected async Task CloseTransactionAsync()
         {
             if (TransactionIsStarted)
             {
@@ -137,9 +144,8 @@ namespace Fluent.Architecture.Controllers
                 {
                     if (Service.TransactionObjects.Session.ChangeTracker.HasChanges())
                     {
-                        Service.TransactionObjects.Session.SaveChanges();
+                        await Service.TransactionObjects.Session.SaveChangesAsync();
                     }
-                    //Transaction.Commit();
                 }
 
                 Service.Dispose(true);

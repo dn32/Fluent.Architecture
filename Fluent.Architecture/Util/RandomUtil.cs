@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Fluent.Architecture.Core.Extensions;
+using Fluent.Architecture.Extensions;
+using System;
+using System.Reflection;
 
 namespace Fluent.Architecture.Core.Util
 {
@@ -34,6 +37,14 @@ namespace Fluent.Architecture.Core.Util
             }
 
             return new string(stringChars);
+        }
+
+        internal static object GetRandomValue(PropertyInfo property)
+        {
+            if (property == null) { throw new ArgumentNullException(nameof(property)); }
+            if (!property.PropertyType.GetNonNullableType().IsPrimitive()) { throw new InvalidOperationException($"Operation valid for primitive types only. {nameof(GetRandomValue)}"); }
+
+            return property.GetExampleValue();
         }
     }
 }
