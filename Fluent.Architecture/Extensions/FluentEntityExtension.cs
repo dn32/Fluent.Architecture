@@ -201,9 +201,9 @@ namespace Fluent.Architecture.Extensions
 
                     returnList.Add(new KeyValue
                     {
-                        Property = element.property,
+                        Property = localKeylProperty,
                         ColumnName = columnName,
-                        Value = value
+                        Value = value.GetDbValue()
                     });
                 }
             }
