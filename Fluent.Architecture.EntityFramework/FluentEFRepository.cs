@@ -242,7 +242,7 @@ namespace Fluent.Architecture.EntityFramework
             {
                 var type = property.PropertyType;
                 var value = property.GetValue(compositionValue);
-                if (value == null || value.FluentEquals(type.GetFluentDefaultValue()))
+                if (value.IsFluentNull() || value.FluentEquals(type.GetFluentDefaultValue()))
                 {
                     if (GetExistinEntityCode(compositionValue, property)) { return; }
                     await GenerateNewEntityCodes(compositionValue, property);
@@ -369,7 +369,7 @@ namespace Fluent.Architecture.EntityFramework
                 Session.EnableLogicalDeletion = false;
             }
 
-            var currentEntity = Service.FindAsync(entity);
+            var currentEntity = await Service.FindAsync(entity);
 
             TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
 
@@ -390,7 +390,7 @@ namespace Fluent.Architecture.EntityFramework
             foreach (var entity in entities)
             {
                 DefineForeignKeyOfCompositions(entity);
-                var currentEntity = Service.FindAsync(entity);
+                var currentEntity = await Service.FindAsync(entity);
                 TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
                 await UpdateCompositionListAsync(entity);
             }

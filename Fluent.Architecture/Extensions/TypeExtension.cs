@@ -408,8 +408,11 @@ namespace Fluent.Architecture.Extensions
             {
                 var grid = 0;
                 var row = 1;
+                var lastGroup = properties.First()?.group ?? "";
                 properties.ForEach(x =>
                 {
+                    if (lastGroup != x.group) { grid = 0; row++; lastGroup = x.group; }
+
                     if (grid + x.lGrid > 12)
                     {
                         row++;
