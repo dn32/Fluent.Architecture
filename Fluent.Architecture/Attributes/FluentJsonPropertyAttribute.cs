@@ -57,6 +57,14 @@ namespace Fluent.Architecture.Core.Attributes
         public List<KeyValuePair<string, string>> Enums { get; set; }
 
         public int Row { get; set; }
+
+        public Type Type { get; internal set; }
+
+        [JsonIgnore]
+        public FluentJsonFormAttribute FkDestinal { get; internal set; }
+
+        [JsonIgnore]
+        public bool IsFk { get; internal set; }
 #pragma warning restore IDE1006 // Naming Styles
     }
 }

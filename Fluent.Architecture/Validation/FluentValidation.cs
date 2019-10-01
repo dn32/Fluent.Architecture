@@ -19,6 +19,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Fluent.Architecture.Validation
 {
@@ -49,41 +50,64 @@ namespace Fluent.Architecture.Validation
 
         #endregion
 
+        public void FluentValidateAttribute(T entity)
+        {
+            if (!this.NullParameterOk)
+            {
+                return;
+            }
+
+            var properties = entity.GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                var FluentValidateAttribute = property.GetCustomAttribute<FluentValidateAttribute>(true)?.FluentCast<FluentValidateAttribute>();
+                if (FluentValidateAttribute == null) { continue; }
+
+                var value = property.GetValue(entity);
+                if (!FluentValidateAttribute.IsValidWhen(value))
+                {
+                    AddInconsistency(new FluentGenericAttributeValidateException(property, false, FluentValidateAttribute.InvalidMessage));
+                }
+            }
+        }
+
         /// <summary>
         /// Validate add operation.
         /// </summary>
         /// <param name="entity">
         /// A entidade a ser validada.
         /// </param>
-        public virtual void Add(T entity)
+        public virtual async Task AddAsync(T entity)
         {
             this.ParameterMustBeInformed(entity);
+            this.FluentValidateAttribute(entity);
             this.RequiredPropertyMustBeInformed(entity);
             this.MaxMinLenghtPropertyMustBeInformed(entity);
             this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
 
             if (KeyValuesOk)
             {
-                EntityShouldNotExistInDatabaseBasedOnKeys(entity, false);
+              await EntityShouldNotExistInDatabaseBasedOnKeysAsync(entity, false);
             }
 
             this.RunTheContextValidation();
         }
 
-        public virtual void AddOrUpdate(T entity)
+        public virtual async Task AddOrUpdateAsync(T entity)
         {
             this.ParameterMustBeInformed(entity);
+            this.FluentValidateAttribute(entity);
             this.RequiredPropertyMustBeInformed(entity);
             this.MaxMinLenghtPropertyMustBeInformed(entity);
             this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
 
             if (KeyValuesOk)
             {
-                EntityShouldNotExistInDatabaseBasedOnKeys(entity, false);
+              await  EntityShouldNotExistInDatabaseBasedOnKeysAsync(entity, false);
             }
         }
 
-        public virtual void AddRange(T[] entities)
+        public virtual async Task AddRangeAsync(T[] entities)
         {
             this.ParameterMustBeInformed(entities);
 
@@ -92,13 +116,14 @@ namespace Fluent.Architecture.Validation
                 foreach (var entity in entities)
                 {
                     this.ParameterMustBeInformed(entity);
+                    this.FluentValidateAttribute(entity);
                     this.RequiredPropertyMustBeInformed(entity);
                     this.MaxMinLenghtPropertyMustBeInformed(entity);
                     this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
 
                     if (KeyValuesOk)
                     {
-                        EntityShouldNotExistInDatabaseBasedOnKeys(entity, false);
+                        await EntityShouldNotExistInDatabaseBasedOnKeysAsync(entity, false);
                     }
                 }
             }
@@ -106,25 +131,27 @@ namespace Fluent.Architecture.Validation
             this.RunTheContextValidation();
         }
 
-        public virtual void Update(T entity)
+        public virtual async Task UpdateAsync(T entity)
         {
             this.ParameterMustBeInformed(entity);
+            this.FluentValidateAttribute(entity);
             this.RequiredPropertyMustBeInformed(entity);
             this.MaxMinLenghtPropertyMustBeInformed(entity);
             this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, isUpdate: true);
 
             if (KeyValuesOk)
             {
-                EntityMustExistInDatabase(entity, true);
-                ThereIsOnlyOneEntity(entity, false);
+                await EntityMustExistInDatabaseAsync(entity, true);
+                await ThereIsOnlyOneEntityAsync(entity, false);
             }
 
             this.RunTheContextValidation();
         }
 
-        internal void UpdateAlter(UpdateAlter<T> value)
+        internal async Task UpdateAlterAsync(UpdateAlter<T> value)
         {
             ParameterMustBeInformed(value);
+            FluentValidateAttribute(value.Final);
             ParameterMustBeInformed(value.Original);
             ParameterMustBeInformed(value.Final);
             RequiredPropertyMustBeInformed(value.Original);
@@ -134,7 +161,7 @@ namespace Fluent.Architecture.Validation
 
             if (KeyValuesOk)
             {
-                EntityMustExistInDatabase(value.Original);
+                await  EntityMustExistInDatabaseAsync(value.Original);
                 //Todo validate ThereIsOnlyOneEntity(entity, false);
                 //Todo validate logical delete
             }
@@ -142,7 +169,7 @@ namespace Fluent.Architecture.Validation
             RunTheContextValidation();
         }
 
-        public virtual void UpdateRange(T[] entities)
+        public virtual async Task UpdateRangeAsync(T[] entities)
         {
             this.ParameterMustBeInformed(entities);
 
@@ -151,12 +178,13 @@ namespace Fluent.Architecture.Validation
                 foreach (var entity in entities)
                 {
                     this.ParameterMustBeInformed(entity);
+                    this.FluentValidateAttribute(entity);
                     this.RequiredPropertyMustBeInformed(entity);
                     this.MaxMinLenghtPropertyMustBeInformed(entity);
                     this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, isUpdate: true);
                     if (KeyValuesOk)
                     {
-                        EntityMustExistInDatabase(entity);
+                        await EntityMustExistInDatabaseAsync(entity);
                         //Todo validate ThereIsOnlyOneEntity(entity, false);
                         //Todo validate logical delete
                     }
@@ -166,19 +194,19 @@ namespace Fluent.Architecture.Validation
             this.RunTheContextValidation();
         }
 
-        public virtual void Remove(T entity)
+        public virtual async Task RemoveAsync(T entity)
         {
             this.ParameterMustBeInformed(entity);
             if (entity != null)
             {
-                this.AllKeysMustBeInformed(entity);
-                this.EntityMustExistInDatabase(entity);
+                AllKeysMustBeInformed(entity);
+                await EntityMustExistInDatabaseAsync(entity);
             }
 
             this.RunTheContextValidation();
         }
 
-        public virtual void RemoveRange(T[] entities)
+        public virtual async Task RemoveRangeAsync(T[] entities)
         {
             this.ParameterMustBeInformed(entities);
 
@@ -186,9 +214,9 @@ namespace Fluent.Architecture.Validation
             {
                 foreach (var entity in entities)
                 {
-                    this.ParameterMustBeInformed(entity);
+                    ParameterMustBeInformed(entity);
                     //this.AllKeysMustBeInformed(entity);
-                    this.EntityMustExistInDatabase(entity);
+                    await EntityMustExistInDatabaseAsync(entity);
                 }
             }
 
@@ -405,14 +433,14 @@ namespace Fluent.Architecture.Validation
             }
         }
 
-        private void EntityMustExistInDatabase(T entity, bool includeExcludedLogically = false)
+        private async Task EntityMustExistInDatabaseAsync(T entity, bool includeExcludedLogically = false)
         {
             if (!this.NullParameterOk)
             {
                 return;
             }
 
-            if (!this.Service.Exists(entity, KeyValuesOk, includeExcludedLogically))
+            if (!await Service.ExistsAsync(entity, KeyValuesOk, includeExcludedLogically))
             {
                 var keys = entity.GetKeyValues().Select(x => $"{{{x.Property.Name}:{x.Value}}}").ToArray();
                 var keyValues = string.Join(", ", keys);
@@ -420,29 +448,29 @@ namespace Fluent.Architecture.Validation
             }
         }
 
-        private void ThereIsOnlyOneEntity(T entity, bool includeExcludedLogically = false)
+        private async Task ThereIsOnlyOneEntityAsync(T entity, bool includeExcludedLogically = false)
         {
-            if (!this.NullParameterOk)
+            if (!NullParameterOk)
             {
                 return;
             }
 
-            if (this.Service.Count(entity) > 1)
+            if (await Service.CountAsync(entity, includeExcludedLogically) > 1)
             {
-                var keys = entity.GetKeyValues().Select(x => $"{{{x.Property.Name}:{x.Value}}}").ToArray();
+                var keys = entity.GetKeyValues().Select(x => $"-{{{x.Property.Name}:{x.Value}}}").ToArray();
                 var keyValues = string.Join(", ", keys);
                 this.AddInconsistency(new EntityExistsFluentValidationException(keyValues));
             }
         }
 
-        private void EntityShouldNotExistInDatabaseBasedOnKeys(T entity, bool checkId)
+        private async Task EntityShouldNotExistInDatabaseBasedOnKeysAsync(T entity, bool checkId)
         {
             if (!this.NullParameterOk || !this.KeyValuesOk)
             {
                 return;
             }
 
-            if (this.Service.Exists(entity, checkId))
+            if (await Service.ExistsAsync(entity, checkId))
             {
                 var keys = entity.GetKeyAndFluentUniqueKeyValues().Select(x => $"{{{x.Property.Name}:{x.Value}}}").ToArray();
                 var keyValues = string.Join(", ", keys);

@@ -7,6 +7,8 @@
 
 // ReSharper disable CommentTypo
 
+using Fluent.Architecture.Extensions;
+
 namespace Fluent.Architecture.Controllers
 {
     public class DefaultResult
@@ -15,7 +17,7 @@ namespace Fluent.Architecture.Controllers
 
         public DefaultResult(object data)
         {
-            Data = data;
+            Data = data.FluentResultOrValue();
         }
     }
 }

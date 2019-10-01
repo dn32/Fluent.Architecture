@@ -43,7 +43,7 @@ namespace Fluent.Architecture.Entities
         public void Dispose(bool primaryService)
         {
             Setup.RemoveSession(this.SessionRequestId);
-            this.TransactionObjects.Dispose();
+            TransactionObjects.Dispose();
 
             foreach (var service in this.Services.Values)
             {
@@ -52,7 +52,33 @@ namespace Fluent.Architecture.Entities
 
             if (primaryService)
             {
-                this.Services.Clear();
+                Services.Clear();
+            }
+        }
+
+        public Dictionary<string, List<object>> CodeAvailableForEntity { get; set; } = new Dictionary<string, List<object>>();
+
+        internal object GetCodeAvailableForEntity(string key)
+        {
+            lock (CodeAvailableForEntity)
+            {
+                if (CodeAvailableForEntity.TryGetValue(key, out List<object> list))
+                {
+                    return list.Next();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        internal void SetCodeAvailableForEntity(string key, List<object> entitiCodes)
+        {
+            lock (CodeAvailableForEntity)
+            {
+                CodeAvailableForEntity.Remove(key);
+                CodeAvailableForEntity.Add(key, entitiCodes);
             }
         }
     }

@@ -44,7 +44,15 @@ namespace Fluent.Architecture.EntityFramework
             var dbType = GetTheEntityDBType(typeof(T));
             if (dbType == null)
             {
-                throw new IncorrectDevelopmentException($"The entity {typeof(T).Name} needs a database type specification. Example: [DbType (FluentDbType.ORACLE)]");
+                if (Setup.Config.Config.Connections.Count == 1)
+                {
+                    dbType = Setup.Config.Config.Connections.Single().DbContextType.GetCustomAttribute<DbTypeAttribute>();
+                }
+
+                if (dbType == null)
+                {
+                    throw new IncorrectDevelopmentException($"The entity {typeof(T).Name} needs a database type specification. Example: [DbType (FluentDbType.ORACLE)]");
+                }
             }
 
             var localType = Setup.Config?.Config?.GenericRepositoryType?.MakeGenericType(typeof(T)) ?? typeof(FluentEFRepository<T>);

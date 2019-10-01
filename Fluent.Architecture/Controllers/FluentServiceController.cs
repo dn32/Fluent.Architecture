@@ -9,6 +9,7 @@
 
 using Fluent.Architecture.Core.Util;
 using Fluent.Architecture.Entities;
+using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Services;
 using Microsoft.AspNetCore.Http;
@@ -16,9 +17,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Dynamic;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo(@"Fluent.Architecture.Controller.Test, PublicKey= 00240000048000009400000006020000002400005253413100040000010001006d1cca26da4daf8230bb524d15453c319d38c381589ab07912b8ab6afff8174aad961a74f171790b60e5ed604bc7bad410214a7d59ed6e101c03440e3b1cd055e2bdba377915b076aa15ac9cd6da1acf488a633cb9bc2bb34536b62593950249111ac7c572e02523978ac82d829fe8be29fba6cc4f4e5b668a6cd57d39eee2aa ")]
 namespace Fluent.Architecture.Controllers
@@ -48,34 +54,59 @@ namespace Fluent.Architecture.Controllers
         [NonAction]
         protected object PropertySelector(object element)
         {
+            if (element == null) { return null; }
+
             Request.Headers.TryGetValue("propertyToIgnore", out StringValues propertyToIgnoreValues);
             Request.Headers.TryGetValue("propertyToShow", out StringValues propertyToShowValues);
-            return JsonConvert.DeserializeObject(JsonConvert.SerializeObject(element,
-                         Formatting.Indented, new JsonSerializerSettings
-                         {
-                             ContractResolver = new PropertySelectorDynamicContractJsonResolver(propertyToIgnoreValues, propertyToShowValues),
-                             ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                         }));
+
+            if (element.GetType().IsList())
+            {
+                var json = JsonConvert.SerializeObject(element,
+                        Formatting.None, new JsonSerializerSettings
+                        {
+                            ContractResolver = new PropertySelectorDynamicContractJsonResolver(propertyToIgnoreValues, propertyToShowValues),
+                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                        });
+
+                return JsonConvert.DeserializeObject<List<ExpandoObject>>(json);
+            }
+            else
+            {
+                if (element.GetType().IsPrimitive())
+                {
+                    return element;
+                }
+
+                return JsonConvert.DeserializeObject<ExpandoObject>(JsonConvert.SerializeObject(element,
+                        Formatting.None, new JsonSerializerSettings
+                        {
+                            ContractResolver = new PropertySelectorDynamicContractJsonResolver(propertyToIgnoreValues, propertyToShowValues),
+                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                        }));
+            }
         }
 
         [NonAction]
-        protected DefaultResult Result(object data)
+        protected async Task<DefaultResult> ResultAsync(object data)
         {
-            CloseTransaction();
+            await CloseTransactionAsync();
+            data = data.FluentResultOrValue();
             return new DefaultResult(PropertySelector(data));
         }
 
         [NonAction]
-        protected DefaultPaginationResult Result(object data, FluentPagination pagination)
+        protected async Task<DefaultPaginationResult> ResultAsync(object data, FluentPagination pagination)
         {
-            CloseTransaction();
+            await CloseTransactionAsync();
+            data = data.FluentResultOrValue();
             return new DefaultPaginationResult(PropertySelector(data), pagination);
         }
 
         [NonAction]
-        protected DefaultPaginationTermResult Result(object data, FluentPagination pagination, string term)
+        protected async Task<DefaultPaginationTermResult> ResultAsync(object data, FluentPagination pagination, string term)
         {
-            CloseTransaction();
+            await CloseTransactionAsync();
+            data = data.FluentResultOrValue();
             return new DefaultPaginationTermResult(PropertySelector(data), pagination, term);
         }
 
@@ -86,12 +117,18 @@ namespace Fluent.Architecture.Controllers
             base.OnActionExecuting(context);
         }
 
-        [NonAction]
-        public override void OnActionExecuted(ActionExecutedContext filterContext)
+        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            CloseTransaction();
-            base.OnActionExecuted(filterContext);
+            await CloseTransactionAsync();
+            await base.OnActionExecutionAsync(context, next);
         }
+
+        //[NonAction]
+        //public override async Task OnActionExecutionAsync(ActionExecutingContext filterContext, ActionExecutionDelegate next)
+        //{
+        //    await CloseTransactionAsync();
+        //    return base.OnActionExecutionAsync(filterContext, next);
+        //}
 
         [NonAction]
         internal protected void OpenTransaction()
@@ -102,14 +139,16 @@ namespace Fluent.Architecture.Controllers
         }
 
         [NonAction]
-        internal protected void CloseTransaction()
+        internal protected async Task CloseTransactionAsync()
         {
             if (TransactionIsStarted)
             {
                 if (Service.SessionRequest.ContextFluentValidationException.IsValid)
                 {
-                    Service.TransactionObjects.Session.SaveChanges();
-                    //Transaction.Commit();
+                    if (Service.TransactionObjects.Session.ChangeTracker.HasChanges())
+                    {
+                        await Service.TransactionObjects.Session.SaveChangesAsync();
+                    }
                 }
 
                 Service.Dispose(true);

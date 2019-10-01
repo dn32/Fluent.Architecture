@@ -8,7 +8,10 @@
 // ReSharper disable CommentTypo
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Entities;
+using Fluent.Architecture.Extensions;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -47,9 +50,14 @@ namespace Fluent.Architecture.EntityFramework
             this.Session = ContextFactory.Create(connection, UserSessionRequest);
         }
 
-        public DbSet<TX> GetObjectInputDataInternal<TX>() where TX : class
+        public DbSet<TX> GetObjectInputDataInternal<TX>() where TX : BaseEntity
         {
             return this.Session.Set<TX>();
+        }
+
+        public IQueryable GetObjectInputDataInternal(Type type)
+        {
+            return typeof(DbContext).GetMethod(nameof(DbContext.Set)).MakeGenericMethod(type).Invoke(Session, null).FluentCast<IQueryable>();
         }
 
         /// <summary>

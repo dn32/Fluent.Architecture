@@ -11,8 +11,10 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Fluent.Architecture.Extensions
 {
@@ -21,10 +23,54 @@ namespace Fluent.Architecture.Extensions
     /// </summary>
     public static class ObjectExtension
     {
+        public static bool TryGetValue<TKey, TValue>(this Dictionary<string, TValue> dictionary, string key, StringComparison comparisonType, out TValue value)
+        {
+            value = dictionary.SingleOrDefault(x => string.Equals(x.Key, key, comparisonType)).Value;
+            return value != null;
+        }
+
+        public static object FluentResultOrValue(this object data)
+        {
+            if (data != null)
+            {
+                var type = data.GetType();
+                if (type == typeof(Task))
+                {
+                    data.GetType().GetMethod(nameof(Task.Wait)).Invoke(data, null);
+                    return null;
+                }
+
+                if (type.IsGenericType && data.GetType().GetGenericTypeDefinition() == typeof(Task<>))
+                {
+                    return data.GetType().GetProperty("Result").GetValue(data);
+                }
+
+                return data;
+            }
+
+            return null;
+        }
+
         public static T FluentClone<T>(this object obj1)
         {
-            var json = JsonConvert.SerializeObject(obj1);
-            return JsonConvert.DeserializeObject<T>(json);
+            if (!typeof(T).IsSerializable)
+            {
+                throw new ArgumentException("The type must be serializable.", "source");
+            }
+
+            if (Object.ReferenceEquals(obj1, null))
+            {
+                return default(T);
+            }
+
+            System.Runtime.Serialization.IFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            Stream stream = new MemoryStream();
+            using (stream)
+            {
+                formatter.Serialize(stream, obj1);
+                stream.Seek(0, SeekOrigin.Begin);
+                return (T)formatter.Deserialize(stream);
+            }
         }
 
         /// <summary>
@@ -111,7 +157,7 @@ namespace Fluent.Architecture.Extensions
                 return (int)value == 0;
             }
 
-            return value == value.GetType().GetDefaultValue();
+            return value == value.GetType().GetFluentDefaultValue();
         }
 
         /// <summary>

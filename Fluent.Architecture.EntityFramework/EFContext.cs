@@ -89,7 +89,7 @@ namespace Fluent.Architecture.EntityFramework
                             }
                         }
 
-                        if (property.GetCustomAttribute<NotMappedAttribute>() != null)
+                        if (property.GetCustomAttributeAny<NotMappedAttribute>(true))
                         {
                             entity.Ignore(property.Name);
                             continue;
@@ -184,7 +184,7 @@ namespace Fluent.Architecture.EntityFramework
                 {
                     CurrentValue = currentValuesGetValue.MakeGenericMethod(x.ClrType).Invoke(entityChanged.CurrentValues, new[] { x }),
                     OriginalValue = originalValuesGetValue.MakeGenericMethod(x.ClrType).Invoke(entityChanged.OriginalValues, new[] { x }),
-                    PropertyBane = x.Name
+                    PropertyName = x.Name
                 };
             }).ToList();
 

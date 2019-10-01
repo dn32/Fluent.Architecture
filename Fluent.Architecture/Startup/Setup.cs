@@ -7,6 +7,8 @@
 
 // ReSharper disable CommentTypo
 using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Core.Attributes;
+using Fluent.Architecture.Core.Factory;
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions;
@@ -14,6 +16,9 @@ using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,18 +28,10 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo(@"Fluent.Architecture.EntityFramework, PublicKey=002400000480000094000000060200000024000052534131000400000100010001e5fbcd7e6f1d70524fc7b787a6ba4d8f332e822c5506e1831f4e59ab41e930c56bbf8cc29fa91f1270f4e873c036335c5aa4ccfc76ab13bfa7372de9d4e17de6c2d188fae9e6842d7d90d51e123836fd9f5d6be5580a32d1a12e59489519c6b93cdcf7ecd782042db1f31190350fbf937bbd6a5ae61d648773b46b9a706ccf")]
 namespace Fluent.Architecture
 {
-    public class Connection
+    public static class Setup
     {
-        public string Identifier { get; internal set; }
-        public Func<UserSessionRequest, string> GetConnectionString { get; internal set; }
-        public bool CreateDatabaseIfNotExists { get; set; }
-        public Type DbContextType { get; set; }
-    }
+        #region PROPERTIES
 
-    public interface IConfigValidate
-    {
-        Config Config { get; set; }
-    }
 
     internal class ConfigClassValidado : IConfigValidate
     {
@@ -78,6 +75,8 @@ namespace Fluent.Architecture
 
         public static Dictionary<Type, Type> Model { get; private set; }
 
+        public static Dictionary<Type, Type> Controllers { get; private set; }
+
         public static bool Initialized { get; set; }
 
         internal static Dictionary<Guid, UserSessionRequest> UserSessionList { get; set; }
@@ -88,10 +87,17 @@ namespace Fluent.Architecture
 
         #region PUBLIC METHODS
 
-        public static Config SetServiceProvider(this Config configClass, IServiceProvider serviceProvider)
+        public static List<Type> GetFluentApiEntity()
         {
-            configClass.ServiceProvider = serviceProvider;
-            return configClass;
+            var entities = Setup.Model.Values.ToList().Where(x => !x.IsAbstract && x.IsPublic).ToList();
+            var list = entities
+           .SelectMany(x => x.GetProperties()
+                             .Select(p => new { type = p.PropertyType, attr = p.GetCustomAttribute<FluentCompositionAttribute>() }))
+                             .Where(x => x.attr != null)
+                             .Select(x => x.type.Name == "List`1" ? x.type.GenericTypeArguments[0] : x.type)
+                             .ToList();
+
+            return entities.Where(x => !list.Any(y => y.Name == x.Name)).ToList();
         }
 
         public static Config SetGenericServiceType(this Config configClass, Type serviceType)
@@ -112,6 +118,12 @@ namespace Fluent.Architecture
             return configClass;
         }
 
+        public static Config SetGenericControllerType(this Config configClass, Type controllerType)
+        {
+            configClass.GenericControllerType = controllerType;
+            return configClass;
+        }
+
         internal static Config SetRepositoryFactory(this Config configClass, IRepositoryFactory repositoryFactory)
         {
             configClass.RepositoryFactory = repositoryFactory;
@@ -120,8 +132,11 @@ namespace Fluent.Architecture
 
         public static Config Init()
         {
-            return new Config();
+            ConfigInstance ??= new Config();
+            return ConfigInstance;
         }
+
+        internal static Config ConfigInstance { get; set; }
 
         public static Config SetUserSessionRequestType(this Config configClass, Type userSessionRequestType)
         {
@@ -159,24 +174,22 @@ namespace Fluent.Architecture
             return configClass;
         }
 
-        public static void Run(this IConfigValidate configClassValidado)
-        {
-            Config = configClassValidado;
-            InternalInitialize();
-        }
+        //Todo no boot da aplicação, checar se os tipos de contexto possuem o atrubuto do tipo de BD
+        //Todo - checar ainda se não tem identificador igual
 
-        public static IConfigValidate Build(this Config configClass)
+        public static IServiceCollection Build(this Config configClass)
         {
-            //Todo no boot da aplicação, checar se os tipos de contexto possuem o atrubuto do tipo de BD
-            //Todo - checar ainda se não tem identificador igual
-
-            return new ConfigClassValidado
+            var configClassValidado = new ConfigClassValidado
             {
                 Config = configClass
             };
+
+            Config = configClassValidado;
+
+            return ClientServices;
         }
 
-        private static void InternalInitialize()
+        internal static void InternalInitialize()
         {
             lock (LockInitialization)
             {
@@ -200,10 +213,12 @@ namespace Fluent.Architecture
             Repositories = new Dictionary<Type, Type>();
             Validations = new Dictionary<Type, Type>();
             Model = new Dictionary<Type, Type>();
+            Controllers = new Dictionary<Type, Type>();
             UserSessionList = new Dictionary<Guid, UserSessionRequest>();
             Services.Add(typeof(FluentEntity), typeof(FluentService<FluentEntity>));
             Repositories.Add(typeof(FluentEntity), typeof(IFluentRepository<FluentEntity>));
             Validations.Add(typeof(FluentEntity), typeof(FluentValidation<FluentEntity>));
+            Controllers.Add(typeof(FluentEntity), typeof(FluentController<FluentEntity>));
         }
 
         private static List<Type[]> LoadAssemblies()
@@ -245,8 +260,8 @@ namespace Fluent.Architecture
                     .Where(x => x.Item1 != null).ToList()
                     .ForEach(AddService);
 
-                types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(IFluentRepository<BaseEntity>)))
-                   .Where(x => x.Item1 != null).ToList()
+                types.Select(x => GlobalUtil.GetFluentEntityTypeByInterface(x, typeof(IFluentRepository<BaseEntity>)))
+                   .Where(x => x?.Item1 != null).ToList()
                    .ForEach(AddRepository);
 
                 types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentValidation<BaseEntity>)))
@@ -256,6 +271,11 @@ namespace Fluent.Architecture
                 types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(BaseEntity)))
                     .Where(x => x.Item1 != null && x.Item2 != typeof(BaseEntity)).ToList()
                     .ForEach(AddModel);
+
+                types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentController<BaseEntity>)))
+                   .Where(x => x.Item1 != null).ToList()
+                   .ForEach(AddController);
+
             }
 
             // Todo - Não me recordo o motivo de estar comentado, mas acredito que tenha que descomentar
@@ -410,7 +430,7 @@ namespace Fluent.Architecture
 
         private static void AddService(Tuple<Type, Type> service)
         {
-            if (Model.ContainsKey(service.Item1))
+            if (Services.ContainsKey(service.Item1))
             {
                 throw new IncorrectDevelopmentException($"There are two service classes with the same name {service.Item1} -  {service.Item2}. This is not allowed.");
             }
@@ -420,7 +440,7 @@ namespace Fluent.Architecture
 
         private static void AddValidation(Tuple<Type, Type> validation)
         {
-            if (Model.ContainsKey(validation.Item1))
+            if (Validations.ContainsKey(validation.Item1))
             {
                 throw new IncorrectDevelopmentException($"There are two validation classes with the same name {validation.Item1} - {validation.Item2}. This is not allowed.");
             }
@@ -428,9 +448,19 @@ namespace Fluent.Architecture
             Validations.Add(validation.Item1, validation.Item2);
         }
 
+        private static void AddController(Tuple<Type, Type> controller)
+        {
+            if (Controllers.ContainsKey(controller.Item1))
+            {
+                throw new IncorrectDevelopmentException($"There are two controller classes with the same name {controller.Item1} - {controller.Item2}. This is not allowed.");
+            }
+
+            Controllers.Add(controller.Item1, controller.Item2);
+        }
+
         private static void AddRepository(Tuple<Type, Type> repository)
         {
-            if (Model.ContainsKey(repository.Item1))
+            if (Repositories.ContainsKey(repository.Item1))
             {
                 throw new IncorrectDevelopmentException($"There are two entity repository with the same name {repository.Item1} - {repository.Item2}. This is not allowed.");
             }

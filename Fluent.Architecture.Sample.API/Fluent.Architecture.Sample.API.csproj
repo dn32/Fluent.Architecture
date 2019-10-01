@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
     <LangVersion>8</LangVersion>
+    <PublishTrimmed>true</PublishTrimmed>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,17 +19,21 @@
   
   <PropertyGroup>
     <IsTransformWebConfigDisabled>true</IsTransformWebConfigDisabled>
-  </PropertyGroup>
-  
-  <PropertyGroup>
     <CopyOutputSymbolsToPublishDirectory>false</CopyOutputSymbolsToPublishDirectory>
   </PropertyGroup>
   
   <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc2" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.0.0-rc2" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp3.0|AnyCPU'">
+    <DocumentationFile>D:\Projetos\dn32\Fluent.Architecture\Fluent.Architecture.Sample.API\Fluent.Architecture.Sample.API.xml</DocumentationFile>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Fluent.Architecture.Core.Doc\Fluent.Architecture.Core.Doc.csproj" />
     <ProjectReference Include="..\Fluent.Architecture.EntityFramework.MemoryDatabase\Fluent.Architecture.EntityFramework.MemoryDatabase.csproj" />
     <ProjectReference Include="..\Fluent.Architecture.EntityFramework.MySQL\Fluent.Architecture.EntityFramework.MySQL.csproj" />
-    <ProjectReference Include="..\Fluent.Architecture.EntityFramework.Oracle\Fluent.Architecture.EntityFramework.Oracle.csproj" />
-    <ProjectReference Include="..\Fluent.Architecture.EntityFramework.PostgreSQL\Fluent.Architecture.EntityFramework.PostgreSQL.csproj" />
     <ProjectReference Include="..\Fluent.Architecture.EntityFramework.SqLite\Fluent.Architecture.EntityFramework.SqLite.csproj" />
     <ProjectReference Include="..\Fluent.Architecture.EntityFramework.SqlServer\Fluent.Architecture.EntityFramework.SqlServer.csproj" />
     <ProjectReference Include="..\Fluent.Architecture.EntityFramework\Fluent.Architecture.EntityFramework.csproj" />

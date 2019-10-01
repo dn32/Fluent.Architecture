@@ -7,6 +7,11 @@
 
 // ReSharper disable CommentTypo
 
+using Fluent.Architecture.Extensions;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Reflection;
+
 namespace Fluent.Architecture.Entities
 {
     /// <summary>
@@ -14,6 +19,17 @@ namespace Fluent.Architecture.Entities
     /// </summary>
     public abstract class BaseEntity
     {
-      //  public virtual string[] Inclusions() => System.Array.Empty<string>();
+        public override bool Equals(object obj)
+        {
+            return GetHashCode() == obj.GetHashCode();
+        }
+
+        public override int GetHashCode()
+        {
+            var type = GetType();
+            var keyElements = type.GetProperties().Where(x => x.GetCustomAttributeAny<KeyAttribute>()).ToList();
+            var json = type.GetHashCode() + Newtonsoft.Json.JsonConvert.SerializeObject(keyElements.Select(x => x.GetValue(this)).ToArray());
+            return json.GetHashCode();
+        }
     }
 }

@@ -1,36 +1,15 @@
 ﻿using Fluent.Architecture.Core.Filters;
-using Fluent.Architecture.Entities;
 using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Specifications;
 using System;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Fluent.Architecture.Core.Specifications
+namespace Fluent.Architecture.Core.Extensions
 {
-    public class FilterSpec<T> : FluentSpecification<T> where T : FluentEntity
+    internal static class FilterExtensions
     {
-        private Filter[] Filters { get; set; }
-
-        public FilterSpec<T> SetParameter(Filter[] filters)
-        {
-            Filters = filters;
-            return this;
-        }
-
-        public override IQueryable<T> Where(IQueryable<T> query)
-        {
-            var expression = FiltersToExtression(Filters);
-            return query.Where(expression);
-        }
-
-        public override IOrderedQueryable<T> Order(IQueryable<T> query)
-        {
-            return query.OrderBy(x => x);
-        }
-
-        private Expression<Func<T, bool>> FiltersToExtression(Filter[] filters)
+        internal static Expression<Func<T, bool>> FiltersToExtression<T>(this Filter[] filters)
         {
             var properties = typeof(T).GetProperties().ToList();
             Expression<Func<T, bool>> allExpression = x => true;

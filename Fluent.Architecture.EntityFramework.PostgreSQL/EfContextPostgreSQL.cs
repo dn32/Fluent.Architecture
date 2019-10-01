@@ -1,11 +1,6 @@
 ﻿// ReSharper disable CommentTypo
 
-#if NET461
-
-#else
 using Microsoft.EntityFrameworkCore;
-
-#endif
 
 namespace Fluent.Architecture.EntityFramework.PostgreSQL
 {

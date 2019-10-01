@@ -6,14 +6,17 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
+using Fluent.Architecture.Core.Extensions;
 using Fluent.Architecture.Core.Inconsistences;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions.ValidationException;
 using Fluent.Architecture.Util;
 using Fluent.Architecture.Validation;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Linq;
 
@@ -75,13 +78,21 @@ public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
 
             inconsistencies.ForEach(GetGlobalization);
 
-            filterContext.Result = new CustomJsonResult(new ValidationReturn
+            // filterContext.Result =
+            var result = new ValidationReturn
             {
                 Inconsistencies = inconsistencies,
                 Message = exception.Message,
                 ValidationError = true
-            });
+            };
 
+            ContentResult content = new ContentResult
+            {
+                ContentType = "application/json",
+                Content = result.ToFluentJson()
+            };
+
+            filterContext.Result = content;
             filterContext.HttpContext.Response.StatusCode = 422;
         }
         else if (filterContext?.Exception != null)
@@ -90,14 +101,22 @@ public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
             var frame = stackTrace.GetFrame(0) ?? new StackFrame();
             var line = frame.GetFileLineNumber();
 
-            filterContext.Result = new CustomJsonResult(new
+            var result = new
             {
                 Error = true,
                 filterContext.Exception.Message,
                 stackTrace,
                 frame,
                 line
-            });
+            };
+
+            ContentResult content = new ContentResult
+            {
+                ContentType = "application/json",
+                Content = result.ToFluentJson()
+            };
+
+            filterContext.Result = content;
 
             filterContext.HttpContext.Response.StatusCode = 500;
         }
