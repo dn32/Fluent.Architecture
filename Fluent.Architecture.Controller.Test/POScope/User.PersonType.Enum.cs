@@ -1,7 +1,7 @@
 ﻿
-public enum EnumPersonType
-{
-    None = 0,
-    User = 1,
-    ExternalUser = 2
-}
+//public enum EnumPersonType
+//{
+//    None = 0,
+//    User = 1,
+//    ExternalUser = 2
+//}

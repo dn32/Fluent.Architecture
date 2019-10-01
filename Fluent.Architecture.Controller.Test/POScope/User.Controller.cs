@@ -1,26 +1,26 @@
-﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
-//     TODOS OS DIREITOS RESERVADOS.
-// </copyright>
-// -----------------------------------------------------------------------
+﻿//// -----------------------------------------------------------------------
+//// <copyright company="Fluent System">
+////     Copyright © Fluent System. All rights reserved.
+////     TODOS OS DIREITOS RESERVADOS.
+//// </copyright>
+//// -----------------------------------------------------------------------
 
-using Fluent.Architecture.Controllers;
-using NUnit.Framework;
+//using Fluent.Architecture.Controllers;
+//using NUnit.Framework;
 
 
-public class UserController : FluentAPIController<User>
-{
-    public DefaultResult InternalCheck()
-    {
-        //Tests
-        Assert.IsNotNull(SessionRequestId);
-        Assert.IsNotNull(ServiceHttpContext);
-        Assert.IsNotNull(ServiceUser);
-        Assert.IsNotNull(User);
-        return Result(true);
-    }
-}
+//public class UserController : FluentAPIController<User>
+//{
+//    public DefaultResult InternalCheck()
+//    {
+//        //Tests
+//        Assert.IsNotNull(SessionRequestId);
+//        Assert.IsNotNull(ServiceHttpContext);
+//        Assert.IsNotNull(ServiceUser);
+//        Assert.IsNotNull(User);
+//        return ResultAsync(true).Result;
+//    }
+//}
 
 
 
