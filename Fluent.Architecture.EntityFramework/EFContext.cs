@@ -15,6 +15,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Fluent.Architecture.EntityFramework
 {
@@ -109,13 +111,13 @@ namespace Fluent.Architecture.EntityFramework
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
-        public override int SaveChanges()
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             UpdateLogicalDeletion(ChangeTracker.Entries());
 
             BeforeSave(out var changedEntities, out var eventChange);
 
-            var ret = base.SaveChanges();
+            var ret = await base.SaveChangesAsync();
 
             AfterSave(changedEntities, eventChange);
 

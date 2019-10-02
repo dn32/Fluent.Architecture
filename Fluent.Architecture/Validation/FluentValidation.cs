@@ -64,6 +64,7 @@ namespace Fluent.Architecture.Validation
                 var FluentValidateAttribute = property.GetCustomAttribute<FluentValidateAttribute>(true)?.FluentCast<FluentValidateAttribute>();
                 if (FluentValidateAttribute == null) { continue; }
 
+                FluentValidateAttribute.Entity = entity;
                 var value = property.GetValue(entity);
                 if (!FluentValidateAttribute.IsValidWhen(value))
                 {

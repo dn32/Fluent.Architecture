@@ -27,6 +27,11 @@ public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
         filterContext.ExceptionHandled = true;
         filterContext.HttpContext.Response.Clear();
 
+        if (filterContext?.Exception?.InnerException is DbUpdateException exception0)
+        {
+            filterContext.Exception = exception0.InnerException;
+        }
+
         if (filterContext?.Exception is DbUpdateException exception1)
         {
             filterContext.Exception = exception1.InnerException;
