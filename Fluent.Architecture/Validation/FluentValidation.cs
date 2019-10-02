@@ -15,6 +15,7 @@ using Fluent.Architecture.Exceptions.ValidationException;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Services;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
@@ -169,7 +170,7 @@ namespace Fluent.Architecture.Validation
             RunTheContextValidation();
         }
 
-        public virtual async Task UpdateRangeAsync(T[] entities)
+        public virtual async Task UpdateRangeAsync(IEnumerable<T> entities)
         {
             this.ParameterMustBeInformed(entities);
 

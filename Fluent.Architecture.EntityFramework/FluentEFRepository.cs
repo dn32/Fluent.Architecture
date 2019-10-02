@@ -384,7 +384,7 @@ namespace Fluent.Architecture.EntityFramework
         }
 
         //Todo - tratar recuperação de exclusão lógica, como foi feito no Update
-        public virtual async Task UpdateRangeAsync(TE[] entities)
+        public virtual async Task UpdateRangeAsync(IEnumerable<TE> entities)
         {
             RunTheContextValidation();
             foreach (var entity in entities)

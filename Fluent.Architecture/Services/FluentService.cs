@@ -274,7 +274,9 @@ namespace Fluent.Architecture.Services
         /// Entidades a serem atualizadas com o identificador preenchido.
         /// </param>
 
-        public virtual async Task UpdateRangeAsync(params T[] entities)
+        public virtual async Task UpdateRangeAsync(params T[] entities) => await UpdateRangeAsync(entities);
+
+        public virtual async Task UpdateRangeAsync(IEnumerable<T> entities)
         {
             await Validation.UpdateRangeAsync(entities);
             await Repository.UpdateRangeAsync(entities);

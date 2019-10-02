@@ -24,14 +24,10 @@ namespace Fluent.Architecture.Core.Interfaces
 
 
         Task<TE> UpdateAsync(TE entity);
-
-        Task UpdateRangeAsync(TE[] entities);
-
+        Task UpdateRangeAsync(IEnumerable<TE> entities);
         Task<TE> UpdateAlterAsync(UpdateAlter<TE> value);
-
         Task TruncateAsync();
         Task<TE> RemoveAsync(TE entity);
-
         Task<bool> ExistsSelectAsync<TO>(ISpec spec);
         Task<bool> ExistsAsync(ISpec spec);
         Task<List<TE>> ListAsync(IFluentSpecification spec, FluentPagination pagination = null);
@@ -43,7 +39,6 @@ namespace Fluent.Architecture.Core.Interfaces
         Task<TE> FindAsync(TE entity);
         Task<TE> AddAsync(TE entity);
         Task AddRangeAsync(TE[] entities);
-
         Task<bool> ExistsOnlyOneAsync(TE entity, bool includeExcludedLogically);
         Task<int> CountSelectAsync<TO>(IFluentSpecification<TO> spec);
         Task<int> CountAsync(TE entity, bool includeExcludedLogically);
