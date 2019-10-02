@@ -39,10 +39,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Public", "Public", "{DCA683
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Automatic", "Automatic", "{A8119674-A9A5-4E65-83B0-4A925629878C}"
 	ProjectSection(SolutionItems) = preProject
+		deploy-package.cmd = deploy-package.cmd
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "01_SimpleHelloWorld", "Public\01-SimpleHelloWorld\01_SimpleHelloWorld.csproj", "{11872BE4-BAD6-47C4-A1BE-45EB8CC9A71E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -106,10 +105,6 @@ Global
 		{55F7FD0C-6CEF-4F51-B644-F374F75A9899}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55F7FD0C-6CEF-4F51-B644-F374F75A9899}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55F7FD0C-6CEF-4F51-B644-F374F75A9899}.Release|Any CPU.Build.0 = Release|Any CPU
-		{11872BE4-BAD6-47C4-A1BE-45EB8CC9A71E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{11872BE4-BAD6-47C4-A1BE-45EB8CC9A71E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{11872BE4-BAD6-47C4-A1BE-45EB8CC9A71E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{11872BE4-BAD6-47C4-A1BE-45EB8CC9A71E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -120,7 +115,6 @@ Global
 		{D3B68587-57C1-4EC4-B201-79A3F746320D} = {B8A70513-1332-4DC5-88EB-B9FB43D556AF}
 		{E5E65A3A-5BEF-4522-97E4-B84AA9707297} = {3CDE6F00-CAA7-48F5-9E60-1D1A6A81667C}
 		{55F7FD0C-6CEF-4F51-B644-F374F75A9899} = {B8A70513-1332-4DC5-88EB-B9FB43D556AF}
-		{11872BE4-BAD6-47C4-A1BE-45EB8CC9A71E} = {DCA683DC-EB06-4A4C-9248-965C07B682DB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {123E34D5-DA60-4929-9110-E760ECAC5050}

@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fluent.Architecture.Test\Fluent.Architecture.Test.csproj" />
-    <ProjectReference Include="..\Public\01-SimpleHelloWorld\01_SimpleHelloWorld.csproj" />
 
     <PackageReference Include="Fluent.Architecture.Core" Version="2.0.1-beta100106" />
     <PackageReference Include="Fluent.Architecture.Core.Doc" Version="2.0.1-beta100106" />

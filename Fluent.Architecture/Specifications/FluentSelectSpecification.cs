@@ -34,7 +34,7 @@ namespace Fluent.Architecture.Specifications
         public abstract IQueryable<TO> Where(IQueryable<TE> query);
 
         // Todo2 doc
-        public virtual IOrderedQueryable<TO> Order(IQueryable<TO> query) => query.OrderBy(x => x);
+        public abstract IOrderedQueryable<TO> Order(IQueryable<TO> query);
 
         // Todo2 doc
         internal IOrderedQueryable<TO> ToIQueryable(IQueryable<TE> query)

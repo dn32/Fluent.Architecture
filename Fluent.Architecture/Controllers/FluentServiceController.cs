@@ -117,18 +117,11 @@ namespace Fluent.Architecture.Controllers
             base.OnActionExecuting(context);
         }
 
-        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        public override void OnActionExecuted(ActionExecutedContext context)
         {
-            await CloseTransactionAsync();
-            await base.OnActionExecutionAsync(context, next);
+            CloseTransactionAsync().Wait();
+            base.OnActionExecuted(context);
         }
-
-        //[NonAction]
-        //public override async Task OnActionExecutionAsync(ActionExecutingContext filterContext, ActionExecutionDelegate next)
-        //{
-        //    await CloseTransactionAsync();
-        //    return base.OnActionExecutionAsync(filterContext, next);
-        //}
 
         [NonAction]
         internal protected void OpenTransaction()
