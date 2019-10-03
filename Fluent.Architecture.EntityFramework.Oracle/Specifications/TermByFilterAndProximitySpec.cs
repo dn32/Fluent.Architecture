@@ -1,13 +1,13 @@
-﻿using Fluent.Architecture.Entities;
+﻿using Fluent.Architecture.Core.Filters;
+using Fluent.Architecture.Core.Specifications;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Specifications;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 
 namespace Fluent.Architecture.EntityFramework.Oracle.Specifications
 {
-    public class TermByProximitySpec<TE> : FluentSpecification<TE> where TE : FluentEntity
+    public class TermByFilterAndProximitySpec<TE> : FluentFilterSpec<TE> where TE : FluentEntity
     {
         private string Term { get; set; }
 
@@ -17,8 +17,10 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Specifications
 
         private int Tolerance { get; set; }
 
-        public TermByProximitySpec<TE> AddParameter(string property, string term, int tolerance)
+        public TermByFilterAndProximitySpec<TE> SetParameter(Filter[] filters, bool isList, string property, string term, int tolerance)
         {
+            Filters = filters;
+            IsList = isList;
             TableName = typeof(TE).GetTableName();
             ColumnName = typeof(TE).GetProperties().FirstOrDefault(x => x.Name.Equals(property, StringComparison.InvariantCultureIgnoreCase))?.GetColumnName() ?? throw new Exception($"Property not found {typeof(TE).Name}.{property}");
             Term = term;
@@ -29,7 +31,9 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Specifications
         public override IQueryable<TE> Where(IQueryable<TE> query)
         {
             IgnoreOrder = true;
-            return query.WhereProximityText(Term, TableName, ColumnName, Tolerance);
+            query = base.Where(query);
+            query = query.WhereProximityText(Term, TableName, ColumnName, Tolerance);
+            return query;
         }
 
         public override IOrderedQueryable<TE> Order(IQueryable<TE> query) => throw new NotImplementedException();

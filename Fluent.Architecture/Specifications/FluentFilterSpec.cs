@@ -8,7 +8,7 @@ namespace Fluent.Architecture.Core.Specifications
 {
     public class FluentFilterSpec<T> : FluentSpecification<T> where T : FluentEntity
     {
-        private Filter[] Filters { get; set; }
+        protected Filter[] Filters { get; set; }
 
         public bool IsList { get; set; }
       
