@@ -237,6 +237,16 @@ namespace Fluent.Architecture.Extensions
             //return type.Name.StartsWith("List`");
         }
 
+        public static Type GetListTypeNonNull(this Type type)
+        {
+            if (type.IsList() && type.IsGenericType)
+            {
+                type.GetGenericTypeDefinition().GetNonNullableType();
+            }
+
+            return type.GetNonNullableType();
+        }
+
         public static object GetMaxValueOfNumber(this Type numberType)
         {
             numberType = numberType.GetNonNullableType();
@@ -364,7 +374,7 @@ namespace Fluent.Architecture.Extensions
                     attr.FluentComposition.SetName(property.Name);
                     attr.FluentComposition.Form = GetFluentJsonSchema(property.PropertyType, tablet);
                 }
-                
+
                 if (property.GetCustomAttributeAny<RequiredAttribute>() || property.GetCustomAttributeAny<FluentRequiredAttribute>())
                 {
                     attr.required = true;
