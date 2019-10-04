@@ -10,6 +10,7 @@ using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Core.Entities;
 using Fluent.Architecture.Core.Enumerator;
 using Fluent.Architecture.Core.Extensions;
+using Fluent.Architecture.Entities;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Util;
 using Newtonsoft.Json;
@@ -235,6 +236,16 @@ namespace Fluent.Architecture.Extensions
         {
             return (type.GetNonNullableType().GetInterface(nameof(ICollection)) != null);
             //return type.Name.StartsWith("List`");
+        }
+
+        public static bool IsFluentEntity(this Type type)
+        {
+            return type.GetNonNullableType().Is(typeof(FluentEntity));
+        }
+
+        public static bool IsFluentEntity(this object obj)
+        {
+            return obj?.GetType().GetNonNullableType().Is(typeof(FluentEntity)) ?? false;
         }
 
         public static Type GetListTypeNonNull(this Type type)
