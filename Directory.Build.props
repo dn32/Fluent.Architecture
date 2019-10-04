@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <Target Name="CopyPackage" AfterTargets="Pack">
-    <Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="C:\Users\Marcelo\Google Drive\FOut" />
-    <!--<Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="C:\Users\marcelo.souza\Google Drive\FOut" />-->
+     <!--<Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="C:\Users\Marcelo\Google Drive\FOut" />-->
+   <Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="C:\Users\marcelo.souza\Google Drive\FOut" />
   </Target>
   
   <!--<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

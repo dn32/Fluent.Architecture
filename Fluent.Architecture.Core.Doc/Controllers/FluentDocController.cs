@@ -1,4 +1,5 @@
 ﻿using Fluent.Architecture.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using System;
@@ -9,6 +10,7 @@ using System.Reflection;
 
 namespace Fluent.Architecture.Core.Doc.Controllers
 {
+    [AllowAnonymous]
     public class FluentDocController : Controller
     {
         public static Dictionary<string, Type> Models { get; private set; }
@@ -72,7 +74,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
                                       _ => 5,
                                   };
 
-                                  var parameters = action.GetParameters().Select(x => x.ParameterType);
+                                  var parameters = action.GetParameters().Select(x => new DocParameter { Type = x.ParameterType, Name = x.Name });
                                   var description = action.GetCustomAttribute<DescriptionAttribute>()?.Description;
 
                                   return new FluentActionSchema

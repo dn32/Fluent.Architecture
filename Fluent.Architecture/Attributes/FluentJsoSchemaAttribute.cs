@@ -18,6 +18,9 @@ namespace Fluent.Architecture.Core.Attributes
         [JsonProperty("PropertyName")]
         public string propName { get; set; }
 
+        [JsonIgnore]
+        public string PropNameCaseSensitive { get; set; }
+
         [DisplayName("Group")]
         [JsonProperty("Group")]
         public string group { get; set; }

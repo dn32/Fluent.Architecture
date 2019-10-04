@@ -364,6 +364,11 @@ namespace Fluent.Architecture.Extensions
                     attr.FluentComposition.SetName(property.Name);
                     attr.FluentComposition.Form = GetFluentJsonSchema(property.PropertyType, tablet);
                 }
+                
+                if (property.GetCustomAttributeAny<RequiredAttribute>() || property.GetCustomAttributeAny<FluentRequiredAttribute>())
+                {
+                    attr.required = true;
+                }
 
                 if (property.PropertyType.IsNullableEnum())
                 {
@@ -378,6 +383,7 @@ namespace Fluent.Architecture.Extensions
                     }
                 }
 
+                attr.PropNameCaseSensitive = property.Name;
                 attr.propName = property.Name.ToFluentJsonStringNormalized();
                 root.Properties.Add(attr);
             });
@@ -475,7 +481,7 @@ namespace Fluent.Architecture.Extensions
                 if (property.FluentAggregation == null) { return; }
                 property.FluentAggregation.LocalKeys.ToList().ForEach(key =>
                 {
-                    var fkProperty = schema.Properties.Single(x => x.propName.Equals(key));
+                    var fkProperty = schema.Properties.Single(x => x.PropNameCaseSensitive.Equals(key));
                     fkProperty.IsFk = true;
                     fkProperty.FkDestinal = property.Type.GetCustomAttribute<FluentJsonFormAttribute>();
                     if (fkProperty.FkDestinal != null) { fkProperty.FkDestinal.Type = property.Type; }

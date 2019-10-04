@@ -11,7 +11,6 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Controllers
 {
     public class FluentOracleAPIController<T> : FluentAPIController<T> where T : FluentEntity, new()
     {
-        // GET api/user/FindByProximity?property=name&term=jon&tolerance=40
         [HttpGet]
         public virtual async Task<DefaultPaginationResult> FindByProximity(string property, string term, int tolerance)
         {

@@ -89,7 +89,7 @@ namespace Fluent.Architecture.Validation
 
             if (KeyValuesOk)
             {
-              await EntityShouldNotExistInDatabaseBasedOnKeysAsync(entity, false);
+                await EntityShouldNotExistInDatabaseBasedOnKeysAsync(entity, false);
             }
 
             this.RunTheContextValidation();
@@ -105,7 +105,7 @@ namespace Fluent.Architecture.Validation
 
             if (KeyValuesOk)
             {
-              await  EntityShouldNotExistInDatabaseBasedOnKeysAsync(entity, false);
+                await EntityShouldNotExistInDatabaseBasedOnKeysAsync(entity, false);
             }
         }
 
@@ -163,7 +163,7 @@ namespace Fluent.Architecture.Validation
 
             if (KeyValuesOk)
             {
-                await  EntityMustExistInDatabaseAsync(value.Original);
+                await EntityMustExistInDatabaseAsync(value.Original);
                 //Todo validate ThereIsOnlyOneEntity(entity, false);
                 //Todo validate logical delete
             }
@@ -347,6 +347,7 @@ namespace Fluent.Architecture.Validation
                     }
 
                     var maxint = Convert.ChangeType(max, typeof(int), CultureInfo.InvariantCulture) as int?;
+                    maxint = maxint == 0 ? int.MaxValue : maxint;
                     if (!new MaxLengthAttribute(maxint.Value).IsValid(value))
                     {
                         this.AddInconsistency(new UiFieldLenghtFluentValidationException(property));

@@ -13,7 +13,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
         public string Name { get; set; }
         public string Route { get; set; }
         public int OrderMethod { get; internal set; }
-        public IEnumerable<Type> Parameters { get; internal set; }
+        public IEnumerable<DocParameter> Parameters { get; set; }
         public string Description { get; internal set; }
     }
 }

@@ -136,7 +136,9 @@
         float: right;
     }
     .actions-container .action span.parameters {
-        color: #3862fb;
+        color: #6d7073;
+        display: block;
+        font-size: 13px;
     }
 
 /* Provide sufficient contrast against white background */

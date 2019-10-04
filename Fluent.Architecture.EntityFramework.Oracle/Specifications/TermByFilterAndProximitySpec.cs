@@ -22,9 +22,14 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Specifications
             Filters = filters;
             IsList = isList;
             TableName = typeof(TE).GetTableName();
-            ColumnName = typeof(TE).GetProperties().FirstOrDefault(x => x.Name.Equals(property, StringComparison.InvariantCultureIgnoreCase))?.GetColumnName() ?? throw new Exception($"Property not found {typeof(TE).Name}.{property}");
+
+            if (!string.IsNullOrWhiteSpace(ColumnName) && !string.IsNullOrWhiteSpace(Term))
+            {
+                ColumnName = typeof(TE).GetProperties().FirstOrDefault(x => x.Name.Equals(property, StringComparison.InvariantCultureIgnoreCase))?.GetColumnName() ?? throw new Exception($"Property not found '{typeof(TE).Name}.{property}'");
+            }
+
             Term = term;
-            Tolerance = tolerance;
+            Tolerance = tolerance == 0 ? 80 : tolerance;
             return this;
         }
 
@@ -32,7 +37,12 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Specifications
         {
             IgnoreOrder = true;
             query = base.Where(query);
-            query = query.WhereProximityText(Term, TableName, ColumnName, Tolerance);
+
+            if (!string.IsNullOrWhiteSpace(ColumnName) && !string.IsNullOrWhiteSpace(Term))
+            {
+                query = query.WhereProximityText(Term, TableName, ColumnName, Tolerance);
+            }
+
             return query;
         }
 

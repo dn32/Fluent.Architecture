@@ -18,7 +18,7 @@ order by UTL_MATCH.jaro_winkler_similarity(lower({collumn}), lower({{0}})) DESC
 ";
 
 #if NETCOREAPP3_0
-            return dbSet.FromSqlRaw(sql, Term);
+            return dbSet.FromSqlRaw(sql, term);
 #else
             return dbSet.FromSql(sql, term);
 #endif

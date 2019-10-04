@@ -28,23 +28,28 @@
             @foreach (var action in actions)
             {
                 if (action == null) { continue; }
-                var parameters = action.Parameters?.Select(x => x.GetFriendlyName(false)).ToArray() ?? new string[] { };
+                var parameters = action.Parameters?.Select(x => $"{x.Name}: {x.Type.GetFriendlyName(false)}").ToArray() ?? new string[] { };
                 var paramString = string.Join(", ", parameters);
 
-                <div class="action">
-                    <span class="method @action.Method.ToLower()">@action.Method</span>
-                    <span class="name">@action.Name</span>
-                    <span class="parameters">@paramString</span>
-                    <span class="description">@action.Description</span>
-                    @if (@action.Method == "GET")
-                    {
-                        <span class="route"><a href="@action.Route" target="_blank">@action.Route</a></span>
-                    }
-                    else
-                    {
-                        <span class="route">@action.Route</span>
-                    }
-                </div>
+            <div class="action">
+                <span class="method @action.Method.ToLower()">@action.Method</span>
+                <span class="name">@action.Name</span>
+                <span class="description">@action.Description</span>
+                @if (@action.Method == "GET")
+                {
+                    <span class="route"><a href="@action.Route" target="_blank">@action.Route</a></span>
+                }
+                else
+                {
+                    <span class="route">@action.Route</span>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(paramString))
+                {
+                    <span class="parameters">params: (@paramString)</span>
+                }
+
+            </div>
             }
 
         </div>
@@ -71,7 +76,7 @@
                     <tr class="property">
                         <td class="name">@property.propName</td>
                         <td class="description">@property.name</td>
-                        <td class="type">@property.Type.Name (@range)</td>
+                        <td class="type">@property.Type.GetFriendlyName(false) (@range)</td>
                         @*<span class="range">Range: @property.min,@property.min </span>*@
                         <td>
                             @Html.Raw(Is(property.IsEnum, "<span><img src='/FluentDoc/img/ok.png'/>enum</span>"))
