@@ -252,7 +252,7 @@ namespace Fluent.Architecture.Extensions
         {
             if (type.IsList() && type.IsGenericType)
             {
-                type.GetGenericTypeDefinition().GetNonNullableType();
+                return type.GenericTypeArguments[0].GetNonNullableType();
             }
 
             return type?.GetElementType()?.GetNonNullableType() ?? type.GetNonNullableType();
@@ -344,11 +344,7 @@ namespace Fluent.Architecture.Extensions
         {
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
 
-            if (type.Name == "List`1")
-            {
-                type = type.GenericTypeArguments[0];
-            }
-
+            type = type.GetListTypeNonNull();
             var form = GetFluentJsonFormAttributeByType(type);
 
             form.propName = type.Name.ToFluentJsonStringNormalized();
@@ -370,13 +366,14 @@ namespace Fluent.Architecture.Extensions
 
                 if (attr.FluentAggregation != null)
                 {
-                    if (property.PropertyType.Name == "List`1")
+                    if (property.PropertyType.IsList())
                     {
-                        return; //Ignorando agregação em lista enquanto não é implementada
+                        return; //Todo - Ignorando agregação em lista enquanto não é implementada
                     }
 
                     attr.FluentAggregation.SetType(property.PropertyType.Name);
                     attr.FluentAggregation.SetName(property.Name);
+                    attr.FluentAggregation.FluentFilter = property.GetCustomAttribute<FluentFilterAttribute>();
                 }
 
                 if (attr.FluentComposition != null)

@@ -1,6 +1,4 @@
-﻿
-using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Core.Filters;
+﻿using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.EntityFramework.Oracle.Specifications;
 using Microsoft.AspNetCore.Mvc;
@@ -22,22 +20,22 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Controllers
         [HttpGet]
         [Route("/api/[controller]/ListByFilterAndProximity")]
         [Description("Get a paginated list of items based on filters and text proximity")]
-        public virtual async Task<DefaultPaginationResult> ListByFilterAndProximityGet([FromQuery] Filter[] filters, string property, string term, int tolerance)
+        public virtual async Task<DefaultPaginationResult> ListByFilterAndProximityGet([FromBody] FiltersAndTerm filtersAndTerm)
         {
-            return await InternalListByFilterAndProximityAsync(filters, property, term, tolerance);
+            return await InternalListByFilterAndProximityAsync(filtersAndTerm);
         }
 
         [HttpPost]
         [Route("/api/[controller]/ListByFilterAndProximity")]
         [Description("Get a paginated list of items based on filters and text proximity")]
-        public virtual async Task<DefaultPaginationResult> ListByFilterAndProximityPost([FromBody] Filter[] filters, string property, string term, int tolerance)
+        public virtual async Task<DefaultPaginationResult> ListByFilterAndProximityPost([FromBody] FiltersAndTerm filtersAndTerm)
         {
-            return await InternalListByFilterAndProximityAsync(filters, property, term, tolerance);
+            return await InternalListByFilterAndProximityAsync(filtersAndTerm);
         }
 
-        private async Task<DefaultPaginationResult> InternalListByFilterAndProximityAsync([FromBody] Filter[] filters, string property, string term, int tolerance)
+        private async Task<DefaultPaginationResult> InternalListByFilterAndProximityAsync(FiltersAndTerm filtersAndTerm)
         {
-            var spec = CreateSpec<TermByFilterAndProximitySpec<T>>().SetParameter(filters, isList: true, property, term, tolerance);
+            var spec = CreateSpec<TermByFilterAndProximitySpec<T>>().SetParameter(filtersAndTerm.Filters, isList: true, filtersAndTerm.Property, filtersAndTerm.Term, filtersAndTerm.Tolerance);
             return await ResultAsync(Service.ListAsync(spec), LastRequestPagination);
         }
     }

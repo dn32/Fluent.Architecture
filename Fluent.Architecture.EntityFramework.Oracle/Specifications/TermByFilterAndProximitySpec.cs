@@ -22,13 +22,13 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Specifications
             Filters = filters;
             IsList = isList;
             TableName = typeof(TE).GetTableName();
+            Term = term;
 
-            if (!string.IsNullOrWhiteSpace(ColumnName) && !string.IsNullOrWhiteSpace(Term))
+            if (!string.IsNullOrWhiteSpace(property) && !string.IsNullOrWhiteSpace(Term))
             {
                 ColumnName = typeof(TE).GetProperties().FirstOrDefault(x => x.Name.Equals(property, StringComparison.InvariantCultureIgnoreCase))?.GetColumnName() ?? throw new Exception($"Property not found '{typeof(TE).Name}.{property}'");
             }
 
-            Term = term;
             Tolerance = tolerance == 0 ? 80 : tolerance;
             return this;
         }

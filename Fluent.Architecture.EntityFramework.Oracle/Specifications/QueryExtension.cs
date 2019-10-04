@@ -1,4 +1,5 @@
 ﻿using Fluent.Architecture.Entities;
+using Fluent.Architecture.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
@@ -10,7 +11,6 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Specifications
         {
             if (string.IsNullOrWhiteSpace(term)) { return query.OrderBy(x => x); }
 
-            var dbSet = query as DbSet<T>;
             var sql = $@"
 select * from {table}
 where UTL_MATCH.jaro_winkler_similarity(lower({collumn}), lower({{0}})) > {tolerance}
@@ -18,9 +18,10 @@ order by UTL_MATCH.jaro_winkler_similarity(lower({collumn}), lower({{0}})) DESC
 ";
 
 #if NETCOREAPP3_0
+            var dbSet = query.FluentCast<DbSet<T>>();
             return dbSet.FromSqlRaw(sql, term);
 #else
-            return dbSet.FromSql(sql, term);
+            return query.FromSql(sql, term);
 #endif
         }
     }
