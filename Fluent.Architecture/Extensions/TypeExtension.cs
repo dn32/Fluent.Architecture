@@ -255,7 +255,7 @@ namespace Fluent.Architecture.Extensions
                 type.GetGenericTypeDefinition().GetNonNullableType();
             }
 
-            return type.GetNonNullableType();
+            return type?.GetElementType()?.GetNonNullableType() ?? type.GetNonNullableType();
         }
 
         public static object GetMaxValueOfNumber(this Type numberType)

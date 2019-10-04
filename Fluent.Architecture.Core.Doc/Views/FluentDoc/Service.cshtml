@@ -12,6 +12,17 @@
     ViewData["Title"] = Model.FluentJsonForm.name;
     var actions = ViewBag.actions as List<FluentActionSchema>;
 
+    string GetTypeName(Type type, string name)
+    {
+        if (type.GetListTypeNonNull().IsFluentEntity())
+        {
+            return $"<a href=\"/FluentDoc/Service?name={type.GetListTypeNonNull().GetFriendlyName(false)}\">{type.GetFriendlyName(false)}</a>";
+        }
+        else
+        {
+            return $"{name}: {type.GetFriendlyName(false)}";
+        }
+    }
 }
 
 <div class="one-service-container">
@@ -28,28 +39,29 @@
             @foreach (var action in actions)
             {
                 if (action == null) { continue; }
-                var parameters = action.Parameters?.Select(x => $"{x.Name}: {x.Type.GetFriendlyName(false)}").ToArray() ?? new string[] { };
+                var parameters = action.Parameters?.Select(x => GetTypeName(x.Type, x.Name)).ToArray() ?? new string[] { };
+
                 var paramString = string.Join(", ", parameters);
 
-            <div class="action">
-                <span class="method @action.Method.ToLower()">@action.Method</span>
-                <span class="name">@action.Name</span>
-                <span class="description">@action.Description</span>
-                @if (@action.Method == "GET")
-                {
-                    <span class="route"><a href="@action.Route" target="_blank">@action.Route</a></span>
-                }
-                else
-                {
-                    <span class="route">@action.Route</span>
-                }
+                <div class="action">
+                    <span class="method @action.Method.ToLower()">@action.Method</span>
+                    <span class="name">@action.Name</span>
+                    <span class="description">@action.Description</span>
+                    @if (@action.Method == "GET")
+                    {
+                        <span class="route"><a href="@action.Route" target="_blank">@action.Route</a></span>
+                    }
+                    else
+                    {
+                        <span class="route">@action.Route</span>
+                    }
 
-                @if (!string.IsNullOrWhiteSpace(paramString))
-                {
-                    <span class="parameters">params: (@paramString)</span>
-                }
+                    @if (!string.IsNullOrWhiteSpace(paramString))
+                    {
+                        <span class="parameters">params: @Html.Raw(paramString)</span>
+                    }
 
-            </div>
+                </div>
             }
 
         </div>
@@ -76,10 +88,10 @@
                     <tr class="property">
                         <td class="name">@property.propName</td>
                         <td class="description">@property.name</td>
-                        <td class="type">@property.Type.GetFriendlyName(false) (@range)</td>
+                        <td class="type">@Html.Raw(GetTypeName(property.Type, property.Type.Name)) (@range)</td>
                         @*<span class="range">Range: @property.min,@property.min </span>*@
                         <td>
-                            @Html.Raw(Is(property.IsEnum, "<span><img src='/FluentDoc/img/ok.png'/>enum</span>"))
+                            @Html.Raw(Is(property.IsEnum, "<span><img src='/FluentDoc/img/ok.png'/> enum</span>"))
                             @Html.Raw(Is(property.IsKey, "<span><img src='/FluentDoc/img/ok.png'/> key</span>"))
                             @Html.Raw(Is(property.IsList, "<span><img src='/FluentDoc/img/ok.png'/> list</span>"))
                             @Html.Raw(Is(property.IsNullable, "<span><img src='/FluentDoc/img/ok.png'/> nullable</span>"))
