@@ -7,6 +7,11 @@ namespace Fluent.Architecture.Extensions
 {
     public static class StringExtension
     {
+        public static string Remove(this string initialText, string removeText)
+        {
+            return initialText.Replace(removeText, "");
+        }
+
         public static string ToCamelCase(this string s)
         {
             if (string.IsNullOrEmpty(s) || !char.IsUpper(s[0]))

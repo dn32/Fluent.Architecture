@@ -87,7 +87,8 @@ namespace Fluent.Architecture.Core.Doc.Controllers
                                       Method = method,
                                       OrderMethod = orderMethod,
                                       Parameters = parameters,
-                                      Description = description
+                                      Description = description,
+                                      ApiBaseUrl = FluentDocExtension.ApiBaseUrl
                                   };
                               })
                               .ToList();

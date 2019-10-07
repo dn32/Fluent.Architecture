@@ -10,8 +10,10 @@ using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Core.Factory;
 using Fluent.Architecture.Core.Interfaces;
+using Fluent.Architecture.Core.Services;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions;
+using Fluent.Architecture.Filters;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Util;
@@ -53,7 +55,7 @@ namespace Fluent.Architecture
 
         internal static Dictionary<Guid, UserSessionRequest> UserSessionList { get; set; }
 
-        internal static IConfigValidate Config { get; set; }
+        public static IConfigValidate Config { get; set; }
 
         #endregion
 
@@ -109,6 +111,13 @@ namespace Fluent.Architecture
                 configClass.GenericControllerType = controllerType;
             }
 
+            return configClass;
+        }
+
+        public static Config UseJwt<Service>(this Config configClass, FluentJwtInfo jwtInfo) where Service : FluentAuthenticationService
+        {
+            configClass.JwtInfo = jwtInfo;
+            configClass.JwtInfo.FluentAuthenticationServiceType = typeof(Service);
             return configClass;
         }
 

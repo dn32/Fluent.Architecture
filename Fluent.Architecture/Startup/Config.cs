@@ -7,6 +7,7 @@
 
 // ReSharper disable CommentTypo
 using Fluent.Architecture.Core.Interfaces;
+using Fluent.Architecture.Filters;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -25,5 +26,6 @@ namespace Fluent.Architecture
         public Type GenericValidationType { get; internal set; }
         public Type GenericControllerType { get; internal set; }
         internal IRepositoryFactory RepositoryFactory { get; set; }
+        public FluentJwtInfo JwtInfo { get; set; }
     }
 }

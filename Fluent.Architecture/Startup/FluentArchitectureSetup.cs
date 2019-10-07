@@ -29,6 +29,6 @@ namespace Fluent.Architecture
             Setup.InternalInitialize();
             builder.ConfigureApplicationPartManager(apm => apm.FeatureProviders.Add(new ControllerFactory()));
             return Setup.Init();
-        }
+        }        
     }
 }

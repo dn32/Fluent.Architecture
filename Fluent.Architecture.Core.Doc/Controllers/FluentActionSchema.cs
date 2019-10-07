@@ -15,5 +15,6 @@ namespace Fluent.Architecture.Core.Doc.Controllers
         public int OrderMethod { get; internal set; }
         public IEnumerable<DocParameter> Parameters { get; set; }
         public string Description { get; internal set; }
+        public string ApiBaseUrl { get; internal set; }
     }
 }

@@ -10,6 +10,7 @@ using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions;
+using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Services;
 using System;
 using System.Collections.Generic;
@@ -71,12 +72,17 @@ namespace Fluent.Architecture.Factory
         /// <returns></returns>
         public static TS Create<TS>(object httpContext, string justification) where TS : TransactionalService, new()
         {
+            return Create(typeof(TS), httpContext).FluentCast<TS>();
+        }
+
+        public static TransactionalService Create(Type serviceType, object httpContext, string justification)
+        {
             if (string.IsNullOrWhiteSpace(justification))
             {
                 throw new IncorrectDevelopmentException("Report the justification");
             }
 
-            return Create<TS>(httpContext);
+            return Create(serviceType, httpContext).FluentCast<TransactionalService>();
         }
 
         //private static void InternalCreateValidation(TransactionalService service)

@@ -6,8 +6,11 @@ namespace Fluent.Architecture
 {
     public static class FluentDocExtension
     {
-        public static void AddFluentDoc(this IMvcBuilder builder)
+        internal static string ApiBaseUrl { get; set; }
+
+        public static void AddFluentDoc(this IMvcBuilder builder, string apiBaseUrl)
         {
+            ApiBaseUrl = apiBaseUrl;
             builder.Services.AddFluentDoc();
         }
 
