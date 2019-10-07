@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 
 namespace Fluent.Architecture.Util
 {
-    public static class AutenticationUtil
+    public static class AuthenticationUtil
     {
         private static string Secret { get; set; }
 

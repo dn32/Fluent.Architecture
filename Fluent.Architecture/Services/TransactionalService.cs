@@ -8,7 +8,7 @@
 // ReSharper disable CommentTypo
 
 using Fluent.Architecture.Core.Interfaces;
-using Fluent.Architecture.Entities;
+using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Specifications;
 using Fluent.Architecture.Validation;

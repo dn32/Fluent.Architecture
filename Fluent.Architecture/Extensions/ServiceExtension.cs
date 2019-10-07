@@ -1,6 +1,5 @@
-﻿
-using Fluent.Architecture.Entities;
-using Fluent.Architecture.Exceptions;
+﻿using Fluent.Architecture.Exceptions;
+using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Services;
 using System;

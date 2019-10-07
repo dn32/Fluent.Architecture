@@ -7,7 +7,7 @@
 
 // ReSharper disable CommentTypo
 
-namespace Fluent.Architecture.Entities
+namespace Fluent.Architecture.Core.Models
 {
     /// <summary>
     /// Classe de solicitação de paginação padrão.

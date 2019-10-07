@@ -1,5 +1,5 @@
-﻿using Fluent.Architecture.Entities;
-using Fluent.Architecture.Services;
+﻿using Fluent.Architecture.Services;
+using Fluent.Architecture.Core.Models;
 
 namespace Fluent.Architecture.Core.Interfaces
 {

@@ -1,4 +1,4 @@
-﻿using Fluent.Architecture.Core.Entities;
+﻿using Fluent.Architecture.Core.Models;
 using System;
 
 namespace Fluent.Architecture.Core.Attributes

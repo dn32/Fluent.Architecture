@@ -7,15 +7,10 @@
 
 // ReSharper disable CommentTypo
 
-using System.Reflection;
-
-namespace Fluent.Architecture.Entities
+namespace Fluent.Architecture.Core.Models
 {
-
-    public class KeyValue
+    /// <inheritdoc />
+    public abstract class FluentEntity : BaseEntity
     {
-        public PropertyInfo Property { get; set; }
-        public object Value { get; set; }
-        public string ColumnName { get; set; }
     }
 }

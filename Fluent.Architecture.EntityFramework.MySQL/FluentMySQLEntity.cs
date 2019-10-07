@@ -1,4 +1,4 @@
-﻿using Fluent.Architecture.Entities;
+﻿using Fluent.Architecture.Core.Models;
 
 namespace Fluent.Architecture.EntityFramework.MySQL
 {

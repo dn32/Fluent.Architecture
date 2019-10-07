@@ -1,8 +1,8 @@
-﻿using Fluent.Architecture.Entities;
-using Fluent.Architecture.Extensions;
+﻿using Fluent.Architecture.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Fluent.Architecture.Core.Models;
 using System.Reflection;
 
 namespace Fluent.Architecture.EntityFramework

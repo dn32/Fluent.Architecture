@@ -1,7 +1,7 @@
 ﻿using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Core.Controllers.ControllerModel;
 using Fluent.Architecture.Core.Enumerator;
-using Fluent.Architecture.Entities;
+using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Test.Mock;
 using Fluent.Architecture.Test.Mock.ControllerMock;
 using Newtonsoft.Json;

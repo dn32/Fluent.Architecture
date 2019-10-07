@@ -10,7 +10,7 @@
 using Fluent.Architecture.Core.Inconsistences;
 using System.Collections.Generic;
 
-namespace Fluent.Architecture.Entities
+namespace Fluent.Architecture.Core.Models
 {
     public class ValidationReturn
     {

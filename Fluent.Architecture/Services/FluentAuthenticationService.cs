@@ -7,9 +7,21 @@ using System.Security.Principal;
 
 namespace Fluent.Architecture.Core.Services
 {
+    public class FluentAuthenticationUser
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Login { get; set; }
+    }
+
     public abstract class FluentAuthenticationService : TransactionalService
     {
         public abstract bool InternalLogin(string user, string psw);
+
+        public virtual void Register(string email, string name, string user, string psw)
+        {
+
+        }
 
         public virtual string Login(string user, string psw)
         {

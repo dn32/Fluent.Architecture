@@ -7,7 +7,7 @@
 
 // ReSharper disable CommentTypo
 
-namespace Fluent.Architecture.Entities
+namespace Fluent.Architecture.Core.Models
 {
     /// <summary>
     /// Model de Nome e Valor para uso genérico.

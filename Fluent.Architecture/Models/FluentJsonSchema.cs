@@ -1,7 +1,7 @@
 ﻿using Fluent.Architecture.Core.Attributes;
 using System.Collections.Generic;
 
-namespace Fluent.Architecture.Core.Entities
+namespace Fluent.Architecture.Core.Models
 {
     public class FluentJsonSchema
     {

@@ -9,7 +9,7 @@
 using Fluent.Architecture.Attributes;
 using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Core.Extensions;
-using Fluent.Architecture.Entities;
+using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Exceptions;
 using Newtonsoft.Json;
 using System;

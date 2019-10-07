@@ -1,4 +1,4 @@
-﻿using Fluent.Architecture.Entities;
+﻿using Fluent.Architecture.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;

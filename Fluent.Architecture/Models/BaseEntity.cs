@@ -11,7 +11,7 @@ using Fluent.Architecture.Extensions;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace Fluent.Architecture.Entities
+namespace Fluent.Architecture.Core.Models
 {
     /// <summary>
     /// A entidade base de todas as entidades do sistema.

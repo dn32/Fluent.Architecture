@@ -4,8 +4,7 @@
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
-
-using Fluent.Architecture.Entities;
+using Fluent.Architecture.Core.Models;
 
 namespace Fluent.Architecture.Test
 {
