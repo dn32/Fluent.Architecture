@@ -1,6 +1,6 @@
 ﻿using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Core.Extensions;
-using Fluent.Architecture.Entities;
+using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Specifications;
 using System;

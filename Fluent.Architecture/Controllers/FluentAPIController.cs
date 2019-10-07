@@ -2,11 +2,11 @@
 using Fluent.Architecture.Core.Enumerator;
 using Fluent.Architecture.Core.Extensions;
 using Fluent.Architecture.Core.Specifications;
-using Fluent.Architecture.Entities;
 using Fluent.Architecture.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Fluent.Architecture.Core.Models;
 
 namespace Fluent.Architecture.Controllers
 {

@@ -10,7 +10,7 @@ using Fluent.Architecture.Controllers;
 using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Core.Services;
-using Fluent.Architecture.Entities;
+using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Filters;
 using Fluent.Architecture.Services;

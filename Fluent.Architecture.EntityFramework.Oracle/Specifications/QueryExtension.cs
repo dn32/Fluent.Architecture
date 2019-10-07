@@ -1,6 +1,6 @@
-﻿using Fluent.Architecture.Entities;
-using Fluent.Architecture.Extensions;
+﻿using Fluent.Architecture.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Fluent.Architecture.Core.Models;
 using System.Linq;
 
 namespace Fluent.Architecture.EntityFramework.Oracle.Specifications

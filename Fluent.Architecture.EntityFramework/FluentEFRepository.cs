@@ -9,10 +9,11 @@
 
 using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Core.Interfaces;
+using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Core.Util;
-using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Extensions;
+using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;

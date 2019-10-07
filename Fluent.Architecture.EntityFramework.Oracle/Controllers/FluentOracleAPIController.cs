@@ -1,7 +1,7 @@
 ﻿using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Entities;
 using Fluent.Architecture.EntityFramework.Oracle.Specifications;
 using Microsoft.AspNetCore.Mvc;
+using Fluent.Architecture.Core.Models;
 using System.ComponentModel;
 using System.Threading.Tasks;
 

@@ -1,4 +1,4 @@
-﻿namespace Fluent.Architecture.Core.Entities
+﻿namespace Fluent.Architecture.Core.Models
 {
     public class FluentJsonSchemaHtml
     {

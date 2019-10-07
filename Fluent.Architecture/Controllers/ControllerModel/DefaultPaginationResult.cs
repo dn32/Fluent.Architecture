@@ -5,10 +5,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Fluent.Architecture.Core.Models;
 
 // ReSharper disable CommentTypo
-
-using Fluent.Architecture.Entities;
 
 namespace Fluent.Architecture.Controllers
 {

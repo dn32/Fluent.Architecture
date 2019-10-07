@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 
-namespace Fluent.Architecture.Entities
+namespace Fluent.Architecture.Core.Models
 {
     /// <summary>
     /// Entidade organizadora da injeção de dependência e do contexto da requisição do usuário.

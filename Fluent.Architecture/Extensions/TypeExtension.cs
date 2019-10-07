@@ -7,10 +7,9 @@
 
 // ReSharper disable CommentTypo
 using Fluent.Architecture.Core.Attributes;
-using Fluent.Architecture.Core.Entities;
+using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Core.Enumerator;
 using Fluent.Architecture.Core.Extensions;
-using Fluent.Architecture.Entities;
 using Fluent.Architecture.Services;
 using Newtonsoft.Json;
 using System;

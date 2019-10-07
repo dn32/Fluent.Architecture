@@ -1,5 +1,5 @@
 ﻿using Fluent.Architecture.Core.Interfaces;
-using Fluent.Architecture.Entities;
+using Fluent.Architecture.Core.Models;
 using System;
 
 namespace Fluent.Architecture.Core.Factory

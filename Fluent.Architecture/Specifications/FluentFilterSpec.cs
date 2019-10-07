@@ -1,6 +1,6 @@
 ﻿using Fluent.Architecture.Core.Enumerator;
 using Fluent.Architecture.Core.Extensions;
-using Fluent.Architecture.Entities;
+using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Specifications;
 using System.Linq;
 

@@ -7,7 +7,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Fluent.Architecture.Sample.Test.SupportElements.Model
+namespace Fluent.Architecture.Core.Models
 {
     [ExcludeFromCodeCoverage]
     public static class FluentLanguage

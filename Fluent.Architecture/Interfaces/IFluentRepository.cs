@@ -1,6 +1,6 @@
 ﻿using Fluent.Architecture.Core.Controllers.ControllerModel;
-using Fluent.Architecture.Entities;
 using Fluent.Architecture.Interfaces;
+using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Services;
 using System;
 using System.Collections.Generic;
