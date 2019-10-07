@@ -1,4 +1,4 @@
-﻿using Fluent.Architecture.Core.Filters;
+﻿using Fluent.Architecture.Core.Enumerator;
 using Fluent.Architecture.Extensions;
 using System;
 using System.Globalization;

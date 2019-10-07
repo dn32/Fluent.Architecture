@@ -1,9 +1,4 @@
-﻿using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
-
-namespace Fluent.Architecture.Extensions
+﻿namespace Fluent.Architecture.Extensions
 {
     public static class StringExtension
     {

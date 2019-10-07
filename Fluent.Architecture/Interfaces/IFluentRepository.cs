@@ -4,7 +4,6 @@ using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Services;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Threading.Tasks;
 
 namespace Fluent.Architecture.Core.Interfaces

@@ -2,15 +2,15 @@
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <!--<Version>2.0.1-beta0930-01</Version>-->
-    <PackageProjectUrl>https://dn32.github.io/Fluent.Architecture/</PackageProjectUrl>
-    <RepositoryUrl>https://dn32.github.io/Fluent.Architecture/</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/dn32/Fluent.Infrastructure.Doc</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dn32/Fluent.Infrastructure.Doc</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 
   <Target Name="CopyPackage" AfterTargets="Pack">
-     <!--<Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="C:\Users\Marcelo\Google Drive\FOut" />-->
-   <Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="C:\Users\marcelo.souza\Google Drive\FOut" />
+     <Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="C:\Users\Marcelo\Google Drive\FOut" />
+   <!--<Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="C:\Users\marcelo.souza\Google Drive\FOut" />-->
   </Target>
   
   <!--<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -18,7 +18,7 @@
   </PropertyGroup>-->
   
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <Version>2.0.1-beta$([System.DateTime]::UtcNow.ToString(MMdd))19</Version>
+    <Version>2.0.1-beta$([System.DateTime]::UtcNow.ToString(MMdd))20</Version>
   </PropertyGroup>
   
 </Project>

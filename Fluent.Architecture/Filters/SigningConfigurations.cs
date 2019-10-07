@@ -2,7 +2,6 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace Fluent.Architecture.Filters
 {

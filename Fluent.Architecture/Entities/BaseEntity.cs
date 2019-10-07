@@ -10,7 +10,6 @@
 using Fluent.Architecture.Extensions;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Reflection;
 
 namespace Fluent.Architecture.Entities
 {

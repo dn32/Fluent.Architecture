@@ -11,7 +11,6 @@ using Fluent.Architecture.Entities;
 using Fluent.Architecture.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections;
 using System.Linq;
 using System.Runtime.CompilerServices;
 

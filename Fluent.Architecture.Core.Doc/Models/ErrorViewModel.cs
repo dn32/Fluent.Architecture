@@ -1,5 +1,3 @@
-using System;
-
 namespace Fluent.Architecture.Core.Doc.Models
 {
     public class ErrorViewModel

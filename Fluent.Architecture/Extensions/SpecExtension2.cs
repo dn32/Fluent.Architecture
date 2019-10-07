@@ -1,9 +1,6 @@
-﻿using Fluent.Architecture.Core.Attributes;
-using Fluent.Architecture.Core.Filters;
-using Fluent.Architecture.Entities;
+﻿using Fluent.Architecture.Entities;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Interfaces;
-using Fluent.Architecture.Specifications;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;

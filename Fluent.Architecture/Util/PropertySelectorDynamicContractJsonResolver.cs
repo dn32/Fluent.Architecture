@@ -32,7 +32,7 @@ namespace Fluent.Architecture.Core.Util
                 propertiesResult = properties.Where(x => PropertyToShow.Contains(x.PropertyName, StringComparer.InvariantCultureIgnoreCase)).ToList();
             }
 
-            if(propertiesResult == null || propertiesResult.Count == 0)
+            if (propertiesResult == null || propertiesResult.Count == 0)
             {
                 return properties;
             }

@@ -9,7 +9,7 @@
 
 using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Core.Controllers.ControllerModel;
-using Fluent.Architecture.Core.Filters;
+using Fluent.Architecture.Core.Enumerator;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions.ValidationException;
 using Fluent.Architecture.Extensions;

@@ -8,9 +8,6 @@
 // ReSharper disable CommentTypo
 
 using Fluent.Architecture.Core.Inconsistences;
-using Fluent.Architecture.Exceptions.ValidationException;
-using Fluent.Architecture.Validation;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Fluent.Architecture.Entities

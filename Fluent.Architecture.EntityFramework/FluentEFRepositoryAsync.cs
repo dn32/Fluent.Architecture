@@ -7,29 +7,17 @@
 
 // ReSharper disable CommentTypo
 
-using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Core.Controllers.ControllerModel;
-using Fluent.Architecture.Core.Interfaces;
-using Fluent.Architecture.Core.Util;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Interfaces;
-using Fluent.Architecture.Services;
-using Fluent.Architecture.Specifications;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Primitives;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.Common;
-using System.Dynamic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Fluent.Architecture.EntityFramework

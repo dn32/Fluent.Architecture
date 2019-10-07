@@ -1,11 +1,10 @@
 ﻿using Fluent.Architecture.Core.Controllers.ControllerModel;
+using Fluent.Architecture.Core.Enumerator;
 using Fluent.Architecture.Core.Extensions;
-using Fluent.Architecture.Core.Filters;
 using Fluent.Architecture.Core.Specifications;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
@@ -42,7 +41,7 @@ namespace Fluent.Architecture.Controllers
             return await InternalListByFilterAsync(filters);
         }
 
-        private async Task<DefaultPaginationResult> InternalListByFilterAsync([FromBody] Filter[] filters)
+        protected async Task<DefaultPaginationResult> InternalListByFilterAsync([FromBody] Filter[] filters)
         {
             var spec = CreateSpec<FluentFilterSpec<T>>().SetParameter(filters, isList: true);
             return await ResultAsync(Service.ListAsync(spec), LastRequestPagination);

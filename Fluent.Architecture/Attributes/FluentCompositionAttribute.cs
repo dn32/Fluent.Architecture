@@ -1,5 +1,5 @@
-﻿using System;
-using Fluent.Architecture.Core.Entities;
+﻿using Fluent.Architecture.Core.Entities;
+using System;
 
 namespace Fluent.Architecture.Core.Attributes
 {

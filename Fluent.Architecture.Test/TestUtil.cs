@@ -21,7 +21,7 @@ namespace Fluent.Architecture.Test
         public static BaseController GetController(Type controllerType)
         {
             return MockControllerFactory.Create(controllerType);
-        }              
+        }
 
         public static TR Execute<TC, TR>(TC controller, Func<TC, object> actionMethod) where TC : BaseController
         {

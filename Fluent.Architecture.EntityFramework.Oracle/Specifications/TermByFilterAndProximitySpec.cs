@@ -1,4 +1,4 @@
-﻿using Fluent.Architecture.Core.Filters;
+﻿using Fluent.Architecture.Core.Enumerator;
 using Fluent.Architecture.Core.Specifications;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Extensions;

@@ -45,7 +45,7 @@ namespace Fluent.Architecture.Specifications
 
         public IQueryable<TE> ToIQueryable(IQueryable<TE> query)
         {
-            var w =  Where(query);
+            var w = Where(query);
             if (IgnoreOrder)
             {
                 return w;

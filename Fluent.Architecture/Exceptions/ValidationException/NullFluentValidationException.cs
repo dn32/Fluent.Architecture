@@ -15,8 +15,8 @@ namespace Fluent.Architecture.Exceptions.ValidationException
             : base($"The parameter {parameter} can not be null.", parameter)
         {
         }
-    } 
-    
+    }
+
     /// <inheritdoc />
     public class AlterLossOfDadaValidationException : FluentValidationException
     {

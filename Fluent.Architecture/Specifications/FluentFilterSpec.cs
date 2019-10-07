@@ -1,5 +1,5 @@
-﻿using Fluent.Architecture.Core.Extensions;
-using Fluent.Architecture.Core.Filters;
+﻿using Fluent.Architecture.Core.Enumerator;
+using Fluent.Architecture.Core.Extensions;
 using Fluent.Architecture.Entities;
 using Fluent.Architecture.Specifications;
 using System.Linq;
@@ -11,7 +11,7 @@ namespace Fluent.Architecture.Core.Specifications
         protected Filter[] Filters { get; set; }
 
         public bool IsList { get; set; }
-      
+
         public FluentFilterSpec<T> SetParameter(Filter[] filters, bool isList)
         {
             Filters = filters;

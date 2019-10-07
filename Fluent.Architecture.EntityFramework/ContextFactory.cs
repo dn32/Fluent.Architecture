@@ -8,7 +8,6 @@
 // ReSharper disable CommentTypo
 
 using Fluent.Architecture.Entities;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -56,7 +55,7 @@ namespace Fluent.Architecture.EntityFramework
             {
                 efContext.Database.EnsureCreated();
                 //Todo - Fix to net core 3
-               // efContext.Database.Migrate();
+                // efContext.Database.Migrate();
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿using Fluent.Architecture.Core.Filters;
+﻿using Fluent.Architecture.Core.Enumerator;
 
 namespace Fluent.Architecture.EntityFramework.Oracle
 {
