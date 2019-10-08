@@ -18,7 +18,11 @@ namespace Fluent.Architecture.Core.Extensions
             foreach (var filter in filters)
             {
                 //Todo - Como validar se a propriedade existe antes de chegar aqui?
-                var property = properties.Single(x => x.Name.Equals(filter.PropertyName, StringComparison.InvariantCultureIgnoreCase));
+                var property = properties.FirstOrDefault(x => x.Name.Equals(filter.PropertyName, StringComparison.InvariantCultureIgnoreCase));
+                if(property == null)
+                {
+                    throw new InvalidOperationException($"Entity '{typeof(T).GetFriendlyName()}' does not have a property with the name '{filter.PropertyName}' requested in the filtered query.");
+                }
 
                 Expression<Func<T, bool>> expression = x => true;
 

@@ -372,6 +372,14 @@ namespace Fluent.Architecture.Extensions
                     attr.FluentAggregation.SetType(property.PropertyType.Name);
                     attr.FluentAggregation.SetName(property.Name);
                     attr.FluentAggregation.FluentFilter = property.GetCustomAttribute<FluentFilterAttribute>();
+                    if(attr.FluentAggregation.FluentFilter != null)
+                    {
+                        attr.FluentAggregation.FluentFilter.PropertyName = property.Name.ToFluentJsonStringNormalized();
+                        if(attr.FluentAggregation.FluentFilter.FieldsToClear != null)
+                        {
+                            attr.FluentAggregation.FluentFilter.FieldsToClear = attr.FluentAggregation.FluentFilter.FieldsToClear.Select(x => x.ToFluentJsonStringNormalized()).ToArray();
+                        }
+                    }
                 }
 
                 if (attr.FluentComposition != null)

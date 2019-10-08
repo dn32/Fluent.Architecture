@@ -14,12 +14,14 @@ namespace Fluent.Architecture.Core.Attributes
 
         public string[] ExternalKeys { get; set; }
 
+        public string[] FieldsToClear { get; set; }
+
         [JsonIgnore]
         public string LocalKey
         {
             get
             {
-                return ExternalKeys.First();
+                return ExternalKeys?.First();
             }
             set
             {
@@ -32,7 +34,7 @@ namespace Fluent.Architecture.Core.Attributes
         {
             get
             {
-                return ExternalKeys.First();
+                return ExternalKeys?.First();
             }
             set
             {
@@ -41,6 +43,21 @@ namespace Fluent.Architecture.Core.Attributes
         }
 
         [JsonIgnore]
+        public string FieldToClear
+        {
+            get
+            {
+                return FieldsToClear?.First();
+            }
+            set
+            {
+                FieldsToClear = new[] { value };
+            }
+        }
+
+        [JsonIgnore]
         public override object TypeId => base.TypeId;
+
+        public string PropertyName { get; internal set; }
     }
 }

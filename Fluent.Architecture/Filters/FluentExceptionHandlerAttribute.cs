@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 
 namespace Fluent.Architecture.Filters
 {
@@ -32,7 +33,7 @@ namespace Fluent.Architecture.Filters
                 filterContext.Exception = exception0.InnerException;
             }
 
-            if (filterContext?.Exception is DbUpdateException exception1)
+            while (filterContext?.Exception is TargetInvocationException exception1)
             {
                 filterContext.Exception = exception1.InnerException;
             }
