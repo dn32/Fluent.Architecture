@@ -38,6 +38,11 @@ namespace Fluent.Architecture.Filters
                 filterContext.Exception = exception1.InnerException;
             }
 
+            if (filterContext?.Exception is TargetInvocationException exception2)
+            {
+                filterContext.Exception = exception2.InnerException;
+            }
+            
             if (filterContext?.Exception is ContextFluentValidationException exception)
             {
                 var inconsistencies = exception.Inconsistencies.Select(inconsistence =>
