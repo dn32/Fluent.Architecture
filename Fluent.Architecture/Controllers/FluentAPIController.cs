@@ -22,7 +22,7 @@ namespace Fluent.Architecture.Controllers
         {
             var spec = CreateSpec<FluentAllSpec<T>>().SetParameter(isList: true);
             var list = Service.ListAsync(spec);
-            return await ResultAsync(list, LastRequestPagination);
+            return await ResultAsync(await list, LastRequestPagination);
         }
 
         [HttpGet]
@@ -44,7 +44,7 @@ namespace Fluent.Architecture.Controllers
         protected async Task<DefaultPaginationResult> InternalListByFilterAsync([FromBody] Filter[] filters)
         {
             var spec = CreateSpec<FluentFilterSpec<T>>().SetParameter(filters, isList: true);
-            return await ResultAsync(Service.ListAsync(spec), LastRequestPagination);
+            return await ResultAsync(await Service.ListAsync(spec), LastRequestPagination);
         }
 
         [HttpGet]
@@ -53,7 +53,7 @@ namespace Fluent.Architecture.Controllers
         {
             var spec = CreateSpec<TermSpec<T>>().SetParameter(term, isList: true);
             var list = Service.ListAsync(spec);
-            return await ResultAsync(list, LastRequestPagination, term);
+            return await ResultAsync(await list, LastRequestPagination, term);
         }
 
         #endregion
@@ -65,7 +65,7 @@ namespace Fluent.Architecture.Controllers
         [Description("Get an item based on its identifiers")]
         public virtual async Task<DefaultResult> FindByEntityGet([FromQuery] T value)
         {
-            return await ResultAsync(Service.FindAsync(value, false));
+            return await ResultAsync(await Service.FindAsync(value, false));
         }
 
         [HttpPost]
@@ -73,7 +73,7 @@ namespace Fluent.Architecture.Controllers
         [Description("Get an item based on its identifiers")]
         public virtual async Task<DefaultResult> FindByEntityPost([FromBody] T value)
         {
-            return await ResultAsync(Service.FindAsync(value, false));
+            return await ResultAsync(await Service.FindAsync(value, false));
         }
 
         [HttpGet]
@@ -96,7 +96,7 @@ namespace Fluent.Architecture.Controllers
         {
             var spec = CreateSpec<FluentFilterSpec<T>>().SetParameter(filters, isList: false);
             var item = Service.SingleOrDefaultAsync(spec);
-            return await ResultAsync(item);
+            return await ResultAsync(await item);
         }
 
         [HttpGet]
@@ -105,7 +105,7 @@ namespace Fluent.Architecture.Controllers
         {
             var spec = CreateSpec<TermSpec<T>>().SetParameter(term, isList: false);
             var item = Service.SingleOrDefaultAsync(spec);
-            return await ResultAsync(item);
+            return await ResultAsync(await item);
         }
 
         #endregion
@@ -123,7 +123,7 @@ namespace Fluent.Architecture.Controllers
         [Description("Get total amount of items")]
         public virtual async Task<DefaultResult> Count()
         {
-            return await ResultAsync(Service.CountAsync());
+            return await ResultAsync(await Service.CountAsync());
         }
 
         [HttpPost]
@@ -131,7 +131,7 @@ namespace Fluent.Architecture.Controllers
         public virtual async Task<DefaultResult> CountByFilter([FromBody] Filter[] filters)
         {
             var spec = CreateSpec<FluentFilterSpec<T>>().SetParameter(filters, isList: true);
-            return await ResultAsync(Service.CountAsync(spec));
+            return await ResultAsync(await Service.CountAsync(spec));
         }
 
         [HttpGet]
@@ -139,7 +139,7 @@ namespace Fluent.Architecture.Controllers
         [Description("Get the number of items based on filters.")]
         public virtual async Task<DefaultResult> ExistsByEntityGet([FromQuery] T value)
         {
-            return await ResultAsync(Service.ExistsAsync(value));
+            return await ResultAsync(await Service.ExistsAsync(value));
         }
 
         [HttpPost]
@@ -147,7 +147,7 @@ namespace Fluent.Architecture.Controllers
         [Description("Checks if an item exists based on its IDs")]
         public virtual async Task<DefaultResult> ExistsByEntityPost([FromBody] T value)
         {
-            return await ResultAsync(Service.ExistsAsync(value));
+            return await ResultAsync(await Service.ExistsAsync(value));
         }
 
         [HttpGet]

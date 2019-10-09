@@ -1,40 +1,49 @@
-﻿using Fluent.Architecture.Filters;
+﻿using Fluent.Architecture.Core.Models;
+using Fluent.Architecture.Filters;
 using Fluent.Architecture.Services;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Principal;
+using System.Threading.Tasks;
 
 namespace Fluent.Architecture.Core.Services
 {
-    public class FluentAuthenticationUser
-    {
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Login { get; set; }
-    }
-
     public abstract class FluentAuthenticationService : TransactionalService
     {
-        public abstract bool InternalLogin(string user, string psw);
+        public abstract Task<bool> AuthenticateAsync(FluentAuthenticationUser user);
 
-        public virtual void Register(string email, string name, string user, string psw)
+        public virtual void Register(FluentAuthenticationUser user) { }
+
+        public virtual async Task<string> LoginAsync(FluentAuthenticationUser user)
         {
-
-        }
-
-        public virtual string Login(string user, string psw)
-        {
-            if (InternalLogin(user, psw))
+            if (await AuthenticateAsync(user))
             {
-                var identity = new ClaimsIdentity(new GenericIdentity(user), new[] { new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")) });
-                var (handler, securityToken) = SigningConfigurations.GetSecurityToken(identity);
-                return handler.WriteToken(securityToken);
+                var identity = new ClaimsIdentity(new GenericIdentity(user.Email), new[] { new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")) });
+                return GenerateToken(identity, TimeSpan.FromDays(1));
             }
             else
             {
                 return string.Empty;
             }
+        }
+
+        protected virtual string GenerateToken(ClaimsIdentity identity, TimeSpan expires)
+        {
+            var now = DateTime.Now;
+            var handler = new JwtSecurityTokenHandler();
+            var securityToken = handler.CreateToken(new SecurityTokenDescriptor
+            {
+                Issuer = Setup.Config.Config.JwtInfo.Issuer,
+                Audience = Setup.Config.Config.JwtInfo.Audience,
+                SigningCredentials = Setup.Config.Config.JwtInfo.SigningCredentials,
+                Subject = identity,
+                NotBefore = now,
+                Expires = now.Add(expires)
+            });
+
+            return handler.WriteToken(securityToken);
         }
     }
 }

@@ -249,6 +249,7 @@ namespace Fluent.Architecture.EntityFramework
             RunTheContextValidation();
             DefineForeignKeyOfCompositions(entity);
             await UpdateCompositionListAsync(entity);
+            await CompleteEmptyKeysAsync(entity);
             var ret = await Input.AddAsync(entity);
             return ret.Entity;
         }

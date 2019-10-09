@@ -151,6 +151,7 @@ namespace Fluent.Architecture.Extensions
 
         public static bool IsPrimitive(this Type type)
         {
+            if(type == null) { return false; }
             var types = new[]
                            {
                               typeof (Enum),
