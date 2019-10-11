@@ -99,6 +99,15 @@ namespace Fluent.Architecture.Extensions
             if (t2 == null) { throw new ArgumentNullException(nameof(t2)); }
 
             return t1.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == t2) ||
+                   t1 == t2 || t1.IsSubclassOf(t2) || t2.IsAssignableFrom(t1);
+        }
+
+        public static bool IsOrIsReverse(this Type t1, Type t2)
+        {
+            if (t1 == null) { throw new ArgumentNullException(nameof(t1)); }
+            if (t2 == null) { throw new ArgumentNullException(nameof(t2)); }
+
+            return t1.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == t2) ||
                    t2.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == t1) ||
                    t1 == t2 || t1.IsSubclassOf(t2) || t2.IsAssignableFrom(t1) || t2.IsSubclassOf(t1) || t1.IsAssignableFrom(t2);
         }
@@ -273,12 +282,12 @@ namespace Fluent.Architecture.Extensions
 
         private static FluentJsonFormAttribute GetFluentJsonFormAttributeByType(this Type type)
         {
-            var form = type.GetCustomAttribute<FluentJsonFormAttribute>();
+            var form = type.GetCustomAttribute<FluentJsonFormAttribute>(true);
             if (form == null)
             {
                 form = new FluentJsonFormAttribute
                 {
-                    desc = type.GetCustomAttribute<DescriptionAttribute>()?.Description ?? type.Name,
+                    desc = type.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? type.Name,
                     group = "",
                     name = type.Name.ToFluentJsonStringNormalized(),
                     propName = type.Name.ToFluentJsonStringNormalized(),
@@ -291,12 +300,12 @@ namespace Fluent.Architecture.Extensions
 
         private static FluentJsonPropertyAttribute GetFluentJsonPropertyAttributeByProperty(PropertyInfo property)
         {
-            var attr = property.GetCustomAttribute<FluentJsonPropertyAttribute>();
+            var attr = property.GetCustomAttribute<FluentJsonPropertyAttribute>(true);
             if (attr == null)
             {
                 attr = new FluentJsonPropertyAttribute
                 {
-                    desc = property.GetCustomAttribute<DescriptionAttribute>()?.Description ?? property.Name,
+                    desc = property.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? property.Name,
                     group = "",
                     name = property.Name,
                     propName = property.Name.ToFluentJsonStringNormalized(),
@@ -317,7 +326,7 @@ namespace Fluent.Architecture.Extensions
                 };
             }
 
-            attr.FluentAggregation = property.GetCustomAttribute<FluentAggregationAttribute>(true);
+            attr.FluentAggregation = property.GetCustomAttribute<FluentManyToManyAggregationAttribute>(true) ?? property.GetCustomAttribute<FluentAggregationAttribute>(true);
             attr.FluentComposition = property.GetCustomAttribute<FluentCompositionAttribute>(true);
             attr.IsKey = property.GetCustomAttributeAny<KeyAttribute>();
             attr.IsList = property.PropertyType.IsList();
@@ -364,18 +373,23 @@ namespace Fluent.Architecture.Extensions
 
                 if (attr.FluentAggregation != null)
                 {
-                    if (property.PropertyType.IsList())
+                    if (attr.FluentAggregation?.GetType()?.Is(typeof(FluentManyToManyAggregationAttribute)) == true)
                     {
-                        return; //Todo - Ignorando agregação em lista enquanto não é implementada
+
                     }
 
-                    attr.FluentAggregation.SetType(property.PropertyType.Name);
+                    if (property.PropertyType.IsList())
+                    {
+                        // return; //Todo - Ignorando agregação em lista enquanto não é implementada
+                    }
+
+                    attr.FluentAggregation.SetType(property.PropertyType.GetListTypeNonNull().Name);
                     attr.FluentAggregation.SetName(property.Name);
                     attr.FluentAggregation.FluentFilter = property.GetCustomAttribute<FluentFilterAttribute>();
-                    if(attr.FluentAggregation.FluentFilter != null)
+                    if (attr.FluentAggregation.FluentFilter != null)
                     {
                         attr.FluentAggregation.FluentFilter.PropertyName = property.Name.ToFluentJsonStringNormalized();
-                        if(attr.FluentAggregation.FluentFilter.FieldsToClear != null)
+                        if (attr.FluentAggregation.FluentFilter.FieldsToClear != null)
                         {
                             attr.FluentAggregation.FluentFilter.FieldsToClear = attr.FluentAggregation.FluentFilter.FieldsToClear.Select(x => x.ToFluentJsonStringNormalized()).ToArray();
                         }
