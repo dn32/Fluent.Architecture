@@ -39,11 +39,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Public", "Public", "{DCA683
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Automatic", "Automatic", "{A8119674-A9A5-4E65-83B0-4A925629878C}"
 	ProjectSection(SolutionItems) = preProject
+		deploy-delete-package.cmd = deploy-delete-package.cmd
 		deploy-package.cmd = deploy-package.cmd
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent.Architecture.Redis", "Fluent.Architecture.Redis\Fluent.Architecture.Redis.csproj", "{AF0642ED-8D64-40A5-871D-5BB737E2CC77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.Redis", "Fluent.Architecture.Redis\Fluent.Architecture.Redis.csproj", "{AF0642ED-8D64-40A5-871D-5BB737E2CC77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
