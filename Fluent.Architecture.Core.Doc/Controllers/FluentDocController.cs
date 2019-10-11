@@ -28,7 +28,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
             }
         }
 
-        [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Client)]
+        //[ResponseCache(Duration = 600, Location = ResponseCacheLocation.Client)]
         [Route("FluentDoc")]
         [Route("FluentDoc/Index")]
         public IActionResult Index()
@@ -37,7 +37,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
             return View(models);
         }
 
-        [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Client)]
+        //[ResponseCache(Duration = 600, Location = ResponseCacheLocation.Client)]
         [Route("FluentDoc/Service")]
         public IActionResult Service(string name)
         {

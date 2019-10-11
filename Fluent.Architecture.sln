@@ -43,6 +43,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Automatic", "Automatic", "{
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent.Architecture.Redis", "Fluent.Architecture.Redis\Fluent.Architecture.Redis.csproj", "{AF0642ED-8D64-40A5-871D-5BB737E2CC77}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,10 @@ Global
 		{55F7FD0C-6CEF-4F51-B644-F374F75A9899}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55F7FD0C-6CEF-4F51-B644-F374F75A9899}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55F7FD0C-6CEF-4F51-B644-F374F75A9899}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF0642ED-8D64-40A5-871D-5BB737E2CC77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF0642ED-8D64-40A5-871D-5BB737E2CC77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF0642ED-8D64-40A5-871D-5BB737E2CC77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF0642ED-8D64-40A5-871D-5BB737E2CC77}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -27,14 +27,16 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.0.0" />
   </ItemGroup>
 
-
   <ItemGroup>
-    <ProjectReference Include="..\Fluent.Architecture\Fluent.Architecture.Core.csproj" />
+    <Compile Remove="Services\**" />
+    <Content Remove="Services\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="Services\**" />
   </ItemGroup>
 
 
   <ItemGroup>
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\Fluent.Architecture\Fluent.Architecture.Core.csproj" />
   </ItemGroup>
 
 </Project>

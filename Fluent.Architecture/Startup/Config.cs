@@ -27,5 +27,7 @@ namespace Fluent.Architecture
         public Type GenericControllerType { get; internal set; }
         internal IRepositoryFactory RepositoryFactory { get; set; }
         public FluentJwtInfo JwtInfo { get; set; }
+        public string RedisConnectionString { get; set; }
+        public Type RedisService { get; set; }
     }
 }
