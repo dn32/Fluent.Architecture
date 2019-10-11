@@ -20,6 +20,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Fluent.Architecture.Core.Attributes;
+using System.Collections;
 
 namespace Fluent.Architecture.EntityFramework
 {
@@ -277,9 +278,13 @@ namespace Fluent.Architecture.EntityFramework
             {
                 var compositionValue = compositionProperty.GetValue(entity);
                 var compositionPropertyType = compositionProperty.PropertyType;
-                var compositionListElements = ListAllByForeignKey(entity, compositionPropertyType);
-                var dbSet = TransactionObjects.GetObjectInputDataInternal(compositionPropertyType);
-                typeof(DbSet<>).MakeGenericType(compositionPropertyType).GetMethod("RemoveRange").Invoke(null, new[] { compositionListElements });
+                var compositionListElements = ListAllByForeignKey(entity, compositionPropertyType.GetListTypeNonNull());
+                var dbSet = TransactionObjects.GetObjectInputDataInternal(compositionPropertyType.GetListTypeNonNull());
+                if (compositionListElements.Count > 0)
+                {
+                    var method = dbSet.GetType().GetMethods().Last(x => x.Name == "RemoveRange");
+                    method.Invoke(dbSet, new[] { compositionListElements });
+                }
             }
 
             return ret;

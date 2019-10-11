@@ -19,9 +19,8 @@ namespace Fluent.Architecture.Core.Interfaces
         #endregion
 
         void RemoveRange(IFluentSpecification spec);
-        void RemoveRangeAsync(TE[] entities);
 
-
+        Task RemoveRangeAsync(params TE[] entities);
         Task<TE> UpdateAsync(TE entity);
         Task UpdateRangeAsync(IEnumerable<TE> entities);
         Task<TE> UpdateAlterAsync(UpdateAlter<TE> value);
