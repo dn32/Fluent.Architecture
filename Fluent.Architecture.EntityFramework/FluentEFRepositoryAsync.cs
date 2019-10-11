@@ -19,6 +19,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
+using Fluent.Architecture.Core.Attributes;
 
 namespace Fluent.Architecture.EntityFramework
 {
@@ -265,6 +266,24 @@ namespace Fluent.Architecture.EntityFramework
             return await command.ExecuteNonQueryAsync();
         }
 
+        public virtual async Task<TE> RemoveAsync(TE entity)
+        {
+            RunTheContextValidation();
+            var teEntity = await Service.FindAsync(entity, false);
+            var ret = Input.Remove(teEntity).Entity;
+
+            var compositionProperties = entity.GetType().GetProperties().Where(x => x.GetCustomAttributeAny<FluentCompositionAttribute>());
+            foreach (var compositionProperty in compositionProperties)
+            {
+                var compositionValue = compositionProperty.GetValue(entity);
+                var compositionPropertyType = compositionProperty.PropertyType;
+                var compositionListElements = ListAllByForeignKey(entity, compositionPropertyType);
+                var dbSet = TransactionObjects.GetObjectInputDataInternal(compositionPropertyType);
+                typeof(DbSet<>).MakeGenericType(compositionPropertyType).GetMethod("RemoveRange").Invoke(null, new[] { compositionListElements });
+            }
+
+            return ret;
+        }
 
         public virtual async Task TruncateAsync()
         {
@@ -272,8 +291,6 @@ namespace Fluent.Architecture.EntityFramework
             var sql = $"TRUNCATE TABLE {tableName}";
             await ExecuteSqlQueryAsync(sql);
         }
-
-
 
         //Todo - tratar recuperação de exclusão lógica, como foi feito no Update
         public async Task<TE> UpdateAlterAsync(UpdateAlter<TE> value)

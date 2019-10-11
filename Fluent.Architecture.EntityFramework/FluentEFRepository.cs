@@ -394,19 +394,6 @@ namespace Fluent.Architecture.EntityFramework
             }
         }
 
-        /// <summary>
-        /// Remove um item do banco de dados baseado em seu identificador.
-        /// </summary>
-        /// <param name="entity">
-        /// Entidate a ser removida.
-        /// </param>
-
-        public virtual async Task<TE> RemoveAsync(TE entity)
-        {
-            RunTheContextValidation();
-            var teEntity = await Service.FindAsync(entity, false);
-            return Input.Remove(teEntity).Entity;
-        }
 
         public virtual void RemoveRange(IFluentSpecification spec)
         {
@@ -414,10 +401,12 @@ namespace Fluent.Architecture.EntityFramework
             this.Input.RemoveRange(list);
         }
 
-
-        public virtual void RemoveRange(params TE[] entities)
+        public virtual async Task RemoveRangeAsync(params TE[] entities)
         {//Todo melhorar isso e tornar async
-            entities.ToList().ForEach(async x => await RemoveAsync(x));
+            foreach (var entity in entities)
+            {
+                await RemoveAsync(entity);
+            }
         }
 
 
