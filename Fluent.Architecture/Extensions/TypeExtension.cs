@@ -543,6 +543,8 @@ namespace Fluent.Architecture.Extensions
 
         public static bool IsNumeric(this Type type)
         {
+            type = type.GetNonNullableType();
+
             if (type.IsNullableEnum())
             {
                 return false;
