@@ -336,7 +336,6 @@ namespace Fluent.Architecture.EntityFramework
             return await task;
         }
 
-
         public virtual ICollection ListAllByForeignKey(TE entity, Type dnEntityType)
         {
             var sql = RepositoryUtil.GetForeignKeyFilterSql(entity, dnEntityType, out bool nonKeys);
@@ -394,21 +393,18 @@ namespace Fluent.Architecture.EntityFramework
             }
         }
 
-
         public virtual void RemoveRange(IFluentSpecification spec)
         {
             var list = GetSpec(spec).ToIQueryable(Query).ToList();
             this.Input.RemoveRange(list);
         }
 
-        public virtual async Task RemoveRangeAsync(params TE[] entities)
-        {//Todo melhorar isso e tornar async
-            foreach (var entity in entities)
-            {
-                await RemoveAsync(entity);
-            }
+        public virtual void RemoveRange(params TE[] entities)
+        {
+            var tasks = entities.Select(RemoveAsync).ToArray();
+            Task.WaitAll(tasks);
+            //foreach (var entity in entities) { await RemoveAsync(entity); }
         }
-
 
         #endregion
 

@@ -164,42 +164,48 @@ namespace Fluent.Architecture.Extensions
 
         public static List<KeyValue> GetForeignKeyValues(this object entity, Type outType)
         {
+            FluentReferenceAttribute GetReference(PropertyInfo property)
+            {
+                return property.GetCustomAttribute<FluentCompositionAttribute>(true) as FluentReferenceAttribute
+                            ?? property.GetCustomAttribute<FluentManyToManyAggregationAttribute>(true) ?? null;
+            }
+
             var returnList = new List<KeyValue>();
             var localType = entity.GetType();
             var elements = entity
                         .GetType()
                         .GetProperties()
-                        .Select(x => new { compositionAttr = x.GetCustomAttribute<FluentCompositionAttribute>(true), property = x })
+                        .Select(x => new { compositionAttr = GetReference(x), property = x })
                         .Where(x => x.compositionAttr != null).ToList();
 
             foreach (var element in elements)
             {
                 var externalKeys = element.compositionAttr.ExternalKeys;
-                var localKeys = element.compositionAttr.LocalKeys;
-                var destinalType = element.property.PropertyType.IsList() ? element.property.PropertyType.GenericTypeArguments[0] : element.property.PropertyType;
+        var localKeys = element.compositionAttr.LocalKeys;
+        var destinalType = element.property.PropertyType.IsList() ? element.property.PropertyType.GenericTypeArguments[0] : element.property.PropertyType;
                 if (outType != destinalType) { continue; }
 
-                for (int i = 0; i < externalKeys.Length; i++)
+                for (int i = 0; i<externalKeys.Length; i++)
                 {
                     var externalKey = externalKeys[i];
-                    var localKey = localKeys[i];
+        var localKey = localKeys[i];
 
-                    var destinalKeyProperty = destinalType.GetProperty(externalKey);
+        var destinalKeyProperty = destinalType.GetProperty(externalKey);
                     if (destinalKeyProperty == null)
                     {
                         throw new IncorrectDevelopmentException($"Entity {entity.GetType().Name} has an incorrectly named foreign key because the reference property could not be found in entity {destinalType.Name}. The key in question has the name: '{externalKey}'.");
-                    }
+    }
 
-                    var localKeylProperty = localType.GetProperty(localKey);
+    var localKeylProperty = localType.GetProperty(localKey);
                     if (localKeylProperty == null)
                     {
                         throw new IncorrectDevelopmentException($"Entity {localType.Name} has an incorrectly named foreign key because the reference property could not be found in entity {localType.Name}. The key in question has the name: '{localKey}'.");
-                    }
+}
 
-                    var columnName = destinalKeyProperty.GetColumnName();
-                    var value = localKeylProperty.GetValue(entity);
+var columnName = destinalKeyProperty.GetColumnName();
+var value = localKeylProperty.GetValue(entity);
 
-                    returnList.Add(new KeyValue
+returnList.Add(new KeyValue
                     {
                         Property = localKeylProperty,
                         ColumnName = columnName,
@@ -213,26 +219,26 @@ namespace Fluent.Architecture.Extensions
 
         // Todo2 documentar
         public static List<KeyValue> GetKeyValues(this object entity)
+{
+    var properties = entity?.GetType()?.GetKeyProperties();
+    return PropertiesToKeyValueList(entity, properties);
+}
+
+private static List<KeyValue> PropertiesToKeyValueList(object entity, List<PropertyInfo> properties)
+{
+    var returnList = new List<KeyValue>();
+
+    foreach (var property in properties)
+    {
+        returnList.Add(new KeyValue
         {
-            var properties = entity?.GetType()?.GetKeyProperties();
-            return PropertiesToKeyValueList(entity, properties);
-        }
+            Property = property,
+            ColumnName = property.GetColumnName(),
+            Value = property.GetValue(entity).GetDbValue(property)
+        });
+    }
 
-        private static List<KeyValue> PropertiesToKeyValueList(object entity, List<PropertyInfo> properties)
-        {
-            var returnList = new List<KeyValue>();
-
-            foreach (var property in properties)
-            {
-                returnList.Add(new KeyValue
-                {
-                    Property = property,
-                    ColumnName = property.GetColumnName(),
-                    Value = property.GetValue(entity).GetDbValue(property)
-                });
-            }
-
-            return returnList;
-        }
+    return returnList;
+}
     }
 }

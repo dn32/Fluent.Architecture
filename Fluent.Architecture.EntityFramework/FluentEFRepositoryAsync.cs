@@ -273,10 +273,15 @@ namespace Fluent.Architecture.EntityFramework
             var teEntity = await Service.FindAsync(entity, false);
             var ret = Input.Remove(teEntity).Entity;
 
-            var compositionProperties = entity.GetType().GetProperties().Where(x => x.GetCustomAttributeAny<FluentCompositionAttribute>());
+            RemoveFluentCompositionsAndFluentAggregations(entity);
+            return ret;
+        }
+
+        private void RemoveFluentCompositionsAndFluentAggregations(TE entity)
+        {
+            var compositionProperties = entity.GetType().GetProperties().Where(x => x.GetCustomAttributeAny<FluentCompositionAttribute>() || x.GetCustomAttributeAny<FluentManyToManyAggregationAttribute>());
             foreach (var compositionProperty in compositionProperties)
             {
-                var compositionValue = compositionProperty.GetValue(entity);
                 var compositionPropertyType = compositionProperty.PropertyType;
                 var compositionListElements = ListAllByForeignKey(entity, compositionPropertyType.GetListTypeNonNull());
                 var dbSet = TransactionObjects.GetObjectInputDataInternal(compositionPropertyType.GetListTypeNonNull());
@@ -286,8 +291,6 @@ namespace Fluent.Architecture.EntityFramework
                     method.Invoke(dbSet, new[] { compositionListElements });
                 }
             }
-
-            return ret;
         }
 
         public virtual async Task TruncateAsync()
