@@ -317,12 +317,12 @@ namespace Fluent.Architecture.Validation
                 var value = property.GetValue(entity);
                 if (property.PropertyType.IsNumeric())
                 {
-                    var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum ?? 0;
-                    var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum?? double.MaxValue;
-                    var mindouble = double.Parse(min.ToString(), CultureInfo.InvariantCulture);
-                    var maxdouble = double.Parse(max.ToString(), CultureInfo.InvariantCulture);
+                    var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
+                    var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
+                    var mindouble = min == null ? double.MinValue : double.Parse(min.ToString(), CultureInfo.InvariantCulture);
+                    var maxdouble = max == null ? double.MaxValue : double.Parse(max.ToString(), CultureInfo.InvariantCulture);
                     var valuedoble = double.Parse(value.ToString(), CultureInfo.InvariantCulture);
-                    if(valuedoble < mindouble || valuedoble > maxdouble)
+                    if (valuedoble < mindouble || valuedoble > maxdouble)
                     {
                         AddInconsistency(new UiFieldLenghtFluentValidationException(property));
                     }

@@ -17,6 +17,7 @@ using Fluent.Architecture.Core.Models;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Fluent.Architecture.EntityFramework
 {
@@ -97,12 +98,28 @@ namespace Fluent.Architecture.EntityFramework
                             continue;
                         }
 
+                        if (property.PropertyType.IsNullableEnum() && property.PropertyType.IsNullable())
+                        {
+                            // Converte valores de enumeradores para null quando necessário
+                            var method = GetType().GetMethod(nameof(ConvertNulableEnum), BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(property.PropertyType.GetNonNullableType());
+                            method.Invoke(this, new object[] { entity, property });
+                        }
+
                         SetEntityProperty(entity, type, property);
                     }
                 }
             }
 
             base.OnModelCreating(modelBuilder);
+        }
+        
+        protected void ConvertNulableEnum<TEnum>(EntityTypeBuilder entity, PropertyInfo property) where TEnum : Enum
+        {
+            if (typeof(TEnum).GetCustomAttribute<FluentEnumValueForSetNullAttribute>() is FluentEnumValueForSetNullAttribute fluentEnumValueForSetNullAttribute)
+            {
+                var converter = new ValueConverter<TEnum, string>(v => v.GetHashCode() == fluentEnumValueForSetNullAttribute.Value ? null : v.ToString(), v => (TEnum)Enum.Parse(typeof(TEnum), v));
+                entity.Property(property.Name).HasConversion(converter);
+            }
         }
 
         protected virtual void SetEntityProperty(EntityTypeBuilder entity, Type type, PropertyInfo property) { }

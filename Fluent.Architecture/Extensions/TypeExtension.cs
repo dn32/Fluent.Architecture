@@ -77,6 +77,11 @@ namespace Fluent.Architecture.Extensions
             return methodInfo.GetCustomAttribute<T>(inherit) != null;
         }
 
+        public static bool GetCustomAttributeAny<T>(this MemberInfo methodInfo, bool inherit = false) where T : Attribute
+        {
+            return methodInfo.GetCustomAttribute<T>(inherit) != null;
+        }
+
         //Todo2 doc
         public static TX Next<TX>(this List<TX> list)
         {
@@ -142,6 +147,11 @@ namespace Fluent.Architecture.Extensions
         }
 
         public static bool IsOfNullableType(this Type type)
+        {
+            return Nullable.GetUnderlyingType(type) != null;
+        }
+
+        public static bool IsNullable(this Type type)
         {
             return Nullable.GetUnderlyingType(type) != null;
         }
