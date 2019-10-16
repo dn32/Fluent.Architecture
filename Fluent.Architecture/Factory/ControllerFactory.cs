@@ -1,5 +1,7 @@
 ﻿using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Exceptions;
+using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Factory.Proxy;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -18,6 +20,7 @@ namespace Fluent.Architecture.Core.Factory
 
             foreach (var entity in entities)
             {
+                if (entity.GetCustomAttribute<FluentAPIControllerAttribute>()?.AutomaticGeneration == false) { return; }
                 if (Setup.Controllers.ContainsKey(entity)) { continue; }
 
                 var typeName = entity.Name + "Controller";

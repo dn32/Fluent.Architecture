@@ -1,4 +1,7 @@
-﻿using Fluent.Architecture.Extensions;
+﻿using Fluent.Architecture.Core.Attributes;
+using Fluent.Architecture.Core.Doc.Attributes;
+using Fluent.Architecture.Core.Enumerator;
+using Fluent.Architecture.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -21,9 +24,18 @@ namespace Fluent.Architecture.Core.Doc.Controllers
             {
                 Models = new Dictionary<string, Type>();
                 var entities = Setup.GetFluentApiEntity();
-                entities.ForEach(x =>
+                entities.ForEach(type =>
                 {
-                    Models.TryAdd(x.Name, x);
+
+                    if (Setup.Controllers.TryGetValue(type, out Type controllerType))
+                    {
+                        if (controllerType.GetCustomAttribute<FluentDocAttribute>()?.Display == EnumFluentDisplay.Hidden)
+                        {
+                            return;
+                        }
+                    }
+
+                    Models.TryAdd(type.Name, type);
                 });
             }
         }
@@ -33,7 +45,11 @@ namespace Fluent.Architecture.Core.Doc.Controllers
         [Route("FluentDoc/Index")]
         public IActionResult Index()
         {
-            var models = Models.Values.Select(x => x.GetFluentJsonSchema(false)).ToList();
+            var models = Models.Values
+                .Where(x => x.GetCustomAttribute<FluentDocAttribute>()?.Display != EnumFluentDisplay.Hidden)
+                .Where(x => x.GetCustomAttribute<FluentAPIControllerAttribute>()?.AutomaticGeneration != false)
+                .Select(x => x.GetFluentJsonSchema(false)).ToList();
+
             return View(models);
         }
 
@@ -45,6 +61,11 @@ namespace Fluent.Architecture.Core.Doc.Controllers
             {
                 if (Setup.Controllers.TryGetValue(type, out Type controllerType))
                 {
+                    if (controllerType.GetCustomAttribute<FluentDocAttribute>()?.Display == EnumFluentDisplay.Hidden)
+                    {
+                        throw new InvalidOperationException("FluentDocAttributeAttribute is EnumFluentDisplay.Hidden");
+                    }
+
                     var model = type.GetFluentJsonSchema(false);
                     if (model != null)
                     {
@@ -53,6 +74,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
                               .GetMethods()
                               .Where(method => method.IsPublic && !method.IsDefined(typeof(NonActionAttribute)))
                               .Where(method => !method.Name.StartsWith("get_") && !method.Name.Equals("Dispose") && !method.Name.Equals("GetType") && !method.Name.StartsWith("set_"))
+                              .Where(method => method.GetCustomAttribute<FluentDocAttribute>()?.Display != EnumFluentDisplay.Hidden)
                               .Select(action =>
                               {
                                   var met = action.GetCustomAttribute<HttpMethodAttribute>() ?? new HttpGetAttribute();
