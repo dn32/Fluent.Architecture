@@ -8,5 +8,7 @@ namespace Fluent.Architecture.Core.Attributes
     {
         [JsonIgnore]
         public Type Type { get; set; }
+
+        public bool IsIntermediateTable { get; set; }
     }
 }
