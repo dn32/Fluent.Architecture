@@ -195,7 +195,7 @@ namespace Fluent.Architecture.EntityFramework
             {
                 var composition = LocalProperty.GetCustomAttribute<FluentReferenceAttribute>(true);
                 if (composition == null) { return; }
-                var externalProperties = LocalProperty.PropertyType.GetNonNullableType().GetProperties();
+                var externalProperties = LocalProperty.PropertyType.GetListTypeNonNull().GetProperties();
                 var externalValue = LocalProperty.GetValue(entity);
 
                 for (int i = 0; i < composition.ExternalKeys.Length; i++)
@@ -206,7 +206,13 @@ namespace Fluent.Architecture.EntityFramework
                     var localKeyProperty = localProperties.Single(x => x.Name == localKey);
 
                     var localKeyValue = localKeyProperty.GetValue(entity);
-                    var externalKeyValue = externalValue == null ? null : externalKeyProperty.GetValue(externalValue);
+
+                    object externalKeyValue = null;
+
+                    if (!LocalProperty.PropertyType.IsList())
+                    {
+                        externalKeyValue = externalValue == null ? null : externalKeyProperty.GetValue(externalValue);
+                    }
 
                     for (int i2 = 0; i < composition.ExternalKeys.Length; i++)
                     {
