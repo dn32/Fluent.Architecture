@@ -44,7 +44,8 @@ namespace Fluent.Architecture.Core.Specifications
                 var properties = typeof(T).GetProperties().Where(x => x.GetCustomAttribute<SearchableAttribute>() != null).ToArray();
                 foreach (var property in properties)
                 {
-                    var expression = ExpressionUtil.Contains<T>(property.Name, term, property.PropertyType);
+                    var expression = ExpressionUtil.IsNull<T>(property.Name).Not();
+                    expression = expression.And(ExpressionUtil.Contains<T>(property.Name, term, property.PropertyType));
                     allExpression = allExpression == null ? expression : allExpression.Or(expression);
                 }
             }
