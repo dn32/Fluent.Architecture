@@ -299,7 +299,7 @@ namespace Fluent.Architecture.Services
         public virtual async Task RemoveRangeAsync(params T[] entities)
         {
             await Validation.RemoveRangeAsync(entities);
-            Repository.RemoveRangeAsync(entities);
+            Repository.RemoveRange(entities);
         }
 
         #endregion

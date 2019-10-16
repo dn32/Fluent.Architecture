@@ -1,7 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace Fluent.Architecture.Filters
 {
@@ -28,24 +26,6 @@ namespace Fluent.Architecture.Filters
                 ValidateAudience = true,
                 ClockSkew = TimeSpan.FromSeconds(30)
             };
-        }
-
-        public static (JwtSecurityTokenHandler handler, SecurityToken securityToken) GetSecurityToken(ClaimsIdentity identity)
-        {
-            var createDate = DateTime.Now;
-            var expirationDate = createDate.AddDays(1); //Duração de 1 dias
-            var handler = new JwtSecurityTokenHandler();
-            var securityToken = handler.CreateToken(new SecurityTokenDescriptor
-            {
-                Issuer = Issuer,
-                Audience = Audience,
-                SigningCredentials = Info.SigningCredentials,
-                Subject = identity,
-                NotBefore = createDate,
-                Expires = expirationDate,
-            });
-
-            return (handler, securityToken);
         }
     }
 }
