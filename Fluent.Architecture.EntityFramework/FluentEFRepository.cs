@@ -187,19 +187,26 @@ namespace Fluent.Architecture.EntityFramework
             }
         }
 
-        protected void DefineForeignKeyOfCompositions(TE entity)
+        protected void DefineForeignKeyOfCompositionsOrAggregations(TE entity)
         {
             var localProperties = entity.GetType().GetProperties();
 
             localProperties.ToList().ForEach(LocalProperty =>
             {
-                var composition = LocalProperty.GetCustomAttribute<FluentCompositionAttribute>();
+                var composition = LocalProperty.GetCustomAttribute<FluentReferenceAttribute>(true);
                 if (composition == null) { return; }
+                var externalProperties = LocalProperty.PropertyType.GetNonNullableType().GetProperties();
+                var externalValue = LocalProperty.GetValue(entity);
+
                 for (int i = 0; i < composition.ExternalKeys.Length; i++)
                 {
                     var externalKey = composition.ExternalKeys[i];
                     var localKey = composition.LocalKeys[i];
-                    var localValue = localProperties.Single(x => x.Name == localKey).GetValue(entity);
+                    var externalKeyProperty = externalProperties.Single(x => x.Name == externalKey);
+                    var localKeyProperty = localProperties.Single(x => x.Name == localKey);
+
+                    var localKeyValue = localKeyProperty.GetValue(entity);
+                    var externalKeyValue = externalValue == null ? null : externalKeyProperty.GetValue(externalValue);
 
                     for (int i2 = 0; i < composition.ExternalKeys.Length; i++)
                     {
@@ -213,17 +220,30 @@ namespace Fluent.Architecture.EntityFramework
                                 foreach (var item in List)
                                 {
                                     var property = item.GetType().GetProperty(ext);
-                                    property.SetValue(item, localValue);
+                                    property.SetValue(item, localKeyValue);
                                 }
                             }
                         }
                         else
                         {
-                            var externalProperty = LocalProperty.PropertyType.GetProperty(ext);
-                            var propertyValue = LocalProperty.GetValue(entity);
-                            if (propertyValue != null)
+                            if (localKeyProperty.IsKey())
                             {
-                                externalProperty.SetValue(propertyValue, localValue);
+                                if (externalKeyValue != null)
+                                {
+                                    externalKeyProperty.SetValue(externalValue, localKeyValue);
+                                }
+                            }
+                            else
+                            {
+                                if (localKeyValue != null)
+                                {
+                                    localKeyProperty.SetValue(entity, externalKeyValue);
+                                }
+
+                                if (composition is FluentAggregationAttribute && externalValue != null)
+                                {
+                                    Session.Entry(externalValue).State = EntityState.Unchanged;
+                                }
                             }
                         }
                     }
@@ -360,7 +380,7 @@ namespace Fluent.Architecture.EntityFramework
         {
             RunTheContextValidation();
 
-            DefineForeignKeyOfCompositions(entity);
+            DefineForeignKeyOfCompositionsOrAggregations(entity);
 
             lock (SessionRequest)
             {
@@ -387,7 +407,7 @@ namespace Fluent.Architecture.EntityFramework
             RunTheContextValidation();
             foreach (var entity in entities)
             {
-                DefineForeignKeyOfCompositions(entity);
+                DefineForeignKeyOfCompositionsOrAggregations(entity);
                 var currentEntity = await Service.FindAsync(entity);
                 TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
                 await UpdateCompositionListAsync(entity);

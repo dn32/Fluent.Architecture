@@ -57,6 +57,11 @@ namespace Fluent.Architecture.Extensions
             return (TX)typeof(TX).GetFluentDefaultValue();
         }
 
+        public static bool IsKey(this MemberInfo info)
+        {
+            return info.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || info.GetCustomAttributeAny<KeyAttribute>(true);
+        }
+
         public static bool GetCustomAttributeAny<T>(this Type type, bool inherit = false) where T : Attribute
         {
             return type.GetCustomAttribute<T>(inherit) != null;

@@ -10,16 +10,10 @@
 
   <Target Name="CopyPackage" AfterTargets="Pack">
      <Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="C:\Users\Marcelo\Google Drive\FOut" />
-   <!--<Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="C:\Users\marcelo.souza\Google Drive\FOut" />-->
   </Target>
-  
-  <!--<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <Version>2.0.1-beta$([System.DateTime]::UtcNow.ToString(MMdd-HHmm))</Version>
-  </PropertyGroup>-->
-  
+ 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <Version>2.0.1.3-beta$([System.DateTime]::UtcNow.ToString(MMdd))07</Version>
-    <!--<Version>2.0.1.2</Version>-->
+    <Version>2.0.1.3-beta$([System.DateTime]::UtcNow.ToString(MMdd))09</Version>
   </PropertyGroup>
   
 </Project>

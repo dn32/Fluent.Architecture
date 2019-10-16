@@ -226,7 +226,7 @@ namespace Fluent.Architecture.EntityFramework
             RunTheContextValidation();
             foreach (var entity in entities)
             {
-                DefineForeignKeyOfCompositions(entity);
+                DefineForeignKeyOfCompositionsOrAggregations(entity);
                 await UpdateCompositionListAsync(entity);
             }
 
@@ -249,7 +249,7 @@ namespace Fluent.Architecture.EntityFramework
         public virtual async Task<TE> AddAsync(TE entity)
         {
             RunTheContextValidation();
-            DefineForeignKeyOfCompositions(entity);
+            DefineForeignKeyOfCompositionsOrAggregations(entity);
             await UpdateCompositionListAsync(entity);
             await CompleteEmptyKeysAsync(entity);
             var ret = await Input.AddAsync(entity);
@@ -302,7 +302,7 @@ namespace Fluent.Architecture.EntityFramework
         {
             RunTheContextValidation();
 
-            DefineForeignKeyOfCompositions(value.Final);
+            DefineForeignKeyOfCompositionsOrAggregations(value.Final);
             var currentEntity = await Service.FindAsync(value.Original);
             TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(value.Final);
             await UpdateCompositionListAsync(value.Final);
