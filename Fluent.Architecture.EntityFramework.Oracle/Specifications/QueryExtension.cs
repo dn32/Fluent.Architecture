@@ -13,7 +13,7 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Specifications
 
             var sql = $@"
 select * from {table}
-where lower({collumn} is not null and UTL_MATCH.jaro_winkler_similarity(lower({collumn}), lower({{0}})) > {tolerance}
+where lower({collumn}) is not null and UTL_MATCH.jaro_winkler_similarity(lower({collumn}), lower({{0}})) > {tolerance}
 order by UTL_MATCH.jaro_winkler_similarity(lower({collumn}), lower({{0}})) DESC
 ";
 
