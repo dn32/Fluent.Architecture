@@ -13,7 +13,7 @@
   </Target>
  
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <Version>2.0.1.3-beta$([System.DateTime]::UtcNow.ToString(MMdd))15</Version>
+    <Version>2.0.1.3-beta$([System.DateTime]::UtcNow.ToString(MMdd))16</Version>
   </PropertyGroup>
   
 </Project>

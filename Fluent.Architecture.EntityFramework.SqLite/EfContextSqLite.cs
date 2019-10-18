@@ -1,5 +1,6 @@
 ﻿// ReSharper disable CommentTypo
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Fluent.Architecture.EntityFramework.SqLite
 {
@@ -10,6 +11,8 @@ namespace Fluent.Architecture.EntityFramework.SqLite
     [DbType(FluentDbType.SQLITE)]
     public class EfContextSqLite : EfContext
     {
+        public static readonly LoggerFactory _myLoggerFactory = new LoggerFactory(new[] { new Microsoft.Extensions.Logging.Debug.DebugLoggerProvider() });
+     
         public EfContextSqLite(string connectionString) : base(connectionString)
         {
         }
@@ -17,6 +20,13 @@ namespace Fluent.Architecture.EntityFramework.SqLite
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite(ConnectionString);
+
+#if DEBUG
+            optionsBuilder
+                .UseLoggerFactory(_myLoggerFactory)
+                .EnableSensitiveDataLogging();
+#endif
+
             base.OnConfiguring(optionsBuilder);
         }
     }
