@@ -1,6 +1,8 @@
 ﻿using Fluent.Architecture.Core.Extensions;
 using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Specifications;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 
 namespace Fluent.Architecture.Core.Specifications
