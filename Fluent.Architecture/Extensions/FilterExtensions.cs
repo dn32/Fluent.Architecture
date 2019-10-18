@@ -30,27 +30,35 @@ namespace Fluent.Architecture.Core.Extensions
                 {
                     case EnumFilterType.CONTAINS:
                         expression = ExpressionUtil.Contains<T>(property.Name, filter.Value.ToUpper(CultureInfo.InvariantCulture), property.PropertyType);
+                        expression = ExpressionUtil.IsNull<T>(property.Name).Not().And(expression);
                         break;
                     case EnumFilterType.GREATER:
                         expression = ExpressionUtil.Greate<T>(property.Name, filter.Value.ToUpper(CultureInfo.InvariantCulture), filter.Including, property.PropertyType);
+                        expression = ExpressionUtil.IsNull<T>(property.Name).Not().And(expression);
                         break;
                     case EnumFilterType.SMALLER:
                         expression = ExpressionUtil.Smaller<T>(property.Name, filter.Value.ToUpper(CultureInfo.InvariantCulture), filter.Including, property.PropertyType);
+                        expression = ExpressionUtil.IsNull<T>(property.Name).Not().And(expression);
                         break;
                     case EnumFilterType.START_WITH:
                         expression = ExpressionUtil.StartWith<T>(property.Name, filter.Value.ToUpper(CultureInfo.InvariantCulture), property.PropertyType);
+                        expression = ExpressionUtil.IsNull<T>(property.Name).Not().And(expression);
                         break;
                     case EnumFilterType.ENDS_WITH:
                         expression = ExpressionUtil.EndsWith<T>(property.Name, filter.Value.ToUpper(CultureInfo.InvariantCulture), property.PropertyType);
+                        expression = ExpressionUtil.IsNull<T>(property.Name).Not().And(expression);
                         break;
                     case EnumFilterType.EQUAL:
                         expression = ExpressionUtil.Equals<T>(property.Name, filter.Value.ToUpper(CultureInfo.InvariantCulture), property.PropertyType);
+                        expression = ExpressionUtil.IsNull<T>(property.Name).Not().And(expression);
                         break;
                     case EnumFilterType.TRUE:
                         expression = ExpressionUtil.IsTrue<T>(property.Name, property.PropertyType);
+                        expression = ExpressionUtil.IsNull<T>(property.Name).Not().And(expression);
                         break;
                     case EnumFilterType.FALSE:
                         expression = ExpressionUtil.IsFalse<T>(property.Name, property.PropertyType);
+                        expression = ExpressionUtil.IsNull<T>(property.Name).Not().And(expression);
                         break;
                     case EnumFilterType.NULL:
                         expression = ExpressionUtil.IsNull<T>(property.Name);
