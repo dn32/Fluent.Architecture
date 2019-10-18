@@ -36,7 +36,7 @@ namespace Fluent.Architecture.Controllers
         [HttpPost]
         [Route("/api/[controller]/ListByFilter")]
         [Description("Get a paginated list of items based on filters")]
-        public virtual async Task<DefaultPaginationResult> ListByFilterPost([FromBody] Filter[] filters)
+        public virtual async Task<DefaultPaginationResult> ListByFilterPostAsync([FromBody] Filter[] filters)
         {
             return await InternalListByFilterAsync(filters);
         }
