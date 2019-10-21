@@ -21,6 +21,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Fluent.Architecture.Core.Attributes;
 using System.Collections;
+using System.Linq.Expressions;
 
 namespace Fluent.Architecture.EntityFramework
 {
@@ -117,11 +118,11 @@ namespace Fluent.Architecture.EntityFramework
             var val = GetSpec(spec).ToIQueryable(Query);
             return await val.FirstOrDefaultAsync();
         }
-
+        
         public virtual async Task<TE> SingleOrDefaultAsync(IFluentSpecification spec)
         {
             var val = GetSpec(spec).ToIQueryable(Query);
-
+           
             try
             {
                 return await val.SingleOrDefaultAsync();
@@ -145,8 +146,8 @@ namespace Fluent.Architecture.EntityFramework
         public virtual async Task<TO> FirstOrDefaultSelectAsync<TO>(IFluentSpecification<TO> ispec)
         {
             var spec = GetSpecSelect<TO>(ispec);
-            var iquerie = spec.ToIQueryable(Query);
-            return await iquerie.FirstOrDefaultAsync();
+            var query = spec.ToIQueryable(Query);
+            return await query.FirstOrDefaultAsync();
         }
 
         internal protected async Task<bool> ExistsSqlAsync(string sql, bool includeExcludedLogically = false)

@@ -234,14 +234,14 @@ namespace Fluent.Architecture.EntityFramework
                         {
                             if (localKeyProperty.IsKey())
                             {
-                                if (externalKeyValue != null)
+                                if (localKeyValue != null && externalValue != null)
                                 {
                                     externalKeyProperty.SetValue(externalValue, localKeyValue);
                                 }
                             }
                             else
                             {
-                                if (localKeyValue != null)
+                                if (localKeyValue != null && externalValue != null)
                                 {
                                     localKeyProperty.SetValue(entity, externalKeyValue);
                                 }

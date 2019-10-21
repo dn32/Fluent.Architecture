@@ -213,9 +213,9 @@ namespace Fluent.Architecture.Extensions
 
         public static Expression<Func<T, bool>> Equals<T>(string propertyName, string value, Type type)
         {
+
             var parameter = Expression.Parameter(typeof(T), "x");
-            var property = Expression.Property(parameter, propertyName);
-            Expression containsCall;
+            Expression equalsExpression;
 
             if (type == typeof(bool) || type == typeof(bool?))
             {
@@ -230,14 +230,20 @@ namespace Fluent.Architecture.Extensions
             }
             if (type == typeof(string))
             {
-                containsCall = Expression.Call(property, "Equals", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
+                var property = Expression.Property(parameter, propertyName);
+                var constant = Expression.Constant(value, type);
+                var methodInfo = typeof(string).GetMethod("ToUpper", new Type[] { });
+                var expression = Expression.Call(property, methodInfo);
+                equalsExpression = Expression.Equal(constant, expression);
             }
             else if (type.IsNullableEnum())
             {
                 var localType = type.GetTypeByNullType();
                 if (Enum.TryParse(localType, value, out object enumObject))
                 {
-                    containsCall = Expression.Equal(property, Expression.Constant(enumObject, type));
+                    var property = Expression.Property(parameter, propertyName);
+                    var constant = Expression.Constant(enumObject, type);
+                    equalsExpression = Expression.Equal(constant, property);
                 }
                 else
                 {
@@ -246,11 +252,13 @@ namespace Fluent.Architecture.Extensions
             }
             else
             {
+                var property = Expression.Property(parameter, propertyName);
                 var toStringCall = Expression.Call(property, "ToString", null, Expression.Constant("D"));
-                containsCall = Expression.Call(toStringCall, "Equals", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
+                var constant = Expression.Constant(value, typeof(string));
+                equalsExpression = Expression.Equal(toStringCall, constant);
             }
 
-            return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
+            return Expression.Lambda<Func<T, bool>>(equalsExpression, parameter);
         }
 
         public static Expression<Func<T, bool>> IsTrue<T>(string propertyName, Type type)
@@ -353,6 +361,14 @@ namespace Fluent.Architecture.Extensions
             var parameter = Expression.Parameter(typeof(T), "x");
             var property = Expression.Property(parameter, propertyName);
             var nullCheck = Expression.Equal(property, Expression.Constant(null, typeof(object)));
+            return Expression.Lambda<Func<T, bool>>(nullCheck, parameter);
+        }
+
+        public static Expression<Func<T, bool>> IsNotNull<T>(string propertyName)
+        {
+            var parameter = Expression.Parameter(typeof(T), "x");
+            var property = Expression.Property(parameter, propertyName);
+            var nullCheck = Expression.NotEqual(property, Expression.Constant(null, typeof(object)));
             return Expression.Lambda<Func<T, bool>>(nullCheck, parameter);
         }
 

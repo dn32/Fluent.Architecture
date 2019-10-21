@@ -52,7 +52,7 @@ namespace Fluent.Architecture.Specifications
             }
             else
             {
-                return Order(w);
+              return Order(w);
             }
         }
     }
