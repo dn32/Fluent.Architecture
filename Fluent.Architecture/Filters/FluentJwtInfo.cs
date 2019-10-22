@@ -11,6 +11,8 @@ namespace Fluent.Architecture.Filters
         public string Audience { get; set; }
 
         public string SecretKey { get; set; }
+        
+        public TimeSpan? Expires { get; set; }
 
         public Type FluentAuthenticationServiceType { get; set; }
 

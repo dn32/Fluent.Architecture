@@ -44,7 +44,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
             var token = await service.LoginAsync(authenticationUser);
             if (string.IsNullOrWhiteSpace(token))
             {
-                throw new System.InvalidOperationException("Error trying to authenticate");
+                throw new InvalidOperationException("Error trying to authenticate");
             }
 
             Response.Cookies.Append("Authorization", token, new CookieOptions() { Path = "/", HttpOnly = false, Secure = false });

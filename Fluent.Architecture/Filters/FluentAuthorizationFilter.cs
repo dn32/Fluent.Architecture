@@ -37,7 +37,9 @@ namespace Fluent.Architecture.Filters
         protected virtual void JWTOnFluentAuthorizationFilter(AuthorizationFilterContext context)
         {
             var tokenRequest = context.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Replace("Bearer", "").Trim();
+            tokenRequest = string.IsNullOrWhiteSpace(tokenRequest) ? context.HttpContext.Request.Query["Authorization"].ToString()?.Replace("Bearer", "")?.Trim() : tokenRequest;
             tokenRequest = string.IsNullOrWhiteSpace(tokenRequest) ? context.HttpContext.Request.Cookies["Authorization"]?.Replace("Bearer", "")?.Trim() : tokenRequest;
+
             if (string.IsNullOrWhiteSpace(tokenRequest) || tokenRequest == "undefined" && tokenRequest == "null")
             {
                 Forbidden(context);
