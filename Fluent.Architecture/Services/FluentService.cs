@@ -7,7 +7,6 @@
 
 // ReSharper disable CommentTypo
 
-using Fluent.Architecture.Core.Controllers.ControllerModel;
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Exceptions;
@@ -170,15 +169,6 @@ namespace Fluent.Architecture.Services
             await Repository.TruncateAsync();
         }
 
-        /// <summary>
-        /// Avalia se um item existe no banco de dados, baseado em uma especificação.
-        /// </summary>
-        /// <param name="spec">
-        /// A especificação de requisição.
-        /// </param>
-        /// <returns>
-        /// Se o item existe ou não.
-        /// </returns>
         public virtual async Task<bool> ExistsAsync(ISpec spec) => await Repository.ExistsAsync(spec);
 
         public virtual async Task<bool> ExistsAsync(T entity, bool checkId = true, bool includeExcludedLogically = false) => await Repository.ExistsAsync(entity, includeExcludedLogically);
@@ -260,12 +250,6 @@ namespace Fluent.Architecture.Services
             return await Repository.UpdateAsync(entity);
         }
 
-        internal async Task<T> UpdateAlterAsync(UpdateAlter<T> value)
-        {
-            await Validation.UpdateAlterAsync(value);
-            return await Repository.UpdateAlterAsync(value);
-        }
-
         /// <summary>
         /// Atualiza vários itens do banco de dados baseado em seus identificadores.
         /// </summary>
@@ -299,7 +283,7 @@ namespace Fluent.Architecture.Services
         public virtual async Task RemoveRangeAsync(params T[] entities)
         {
             await Validation.RemoveRangeAsync(entities);
-            Repository.RemoveRange(entities);
+            Repository.RemoveRangeAsync(entities);
         }
 
         #endregion

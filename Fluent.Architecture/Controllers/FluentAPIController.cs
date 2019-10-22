@@ -1,5 +1,4 @@
-﻿using Fluent.Architecture.Core.Controllers.ControllerModel;
-using Fluent.Architecture.Core.Enumerator;
+﻿using Fluent.Architecture.Core.Enumerator;
 using Fluent.Architecture.Core.Extensions;
 using Fluent.Architecture.Core.Specifications;
 using Fluent.Architecture.Extensions;
@@ -190,15 +189,6 @@ namespace Fluent.Architecture.Controllers
         public virtual async Task<DefaultResult> Update([FromBody] T value)
         {
             await Service.UpdateAsync(value);
-            return await ResultAsync(true);
-        }
-
-        // PUT api/user/UpdateAlter
-        [HttpPut]
-        [Description("Updates an item based on another item's identifiers")]
-        public virtual async Task<DefaultResult> UpdateAlter([FromBody] UpdateAlter<T> value)
-        {
-            await Service.UpdateAlterAsync(value);
             return await ResultAsync(true);
         }
 

@@ -1,8 +1,6 @@
 ﻿
 using Fluent.Architecture.Exceptions.ValidationException;
-using Fluent.Architecture.Extensions;
 using Newtonsoft.Json;
-using System.Reflection;
 
 namespace Fluent.Architecture.Core.Inconsistences
 {
@@ -16,10 +14,7 @@ namespace Fluent.Architecture.Core.Inconsistences
 
     public class FluentPropertyInconsistence : FluentInconsistence
     {
-        public string PropertyName => Property.GetJsonPropertyName();
-
-        [JsonIgnore]
-        public PropertyInfo Property { get; set; }
+        public string PropertyName { get; set; }
     }
 
     public class FluentUiFieldInconsistence : FluentPropertyInconsistence

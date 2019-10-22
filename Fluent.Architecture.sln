@@ -48,7 +48,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.Redis",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "01_SimpleHelloWorld", "..\Fluent.Infrastructure.Doc\Samples\01-SimpleHelloWorld\01_SimpleHelloWorld.csproj", "{E3496F2B-0343-42F2-9185-6BEB9FF3DC34}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "02_CustomController", "..\Fluent.Infrastructure.Doc\Samples\02-CustomController\02_CustomController.csproj", "{429F0A0F-A577-4E64-89A0-B5AC218EF883}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "06_Composition", "..\Fluent.Infrastructure.Doc\Samples\06-Composition\06_Composition.csproj", "{63D6E628-53CE-45AF-9310-9828F8909832}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -120,10 +120,10 @@ Global
 		{E3496F2B-0343-42F2-9185-6BEB9FF3DC34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3496F2B-0343-42F2-9185-6BEB9FF3DC34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3496F2B-0343-42F2-9185-6BEB9FF3DC34}.Release|Any CPU.Build.0 = Release|Any CPU
-		{429F0A0F-A577-4E64-89A0-B5AC218EF883}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{429F0A0F-A577-4E64-89A0-B5AC218EF883}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{429F0A0F-A577-4E64-89A0-B5AC218EF883}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{429F0A0F-A577-4E64-89A0-B5AC218EF883}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63D6E628-53CE-45AF-9310-9828F8909832}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63D6E628-53CE-45AF-9310-9828F8909832}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63D6E628-53CE-45AF-9310-9828F8909832}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63D6E628-53CE-45AF-9310-9828F8909832}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -135,7 +135,7 @@ Global
 		{E5E65A3A-5BEF-4522-97E4-B84AA9707297} = {3CDE6F00-CAA7-48F5-9E60-1D1A6A81667C}
 		{55F7FD0C-6CEF-4F51-B644-F374F75A9899} = {B8A70513-1332-4DC5-88EB-B9FB43D556AF}
 		{E3496F2B-0343-42F2-9185-6BEB9FF3DC34} = {DCA683DC-EB06-4A4C-9248-965C07B682DB}
-		{429F0A0F-A577-4E64-89A0-B5AC218EF883} = {DCA683DC-EB06-4A4C-9248-965C07B682DB}
+		{63D6E628-53CE-45AF-9310-9828F8909832} = {DCA683DC-EB06-4A4C-9248-965C07B682DB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {123E34D5-DA60-4929-9110-E760ECAC5050}

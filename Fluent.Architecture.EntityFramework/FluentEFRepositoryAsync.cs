@@ -7,7 +7,6 @@
 
 // ReSharper disable CommentTypo
 
-using Fluent.Architecture.Core.Controllers.ControllerModel;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Interfaces;
@@ -299,18 +298,6 @@ namespace Fluent.Architecture.EntityFramework
             var tableName = typeof(TE).GetTableName();
             var sql = $"TRUNCATE TABLE {tableName}";
             await ExecuteSqlQueryAsync(sql);
-        }
-
-        //Todo - tratar recuperação de exclusão lógica, como foi feito no Update
-        public async Task<TE> UpdateAlterAsync(UpdateAlter<TE> value)
-        {
-            RunTheContextValidation();
-
-            DefineForeignKeyOfCompositionsOrAggregations(value.Final);
-            var currentEntity = await Service.FindAsync(value.Original);
-            TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(value.Final);
-            await UpdateCompositionListAsync(value.Final);
-            return value.Final;
         }
 
         /// <summary>

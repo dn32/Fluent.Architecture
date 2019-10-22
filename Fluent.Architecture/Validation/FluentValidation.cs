@@ -8,16 +8,12 @@
 // ReSharper disable CommentTypo
 
 using Fluent.Architecture.Core.Attributes;
-using Fluent.Architecture.Core.Controllers.ControllerModel;
 using Fluent.Architecture.Core.Enumerator;
 using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Exceptions.ValidationException;
-using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Services;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -28,7 +24,7 @@ namespace Fluent.Architecture.Validation
     /// A classe de validação base de todas as validações com entidade do sistema.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class FluentValidation<T> : TransactionalValidation where T : BaseEntity
+    public class FluentValidation<T> : TransactionalValidation, IFluentValidation where T : BaseEntity
     {
         #region INTERNAL
 
@@ -51,183 +47,119 @@ namespace Fluent.Architecture.Validation
 
         #endregion
 
-        public void FluentValidateAttribute(T entity)
-        {
-            if (!this.NullParameterOk)
-            {
-                return;
-            }
+        #region VALIDATE COMPOSITIONS
 
-            var properties = entity.GetType().GetProperties();
-            foreach (var property in properties)
-            {
-                var FluentValidateAttribute = property.GetCustomAttribute<FluentValidateAttribute>(true)?.FluentCast<FluentValidateAttribute>();
-                if (FluentValidateAttribute == null) { continue; }
-
-                FluentValidateAttribute.Entity = entity;
-                var value = property.GetValue(entity);
-                if (!FluentValidateAttribute.IsValidWhen(value))
-                {
-                    AddInconsistency(new FluentGenericAttributeValidateException(property, false, FluentValidateAttribute.InvalidMessage));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Validate add operation.
-        /// </summary>
-        /// <param name="entity">
-        /// A entidade a ser validada.
-        /// </param>
+        // Composition
         public virtual async Task AddAsync(T entity)
         {
-            this.ParameterMustBeInformed(entity);
-            this.FluentValidateAttribute(entity);
-            this.RequiredPropertyMustBeInformed(entity);
-            this.MaxMinLenghtPropertyMustBeInformed(entity);
-            this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
+            var method = GetType().GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
 
-            if (KeyValuesOk)
-            {
-                await EntityShouldNotExistInDatabaseBasedOnKeysAsync(entity, false);
-            }
-
-            this.RunTheContextValidation();
+            var anotherServices = await (this).ExecuteEntityAndCompositions(entity, method);
+            RunTheContextValidation(anotherServices);
         }
 
+        // Composition
         public virtual async Task AddOrUpdateAsync(T entity)
         {
-            this.ParameterMustBeInformed(entity);
-            this.FluentValidateAttribute(entity);
-            this.RequiredPropertyMustBeInformed(entity);
-            this.MaxMinLenghtPropertyMustBeInformed(entity);
-            this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
+            var method = GetType().GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
 
-            if (KeyValuesOk)
-            {
-                await EntityShouldNotExistInDatabaseBasedOnKeysAsync(entity, false);
-            }
+            var anotherServices = await (this).ExecuteEntityAndCompositions(entity, method);
+            RunTheContextValidation(anotherServices);
         }
 
-        public virtual async Task AddRangeAsync(T[] entities)
-        {
-            this.ParameterMustBeInformed(entities);
-
-            if (entities != null)
-            {
-                foreach (var entity in entities)
-                {
-                    this.ParameterMustBeInformed(entity);
-                    this.FluentValidateAttribute(entity);
-                    this.RequiredPropertyMustBeInformed(entity);
-                    this.MaxMinLenghtPropertyMustBeInformed(entity);
-                    this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity);
-
-                    if (KeyValuesOk)
-                    {
-                        await EntityShouldNotExistInDatabaseBasedOnKeysAsync(entity, false);
-                    }
-                }
-            }
-
-            this.RunTheContextValidation();
-        }
-
+        // Composition
         public virtual async Task UpdateAsync(T entity)
         {
-            this.ParameterMustBeInformed(entity);
-            this.FluentValidateAttribute(entity);
-            this.RequiredPropertyMustBeInformed(entity);
-            this.MaxMinLenghtPropertyMustBeInformed(entity);
-            this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, isUpdate: true);
+            var method = GetType().GetMethod(nameof(UpdateRangeAsyncInternal));
+            var anotherServices = await (this).ExecuteEntityAndCompositions(entity, method);
 
             if (KeyValuesOk)
             {
-                await EntityMustExistInDatabaseAsync(entity, true);
-                await ThereIsOnlyOneEntityAsync(entity, false);
+                await this.EntityMustExistInDatabaseAsync(entity, true);
+                await this.ThereIsOnlyOneEntityAsync(entity, false);
             }
 
-            this.RunTheContextValidation();
+            RunTheContextValidation(anotherServices);
         }
 
-        internal async Task UpdateAlterAsync(UpdateAlter<T> value)
-        {
-            ParameterMustBeInformed(value);
-            FluentValidateAttribute(value.Final);
-            ParameterMustBeInformed(value.Original);
-            ParameterMustBeInformed(value.Final);
-            RequiredPropertyMustBeInformed(value.Original);
-            RequiredPropertyMustBeInformed(value.Final);
-            MaxMinLenghtPropertyMustBeInformed(value.Final);
-            AllKeysShouldBeInformedWhenThereAreMoreThanOne(value.Final, isUpdate: true);
-
-            if (KeyValuesOk)
-            {
-                await EntityMustExistInDatabaseAsync(value.Original);
-                //Todo validate ThereIsOnlyOneEntity(entity, false);
-                //Todo validate logical delete
-            }
-
-            RunTheContextValidation();
-        }
-
+        // Composition
         public virtual async Task UpdateRangeAsync(IEnumerable<T> entities)
         {
-            this.ParameterMustBeInformed(entities);
+            this.ParameterMustBeInformed(entities, nameof(entities));
+            var anotherServices = new List<TransactionalService>();
+            var method = GetType().GetMethod(nameof(UpdateRangeAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
 
             if (entities != null)
             {
-                foreach (var entity in entities)
+                foreach (var entity_ in entities)
                 {
-                    this.ParameterMustBeInformed(entity);
-                    this.FluentValidateAttribute(entity);
-                    this.RequiredPropertyMustBeInformed(entity);
-                    this.MaxMinLenghtPropertyMustBeInformed(entity);
-                    this.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, isUpdate: true);
+                    var services = await (this).ExecuteEntityAndCompositions(entity_, method);
+                    anotherServices.AddRange(services);
+
                     if (KeyValuesOk)
                     {
-                        await EntityMustExistInDatabaseAsync(entity);
+                        await this.EntityMustExistInDatabaseAsync(entity_);
                         //Todo validate ThereIsOnlyOneEntity(entity, false);
                         //Todo validate logical delete
                     }
                 }
             }
 
-            this.RunTheContextValidation();
+            RunTheContextValidation(anotherServices);
         }
+
+        // Composition
+        public virtual async Task AddRangeAsync(IEnumerable<T> entities)
+        {
+            this.ParameterMustBeInformed(entities, nameof(entities));
+            var anotherServices = new List<TransactionalService>();
+            if (entities != null)
+            {
+                var method = GetType().GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
+
+                foreach (var entity in entities)
+                {
+                    var services = await (this).ExecuteEntityAndCompositions(entity, method);
+                    anotherServices.AddRange(services);
+                }
+            }
+
+            RunTheContextValidation(anotherServices);
+        }
+        
+        #endregion
 
         public virtual async Task RemoveAsync(T entity)
         {
-            this.ParameterMustBeInformed(entity);
+            this.ParameterMustBeInformed(entity, null);
             if (entity != null)
             {
-                AllKeysMustBeInformed(entity);
-                await EntityMustExistInDatabaseAsync(entity);
+                this.AllKeysMustBeInformed(entity, null, null);
+                await this.EntityMustExistInDatabaseAsync<T>(entity);
             }
 
-            this.RunTheContextValidation();
+            RunTheContextValidation();
         }
 
         public virtual async Task RemoveRangeAsync(T[] entities)
         {
-            this.ParameterMustBeInformed(entities);
+            this.ParameterMustBeInformed(entities, null);
 
             if (entities != null)
             {
                 foreach (var entity in entities)
                 {
-                    ParameterMustBeInformed(entity);
-                    //this.AllKeysMustBeInformed(entity);
-                    await EntityMustExistInDatabaseAsync(entity);
+                    this.ParameterMustBeInformed(entity, null);
+                    await this.EntityMustExistInDatabaseAsync(entity);
                 }
             }
 
-            this.RunTheContextValidation();
+            RunTheContextValidation();
         }
 
         internal void FilteredList(Filter[] filters)
         {
-            this.ParameterMustBeInformed(filters);
+            this.ParameterMustBeInformed(filters, nameof(filters));
 
             var properties = typeof(T).GetProperties().ToList();
 
@@ -240,17 +172,16 @@ namespace Fluent.Architecture.Validation
                 }
             }
 
-            this.RunTheContextValidation();
+            RunTheContextValidation();
         }
 
-        // Todo2 Documentar
         public virtual void Find(T entity, bool checkId = true)
         {
-            ParameterMustBeInformed(entity);
+            this.ParameterMustBeInformed(entity, null);
 
             if (checkId && entity != null)
             {
-                AllKeysMustBeInformed(entity);
+                this.AllKeysMustBeInformed(entity, null, null);
             }
 
             RunTheContextValidation();
@@ -281,209 +212,38 @@ namespace Fluent.Architecture.Validation
             RunTheContextValidation();
         }
 
-        /*
-    === PADRÃO DE NOMECLATURA ===
-    O que deve ser verdadeiro
-    ParameterMustBeInformed 
-    (O parâmetro deve ser informado. Se não for informado, teremos uma inconsistência)
-    Evite escrever negação, mas quando não for possível evitar, escreva assim: EntityShouldNotExistInDatabase.
-    A entida não pode existir. Se existir, teremos uma inconsistência.
-    =============================         
-         */
-        #region VALIDATIONS
+        #region INTERNAL
 
-        private void ParameterMustBeInformed(object entity)
+        private static void UpdateAsyncInternal<T2>(IFluentValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : BaseEntity
         {
-            if (entity == null)
-            {
-                this.AddInconsistency(new NullParameterFluentValidationException(nameof(entity)));
-                this.NullParameterOk = false;
-                return;
-            }
-
-            this.NullParameterOk = true;
+            validation.ParameterMustBeInformed(entity, compositionProperty);
+            validation.FluentValidateAttribute(entity, compositionProperty, compositionFieldName);
+            validation.RequiredPropertyMustBeInformed(entity, compositionProperty, compositionFieldName);
+            validation.MaxMinLenghtPropertyMustBeInformed(entity, compositionProperty, compositionFieldName);
+            validation.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, compositionProperty, compositionFieldName);
         }
 
-        private void MaxMinLenghtPropertyMustBeInformed(T entity)
+        private static async Task AdddAsyncInternal<T2>(IFluentValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : BaseEntity
         {
-            if (!this.NullParameterOk)
+            validation.ParameterMustBeInformed(entity, compositionProperty);
+            validation.FluentValidateAttribute(entity, compositionProperty, compositionFieldName);
+            validation.RequiredPropertyMustBeInformed(entity, compositionProperty, compositionFieldName);
+            validation.MaxMinLenghtPropertyMustBeInformed(entity, compositionProperty, compositionFieldName);
+            validation.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, compositionProperty, compositionFieldName);
+
+            if (validation.KeyValuesOk)
             {
-                return;
-            }
-
-            var properties = entity.GetType().GetProperties().ToList();
-            foreach (var property in properties)
-            {
-                var value = property.GetValue(entity);
-                if(value == null) { continue; }
-                if (property.PropertyType.IsNumeric())
-                {
-                    var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
-                    var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
-                    var mindouble = min == null ? double.MinValue : double.Parse(min.ToString(), CultureInfo.InvariantCulture);
-                    var maxdouble = max == null ? double.MaxValue : double.Parse(max.ToString(), CultureInfo.InvariantCulture);
-                    var stringValue = value.ToString();
-                    if (stringValue.Contains(".")) { stringValue = stringValue.Split(".")[0]; }
-                    if (stringValue.Contains(",")) { stringValue = stringValue.Split(",")[0]; }
-                    var valuedoble = double.Parse(stringValue, CultureInfo.InvariantCulture);
-                    if (valuedoble < mindouble || valuedoble > maxdouble)
-                    {
-                        AddInconsistency(new UiFieldLenghtFluentValidationException(property));
-                    }
-                }
-
-                if (property.PropertyType == typeof(string) && property.PropertyType == typeof(String))
-                {
-                    var requ = property.GetCustomAttribute<RequiredAttribute>() != null || property.GetCustomAttribute<FluentRequiredAttribute>() != null;
-                    if (requ && property.GetValue(entity).IsFluentNull())
-                    {//Nesse caso já há uma inconsistência de requerido adicionada
-                        return;
-                    }
-
-                    var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
-                    var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length;
-                    if (min == null || max == null) { continue; }
-
-                    if (!new MinLengthAttribute(min.Value).IsValid(value))
-                    {
-                        this.AddInconsistency(new UiFieldLenghtFluentValidationException(property));
-                    }
-
-                    var maxint = Convert.ChangeType(max, typeof(int), CultureInfo.InvariantCulture) as int?;
-                    maxint = maxint == 0 ? int.MaxValue : maxint;
-                    if (!new MaxLengthAttribute(maxint.Value).IsValid(value))
-                    {
-                        this.AddInconsistency(new UiFieldLenghtFluentValidationException(property));
-                    }
-                }
+                await validation.EntityShouldNotExistInDatabaseBasedOnKeysAsync(entity, false);
             }
         }
 
-        private void RequiredPropertyMustBeInformed(T entity)
+        private static void UpdateRangeAsyncInternal<T2>(IFluentValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : BaseEntity
         {
-            if (!this.NullParameterOk)
-            {
-                return;
-            }
-
-            var properties = typeof(T).GetPropertiesByAttribute<RequiredAttribute>();
-            var properties2 = typeof(T).GetPropertiesByAttribute<FluentRequiredAttribute>();
-
-            properties2.ForEach(x =>
-            {
-                if (!properties.Contains(x))
-                {
-                    properties.Add(x);
-                }
-            });
-
-            foreach (var property in properties)
-            {
-                if (property.GetValue(entity).IsFluentNull())
-                {
-                    this.AddInconsistency(new UiFieldRequiredFluentValidationException(property));
-                }
-            }
-        }
-
-        private void AllKeysMustBeInformed(T entity)
-        {
-            this.KeyValuesOk = true;
-
-            var properties = entity.GetType().GetKeyProperties();
-            foreach (var property in properties)
-            {
-                if (property.GetValue(entity).IsFluentNull())
-                {
-                    this.AddInconsistency(new UiFieldRequiredFluentValidationException(property));
-                    this.KeyValuesOk = false;
-                }
-            }
-        }
-
-        private void AllKeysShouldBeInformedWhenThereAreMoreThanOne(T entity, bool isUpdate = false)
-        {
-            if (!this.NullParameterOk || !this.KeyValuesOk)
-            {
-                return;
-            }
-
-            var entityType = typeof(T);
-            var properties = entityType.GetKeyProperties();
-            if (properties.Count > 1)
-            {
-                this.AllKeysMustBeInformed(entity);
-            }
-            else
-            {
-                var property = properties.First();
-                if (property.GetValue(entity).IsFluentNull())
-                {
-                    if (!isUpdate)
-                    {
-                        return;
-                    }
-
-                    this.AddInconsistency(new UiFieldRequiredFluentValidationException(property));
-                    this.KeyValuesOk = false;
-                }
-                else
-                {
-                    if (isUpdate)
-                    {
-                        return;
-                    }
-
-                    //Todo - Exigir que não seja informado somente quando o campo for de auto incremento.
-                    //this.AddInconsistency(new DbFieldNotRequiredFluentValidationException(property));
-                    //this.KeyValuesOk = false;
-                }
-            }
-        }
-
-        private async Task EntityMustExistInDatabaseAsync(T entity, bool includeExcludedLogically = false)
-        {
-            if (!this.NullParameterOk)
-            {
-                return;
-            }
-
-            if (!await Service.ExistsAsync(entity, KeyValuesOk, includeExcludedLogically))
-            {
-                var keys = entity.GetKeyValues().Select(x => $"{{{x.Property.Name}:{x.Value}}}").ToArray();
-                var keyValues = string.Join(", ", keys);
-                this.AddInconsistency(new EntityNotFoundFluentValidationException(keyValues));
-            }
-        }
-
-        private async Task ThereIsOnlyOneEntityAsync(T entity, bool includeExcludedLogically = false)
-        {
-            if (!NullParameterOk)
-            {
-                return;
-            }
-
-            if (await Service.CountAsync(entity, includeExcludedLogically) > 1)
-            {
-                var keys = entity.GetKeyValues().Select(x => $"-{{{x.Property.Name}:{x.Value}}}").ToArray();
-                var keyValues = string.Join(", ", keys);
-                this.AddInconsistency(new EntityExistsFluentValidationException(keyValues));
-            }
-        }
-
-        private async Task EntityShouldNotExistInDatabaseBasedOnKeysAsync(T entity, bool checkId)
-        {
-            if (!this.NullParameterOk || !this.KeyValuesOk)
-            {
-                return;
-            }
-
-            if (await Service.ExistsAsync(entity, checkId))
-            {
-                var keys = entity.GetKeyAndFluentUniqueKeyValues().Select(x => $"{{{x.Property.Name}:{x.Value}}}").ToArray();
-                var keyValues = string.Join(", ", keys);
-                this.AddInconsistency(new EntityExistsFluentValidationException(keyValues));
-            }
+            validation.ParameterMustBeInformed(entity, compositionProperty);
+            validation.FluentValidateAttribute(entity, compositionProperty, compositionFieldName);
+            validation.RequiredPropertyMustBeInformed(entity, compositionProperty, compositionFieldName);
+            validation.MaxMinLenghtPropertyMustBeInformed(entity, compositionProperty, compositionFieldName);
+            validation.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, compositionProperty, compositionFieldName, isUpdate: true);
         }
 
         #endregion

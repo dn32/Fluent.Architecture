@@ -54,7 +54,7 @@ namespace Fluent.Architecture.Filters
                             Field = field.Field,
                             Message = field.Message,
                             GlobalizationKey = field.GlobalizationKey,
-                            Property = field.Property,
+                            PropertyName = field.PropertyName,
                             FluentException = inconsistence
                         };
                     }
@@ -64,7 +64,7 @@ namespace Fluent.Architecture.Filters
                         {
                             Message = prop.Message,
                             GlobalizationKey = prop.GlobalizationKey,
-                            Property = prop.Property,
+                            PropertyName = prop.PropertyName,
                             FluentException = inconsistence
                         };
                     }

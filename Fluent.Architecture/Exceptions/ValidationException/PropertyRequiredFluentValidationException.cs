@@ -20,9 +20,17 @@ namespace Fluent.Architecture.Exceptions.ValidationException
         [JsonProperty("globalization_key")]
         public override string GlobalizationKey => "FluentUiFieldValidationException";
 
-        public FluentUiFieldValidationException(PropertyInfo property, bool globalizeValues, string message) : base(property, globalizeValues, message)
+        public FluentUiFieldValidationException(PropertyInfo property, bool globalizeValues, string message, string compositionProperty, string compositionFieldName) :
+            base(property, globalizeValues, message, compositionProperty)
         {
-            Field = property.GetUiPropertyName();
+            if (string.IsNullOrWhiteSpace(compositionFieldName))
+            {
+                Field = property.GetUiPropertyName();
+            }
+            else
+            {
+                Field = $"{compositionFieldName}.{property.GetUiPropertyName()}";
+            }
         }
     }
 
@@ -31,7 +39,8 @@ namespace Fluent.Architecture.Exceptions.ValidationException
         [JsonProperty("globalization_key")]
         public override string GlobalizationKey => "TheFieldMustHaveAValueForThisOperation";
 
-        public UiFieldRequiredFluentValidationException(PropertyInfo property) : base(property, true, $"The field {property.GetUiPropertyName()} must have a value for this operation.")
+        public UiFieldRequiredFluentValidationException(PropertyInfo property, string compositionProperty, string compositionFieldName) :
+            base(property, true, $"The field {(compositionFieldName == null ? property.GetUiPropertyName() : compositionFieldName + "." + property.GetUiPropertyName())} must have a value for this operation.", compositionProperty, compositionFieldName)
         {
         }
     }
@@ -45,7 +54,8 @@ namespace Fluent.Architecture.Exceptions.ValidationException
 
         public double Max { get; set; }
 
-        public UiFieldLenghtFluentValidationException(PropertyInfo property) : base(property, true, $"The {property.GetUiPropertyName()} field has more or less characters than allowed.")
+        public UiFieldLenghtFluentValidationException(PropertyInfo property, string compositionProperty, string compositionFieldName) :
+            base(property, true, $"The {(compositionFieldName == null ? property.GetUiPropertyName() : compositionFieldName + "." + property.GetUiPropertyName())} field has more or less characters than allowed.", compositionProperty, compositionFieldName)
         {
             var ret = property.GetPropertyRange();
             Min = ret?.min ?? 0;
@@ -54,47 +64,4 @@ namespace Fluent.Architecture.Exceptions.ValidationException
             Field = property.GetUiPropertyName();
         }
     }
-
-    //public class DbFieldRequiredFluentValidationException : FluentPropertyValidationException
-    //{
-    //    public DbFieldRequiredFluentValidationException(PropertyInfo propertyName) : base(propertyName.GetColumnName(), false, $"The field {propertyName.GetColumnName()} must have a value for this operation.")
-    //    {
-    //    }
-    //}
-
-    //public class PropertyRequiredFluentValidationException : FluentPropertyValidationException
-    //{
-    //    public PropertyRequiredFluentValidationException(PropertyInfo propertyName) : base(propertyName?.Name, false, $"The property {propertyName.Name} must have a value for this operation.")
-    //    {
-    //    }
-    //}
-
-    //public class DbFieldNotRequiredFluentValidationException : FluentPropertyValidationException
-    //{
-    //    public DbFieldNotRequiredFluentValidationException(PropertyInfo propertyName) : base(propertyName.GetColumnName(), false, $"The {propertyName.GetColumnName()} field should not have a value for this operation.")
-    //    {
-    //    }
-
-    //    [JsonProperty("globalization_key")]
-    //    public override string GlobalizationKey => "ThePropertyShouldNotHaveAValueForThisOperation";
-    //}
-
-    //public class JsonFieldPropertyRequiredFluentValidationException : FluentPropertyValidationException
-    //{
-    //    public JsonFieldPropertyRequiredFluentValidationException(PropertyInfo propertyName) : base(propertyName.GetJsonPropertyName(), false, $"The field {propertyName.GetJsonPropertyName()} must have a value for this operation.")
-    //    {
-    //    }
-    //}
-
-    //public class JsonIncorrectFieldValueFluentValidationException : FluentValidationException
-    //{
-    //    public JsonIncorrectFieldValueFluentValidationException(string propertyName, string value) : base($"Field {propertyName} has an incorrect value. Value: {value}.", false, propertyName, value)
-    //    {
-    //    }
-
-    //    [JsonProperty("globalization_key")]
-    //    public override string GlobalizationKey => "IncorrectFieldValue";
-    //}
-
-
 }

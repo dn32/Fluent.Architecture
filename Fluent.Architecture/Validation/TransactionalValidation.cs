@@ -7,6 +7,9 @@
 
 using Fluent.Architecture.Exceptions.ValidationException;
 using Fluent.Architecture.Services;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Fluent.Architecture.Validation
 {
@@ -41,13 +44,23 @@ namespace Fluent.Architecture.Validation
         /// <param name="ex">
         /// A inconsitência.
         /// </param>
-        protected void AddInconsistency(FluentValidationException ex)
+        public void AddInconsistency(FluentValidationException ex)
         {
             this.Service.SessionRequest.ContextFluentValidationException.AddInconsistency(ex);
         }
 
-        protected void RunTheContextValidation()
+        public void RunTheContextValidation()
         {
+            this.Service.SessionRequest.ContextFluentValidationException.Validate();
+        }
+
+        public void RunTheContextValidation(List<TransactionalService> anotherServices)
+        {
+            anotherServices.SelectMany(x => x.SessionRequest.ContextFluentValidationException.Inconsistencies).ToList().ForEach(ex =>
+            {
+                Service.SessionRequest.ContextFluentValidationException.AddInconsistency(ex);
+            });
+
             this.Service.SessionRequest.ContextFluentValidationException.Validate();
         }
 

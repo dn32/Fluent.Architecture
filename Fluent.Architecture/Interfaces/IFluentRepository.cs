@@ -1,5 +1,4 @@
-﻿using Fluent.Architecture.Core.Controllers.ControllerModel;
-using Fluent.Architecture.Interfaces;
+﻿using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Services;
 using System;
@@ -19,11 +18,10 @@ namespace Fluent.Architecture.Core.Interfaces
         #endregion
 
         void RemoveRange(IFluentSpecification spec);
-        void RemoveRange(params TE[] entities);
 
+        Task RemoveRangeAsync(params TE[] entities);
         Task<TE> UpdateAsync(TE entity);
         Task UpdateRangeAsync(IEnumerable<TE> entities);
-        Task<TE> UpdateAlterAsync(UpdateAlter<TE> value);
         Task TruncateAsync();
         Task<TE> RemoveAsync(TE entity);
         Task<bool> ExistsSelectAsync<TO>(ISpec spec);

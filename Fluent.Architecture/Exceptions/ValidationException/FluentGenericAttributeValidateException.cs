@@ -16,7 +16,8 @@ namespace Fluent.Architecture.Exceptions.ValidationException
         [JsonProperty("globalization_key")]
         public override string GlobalizationKey => "FluentGenericAttributeValidateException";
 
-        public FluentGenericAttributeValidateException(PropertyInfo property, bool globalizeValues, string message) : base(property, globalizeValues, message)
+        public FluentGenericAttributeValidateException(PropertyInfo property, bool globalizeValues, string message, string compositionProperty, string compositionFieldName) :
+            base(property, globalizeValues, message, compositionProperty, compositionFieldName)
         {
         }
     }

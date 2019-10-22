@@ -13,7 +13,6 @@ using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Core.Util;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Services;
 using Fluent.Architecture.Specifications;
@@ -78,7 +77,7 @@ namespace Fluent.Architecture.EntityFramework
 
         // FluentService<TE> IFluentRepository<TE>.Service { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
-        protected void RunTheContextValidation() => Service.SessionRequest.ContextFluentValidationException.Validate();
+        internal protected void RunTheContextValidation() => Service.SessionRequest.ContextFluentValidationException.Validate();
 
         #endregion
 
@@ -425,11 +424,10 @@ namespace Fluent.Architecture.EntityFramework
             this.Input.RemoveRange(list);
         }
 
-        public virtual void RemoveRange(params TE[] entities)
+        public virtual async Task RemoveRangeAsync(params TE[] entities)
         {
             var tasks = entities.Select(RemoveAsync).ToArray();
-            Task.WaitAll(tasks);
-            //foreach (var entity in entities) { await RemoveAsync(entity); }
+            await Task.WhenAll(tasks);
         }
 
         #endregion

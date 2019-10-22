@@ -72,6 +72,11 @@ namespace Fluent.Architecture.Factory
         /// <returns></returns>
         public static TS Create<TS>(object httpContext, string justification) where TS : TransactionalService, new()
         {
+            if (string.IsNullOrWhiteSpace(justification))
+            {
+                throw new IncorrectDevelopmentException("Report the justification");
+            }
+
             return Create(typeof(TS), httpContext).FluentCast<TS>();
         }
 
@@ -80,6 +85,11 @@ namespace Fluent.Architecture.Factory
             if (string.IsNullOrWhiteSpace(justification))
             {
                 throw new IncorrectDevelopmentException("Report the justification");
+            }
+
+            if (serviceType.IsFluentEntity())
+            {
+                serviceType = typeof(FluentService<>).MakeGenericType(serviceType);
             }
 
             return Create(serviceType, httpContext).FluentCast<TransactionalService>();

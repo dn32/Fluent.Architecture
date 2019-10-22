@@ -20,10 +20,18 @@ namespace Fluent.Architecture.Exceptions.ValidationException
         [JsonIgnore]
         public PropertyInfo Property { get; set; }
 
-        public FluentPropertyValidationException(PropertyInfo property, bool globalizeValues, string message) : base(message, globalizeValues)
+        public FluentPropertyValidationException(PropertyInfo property, bool globalizeValues, string message, string compositionProperty) : base(message, globalizeValues)
         {
             Property = property;
-            PropertyName = property.GetJsonPropertyName();
+            if (string.IsNullOrWhiteSpace(compositionProperty))
+            {
+                PropertyName = property.GetJsonPropertyName();
+            }
+            else
+            {
+                PropertyName = $"{compositionProperty}.{property.GetJsonPropertyName()}";
+            }
+
             Values = new[] { PropertyName };
         }
 
