@@ -3,6 +3,7 @@ using Fluent.Architecture.Filters;
 using Fluent.Architecture.Services;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -12,16 +13,20 @@ namespace Fluent.Architecture.Core.Services
 {
     public abstract class FluentAuthenticationService : TransactionalService
     {
-        public abstract Task<bool> AuthenticateAsync(FluentAuthenticationUser user);
+        public abstract Task<(bool sucess, List<Claim> claims)> AuthenticateAsync(FluentAuthenticationUser user);
 
         public virtual void Register(FluentAuthenticationUser user) { }
 
         public virtual async Task<string> LoginAsync(FluentAuthenticationUser user)
         {
-            if (await AuthenticateAsync(user))
+            var (sucess, claims) = await AuthenticateAsync(user);
+
+            if (sucess)
             {
-                var identity = new ClaimsIdentity(new GenericIdentity(user.Email), new[] { new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")) });
-                return GenerateToken(identity, TimeSpan.FromDays(1));
+                if (claims == null) { claims = new List<Claim>(); }
+                claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")));
+                var identity = new ClaimsIdentity(new GenericIdentity(user.Email), claims);
+                return GenerateToken(identity, Setup.Config.Config.JwtInfo.Expires ?? TimeSpan.FromDays(1));
             }
             else
             {
