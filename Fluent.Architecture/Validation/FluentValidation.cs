@@ -70,7 +70,7 @@ namespace Fluent.Architecture.Validation
         // Composition
         public virtual async Task UpdateAsync(T entity)
         {
-            var method = GetType().GetMethod(nameof(UpdateRangeAsyncInternal));
+            var method = GetType().GetMethod(nameof(UpdateRangeAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
             var anotherServices = await (this).ExecuteEntityAndCompositions(entity, method);
 
             if (KeyValuesOk)

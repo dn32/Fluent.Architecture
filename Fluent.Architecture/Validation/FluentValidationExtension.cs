@@ -25,10 +25,9 @@ namespace Fluent.Architecture.Validation
     {
         internal static async Task<List<TransactionalService>> ExecuteEntityAndCompositions<T>(this FluentValidation<T> validation, object entity, MethodInfo method) where T : BaseEntity
         {
-            var tasks = new List<Task>
-            {
-                method.MakeGenericMethod(typeof(T)).Invoke(null, new object[]{ validation, entity, null, null }).FluentCast<Task>()
-            };
+            var tasks = new List<Task>();
+            var t1 = method.MakeGenericMethod(typeof(T)).Invoke(null, new object[] { validation, entity, null, null }).FluentCast<Task>();
+            if (t1 != null) { tasks.Add(t1); }
 
             List<TransactionalService> anotherServices = new List<TransactionalService>();
 
@@ -57,7 +56,8 @@ namespace Fluent.Architecture.Validation
                             var compositionPropertyName = $"{property.GetJsonPropertyName()}[{i}]";
                             var compositionFieldName = $"{property.GetUiPropertyName()}[{i}]";
 
-                            tasks.Add(method.MakeGenericMethod(entityType).Invoke(null, new object[] { service.Validation, item, compositionPropertyName, compositionFieldName }).FluentCast<Task>());
+                            var t2 = method.MakeGenericMethod(entityType).Invoke(null, new object[] { service.Validation, item, compositionPropertyName, compositionFieldName }).FluentCast<Task>();
+                            if (t2 != null) { tasks.Add(t2); }
                             i++;
                         }
                     }
@@ -66,7 +66,8 @@ namespace Fluent.Architecture.Validation
                         var compositionPropertyName = property.GetJsonPropertyName();
                         var compositionFieldName = property.GetUiPropertyName();
 
-                        tasks.Add(method.MakeGenericMethod(entityType).Invoke(null, new object[] { service.Validation, entityCompositionValue, compositionPropertyName, compositionFieldName }).FluentCast<Task>());
+                        var t2 = method.MakeGenericMethod(entityType).Invoke(null, new object[] { service.Validation, entityCompositionValue, compositionPropertyName, compositionFieldName }).FluentCast<Task>();
+                        if (t2 != null) { tasks.Add(t2); }
                     }
                 }
             }

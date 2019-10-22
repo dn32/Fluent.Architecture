@@ -259,7 +259,7 @@ namespace Fluent.Architecture.EntityFramework
         private async Task CompleteEmptyKeysAsync(object compositionValue)
         {
             if (compositionValue == null) { return; }
-            var keyPoroperties = compositionValue.GetType().GetProperties().Where(x => x.GetCustomAttributeAny<FluentRandomKeyValueOnAdd>()).ToList();
+            var keyPoroperties = compositionValue.GetType().GetProperties().Where(x => x.GetCustomAttributeAny<FluentRandomKeyValueOnAddAttribute>()).ToList();
             //Todo - Permitir esse atributo somente em tipos primitivos
             foreach (var property in keyPoroperties)
             {
