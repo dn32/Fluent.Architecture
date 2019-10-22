@@ -77,6 +77,14 @@ namespace Fluent.Architecture.Validation
             var properties = entity.GetType().GetProperties().ToList();
             foreach (var property in properties)
             {
+                if (property.GetCustomAttributeAny<FluentRandomKeyValueOnAddAttribute>(true)) { continue; }
+                if (!string.IsNullOrWhiteSpace(compositionProperty))
+                {
+                    if (property.GetCustomAttribute<FluentJsonPropertyAttribute>(true)?.form == Core.Enumerator.EnumForm.HIDDEN)
+                    {
+                        continue;
+                    }
+                }
                 var value = property.GetValue(entity);
                 if (value == null) { continue; }
                 if (property.PropertyType.IsNumeric())
@@ -142,6 +150,14 @@ namespace Fluent.Architecture.Validation
 
             foreach (var property in properties)
             {
+                if (property.GetCustomAttributeAny<FluentRandomKeyValueOnAddAttribute>(true)) { continue; }
+                if (!string.IsNullOrWhiteSpace(compositionProperty))
+                {
+                    if (property.GetCustomAttribute<FluentJsonPropertyAttribute>(true)?.form == Core.Enumerator.EnumForm.HIDDEN)
+                    {
+                        continue;
+                    }
+                }
                 if (property.GetValue(entity).IsFluentNull())
                 {
                     validation.AddInconsistency(new UiFieldRequiredFluentValidationException(property, compositionProperty, compositionFieldName));
@@ -156,6 +172,15 @@ namespace Fluent.Architecture.Validation
             var properties = entity.GetType().GetKeyProperties();
             foreach (var property in properties)
             {
+                if (property.GetCustomAttributeAny<FluentRandomKeyValueOnAddAttribute>(true)) { continue; }
+                if (!string.IsNullOrWhiteSpace(compositionProperty))
+                {
+                    if(property.GetCustomAttribute<FluentJsonPropertyAttribute>(true)?.form == Core.Enumerator.EnumForm.HIDDEN)
+                    {
+                        continue;
+                    }
+                }
+
                 if (property.GetValue(entity).IsFluentNull())
                 {
                     validation.AddInconsistency(new UiFieldRequiredFluentValidationException(property, compositionProperty, compositionFieldName));
