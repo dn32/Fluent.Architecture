@@ -13,7 +13,7 @@
   </ItemGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
-    <!--<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.0.0" />-->
+    <PackageReference Include="Oracle.EntityFrameworkCore" Version="2.19.50" />
   </ItemGroup>
   
   <ItemGroup>

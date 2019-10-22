@@ -19,11 +19,11 @@ namespace Fluent.Architecture.EntityFramework.Oracle
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-#if NETCOREAPP3_0
-            throw new System.Exception("Oracle is not compatible with net core 3 yet");
-#else
+//#if NETCOREAPP3_0
+//            throw new System.Exception("Oracle is not compatible with net core 3 yet");
+//#else
             optionsBuilder.UseOracle(ConnectionString);
-#endif
+//#endif
 
 
 #if DEBUG

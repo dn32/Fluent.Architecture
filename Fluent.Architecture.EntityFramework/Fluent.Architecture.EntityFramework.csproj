@@ -23,8 +23,6 @@
     <ProjectReference Include="..\Fluent.Architecture\Fluent.Architecture.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Remotion.Linq" Version="2.2.0" />
-  </ItemGroup>
-  
+  <!--<ItemGroup>
+  </ItemGroup>-->
 </Project>
