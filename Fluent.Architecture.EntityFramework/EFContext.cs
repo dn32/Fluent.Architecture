@@ -84,25 +84,27 @@ namespace Fluent.Architecture.EntityFramework
                             continue;
                         }
 
-                        if (property.PropertyType.IsNullableEnum())
-                        {
-                            if (property.PropertyType.GetCustomAttribute<FluentUseEnumValueToDBAttribute>() == null)
-                            {
-                                entity.Property(property.Name).HasConversion<string>();// Converte os enumeradores para salvar o valor string no BD
-                            }
-                        }
-
                         if (property.GetCustomAttributeAny<NotMappedAttribute>(true))
                         {
                             entity.Ignore(property.Name);
                             continue;
                         }
 
-                        if (property.PropertyType.IsNullableEnum() && property.PropertyType.IsNullable())
+                        if (property.PropertyType.IsNullableEnum())
                         {
-                            // Converte valores de enumeradores para null quando necessário
-                            var method = GetType().GetMethod(nameof(ConvertNulableEnum), BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(property.PropertyType.GetNonNullableType());
-                            method.Invoke(this, new object[] { entity, property });
+                            if (property.PropertyType.IsNullable())
+                            {
+                                // Converte valores de enumeradores para null quando necessário
+                                var method = GetType().GetMethod(nameof(ConvertNulableEnum), BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(property.PropertyType.GetNonNullableType());
+                                method.Invoke(this, new object[] { entity, property });
+                            }
+                            else
+                            {
+                                if (!property.PropertyType.GetListTypeNonNull().GetCustomAttributeAny<FluentUseEnumValueToDBAttribute>())
+                                {
+                                    entity.Property(property.Name).HasConversion<string>();// Converte os enumeradores para salvar o valor string no BD
+                                }
+                            }
                         }
 
                         SetEntityProperty(entity, type, property);
@@ -112,13 +114,30 @@ namespace Fluent.Architecture.EntityFramework
 
             base.OnModelCreating(modelBuilder);
         }
-        
+
         protected void ConvertNulableEnum<TEnum>(EntityTypeBuilder entity, PropertyInfo property) where TEnum : Enum
         {
             if (typeof(TEnum).GetCustomAttribute<FluentEnumValueForSetNullAttribute>() is FluentEnumValueForSetNullAttribute fluentEnumValueForSetNullAttribute)
             {
-                var converter = new ValueConverter<TEnum, string>(v => v.GetHashCode() == fluentEnumValueForSetNullAttribute.Value ? null : v.ToString(), v => (TEnum)Enum.Parse(typeof(TEnum), v));
+                ValueConverter converter = null;
+
+                if (property.PropertyType.GetListTypeNonNull().GetCustomAttributeAny<FluentUseEnumValueToDBAttribute>())
+                {
+                    converter = new ValueConverter<TEnum, int?>(v => v.GetHashCode() == fluentEnumValueForSetNullAttribute.Value ? null : (int?)v.GetHashCode(), v => (TEnum)Enum.ToObject(typeof(TEnum), v));
+                }
+                else
+                {
+                    converter = new ValueConverter<TEnum, string>(v => v.GetHashCode() == fluentEnumValueForSetNullAttribute.Value ? null : v.ToString(), v => (TEnum)Enum.Parse(typeof(TEnum), v));
+                }
+
                 entity.Property(property.Name).HasConversion(converter);
+            }
+            else
+            {
+                if (!property.PropertyType.GetListTypeNonNull().GetCustomAttributeAny<FluentUseEnumValueToDBAttribute>())
+                {
+                    entity.Property(property.Name).HasConversion<string>();// Converte os enumeradores para salvar o valor string no BD
+                }
             }
         }
 
