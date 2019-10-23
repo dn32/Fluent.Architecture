@@ -127,7 +127,10 @@ namespace Fluent.Architecture.EntityFramework
                     {
                         foreach (var auth in compositionListValue)
                         {
+                            lock (SessionRequest) { Session.EnableLogicalDeletion = false; }
                             var currentEntity = await FindAsync(auth);
+                            lock (SessionRequest) { Session.EnableLogicalDeletion = true; }
+
                             if (currentEntity == null)
                             { //Add
                                 Session.Add(auth);

@@ -471,7 +471,7 @@ namespace Fluent.Architecture.Extensions
             {
                 var grid = 0;
                 var row = 1;
-                var lastGroup = properties.First()?.group ?? "";
+                var lastGroup = properties.FirstOrDefault()?.group ?? "";
                 properties.ForEach(x =>
                 {
                     if (lastGroup != x.group) { grid = 0; row++; lastGroup = x.group; }
