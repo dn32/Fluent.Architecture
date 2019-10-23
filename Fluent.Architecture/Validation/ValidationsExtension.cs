@@ -158,6 +158,7 @@ namespace Fluent.Architecture.Validation
                         continue;
                     }
                 }
+
                 if (property.GetValue(entity).IsFluentNull())
                 {
                     validation.AddInconsistency(new UiFieldRequiredFluentValidationException(property, compositionProperty, compositionFieldName));
@@ -210,6 +211,15 @@ namespace Fluent.Architecture.Validation
                     if (!isUpdate)
                     {
                         return;
+                    }
+
+                    if (property.GetCustomAttributeAny<FluentRandomKeyValueOnAddAttribute>(true)) { return; }
+                    if (!string.IsNullOrWhiteSpace(compositionProperty))
+                    {
+                        if (property.GetCustomAttribute<FluentJsonPropertyAttribute>(true)?.form == Core.Enumerator.EnumForm.HIDDEN)
+                        {
+                            return;
+                        }
                     }
 
                     validation.AddInconsistency(new UiFieldRequiredFluentValidationException(property, compositionProperty, compositionFieldName));
