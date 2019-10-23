@@ -58,6 +58,11 @@ namespace Fluent.Architecture.EntityFramework
                     continue;
                 }
 
+                if (type.GetCustomAttributeAny<NotMappedAttribute>(true))
+                {
+                    continue;
+                }
+
                 if (type.IsSubclassOf(typeof(FluentEntity)))
                 {
                     var keys = type.GetProperties().Where(x => x.GetCustomAttribute<KeyAttribute>() != null).Select(x => x.Name).ToArray();
