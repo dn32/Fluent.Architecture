@@ -36,6 +36,6 @@ namespace Fluent.Architecture.Exceptions.ValidationException
         }
 
         [JsonProperty("globalization_key")]
-        public override string GlobalizationKey => "ThePropertyMustHaveAValueForThisOperation";
+        public override string GlobalizationKey => "FluentPropertyValidationException";
     }
 }

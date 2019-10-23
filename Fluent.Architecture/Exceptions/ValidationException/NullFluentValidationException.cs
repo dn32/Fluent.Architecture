@@ -6,6 +6,8 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
+using Newtonsoft.Json;
+
 namespace Fluent.Architecture.Exceptions.ValidationException
 {
     /// <inheritdoc />
@@ -15,6 +17,9 @@ namespace Fluent.Architecture.Exceptions.ValidationException
             : base($"The parameter {parameter} can not be null.", parameter)
         {
         }
+
+        [JsonProperty("globalization_key")]
+        public override string GlobalizationKey => "NullParameterFluentValidationException";
     }
 
     /// <inheritdoc />
@@ -24,5 +29,7 @@ namespace Fluent.Architecture.Exceptions.ValidationException
             : base($"This operation physically removes all data from the requested table. If you really want to do this, you should add to the request header the term \"ERASE_ALL_DATA=YES\"")
         {
         }
+        [JsonProperty("globalization_key")]
+        public override string GlobalizationKey => "AlterLossOfDadaValidationException";
     }
 }

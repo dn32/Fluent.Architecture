@@ -43,7 +43,7 @@ namespace Fluent.Architecture.Core.Models
         public void Dispose(bool primaryService)
         {
             Setup.RemoveSession(this.SessionRequestId);
-            TransactionObjects.Dispose();
+            TransactionObjects?.Dispose();
 
             foreach (var service in this.Services.Values)
             {

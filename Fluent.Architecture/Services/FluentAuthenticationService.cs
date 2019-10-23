@@ -19,6 +19,11 @@ namespace Fluent.Architecture.Core.Services
 
         public virtual async Task<string> LoginAsync(FluentAuthenticationUser user)
         {
+            if (string.IsNullOrWhiteSpace(user?.Email))
+            {
+                throw new ArgumentNullException(nameof(user.Email));
+            }
+
             var (sucess, claims) = await AuthenticateAsync(user);
 
             if (sucess)
@@ -30,7 +35,7 @@ namespace Fluent.Architecture.Core.Services
             }
             else
             {
-                return string.Empty;
+                return "Access denied";
             }
         }
 

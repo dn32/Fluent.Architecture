@@ -22,6 +22,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using Fluent.Architecture.Attributes;
 
 namespace Fluent.Architecture.Extensions
 {
@@ -335,6 +336,7 @@ namespace Fluent.Architecture.Extensions
                     IsEnum = property.PropertyType.IsNullableEnum(),
                     IsFk = false,
                     IsKey = false,
+                    IsFluentUniqueKeyKey = false,
                     IsList = property.PropertyType.IsList(),
                     IsNullable = property.PropertyType.IsOfNullableType(),
                     min = property.GetCustomAttribute<MinLengthAttribute>(true)?.Length ?? 0,
@@ -345,6 +347,7 @@ namespace Fluent.Architecture.Extensions
             attr.FluentAggregation = property.GetCustomAttribute<FluentManyToManyAggregationAttribute>(true) ?? property.GetCustomAttribute<FluentAggregationAttribute>(true);
             attr.FluentComposition = property.GetCustomAttribute<FluentCompositionAttribute>(true);
             attr.IsKey = property.GetCustomAttributeAny<KeyAttribute>();
+            attr.IsFluentUniqueKeyKey = property.GetCustomAttributeAny<FluentUniqueKeyAttribute>();
             attr.IsList = property.PropertyType.IsList();
             attr.required = attr.required || property.GetCustomAttributeAny<RequiredAttribute>(true);
             attr.IsNullable = (property.PropertyType.IsOfNullableType() && !attr.required);

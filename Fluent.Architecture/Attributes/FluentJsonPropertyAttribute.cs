@@ -51,6 +51,7 @@ namespace Fluent.Architecture.Core.Attributes
 
         public bool IsEnum { get; set; }
         public bool IsKey { get; set; }
+        public bool IsFluentUniqueKeyKey { get; set; }
         public bool IsNullable { get; set; }
         public bool IsList { get; set; }
         public List<KeyValuePair<string, string>> Enums { get; set; }
