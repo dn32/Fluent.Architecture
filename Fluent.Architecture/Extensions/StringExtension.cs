@@ -7,6 +7,11 @@
             return initialText.Replace(removeText, "");
         }
 
+        public static bool IsNumeric(this string obj)
+        {
+            return int.TryParse(obj, out _);
+        }
+
         public static string ToCamelCase(this string s)
         {
             if (string.IsNullOrEmpty(s) || !char.IsUpper(s[0]))

@@ -1,9 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Remotion.Linq.Parsing.ExpressionVisitors;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+
+#if NETCOREAPP3_0
+
+using Microsoft.EntityFrameworkCore.Query;
+
+#else
+
+using Remotion.Linq.Parsing.ExpressionVisitors;
+
+#endif
 
 namespace Fluent.Architecture.EntityFramework
 {
@@ -17,10 +26,9 @@ namespace Fluent.Architecture.EntityFramework
         internal static void AddQueryFilter(this EntityTypeBuilder entityTypeBuilder, LambdaExpression expression)
         {
             var parameterType = Expression.Parameter(entityTypeBuilder.Metadata.ClrType);
-            var expressionFilter = ReplacingExpressionVisitor.Replace(
-                expression.Parameters.Single(), parameterType, expression.Body);
+            var expressionFilter = ReplacingExpressionVisitor.Replace(expression.Parameters.Single(), parameterType, expression.Body);
 
-            var internalEntityTypeBuilder = entityTypeBuilder.GetInternalEntityTypeBuilder();
+            //var internalEntityTypeBuilder = entityTypeBuilder.GetInternalEntityTypeBuilder();
             //if (internalEntityTypeBuilder.Metadata.QueryFilter != null)
             //{
             //    var currentQueryFilter = internalEntityTypeBuilder.Metadata.QueryFilter;

@@ -9,11 +9,14 @@
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.2' ">
     <PackageReference Include="Oracle.EntityFrameworkCore" Version="2.19.30" />
-
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.2.6" />
   </ItemGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
     <PackageReference Include="Oracle.EntityFrameworkCore" Version="2.19.50" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.0.0" />
   </ItemGroup>
   
   <ItemGroup>

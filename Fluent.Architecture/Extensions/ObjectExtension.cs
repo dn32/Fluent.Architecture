@@ -178,7 +178,7 @@ namespace Fluent.Architecture.Extensions
             GetAllFieldsDataOfObject(objectToCheck, propertyData);
             return JsonConvert.SerializeObject(propertyData, Formatting.None);
         }
-
+        
         /// <summary>
         /// Obtem todos o nome e valor de todos os campos de um objeto.
         /// </summary>
