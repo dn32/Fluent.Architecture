@@ -53,12 +53,7 @@ namespace Fluent.Architecture.EntityFramework
             var exportedTypes = Setup.Model.Values.ToList();
             foreach (var type in exportedTypes)
             {
-                if (type.GetCustomAttribute<NotDbEntityAttribute>(false) != null || type.IsAbstract)
-                {
-                    continue;
-                }
-
-                if (type.GetCustomAttributeAny<NotMappedAttribute>(true))
+                if (type.GetCustomAttributeAny<NotMappedAttribute>(false) || type.IsAbstract)
                 {
                     continue;
                 }
