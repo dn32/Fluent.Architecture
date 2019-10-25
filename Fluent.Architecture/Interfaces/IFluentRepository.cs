@@ -31,6 +31,7 @@ namespace Fluent.Architecture.Core.Interfaces
         Task<TO> FirstOrDefaultSelectAsync<TO>(IFluentSpecification<TO> spec);
         Task<TE> FirstOrDefaultAsync(IFluentSpecification spec);
         Task<TE> SingleOrDefaultAsync(IFluentSpecification spec);
+        Task<TO> SingleOrDefaultSelectAsync<TO>(IFluentSpecification<TO> spec);
         Task<bool> ExistsAsync(TE entity, bool includeExcludedLogically = false);
         Task<TE> FindAsync(TE entity);
         Task<TE> AddAsync(TE entity);

@@ -1,20 +1,16 @@
-﻿using AutoMapper;
-using Fluent.Architecture.Core.Attributes;
+﻿using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Core.Extensions;
 using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Core.Util;
 using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Factory.Proxy;
 using Fluent.Architecture.Specifications;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Fluent.Architecture.Core.Specifications
 {
-    public class TermSpec<T> : FluentSpecification<T> where T : FluentEntity
+    public class TermSpec<T> : FluentSelectSpecification<T, object> where T : FluentEntity
     {
         private string Term { get; set; }
 
@@ -27,16 +23,20 @@ namespace Fluent.Architecture.Core.Specifications
             return this;
         }
 
-        public override IQueryable<T> Where(IQueryable<T> query)
+        public override IQueryable<object> Where(IQueryable<T> query)
         {
             var expression = TermToExpression(Term);
-            query = query.Where(expression);
-            return query.GetInclusions(IsList);
+
+            return query
+                    .Where(expression)
+                    .GetInclusions(IsList)
+                    .FluentDynamicProjectTo(Service);
+
         }
 
-        public override IOrderedQueryable<T> Order(IQueryable<T> query)
+        public override IOrderedQueryable<object> Order(IQueryable<object> query)
         {
-            return query.OrderBy(x => x);
+            return query.FluentDynamicProjectToOrder(Service);
         }
 
         private Expression<Func<T, bool>> TermToExpression(string term)

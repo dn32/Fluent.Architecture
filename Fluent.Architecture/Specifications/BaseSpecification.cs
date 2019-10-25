@@ -21,6 +21,8 @@ namespace Fluent.Architecture.Specifications
     {
         internal BaseSpecification() { }
 
+        protected bool IgnoreOrder { get; set; } = false;
+
         public TransactionalService Service { get; set; }
 
         /// <summary>

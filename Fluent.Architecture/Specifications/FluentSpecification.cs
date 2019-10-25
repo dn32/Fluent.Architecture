@@ -27,8 +27,6 @@ namespace Fluent.Architecture.Specifications
     {
         public Type FluentEntityType => typeof(TE);
 
-        protected bool IgnoreOrder { get; set; } = false;
-
         /// <summary>
         /// A especificação.
         /// </summary>

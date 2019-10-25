@@ -132,6 +132,8 @@ namespace Fluent.Architecture.Services
 
         public virtual async Task<T> SingleOrDefaultAsync(IFluentSpecification spec) => await Repository.SingleOrDefaultAsync(spec);
 
+        public virtual async Task<TO> SingleOrDefaultSelectAsync<TO>(IFluentSpecification<TO> spec) => await Repository.SingleOrDefaultSelectAsync<TO>(spec);
+
         /// <summary>
         /// Retorna a quantidade de itens existentes que satisfaçam a uma especificação
         /// </summary>

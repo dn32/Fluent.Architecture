@@ -7,8 +7,6 @@
 
 // ReSharper disable CommentTypo
 
-using Fluent.Architecture.Core.Util;
-using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Factory;
@@ -16,11 +14,7 @@ using Fluent.Architecture.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Primitives;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Dynamic;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -53,36 +47,37 @@ namespace Fluent.Architecture.Controllers
         [NonAction]
         protected object PropertySelector(object element)
         {
-            if (element == null) { return null; }
+            return element;
+            //if (element == null) { return null; }
 
-            Request.Headers.TryGetValue("propertyToIgnore", out StringValues propertyToIgnoreValues);
-            Request.Headers.TryGetValue("propertyToShow", out StringValues propertyToShowValues);
+            //Request.Headers.TryGetValue("propertyToIgnore", out StringValues propertyToIgnoreValues);
+            //Request.Headers.TryGetValue("propertyToShow", out StringValues propertyToShowValues);
 
-            if (element.GetType().IsList())
-            {
-                var json = JsonConvert.SerializeObject(element,
-                        Formatting.None, new JsonSerializerSettings
-                        {
-                            ContractResolver = new PropertySelectorDynamicContractJsonResolver(propertyToIgnoreValues, propertyToShowValues),
-                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                        });
+            //if (element.GetType().IsList())
+            //{
+            //    var json = JsonConvert.SerializeObject(element,
+            //            Formatting.None, new JsonSerializerSettings
+            //            {
+            //                ContractResolver = new PropertySelectorDynamicContractJsonResolver(propertyToIgnoreValues, propertyToShowValues),
+            //                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            //            });
 
-                return JsonConvert.DeserializeObject<List<ExpandoObject>>(json);
-            }
-            else
-            {
-                if (element.GetType().IsPrimitive())
-                {
-                    return element;
-                }
+            //    return JsonConvert.DeserializeObject<List<ExpandoObject>>(json);
+            //}
+            //else
+            //{
+            //    if (element.GetType().IsPrimitive())
+            //    {
+            //        return element;
+            //    }
 
-                return JsonConvert.DeserializeObject<ExpandoObject>(JsonConvert.SerializeObject(element,
-                        Formatting.None, new JsonSerializerSettings
-                        {
-                            ContractResolver = new PropertySelectorDynamicContractJsonResolver(propertyToIgnoreValues, propertyToShowValues),
-                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                        }));
-            }
+            //    return JsonConvert.DeserializeObject<ExpandoObject>(JsonConvert.SerializeObject(element,
+            //            Formatting.None, new JsonSerializerSettings
+            //            {
+            //                ContractResolver = new PropertySelectorDynamicContractJsonResolver(propertyToIgnoreValues, propertyToShowValues),
+            //                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            //            }));
+            //}
         }
 
         [NonAction]

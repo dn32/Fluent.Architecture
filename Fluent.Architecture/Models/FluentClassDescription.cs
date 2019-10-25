@@ -5,7 +5,7 @@ using System.Linq.Dynamic.Core;
 
 namespace Fluent.Architecture.Core.Models
 {
-    public class FluentClassDescription
+    internal class FluentClassDescription
     {
         public FluentClassDescription(Type principalType, string[] fields)
         {
@@ -55,7 +55,7 @@ namespace Fluent.Architecture.Core.Models
 
         private static FluentPropertyDescription GetSimpleProperty(Type principalType, string property)
         {
-            var propertyInfo = principalType.GetProperty(property) ?? throw new InvalidOperationException($"Entity {principalType.Name} does not have property {property}");
+            var propertyInfo = principalType.GetProperties().FirstOrDefault(x => x.Name.Equals(property, StringComparison.InvariantCultureIgnoreCase)) ?? throw new InvalidOperationException($"Entity {principalType.Name} does not have property {property}");
             return new FluentPropertyDescription { Name = property, Type = propertyInfo.PropertyType };
         }
 

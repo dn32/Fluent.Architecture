@@ -25,6 +25,9 @@ namespace Fluent.Architecture.Validation
     {
         internal static async Task<List<TransactionalService>> ExecuteEntityAndCompositions<T>(this FluentValidation<T> validation, object entity, MethodInfo method) where T : BaseEntity
         {
+            if (validation is null) { throw new ArgumentNullException(nameof(validation)); }
+            if (method is null) { throw new ArgumentNullException(nameof(method)); }
+
             var tasks = new List<Task>();
             var t1 = method.MakeGenericMethod(typeof(T)).Invoke(null, new object[] { validation, entity, null, null }).FluentCast<Task>();
             if (t1 != null) { tasks.Add(t1); }

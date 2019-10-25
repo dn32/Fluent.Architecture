@@ -2,25 +2,27 @@
 using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Specifications;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 
 namespace Fluent.Architecture.Core.Specifications
 {
-    public class FluentAllSpec<T> : FluentSelectSpecification<T, object> where T : FluentEntity
+    public class FluentDynamicSpec<T> : FluentSelectSpecification<T, object> where T : FluentEntity
     {
-        public bool IsList { get; set; } = true;
+        public string[] Fields { get; set; }
 
-        public FluentAllSpec<T> SetParameter(bool isList)
+        public bool IsList { get; set; }
+
+        public FluentDynamicSpec<T> SetParameters(string[] fields, bool isList)
         {
+            Fields = fields;
             IsList = isList;
             return this;
         }
 
         public override IQueryable<object> Where(IQueryable<T> query)
         {
-            return query
-                    .GetInclusions(IsList)
-                    .FluentDynamicProjectTo(Service);
-
+            query = query.GetInclusions(IsList);
+            return query.FluentDynamicProjectTo(Fields);
         }
 
         public override IOrderedQueryable<object> Order(IQueryable<object> query)

@@ -1,5 +1,6 @@
 ﻿using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Core.Specifications;
+using Fluent.Architecture.Specifications;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -11,7 +12,7 @@ using Fluent.Architecture.Extensions;
 
 namespace Fluent.Architecture.EntityFramework.Specifications
 {
-    public class FluentSqlSpec<TE> : FluentFilterSpec<TE> where TE : FluentEntity
+    public class FluentSqlSpec<TE> : FluentSpecification<TE> where TE : FluentEntity
     {
         private string Sql { get; set; }
 

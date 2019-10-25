@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Fluent.Architecture.Core.Specifications
 {
-    public class FluentFilterSpec<T> : FluentSpecification<T> where T : FluentEntity
+    public class FluentFilterSpec<T> : FluentSelectSpecification<T, object> where T : FluentEntity
     {
         protected Filter[] Filters { get; set; }
 
@@ -19,17 +19,19 @@ namespace Fluent.Architecture.Core.Specifications
             return this;
         }
 
-        public override IQueryable<T> Where(IQueryable<T> query)
+        public override IQueryable<object> Where(IQueryable<T> query)
         {
             var expression = Filters.FiltersToExtression<T>();
-            query = query.Where(expression);
-            query = query.GetInclusions(IsList);
-            return query;
+
+            return query
+                 .Where(expression)
+                 .GetInclusions(IsList)
+                 .FluentDynamicProjectTo(Service);
         }
 
-        public override IOrderedQueryable<T> Order(IQueryable<T> query)
+        public override IOrderedQueryable<object> Order(IQueryable<object> query)
         {
-            return query.OrderBy(x => x);
+            return query.FluentDynamicProjectToOrder(Service);
         }
     }
 }

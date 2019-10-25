@@ -2,7 +2,7 @@
 
 namespace Fluent.Architecture.Core.Models
 {
-    public class FluentPropertyDescription
+    internal class FluentPropertyDescription
     {
         public string Name { get; set; }
 

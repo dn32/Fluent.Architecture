@@ -20,7 +20,7 @@ namespace Fluent.Architecture.Controllers
         public virtual async Task<DefaultPaginationResult> List()
         {
             var spec = CreateSpec<FluentAllSpec<T>>().SetParameter(isList: true);
-            var list = Service.ListAsync(spec);
+            var list = Service.ListSelectAsync(spec);
             return await ResultAsync(await list, LastRequestPagination);
         }
 
@@ -43,7 +43,7 @@ namespace Fluent.Architecture.Controllers
         protected async Task<DefaultPaginationResult> InternalListByFilterAsync([FromBody] Filter[] filters)
         {
             var spec = CreateSpec<FluentFilterSpec<T>>().SetParameter(filters, isList: true);
-            return await ResultAsync(await Service.ListAsync(spec), LastRequestPagination);
+            return await ResultAsync(await Service.ListSelectAsync(spec), LastRequestPagination);
         }
 
         [HttpGet]
@@ -51,7 +51,7 @@ namespace Fluent.Architecture.Controllers
         public virtual async Task<DefaultPaginationTermResult> ListByTerm(string term)
         {
             var spec = CreateSpec<TermSpec<T>>().SetParameter(term, isList: true);
-            var list = Service.ListAsync(spec);
+            var list = Service.ListSelectAsync(spec);
             return await ResultAsync(await list, LastRequestPagination, term);
         }
 
@@ -94,8 +94,8 @@ namespace Fluent.Architecture.Controllers
         private async Task<DefaultResult> InternalFindByFilterAsync([FromBody] Filter[] filters)
         {
             var spec = CreateSpec<FluentFilterSpec<T>>().SetParameter(filters, isList: false);
-            var item = Service.SingleOrDefaultAsync(spec);
-            return await ResultAsync(await item);
+            var item = await Service.SingleOrDefaultSelectAsync(spec);
+            return await ResultAsync(item);
         }
 
         [HttpGet]
@@ -103,7 +103,7 @@ namespace Fluent.Architecture.Controllers
         public virtual async Task<DefaultResult> FindByTerm(string term)
         {
             var spec = CreateSpec<TermSpec<T>>().SetParameter(term, isList: false);
-            var item = Service.SingleOrDefaultAsync(spec);
+            var item = Service.SingleOrDefaultSelectAsync(spec);
             return await ResultAsync(await item);
         }
 
@@ -130,7 +130,7 @@ namespace Fluent.Architecture.Controllers
         public virtual async Task<DefaultResult> CountByFilter([FromBody] Filter[] filters)
         {
             var spec = CreateSpec<FluentFilterSpec<T>>().SetParameter(filters, isList: true);
-            return await ResultAsync(await Service.CountAsync(spec));
+            return await ResultAsync(await Service.CountSelectAsync(spec));
         }
 
         [HttpGet]

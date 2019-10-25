@@ -213,6 +213,8 @@ namespace Fluent.Architecture.Extensions
 
         public static Expression<Func<T, bool>> Equals<T>(string propertyName, string value, Type type)
         {
+            if (value is null) { throw new ArgumentNullException(nameof(value)); }
+            type = type.GetNonNullableType();
 
             var parameter = Expression.Parameter(typeof(T), "x");
             Expression equalsExpression;
@@ -235,6 +237,13 @@ namespace Fluent.Architecture.Extensions
                 var methodInfo = typeof(string).GetMethod("ToUpper", new Type[] { });
                 var expression = Expression.Call(property, methodInfo);
                 equalsExpression = Expression.Equal(constant, expression);
+            }
+            else if (type.IsNumeric())
+            {
+                var property = Expression.Property(parameter, propertyName);
+                var numberValue = Convert.ChangeType(value, type);
+                var constant = Expression.Constant(numberValue, type);
+                equalsExpression = Expression.Equal(property, constant);
             }
             else if (type.IsNullableEnum())
             {

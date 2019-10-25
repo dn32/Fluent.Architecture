@@ -117,7 +117,13 @@ namespace Fluent.Architecture.EntityFramework
             var val = GetSpec(spec).ToIQueryable(Query);
             return await val.FirstOrDefaultAsync();
         }
-        
+
+        public virtual async Task<TO> SingleOrDefaultSelectAsync<TO>(IFluentSpecification<TO> spec)
+        {
+            var query = GetSpecSelect<TO>(spec).ToIQueryable(Query);
+            return await query.FirstOrDefaultAsync();
+        }
+
         public virtual async Task<TE> SingleOrDefaultAsync(IFluentSpecification spec)
         {
             var val = GetSpec(spec).ToIQueryable(Query);
