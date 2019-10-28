@@ -36,7 +36,7 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Controllers
         private async Task<DefaultPaginationResult> InternalListByFilterAndProximityAsync(FiltersAndTerm filtersAndTerm)
         {
             var spec = CreateSpec<TermByFilterAndProximitySpec<T>>().SetParameter(filtersAndTerm.Filters, isList: true, filtersAndTerm.Property, filtersAndTerm.Term, filtersAndTerm.Tolerance);
-            return await ResultAsync(Service.ListSelectAsync(spec), LastRequestPagination);
+            return await ResultAsync(Service.ListAsync(spec), LastRequestPagination);
         }
     }
 }

@@ -9,7 +9,7 @@ using Fluent.Architecture.Core.Extensions;
 
 namespace Fluent.Architecture.EntityFramework.Oracle.Specifications
 {
-    public class TermByFilterAndProximitySpec<T> : FluentSelectSpecification<T, object> where T : FluentEntity
+    public class TermByFilterAndProximitySpec<T> : FluentSpecification<T> where T : FluentEntity
     {
         private string Term { get; set; }
 
@@ -39,7 +39,7 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Specifications
             return this;
         }
 
-        public override IQueryable<object> Where(IQueryable<T> query)
+        public override IQueryable<T> Where(IQueryable<T> query)
         {
             IgnoreOrder = true;
             var expression = Filters.FiltersToExtression<T>();
@@ -56,6 +56,6 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Specifications
             return query.FluentDynamicProjectTo(Service);
         }
 
-        public override IOrderedQueryable<object> Order(IQueryable<object> query) => throw new NotImplementedException();
+        public override IOrderedQueryable<T> Order(IQueryable<T> query) => throw new NotImplementedException();
     }
 }

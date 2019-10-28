@@ -10,7 +10,7 @@ using System.Reflection;
 
 namespace Fluent.Architecture.Core.Specifications
 {
-    public class TermSpec<T> : FluentSelectSpecification<T, object> where T : FluentEntity
+    public class TermSpec<T> : FluentSpecification<T> where T : FluentEntity
     {
         private string Term { get; set; }
 
@@ -23,7 +23,7 @@ namespace Fluent.Architecture.Core.Specifications
             return this;
         }
 
-        public override IQueryable<object> Where(IQueryable<T> query)
+        public override IQueryable<T> Where(IQueryable<T> query)
         {
             var expression = TermToExpression(Term);
 
@@ -34,7 +34,7 @@ namespace Fluent.Architecture.Core.Specifications
 
         }
 
-        public override IOrderedQueryable<object> Order(IQueryable<object> query)
+        public override IOrderedQueryable<T> Order(IQueryable<T> query)
         {
             return query.FluentDynamicProjectToOrder(Service);
         }

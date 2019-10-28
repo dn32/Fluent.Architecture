@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Core.Util;
 using Fluent.Architecture.Factory.Proxy;
@@ -10,40 +11,54 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Reflection.Emit;
 
-namespace Fluent.Architecture.Core.Specifications
+namespace Fluent.Architecture.Extensions
 {
     public static class DynamicSpecExtension
     {
+        private static string GetParameter(this Microsoft.AspNetCore.Http.HttpRequest Request, string paramName)
+        {
+            var value = Request.Headers[paramName].FirstOrDefault()?.Trim();
+            value = string.IsNullOrWhiteSpace(value) ? Request.Query[paramName].ToString()?.Trim() : value;
+            return string.IsNullOrWhiteSpace(value) ? Request.Cookies[paramName]?.Trim() : value;
+        }
+
+        private static string[] GetParameters(this Microsoft.AspNetCore.Http.HttpRequest Request, string paramName)
+        {
+            return Request.GetParameter(paramName).Split(",").Select(x => x.Trim()).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+        }
+
         public static string[] GetPropertiesToIgnore(this Microsoft.AspNetCore.Http.HttpRequest Request)
         {
-            Request.Headers.TryGetValue("propertyToIgnore", out StringValues properties);
-            var propertiesList = properties.ToList().Select(x => x.Split(",")).SelectMany(x => x).Select(x => x.Trim()).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
-            return propertiesList;
+            return Request.GetParameters("propertyToIgnore");
         }
 
         public static string[] GetPropertiesToShow(this Microsoft.AspNetCore.Http.HttpRequest Request)
         {
-            Request.Headers.TryGetValue("propertyToShow", out StringValues properties);
-            var propertiesList = properties.ToList().Select(x => x.Split(",")).SelectMany(x => x).Select(x => x.Trim()).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
-            return propertiesList;
+            return Request.GetParameters("propertyToShow");
         }
 
         public static string[] GetPropertiesToOrder(this Microsoft.AspNetCore.Http.HttpRequest Request)
         {
-            Request.Headers.TryGetValue("propertyToOrder", out StringValues properties);
-            var propertiesList = properties.ToList().Select(x => x.Split(",")).SelectMany(x => x).Select(x => x.Trim()).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
-            return propertiesList;
+            return Request.GetParameters("propertyToOrder");
         }
 
-        public static IQueryable<object> FluentDynamicProjectTo<T>(this IQueryable<T> query, TransactionalService service) where T : BaseEntity
+        public static IQueryable<object> FluentDynamicSelectProjectTo<T>(this IQueryable<T> query, TransactionalService service) where T : BaseEntity
         {
             var Request = service.LocalHttpContext.Request;
             var show = Request.GetPropertiesToShow();
             if (show.Length == 0) { return query; }
-            return query.FluentDynamicProjectTo(show);
+            return query.FluentDynamicSelectProjectTo(show, out _);
         }
 
-        public static IOrderedQueryable<object> FluentDynamicProjectToOrder(this IQueryable<object> query, TransactionalService service)
+        public static IQueryable<T> FluentDynamicProjectTo<T>(this IQueryable<T> query, TransactionalService service, string[] fields = null) where T : BaseEntity
+        {
+            var Request = service.LocalHttpContext.Request;
+            if (fields == null || fields.Length == 0) { fields = Request.GetPropertiesToShow(); }
+            if (fields.Length == 0) { return query; }
+            return query.FluentDynamicProjectTo(fields);
+        }
+
+        public static IOrderedQueryable<T> FluentDynamicProjectToOrder<T>(this IQueryable<T> query, TransactionalService service) where T : BaseEntity
         {
             var Request = service.LocalHttpContext.Request;
             var show = Request.GetPropertiesToShow();
@@ -55,7 +70,25 @@ namespace Fluent.Architecture.Core.Specifications
             return query.OrderBy(orderString);
         }
 
-        public static IQueryable<object> FluentDynamicProjectTo<T>(this IQueryable<T> query, string[] Fields)
+        private static IOrderedQueryable<object> FluentDynamicProjectToSelectOrder(this IQueryable<object> query, TransactionalService service)
+        {
+            var Request = service.LocalHttpContext.Request;
+            var show = Request.GetPropertiesToShow();
+            var order = Request.GetPropertiesToOrder();
+            var orderString = order.Length > 0 ? string.Join(",", order) : show.FirstOrDefault();
+
+            if (string.IsNullOrEmpty(orderString)) { return query.OrderBy(x => x); }
+
+            return query.OrderBy(orderString);
+        }
+
+        private static IQueryable<T> FluentDynamicProjectTo<T>(this IQueryable<T> query, string[] Fields)
+        {
+            var ret = FluentDynamicSelectProjectTo(query, Fields, out MapperConfiguration config);
+            return ret.ProjectTo<T>(config);
+        }
+
+        private static IQueryable<object> FluentDynamicSelectProjectTo<T>(this IQueryable<T> query, string[] Fields, out MapperConfiguration config)
         {
             var descriptions = new FluentClassDescription(typeof(T), Fields);
             var rash = RandomUtil.NextRandomString(6);
@@ -65,8 +98,9 @@ namespace Fluent.Architecture.Core.Specifications
 
             descriptions.GetAllTypeForDescription(types);
 
-            var config = new MapperConfiguration(cfg =>
+            config = new MapperConfiguration(cfg =>
             {
+                cfg.CreateMap(typeof(T), typeof(T));
                 cfg.CreateMap(typeof(T), type).ReverseMap();
                 types.ForEach(x => cfg.CreateMap(x.Item1, x.Item2).ReverseMap());
             });
