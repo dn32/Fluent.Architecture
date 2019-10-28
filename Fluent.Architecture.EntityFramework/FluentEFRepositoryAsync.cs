@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using Fluent.Architecture.Core.Attributes;
 using System.Collections;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Fluent.Architecture.EntityFramework
 {
@@ -127,7 +128,7 @@ namespace Fluent.Architecture.EntityFramework
         public virtual async Task<TE> SingleOrDefaultAsync(IFluentSpecification spec)
         {
             var val = GetSpec(spec).ToIQueryable(Query);
-           
+
             try
             {
                 return await val.SingleOrDefaultAsync();
@@ -285,7 +286,10 @@ namespace Fluent.Architecture.EntityFramework
 
         private void RemoveFluentCompositionsAndFluentAggregations(TE entity)
         {
-            var compositionProperties = entity.GetType().GetProperties().Where(x => x.GetCustomAttributeAny<FluentCompositionAttribute>() || x.GetCustomAttributeAny<FluentManyToManyAggregationAttribute>());
+            var type = entity.GetType();
+            if (type.GetCustomAttribute<FluentJsonFormAttribute>()?.IsIntermediateTable == true) { return; }
+
+            var compositionProperties = type.GetProperties().Where(x => x.GetCustomAttributeAny<FluentCompositionAttribute>() || x.GetCustomAttributeAny<FluentManyToManyAggregationAttribute>());
             foreach (var compositionProperty in compositionProperties)
             {
                 var compositionPropertyType = compositionProperty.PropertyType;

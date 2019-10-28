@@ -59,12 +59,10 @@ namespace Fluent.Architecture.Validation
         }
 
         // Composition
-        public virtual async Task AddOrUpdateAsync(T entity)
+        public virtual async Task<List<TransactionalService>> AddOrUpdateAsync(T entity)
         {
             var method = GetType().GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
-
-            var anotherServices = await (this).ExecuteEntityAndCompositions(entity, method);
-            RunTheContextValidation(anotherServices);
+           return await (this).ExecuteEntityAndCompositions(entity, method);
         }
 
         // Composition

@@ -219,9 +219,10 @@ namespace Fluent.Architecture.Services
 
         public virtual async Task<T> AddOrUpdateAsync(T entity)
         {
-            await Validation.AddOrUpdateAsync(entity);
-            var exists = SessionRequest.ContextFluentValidationException.Inconsistencies.Any(x => x.ExceptionType == nameof(EntityExistsFluentValidationException));
-            SessionRequest.ContextFluentValidationException.Inconsistencies.Clear();
+            var anotherServices = await Validation.AddOrUpdateAsync(entity);
+            var exists = SessionRequest.ContextFluentValidationException.Inconsistencies.RemoveAll(x => x.ExceptionType == nameof(EntityExistsFluentValidationException)) > 0;
+
+            Validation.RunTheContextValidation(anotherServices);
 
             if (exists)
             {
