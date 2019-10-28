@@ -1,6 +1,7 @@
 ﻿using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Core.Doc.Attributes;
 using Fluent.Architecture.Core.Enumerator;
+using Fluent.Architecture.Core.Specifications;
 using Fluent.Architecture.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -96,8 +97,23 @@ namespace Fluent.Architecture.Core.Doc.Controllers
                                       _ => 5,
                                   };
 
-                                  var parameters = action.GetParameters().Select(x => new DocParameter { Type = x.ParameterType, Name = x.Name });
+                                  var parameters = action.GetParameters().Select(x => new DocParameter { Type = x.ParameterType, Name = x.Name }).ToList();
                                   var description = action.GetCustomAttribute<DescriptionAttribute>()?.Description;
+                                  var fluentAction = action.GetCustomAttribute<FluentActionAttribute>();
+
+                                  if (fluentAction?.Pagination == true)
+                                  {
+                                      parameters.Add(new DocParameter { Name = "CurrentPage", Type = typeof(string) });
+                                      parameters.Add(new DocParameter { Name = "ItemsPerPage", Type = typeof(string) });
+                                      parameters.Add(new DocParameter { Name = "StartAtZero", Type = typeof(string) });
+                                  }
+
+                                  if (fluentAction?.DynamicSpec == true)
+                                  {
+                                      parameters.Add(new DocParameter { Name = "propertyToIgnore", Type = typeof(string) });
+                                      parameters.Add(new DocParameter { Name = "propertyToShow", Type = typeof(string) });
+                                      parameters.Add(new DocParameter { Name = "propertyToOrder", Type = typeof(string) });
+                                  }
 
                                   return new FluentActionSchema
                                   {
@@ -109,7 +125,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
                                       Method = method,
                                       OrderMethod = orderMethod,
                                       Parameters = parameters,
-                                      Description = description,
+                                      Description = description.G(),
                                       ApiBaseUrl = FluentDocExtension.ApiBaseUrl
                                   };
                               })

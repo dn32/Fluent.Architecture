@@ -17,6 +17,7 @@ namespace Fluent.Architecture.Controllers
 
         [HttpGet]
         [Description("Get a paged list of all items")]
+        [FluentAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<DefaultPaginationResult> List()
         {
             var spec = CreateSpec<FluentAllSpec<T>>().SetParameter(isList: true);
@@ -27,6 +28,7 @@ namespace Fluent.Architecture.Controllers
         [HttpGet]
         [Route("/api/[controller]/ListByFilter")]
         [Description("Get a paginated list of items based on filters")]
+        [FluentAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<DefaultPaginationResult> ListByFilterGet([FromQuery] Filter[] filters)
         {
             return await InternalListByFilterAsync(filters);
@@ -35,6 +37,7 @@ namespace Fluent.Architecture.Controllers
         [HttpPost]
         [Route("/api/[controller]/ListByFilter")]
         [Description("Get a paginated list of items based on filters")]
+        [FluentAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<DefaultPaginationResult> ListByFilterPostAsync([FromBody] Filter[] filters)
         {
             return await InternalListByFilterAsync(filters);
@@ -48,6 +51,7 @@ namespace Fluent.Architecture.Controllers
 
         [HttpGet]
         [Description("Get a paginated list of items based on a term")]
+        [FluentAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<DefaultPaginationTermResult> ListByTerm(string term)
         {
             var spec = CreateSpec<TermSpec<T>>().SetParameter(term, isList: true);
@@ -78,6 +82,7 @@ namespace Fluent.Architecture.Controllers
         [HttpGet]
         [Route("/api/[controller]/FindByFilter")]
         [Description("Get an item based on its filters")]
+        [FluentAction(DynamicSpec = true)]
         public virtual async Task<DefaultResult> FindByFilterGet([FromQuery] Filter[] filters)
         {
             return await InternalFindByFilterAsync(filters);
@@ -85,7 +90,8 @@ namespace Fluent.Architecture.Controllers
 
         [HttpPost]
         [Route("/api/[controller]/FindByFilter")]
-        [Description(" Get an item based on filters")]
+        [Description("Get an item based on filters")]
+        [FluentAction(DynamicSpec = true)]
         public virtual async Task<DefaultResult> FindByFilterPost([FromBody] Filter[] filters)
         {
             return await InternalFindByFilterAsync(filters);
@@ -99,7 +105,8 @@ namespace Fluent.Architecture.Controllers
         }
 
         [HttpGet]
-        [Description(" Get an item based on a term")]
+        [Description("Get an item based on a term")]
+        [FluentAction(DynamicSpec = true)]
         public virtual async Task<DefaultResult> FindByTerm(string term)
         {
             var spec = CreateSpec<TermSpec<T>>().SetParameter(term, isList: false);
@@ -126,7 +133,7 @@ namespace Fluent.Architecture.Controllers
         }
 
         [HttpPost]
-        [Description("Get the number of items based on filters.")]
+        [Description("Get the number of items based on filters")]
         public virtual async Task<DefaultResult> CountByFilter([FromBody] Filter[] filters)
         {
             var spec = CreateSpec<FluentFilterSpec<T>>().SetParameter(filters, isList: true);
@@ -135,7 +142,7 @@ namespace Fluent.Architecture.Controllers
 
         [HttpGet]
         [Route("/api/[controller]/ExistsByEntity")]
-        [Description("Get the number of items based on filters.")]
+        [Description("Checks if an entity exists based on filters")]
         public virtual async Task<DefaultResult> ExistsByEntityGet([FromQuery] T value)
         {
             return await ResultAsync(await Service.ExistsAsync(value));
@@ -143,7 +150,7 @@ namespace Fluent.Architecture.Controllers
 
         [HttpPost]
         [Route("/api/[controller]/ExistsByEntity")]
-        [Description("Checks if an item exists based on its IDs")]
+        [Description("Checks if an item exists based on their identifiers")]
         public virtual async Task<DefaultResult> ExistsByEntityPost([FromBody] T value)
         {
             return await ResultAsync(await Service.ExistsAsync(value));
@@ -168,7 +175,7 @@ namespace Fluent.Architecture.Controllers
 
         // POST api/user/AddOrUpdate/
         [HttpPost]
-        [Description("Add an item")]
+        [Description("Add or update an item")]
         public virtual async Task<DefaultResult> AddOrUpdate([FromBody] T value)
         {
             return await ResultAsync(await Service.AddOrUpdateAsync(value));
@@ -176,7 +183,7 @@ namespace Fluent.Architecture.Controllers
 
         // POST api/user/AddRange
         [HttpPost]
-        [Description("Add or update an item")]
+        [Description("Add an item collection")]
         public virtual async Task<DefaultResult> AddRange([FromBody] T[] values)
         {
             await Service.AddRangeAsync(values);
@@ -194,7 +201,7 @@ namespace Fluent.Architecture.Controllers
 
         // PUT api/user/UpdateRange
         [HttpPut]
-        [Description("Update a list of items")]
+        [Description("Update an item collection")]
         public virtual async Task<DefaultResult> UpdateRange([FromBody] T[] values)
         {
             await Service.UpdateRangeAsync(values);
@@ -212,7 +219,7 @@ namespace Fluent.Architecture.Controllers
 
         // DELETE api/user/RemoveRange
         [HttpDelete]
-        [Description("Remove a list of items based on their identifiers")]
+        [Description("Remove a collection of items based on their identifiers")]
         public virtual async Task<DefaultResult> RemoveRange([FromBody] T[] values)
         {
             await Service.RemoveRangeAsync(values);
@@ -220,7 +227,7 @@ namespace Fluent.Architecture.Controllers
         }
 
         [HttpDelete]
-        [Description("Physically deletes all elements of a set")]
+        [Description("Physically delete all elements of a table")]
         public virtual async Task<DefaultResult> Truncate([FromHeader] string ERASE_ALL_DATA = "false")
         {
             await Service.TruncateAsync(ERASE_ALL_DATA);

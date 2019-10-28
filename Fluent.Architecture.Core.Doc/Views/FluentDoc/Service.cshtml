@@ -3,6 +3,7 @@
 @using Fluent.Architecture.Core.Doc.Controllers
 @using Fluent.Architecture.Core.Extensions
 @using Fluent.Architecture
+@using static Fluent.Architecture.FluentDocExtension
 
 <link rel="stylesheet" href="/FluentDoc/lib/bootstrap.min.css" />
 <link rel="stylesheet" href="/FluentDoc/css/site.css" />
@@ -59,7 +60,7 @@
 
                     @if (!string.IsNullOrWhiteSpace(paramString))
                     {
-                        <span class="parameters">params: @Html.Raw(paramString)</span>
+                        <span class="parameters">@(("params").G()): @Html.Raw(paramString)</span>
                     }
 
                 </div>
@@ -68,21 +69,19 @@
         </div>
 
         <div class="properties-container">
-            <span class="title">@Model.FluentJsonForm?.name Properties</span>
+            <span class="title">@Model.FluentJsonForm?.name @(("Properties").G())</span>
             <table class="properties">
                 <thead>
                     <tr>
-                        <th>Property</th>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Others</th>
+                        <th>@(("Property").G())</th>
+                        <th>@(("Name").G())</th>
+                        <th>@(("Type").G())</th>
+                        <th>@(("Others").G())</th>
                     </tr>
                 </thead>
                 @foreach (var property in Model.Properties)
                 {
                     if (property.form == Fluent.Architecture.Core.Enumerator.EnumForm.NONE) { continue; }
-                    // if (property.FluentAggregation != null) { continue; }
-                    // property.key
 
                     var range = (property.min == property.max ? property.min.ToString() : property.min + ", " + property.max);
 
@@ -90,35 +89,19 @@
                         <td class="name">@property.propName</td>
                         <td class="description">@property.name</td>
                         <td class="type">@Html.Raw(GetTypeName(property.Type, property.Type.Name)) (@range)</td>
-                        @*<span class="range">Range: @property.min,@property.min </span>*@
                         <td>
-                            @Html.Raw(Is(property.IsEnum, "<span><img src='/FluentDoc/img/ok.png'/> enum</span>"))
-                            @Html.Raw(Is(property.IsKey, "<span><img src='/FluentDoc/img/ok.png'/> key</span>"))
-                            @Html.Raw(Is(property.IsList, "<span><img src='/FluentDoc/img/ok.png'/> list</span>"))
-                            @Html.Raw(Is(property.IsNullable, "<span><img src='/FluentDoc/img/ok.png'/> nullable</span>"))
-                            @Html.Raw(Is(property.required, "<span><img src='/FluentDoc/img/ok.png'/> required</span>"))
-                            @Html.Raw(Is(property.IsFk, "<span><img src='/FluentDoc/img/ok.png'/> fk <a href=\"/FluentDoc/Service?name=" + property.FkDestinal?.Type?.Name + "\">" + property.FkDestinal?.name + "</a></span>"))
+                            @Html.Raw(Is(property.IsEnum, "<span><img src='/FluentDoc/img/ok.png'/> " + "enum".G() + "</span>"))
+                            @Html.Raw(Is(property.IsKey || property.IsFluentUniqueKeyKey, "<span><img src='/FluentDoc/img/ok.png'/> " + "key".G() + "</span>"))
+                            @Html.Raw(Is(property.IsList, "<span><img src='/FluentDoc/img/ok.png'/> " + "list".G() + "</span>"))
+                            @Html.Raw(Is(property.IsNullable, "<span><img src='/FluentDoc/img/ok.png'/> " + "nullable".G() + "</span>"))
+                            @Html.Raw(Is(property.required, "<span><img src='/FluentDoc/img/ok.png'/> " + "required".G() + "</span>"))
+                            @Html.Raw(Is(property.IsFk, "<span><img src='/FluentDoc/img/ok.png'/>  " + "fk".G() + " <a href=\"/FluentDoc/Service?name=" + property.FkDestinal?.Type?.Name + "\">" + property.FkDestinal?.name + "</a></span>"))
                         </td>
-                        @*<span class="value">Default value: @property.value</span>*@
-                        @*<span class="name">@property.desc</span>*@
-
-                        @*
-                            <span class="grid">grid: @property.grid</span>
-                            <span class="form">form: @property.form</span>
-                            <span class="lGrid">lGrid: @property.lGrid</span>
-                            <span class="Enums">Enums: @property.Enums</span>
-                            <span class="FluentAggregation">FluentAggregation: @property.FluentAggregation</span>
-                            <span class="FluentComposition">FluentComposition: @property.FluentComposition</span>
-                            <span class="reference">reference: @property.reference</span>
-                            <span class="Row">Row: @property.Row</span>
-                            <span class="tgroup">tgroup: @property.tgroup</span>
-                        *@
-
                     </tr>
                 }
             </table>
             <div class="example-value-container">
-                <span>Example value</span>
+                <span>@("Example value".G())</span>
 
                 @{
                     var exampleValue = Model.FluentJsonForm?.Type?.GetExampleValue() ?? "";
