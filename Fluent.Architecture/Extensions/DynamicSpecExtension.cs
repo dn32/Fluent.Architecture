@@ -24,7 +24,7 @@ namespace Fluent.Architecture.Extensions
 
         private static string[] GetParameters(this Microsoft.AspNetCore.Http.HttpRequest Request, string paramName)
         {
-            return Request.GetParameter(paramName).Split(",").Select(x => x.Trim()).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+            return Request.GetParameter(paramName)?.Split(",")?.Select(x => x?.Trim())?.Where(x => !string.IsNullOrWhiteSpace(x))?.ToArray();
         }
 
         public static string[] GetPropertiesToIgnore(this Microsoft.AspNetCore.Http.HttpRequest Request)
@@ -45,25 +45,25 @@ namespace Fluent.Architecture.Extensions
         public static IQueryable<object> FluentDynamicSelectProjectTo<T>(this IQueryable<T> query, TransactionalService service) where T : BaseEntity
         {
             var Request = service.LocalHttpContext.Request;
-            var show = Request.GetPropertiesToShow();
-            if (show.Length == 0) { return query; }
-            return query.FluentDynamicSelectProjectTo(show, out _);
+            var fields = Request.GetPropertiesToShow();
+            if (fields == null || fields.Length == 0) { return query; }
+            return query.FluentDynamicSelectProjectTo(fields, out _);
         }
 
         public static IQueryable<T> FluentDynamicProjectTo<T>(this IQueryable<T> query, TransactionalService service, string[] fields = null) where T : BaseEntity
         {
             var Request = service.LocalHttpContext.Request;
             if (fields == null || fields.Length == 0) { fields = Request.GetPropertiesToShow(); }
-            if (fields.Length == 0) { return query; }
+            if (fields == null || fields.Length == 0) { return query; }
             return query.FluentDynamicProjectTo(fields);
         }
 
-        public static IOrderedQueryable<T> FluentDynamicProjectToOrder<T>(this IQueryable<T> query, TransactionalService service) where T : BaseEntity
+        public static IOrderedQueryable<T> FluentDynamicProjectToOrder<T>(this IQueryable<T> query, TransactionalService service, string[] fields = null) where T : BaseEntity
         {
             var Request = service.LocalHttpContext.Request;
-            var show = Request.GetPropertiesToShow();
+            if (fields == null || fields.Length == 0) { fields = Request.GetPropertiesToShow(); }
             var order = Request.GetPropertiesToOrder();
-            var orderString = order.Length > 0 ? string.Join(",", order) : show.FirstOrDefault();
+            var orderString = order?.Length > 0 ? string.Join(",", order) : fields?.FirstOrDefault();
 
             if (string.IsNullOrEmpty(orderString)) { return query.OrderBy(x => x); }
 
@@ -75,7 +75,7 @@ namespace Fluent.Architecture.Extensions
             var Request = service.LocalHttpContext.Request;
             var show = Request.GetPropertiesToShow();
             var order = Request.GetPropertiesToOrder();
-            var orderString = order.Length > 0 ? string.Join(",", order) : show.FirstOrDefault();
+            var orderString = order?.Length > 0 ? string.Join(",", order) : show.FirstOrDefault();
 
             if (string.IsNullOrEmpty(orderString)) { return query.OrderBy(x => x); }
 
