@@ -23,6 +23,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using Fluent.Architecture.Attributes;
+using System.Threading.Tasks;
 
 namespace Fluent.Architecture.Extensions
 {
@@ -84,6 +85,11 @@ namespace Fluent.Architecture.Extensions
         }
 
         public static bool GetCustomAttributeAny<T>(this MemberInfo methodInfo, bool inherit = false) where T : Attribute
+        {
+            return methodInfo.GetCustomAttribute<T>(inherit) != null;
+        }
+
+        public static bool GetCustomAttributeAny<T>(this ParameterInfo methodInfo, bool inherit = false) where T : Attribute
         {
             return methodInfo.GetCustomAttribute<T>(inherit) != null;
         }
@@ -176,7 +182,7 @@ namespace Fluent.Architecture.Extensions
 
         public static bool IsPrimitive(this Type type)
         {
-            if(type == null) { return false; }
+            if (type == null) { return false; }
             var types = new[]
                            {
                               typeof (Enum),
@@ -270,6 +276,17 @@ namespace Fluent.Architecture.Extensions
         public static bool IsFluentEntity(this object obj)
         {
             return obj?.GetType().GetNonNullableType().Is(typeof(FluentEntity)) ?? false;
+        }
+        public static Type GetTaskType(this Type type)
+        {
+            if (type == typeof(Task)) { return null; }
+
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Task<>))
+            {
+                return type.GenericTypeArguments[0];
+            }
+
+            return type;
         }
 
         public static Type GetListTypeNonNull(this Type type)
@@ -600,10 +617,10 @@ namespace Fluent.Architecture.Extensions
         /// <param name="type">O tipo a ser tratado.</param>
         /// <param name="useGenericT">Se deve indicar os tipos genéricos como T. Exemplo com true: FluentSelectSpecification T, T. Exemplo com false: FluentSelectSpecification FluentEntity, TO </param>
         /// <returns>O nome amigável do tipo.</returns>
-        public static string GetFriendlyName(this Type type, bool useGenericT = true)
+        public static string GetFriendlyName(this Type type, bool useGenericT = true, bool fullName = false, string complement = "")
         {
             if (type == null) { return "null"; }
-            var friendlyName = type.Name;
+            var friendlyName = fullName ? type.FullName : type.Name;
             if (!type.IsGenericType) { return friendlyName; }
             var iBacktick = friendlyName.IndexOf('`', StringComparison.InvariantCultureIgnoreCase);
             if (iBacktick > 0)
@@ -615,12 +632,14 @@ namespace Fluent.Architecture.Extensions
             var typeParameters = type.GetGenericArguments();
             for (var i = 0; i < typeParameters.Length; ++i)
             {
-                var typeParamName = GetFriendlyName(typeParameters[i], useGenericT);
+                var typeParamName = GetFriendlyName(typeParameters[i], useGenericT, fullName, complement);
                 typeParamName = useGenericT ? "T" : typeParamName;
                 friendlyName += (i == 0 ? typeParamName : ", " + typeParamName);
             }
 
             friendlyName += ">";
+
+            if (!string.IsNullOrWhiteSpace(complement)) { friendlyName = string.Format(complement, friendlyName); }
             return friendlyName;
         }
 

@@ -11,13 +11,15 @@ using Fluent.Architecture.Extensions;
 
 namespace Fluent.Architecture.Controllers
 {
-    public class DefaultResult
+    public interface IDefaultResult { }
+
+    public class DefaultResult<T> : IDefaultResult
     {
-        public object Data { get; set; }
+        public T Data { get; set; }
 
         public DefaultResult(object data)
         {
-            Data = data.FluentResultOrValue();
+            Data = data.FluentResultOrValue<T>();
         }
     }
 }

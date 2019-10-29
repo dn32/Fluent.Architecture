@@ -1,0 +1,101 @@
+﻿@using Fluent.Architecture.Core.Models
+@using Fluent.Architecture.Extensions
+@using Fluent.Architecture.Core.Doc.Controllers
+@using Fluent.Architecture.Core.Extensions
+@using Fluent.Architecture
+@using static Fluent.Architecture.FluentDocExtension
+
+<link rel="stylesheet" href="/FluentDoc/lib/bootstrap.min.css" />
+<link rel="stylesheet" href="/FluentDoc/css/site.css" />
+
+@model FluentActionSchema
+
+@{
+    ViewData["Title"] = Model.Name;
+
+    string GetTypeName(Type type, string name)
+    {
+        if (type.GetListTypeNonNull().IsFluentEntity())
+        {
+            return $"<a href=\"/FluentDoc/Service?name={type.GetListTypeNonNull().GetFriendlyName(false)}\">{type.GetFriendlyName(false)}</a>";
+        }
+        else
+        {
+            return $"{name}: {type.GetFriendlyName(false)}";
+        }
+    }
+}
+
+<div class="one-service-container">
+    <h4 class="general-title">@Model.Name</h4>
+
+    @{
+        <div class="actions-container">
+
+            @{
+                var action = Model;
+                <div class="action action-description">
+                    <span class="method @action.Method.ToLower()">@action.Method</span>
+                    <span class="name">@action.Name</span>
+                    <span class="description">@action.Description</span>
+                    @if (@action.Method == "GET")
+                    {
+                        <span class="route"><a href="@(action.ApiBaseUrl + action.Route)" target="_blank">@action.Route</a></span>
+                    }
+                    else
+                    {
+                        <span class="route">@action.Route</span>
+                    }
+
+                    @{
+                        <div class="properties-container">
+                            <span class="title">@Html.Raw(GetTypeName(action.EntityType, action.EntityType.Name)) @(("Parameters").G())</span>
+                            <table class="properties">
+                                <thead>
+                                    <tr>
+                                        <th>@(("Name").G())</th>
+                                        <th>@(("Type").G())</th>
+                                        <th>@(("Source").G())</th>
+                                        <th>@(("Description").G())</th>
+                                        <th>@(("Example").G())</th>
+                                    </tr>
+                                </thead>
+                                @foreach (var parameter in Model.Parameters)
+                                {
+                                    <tr class="property">
+                                        <td class="name">@parameter.Name</td>
+                                        @if (string.IsNullOrWhiteSpace(parameter.Link))
+                                        {
+                                            <td class="type">@Html.Raw(parameter.Type.GetFriendlyName())</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="type"><a href="@parameter.Link" target="_blank">@Html.Raw(parameter.Type.GetFriendlyName())</a></td>
+                                        }
+                                        <td class="source">@parameter.Source.ToString().G()</td>
+                                        <td class="description">@parameter.Description.G()</td>
+                                        <td class="example">@Html.Raw(parameter.Example)</td>
+                                    </tr>
+                                }
+                            </table>
+                            <div class="example-value-container">
+                                <span>@("Request Example".G())</span>
+                                <pre class="example-value">@Model.Example</pre>
+                            </div>
+
+                            <div class="example-value-container">
+                                <span>@("Return type".G())</span>
+                                <pre class="example-value">@Html.Raw(Model.ReturnType)</pre>
+                            </div>
+
+
+                        </div>
+                    }
+                </div>
+            }
+
+        </div>
+
+
+    }
+</div>

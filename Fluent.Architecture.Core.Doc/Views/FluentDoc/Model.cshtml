@@ -12,7 +12,6 @@
 
 @{
     ViewData["Title"] = Model.FluentJsonForm.name;
-    var actions = ViewBag.actions as List<FluentActionSchema>;
 
     string GetTypeName(Type type, string name)
     {
@@ -39,38 +38,6 @@
         {
             return operation ? text : "";
         }
-
-        <div class="actions-container">
-
-            @foreach (var action in actions)
-            {
-                if (action == null) { continue; }
-                var parameters = action.Parameters?.Select(x => GetTypeName(x.Type, x.Name)).ToArray() ?? new string[] { };
-
-                var paramString = string.Join(", ", parameters);
-
-                <div class="action" onclick="navegate('/FluentDoc/Action?service=@Model.FluentJsonForm.Type.GetListTypeNonNull().Name&actionName=@action.MethodName')">
-                    <span class="method @action.Method.ToLower()">@action.Method</span>
-                    <span class="name">@action.Name</span>
-                    <span class="description">@action.Description</span>
-                    @if (@action.Method == "GET")
-                    {
-                        <span class="route"><a href="@(action.ApiBaseUrl + action.Route)" target="_blank">@action.Route</a></span>
-                    }
-                    else
-                    {
-                        <span class="route">@action.Route</span>
-                    }
-
-                    @if (!string.IsNullOrWhiteSpace(paramString))
-                    {
-                        <span class="parameters">@(("params").G()): @Html.Raw(paramString)</span>
-                    }
-
-                </div>
-            }
-
-        </div>
 
         <div class="properties-container">
             <span class="title">@Model.FluentJsonForm?.name @(("Properties").G())</span>

@@ -16,5 +16,8 @@ namespace Fluent.Architecture.Core.Doc.Controllers
         public IEnumerable<DocParameter> Parameters { get; set; }
         public string Description { get; internal set; }
         public string ApiBaseUrl { get; internal set; }
+        public string Example { get; set; }
+        public string ReturnType { get; set; }
+        public string MethodName { get; set; }
     }
 }

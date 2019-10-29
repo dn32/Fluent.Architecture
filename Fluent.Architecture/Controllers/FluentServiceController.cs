@@ -81,27 +81,27 @@ namespace Fluent.Architecture.Controllers
         }
 
         [NonAction]
-        protected async Task<DefaultResult> ResultAsync(object data)
+        protected async Task<DefaultResult<T>> ResultAsync<T>(object data)
         {
             await CloseTransactionAsync();
             data = data.FluentResultOrValue();
-            return new DefaultResult(PropertySelector(data));
+            return new DefaultResult<T>(PropertySelector(data));
         }
 
         [NonAction]
-        protected async Task<DefaultPaginationResult> ResultAsync(object data, FluentPagination pagination)
+        protected async Task<DefaultPaginationResult<T>> ResultAsync<T>(object data, FluentPagination pagination)
         {
             await CloseTransactionAsync();
             data = data.FluentResultOrValue();
-            return new DefaultPaginationResult(PropertySelector(data), pagination);
+            return new DefaultPaginationResult<T>(PropertySelector(data), pagination);
         }
 
         [NonAction]
-        protected async Task<DefaultPaginationTermResult> ResultAsync(object data, FluentPagination pagination, string term)
+        protected async Task<DefaultPaginationTermResult<T>> ResultAsync<T>(object data, FluentPagination pagination, string term)
         {
             await CloseTransactionAsync();
             data = data.FluentResultOrValue();
-            return new DefaultPaginationTermResult(PropertySelector(data), pagination, term);
+            return new DefaultPaginationTermResult<T>(PropertySelector(data), pagination, term);
         }
 
         [NonAction]

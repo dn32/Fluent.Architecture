@@ -51,6 +51,28 @@ namespace Fluent.Architecture.Extensions
             return null;
         }
 
+        public static T FluentResultOrValue<T>(this object data)
+        {
+            if (data != null)
+            {
+                var type = data.GetType();
+                if (type == typeof(Task))
+                {
+                    data.GetType().GetMethod(nameof(Task.Wait)).Invoke(data, null);
+                    return default;
+                }
+
+                if (type.IsGenericType && data.GetType().GetGenericTypeDefinition() == typeof(Task<>))
+                {
+                    return data.GetType().GetProperty("Result").GetValue(data).FluentCast<T>();
+                }
+
+                return data.FluentCast<T>();
+            }
+
+            return default;
+        }
+
         public static T FluentClone<T>(this object obj1)
         {
             if (!typeof(T).IsSerializable)

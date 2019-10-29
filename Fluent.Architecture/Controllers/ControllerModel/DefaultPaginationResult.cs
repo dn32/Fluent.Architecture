@@ -11,7 +11,7 @@ using Fluent.Architecture.Core.Models;
 
 namespace Fluent.Architecture.Controllers
 {
-    public class DefaultPaginationResult : DefaultResult
+    public class DefaultPaginationResult<T> : DefaultResult<T>
     {
         public FluentPagination Pagination { get; set; }
 

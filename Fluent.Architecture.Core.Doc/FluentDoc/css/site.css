@@ -119,10 +119,10 @@
     margin: 0px 0px 4px 0px;
     padding: 1px 7px 1px 7px;
     border-radius: 4px;
-    cursor: pointer;
 }
 
-    .actions-container .action:hover {
+    .actions-container .action:not(.action-description):hover {
+        cursor: pointer;
         background: #2125290f;
     }
 
