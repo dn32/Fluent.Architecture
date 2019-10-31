@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <PackageProjectUrl>https://github.com/dn32/Fluent.Infrastructure.Doc</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dn32/Fluent.Infrastructure.Doc</RepositoryUrl>
     <TargetFrameworks>netcoreapp2.2;netcoreapp3.0</TargetFrameworks>
     <LangVersion>8</LangVersion>
     <AssemblyOriginatorKeyFile>Fluent.Architecture.Core.snk</AssemblyOriginatorKeyFile>
-
   </PropertyGroup>
 
   <ItemGroup>

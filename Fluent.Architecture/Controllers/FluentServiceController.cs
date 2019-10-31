@@ -45,39 +45,11 @@ namespace Fluent.Architecture.Controllers
         internal protected bool TransactionIsStarted { get; set; }
 
         [NonAction]
-        protected object PropertySelector(object element)
+        protected async Task<DefaultResult<T>> ResultAsync<T>(object data, string term)
         {
-            return element;
-            //if (element == null) { return null; }
-
-            //Request.Headers.TryGetValue("propertyToIgnore", out StringValues propertyToIgnoreValues);
-            //Request.Headers.TryGetValue("propertyToShow", out StringValues propertyToShowValues);
-
-            //if (element.GetType().IsList())
-            //{
-            //    var json = JsonConvert.SerializeObject(element,
-            //            Formatting.None, new JsonSerializerSettings
-            //            {
-            //                ContractResolver = new PropertySelectorDynamicContractJsonResolver(propertyToIgnoreValues, propertyToShowValues),
-            //                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            //            });
-
-            //    return JsonConvert.DeserializeObject<List<ExpandoObject>>(json);
-            //}
-            //else
-            //{
-            //    if (element.GetType().IsPrimitive())
-            //    {
-            //        return element;
-            //    }
-
-            //    return JsonConvert.DeserializeObject<ExpandoObject>(JsonConvert.SerializeObject(element,
-            //            Formatting.None, new JsonSerializerSettings
-            //            {
-            //                ContractResolver = new PropertySelectorDynamicContractJsonResolver(propertyToIgnoreValues, propertyToShowValues),
-            //                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            //            }));
-            //}
+            await CloseTransactionAsync();
+            data = data.FluentResultOrValue();
+            return new DefaultTermResult<T>(data, term);
         }
 
         [NonAction]
@@ -85,15 +57,15 @@ namespace Fluent.Architecture.Controllers
         {
             await CloseTransactionAsync();
             data = data.FluentResultOrValue();
-            return new DefaultResult<T>(PropertySelector(data));
+            return new DefaultResult<T>(data);
         }
-
+        
         [NonAction]
         protected async Task<DefaultPaginationResult<T>> ResultAsync<T>(object data, FluentPagination pagination)
         {
             await CloseTransactionAsync();
             data = data.FluentResultOrValue();
-            return new DefaultPaginationResult<T>(PropertySelector(data), pagination);
+            return new DefaultPaginationResult<T>(data, pagination);
         }
 
         [NonAction]
@@ -101,7 +73,7 @@ namespace Fluent.Architecture.Controllers
         {
             await CloseTransactionAsync();
             data = data.FluentResultOrValue();
-            return new DefaultPaginationTermResult<T>(PropertySelector(data), pagination, term);
+            return new DefaultPaginationTermResult<T>(data, pagination, term);
         }
 
         [NonAction]

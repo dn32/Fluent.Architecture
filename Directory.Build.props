@@ -1,19 +1,32 @@
 <Project>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <!--<Version>2.0.1-beta0930-01</Version>-->
+  <PropertyGroup>
     <PackageProjectUrl>https://github.com/dn32/Fluent.Infrastructure.Doc</PackageProjectUrl>
     <RepositoryUrl>https://github.com/dn32/Fluent.Infrastructure.Doc</RepositoryUrl>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <SignAssembly>true</SignAssembly>
+    <CopyOutputSymbolsToPublishDirectory>false</CopyOutputSymbolsToPublishDirectory>
+    <!--<GeneratePackageOnBuild>true</GeneratePackageOnBuild>-->
   </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>None</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+  
+  <!--<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    --><!--<OutputPath>..\pack\$(MSBuildProjectName)\lib</OutputPath>--><!--
+  </PropertyGroup>-->
 
   <Target Name="CopyPackage" AfterTargets="Pack">
      <!--<Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="C:\Users\Marcelo\Google Drive\FOut" />-->
   </Target>
- 
+
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <Version>2.0.1.3-beta$([System.DateTime]::UtcNow.ToString(MMdd))48</Version>
+    <Version>2.0.1.4-beta$([System.DateTime]::UtcNow.ToString(MMdd))2</Version>
   </PropertyGroup>
   
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <Version>2.0.1.4</Version>
+  </PropertyGroup>
+
 </Project>

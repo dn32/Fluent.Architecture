@@ -20,4 +20,14 @@ namespace Fluent.Architecture.Controllers
             Term = term;
         }
     }
+
+    public class DefaultTermResult<T> : DefaultResult<T>
+    {
+        public string Term { get; }
+
+        public DefaultTermResult(object data, string term) : base(data)
+        {
+            Term = term;
+        }
+    }
 }

@@ -5,12 +5,14 @@ using Fluent.Architecture.Core.Models;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Fluent.Architecture.Core.Specifications;
 
 namespace Fluent.Architecture.EntityFramework.Oracle.Controllers
 {
     public class FluentOracleAPIController<T> : FluentAPIController<T> where T : FluentEntity, new()
     {
         [HttpGet]
+        [FluentAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<DefaultPaginationResult<List<T>>> FindByProximity(string property, string term, int tolerance)
         {
             var spec = CreateSpec<TermByProximitySpec<T>>().AddParameter(property, term, tolerance);
@@ -21,6 +23,7 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Controllers
         [HttpGet]
         [Route("/api/[controller]/ListByFilterAndProximity")]
         [Description("Get a paginated list of items based on filters and text proximity")]
+        [FluentAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<DefaultPaginationResult<List<T>>> ListByFilterAndProximityGet([FromBody] FiltersAndTerm filtersAndTerm)
         {
             return await InternalListByFilterAndProximityAsync(filtersAndTerm);
@@ -29,6 +32,7 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Controllers
         [HttpPost]
         [Route("/api/[controller]/ListByFilterAndProximity")]
         [Description("Get a paginated list of items based on filters and text proximity")]
+        [FluentAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<DefaultPaginationResult<List<T>>> ListByFilterAndProximityPost([FromBody] FiltersAndTerm filtersAndTerm)
         {
             return await InternalListByFilterAndProximityAsync(filtersAndTerm);

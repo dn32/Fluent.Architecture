@@ -12,9 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
-
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
-
   </ItemGroup>
 
   <ItemGroup><!--<ProjectReference Include="..\..\Fluent.Infrastructure.Doc\Samples\01-SimpleHelloWorld\01_SimpleHelloWorld.csproj" />

@@ -1,5 +1,4 @@
 ﻿using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Core.Controllers.ControllerModel;
 using Fluent.Architecture.Core.Enumerator;
 using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Test.Mock;
@@ -42,12 +41,6 @@ namespace Fluent.Architecture.Test
         {
             var newController = GetNewController();
             return TestUtil.Execute<FluentAPIController<TModel>, bool>(newController, (FluentAPIController<TModel> controller) => controller.Update(model).Result);
-        }
-
-        public virtual bool UpdateAlter(UpdateAlter<TModel> model)
-        {
-            var newController = GetNewController();
-            return TestUtil.Execute<FluentAPIController<TModel>, bool>(newController, (FluentAPIController<TModel> controller) => controller.UpdateAlter(model).Result);
         }
 
         public virtual TModel Add()
@@ -118,7 +111,7 @@ namespace Fluent.Architecture.Test
             return new FluentAPIController<TModel>().ExampleData();
         }
 
-        public virtual TModel Execute(Func<FluentAPIController<TModel>, DefaultResult> actionMethod)
+        public virtual TModel Execute(Func<FluentAPIController<TModel>, DefaultResult<TModel>> actionMethod)
         {
             var newController = GetNewController();
             newController.OnActionExecuting(MockActionExecutingContextFactory.Create(newController));

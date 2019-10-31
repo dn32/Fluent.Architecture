@@ -26,11 +26,11 @@ namespace Fluent.Architecture.Test
         public static TR Execute<TC, TR>(TC controller, Func<TC, object> actionMethod) where TC : BaseController
         {
             controller.OnActionExecuting(MockActionExecutingContextFactory.Create(controller));
-            DefaultResult result;
+            DefaultResult<TR> result;
 
             try
             {
-                result = actionMethod(controller) as DefaultResult;
+                result = actionMethod(controller) as DefaultResult<TR>;
             }
             catch (Exception ex)
             {

@@ -1,1 +1,0 @@
-Arquivo necessário para manter a pasta no github. Necerrária no build
