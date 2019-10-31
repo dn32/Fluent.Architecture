@@ -8,12 +8,15 @@ using Fluent.Architecture.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Fluent.Architecture.Core.Doc.Controllers
 {
@@ -124,6 +127,25 @@ namespace Fluent.Architecture.Core.Doc.Controllers
             if (AllTypes.TryGetValue(name, out Type type))
             {
                 var jsonSchema = type.GetFluentJsonSchema(false);
+                jsonSchema.Properties.ForEach(x =>
+                {
+                    x.desc = x.desc.G();
+                    x.Link = GetModelLink(x.Type);
+                });
+
+                if (type.IsNullableEnum())
+                {
+                    jsonSchema.Properties = type.GetFields().Where(x => x.Name != "value__").Select(x =>
+                    new FluentJsonPropertyAttribute
+                    {
+                        propName = x.Name,
+                        name = x.Name.ToLower().ToTitleCase(),
+                        desc = (x.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? x.GetCustomAttribute<FluentJsonPropertyAttribute>(true)?.desc ?? x.Name).G(),
+                        form = EnumForm.TEXTBOX,
+                        Type = x.FieldType.BaseType
+                    }).ToList();
+                }
+
                 return View(jsonSchema);
             }
 
@@ -202,7 +224,8 @@ namespace Fluent.Architecture.Core.Doc.Controllers
 
         public static string GetModelLink(Type type)
         {
-            return $"/FluentDoc/Model?name={type.GetListTypeNonNull().FullName}";
+            if (AllTypes.TryGetValue(type.GetListTypeNonNull().FullName, out _)) { return $"/FluentDoc/Model?name={type.GetListTypeNonNull().FullName}"; }
+            return string.Empty;
         }
 
         private FluentActionSchema GetActionData(MethodInfo action, Type type, Type controllerType, RouteAttribute routeAtributeController)
@@ -229,7 +252,17 @@ namespace Fluent.Architecture.Core.Doc.Controllers
                 _ => 5,
             };
 
-            var parameters = action.GetParameters().Select(x => new DocParameter { Link = GetModelLink(x.ParameterType), Type = x.ParameterType, Name = x.Name, Source = GetParameterSource(x, orderMethod) }).ToList();
+            var parameters = action.GetParameters().Select(x =>
+                            new DocParameter
+                            {
+                                Link = GetModelLink(x.ParameterType),
+                                Type = x.ParameterType,
+                                Name = x.Name,
+                                Description = (x.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? x.GetCustomAttribute<FluentJsonPropertyAttribute>(true)?.desc ?? x.Name).G(),
+                                Source = GetParameterSource(x, orderMethod),
+                                Example = x.ParameterType.GetExampleValueString()
+                            }).ToList();
+
             var description = action.GetCustomAttribute<DescriptionAttribute>()?.Description;
             var fluentAction = action.GetCustomAttribute<FluentActionAttribute>();
 
@@ -254,7 +287,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
 
             if (Setup.Config.Config.JwtInfo != null)
             {
-                parameters.Add(new DocParameter("Authorization", typeof(string), EnumParameterSouce.Header, "Authentication Token", "Bearer xxxxx"));
+                parameters.Add(new DocParameter("Authorization", typeof(string), EnumParameterSouce.Header, "The authentication Token", "Bearer xxxxx"));
             }
 
             var action_ = new FluentActionSchema
@@ -278,9 +311,26 @@ namespace Fluent.Architecture.Core.Doc.Controllers
             return action_;
         }
 
+        private List<string> JsonToQueryString(string json)
+        {
+            var jObj = (JObject)JsonConvert.DeserializeObject(json);
+           return  jObj.Children().Cast<JProperty>().Select(jp => jp.Name + "=" + HttpUtility.UrlEncode(jp.Value.ToString())).ToList();
+        }
+
         private string GetExampleAction(FluentActionSchema action)
         {
-            var parametersArray = action.Parameters.Where(x => x.Source == EnumParameterSouce.Header).Select(x => $"xhr.setRequestHeader(\"{x.Name}\", \"{x.Example}\";").ToArray();
+            var parametersArray = action.Parameters.Where(x => x.Source == EnumParameterSouce.Header).Select(x => $"xhr.setRequestHeader(\"{x.Name}\", \"{x.Example}\");").ToArray();
+            var parametersQueryArray = action.Parameters.Where(x => x.Source == EnumParameterSouce.Query).Where(x => !x.Type.IsFluentEntity()).Select(x => $"{x.Name}={x.Example}").ToList();
+            var parametersQueryArray3 = action.Parameters.Where(x => x.Source == EnumParameterSouce.Query).Where(x => x.Type.IsFluentEntity()).SelectMany(x => JsonToQueryString(x.Example)).ToList();
+            parametersQueryArray.AddRange(parametersQueryArray3);
+
+              var parametersQueryArrayString = "";
+
+            if (parametersQueryArray.Count > 0)
+            {
+                parametersQueryArrayString = "?" + string.Join("&", parametersQueryArray);
+            }
+
             var parametersString = string.Join('\n', parametersArray);
             var dataExample = "xhr.send();";
 
@@ -297,7 +347,7 @@ xhr.send(data);";
             var example =
     $@"var xhr = new XMLHttpRequest();
 xhr.withCredentials = true;
-xhr.open(""{action.Method}"", ""{action.ApiBaseUrl}{action.Route}"");
+xhr.open(""{action.Method}"", ""{action.ApiBaseUrl}{action.Route}{parametersQueryArrayString}"");
 {parametersString}
 
 xhr.addEventListener(""readystatechange"", function() {{

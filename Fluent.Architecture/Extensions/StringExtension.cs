@@ -1,4 +1,6 @@
-﻿namespace Fluent.Architecture.Extensions
+﻿using System.Globalization;
+
+namespace Fluent.Architecture.Extensions
 {
     public static class StringExtension
     {
@@ -63,10 +65,10 @@
             return c;
         }
 
-        //public static string TitleCase(this string text)
-        //{
-        //    return Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(text.ToLowerInvariant());
-        //}
+        public static string ToTitleCase(this string text)
+        {
+            return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(text);
+        }
 
         //public static string GetGlobalizationOfResourceWithParameters(this string text, params string[] parameters)
         //{

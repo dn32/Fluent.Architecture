@@ -18,6 +18,8 @@ namespace Fluent.Architecture.Core.Attributes
         [JsonProperty("PropertyName")]
         public string propName { get; set; }
 
+        public string Link { get; set; }
+
         [JsonIgnore]
         public string PropNameCaseSensitive { get; set; }
 

@@ -45,9 +45,8 @@
             @foreach (var action in actions)
             {
                 if (action == null) { continue; }
-                var parameters = action.Parameters?.Select(x => GetTypeName(x.Type, x.Name)).ToArray() ?? new string[] { };
-
-                var paramString = string.Join(", ", parameters);
+                //var parameters = action.Parameters?.Select(x => GetTypeName(x.Type, x.Name)).ToArray() ?? new string[] { };
+                //var paramString = string.Join(", ", parameters);
 
                 <div class="action" onclick="navegate('/FluentDoc/Action?service=@Model.FluentJsonForm.Type.GetListTypeNonNull().Name&actionName=@action.MethodName')">
                     <span class="method @action.Method.ToLower()">@action.Method</span>
@@ -62,10 +61,10 @@
                         <span class="route">@action.Route</span>
                     }
 
-                    @if (!string.IsNullOrWhiteSpace(paramString))
+                    @*@if (!string.IsNullOrWhiteSpace(paramString))
                     {
                         <span class="parameters">@(("params").G()): @Html.Raw(paramString)</span>
-                    }
+                    }*@
 
                 </div>
             }

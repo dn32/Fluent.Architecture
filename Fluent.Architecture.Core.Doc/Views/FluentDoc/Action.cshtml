@@ -17,7 +17,7 @@
     {
         if (type.GetListTypeNonNull().IsFluentEntity())
         {
-            return $"<a href=\"/FluentDoc/Service?name={type.GetListTypeNonNull().GetFriendlyName(false)}\">{type.GetFriendlyName(false)}</a>";
+            return $"<a href=\"/FluentDoc/Model?name={type.GetListTypeNonNull().FullName}\">{type.GetFriendlyName(false)}</a>";
         }
         else
         {
@@ -49,7 +49,7 @@
 
                     @{
                         <div class="properties-container">
-                            <span class="title">@Html.Raw(GetTypeName(action.EntityType, action.EntityType.Name)) @(("Parameters").G())</span>
+                            <span class="title">@Html.Raw(GetTypeName(action.EntityType, action.EntityType.Name))</span>
                             <table class="properties">
                                 <thead>
                                     <tr>
@@ -74,7 +74,7 @@
                                         }
                                         <td class="source">@parameter.Source.ToString().G()</td>
                                         <td class="description">@parameter.Description.G()</td>
-                                        <td class="example">@Html.Raw(parameter.Example)</td>
+                                        <td class="example"><pre class="example-value" style="margin:0 0 0 0;background: #ffc10712; border-color:#ffc10712;">@Html.Raw(parameter.Example)</pre></td>
                                     </tr>
                                 }
                             </table>
@@ -85,7 +85,7 @@
 
                             <div class="example-value-container">
                                 <span>@("Return type".G())</span>
-                                <pre class="example-value">@Html.Raw(Model.ReturnType)</pre>
+                                <pre class="example-value">@(Model.ReturnType)</pre>
                             </div>
 
 

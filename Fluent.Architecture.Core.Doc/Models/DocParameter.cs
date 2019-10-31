@@ -13,17 +13,19 @@ namespace Fluent.Architecture.Core.Doc.Controllers
         public string Example { get; set; }
 
         public EnumParameterSouce Source { get; set; }
+
         public string Link { get; internal set; }
 
         public DocParameter()
         {
             Source = EnumParameterSouce.Body;
-        }
+        }     
 
         public DocParameter(string name, Type type, EnumParameterSouce source, string description, string example)
         {
             Name = name;
             Type = type;
+            Link = FluentDocController.GetModelLink(Type);
             Source = source;
             Description = description;
             Example = example;

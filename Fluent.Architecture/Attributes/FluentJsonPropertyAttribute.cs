@@ -58,7 +58,7 @@ namespace Fluent.Architecture.Core.Attributes
 
         public int Row { get; set; }
 
-        public Type Type { get; internal set; }
+        public Type Type { get; set; }
 
         [JsonIgnore]
         public FluentJsonFormAttribute FkDestinal { get; internal set; }

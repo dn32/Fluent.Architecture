@@ -4,6 +4,7 @@
 @using Fluent.Architecture.Core.Extensions
 @using Fluent.Architecture
 @using static Fluent.Architecture.FluentDocExtension
+@using static Fluent.Architecture.Extensions.StringExtension
 
 <link rel="stylesheet" href="/FluentDoc/lib/bootstrap.min.css" />
 <link rel="stylesheet" href="/FluentDoc/css/site.css" />
@@ -31,7 +32,7 @@
     }
 </script>
 <div class="one-service-container">
-    <h4 class="general-title">@Model.FluentJsonForm?.name</h4>
+    <h4 class="general-title">@Model.FluentJsonForm?.Type.GetListTypeNonNull().Name</h4>
 
     @{
         string Is(bool operation, string text)
@@ -39,13 +40,14 @@
             return operation ? text : "";
         }
 
-        <div class="properties-container">
-            <span class="title">@Model.FluentJsonForm?.name @(("Properties").G())</span>
+        <div class="properties-container" style="display:@(Model.Properties.Any()? "block" : "none")">
+            <span class="title">@(("Properties").G())</span>
             <table class="properties">
                 <thead>
                     <tr>
                         <th>@(("Property").G())</th>
                         <th>@(("Name").G())</th>
+                        <th>@(("Description").G())</th>
                         <th>@(("Type").G())</th>
                         <th>@(("Others").G())</th>
                     </tr>
@@ -55,12 +57,21 @@
                     if (property.form == Fluent.Architecture.Core.Enumerator.EnumForm.NONE) { continue; }
 
                     var range = (property.min == property.max ? property.min.ToString() : property.min + ", " + property.max);
-                    range = range == "0" ? "": $" ({range})";
+                    range = range == "0" ? "" : $" ({range})";
 
                     <tr class="property">
                         <td class="name">@property.propName</td>
-                        <td class="description">@property.name</td>
-                        <td class="type">@Html.Raw(GetTypeName(property.Type, property.Type.Name))@range</td>
+                        <td class="name">@property.name</td>
+                        <td class="description">@property.desc</td>
+
+                        @if (string.IsNullOrWhiteSpace(property.Link))
+                        {
+                            <td class="type">@Html.Raw(property.Type.GetFriendlyName())</td>
+                        }
+                        else
+                        {
+                            <td class="type"><a href="@property.Link" target="_blank">@Html.Raw(property.Type.GetFriendlyName())</a></td>
+                        }
                         <td>
                             @Html.Raw(Is(property.IsEnum, "<span><img src='/FluentDoc/img/ok.png'/> " + "enum".G() + "</span>"))
                             @Html.Raw(Is(property.IsKey || property.IsFluentUniqueKeyKey, "<span><img src='/FluentDoc/img/ok.png'/> " + "key".G() + "</span>"))

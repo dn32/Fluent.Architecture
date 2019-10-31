@@ -24,6 +24,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using Fluent.Architecture.Attributes;
 using System.Threading.Tasks;
+using Fluent.Architecture.Core.Util;
 
 namespace Fluent.Architecture.Extensions
 {
@@ -129,10 +130,40 @@ namespace Fluent.Architecture.Extensions
                    t1 == t2 || t1.IsSubclassOf(t2) || t2.IsAssignableFrom(t1) || t2.IsSubclassOf(t1) || t1.IsAssignableFrom(t2);
         }
 
+        public static object GetPrimitiveExampleValue(this Type type)
+        {
+            type = type.GetNonNullableType();
+
+            if (type.IsNumeric()) { return RandomUtil.NextRandom(99); }
+            if (type == typeof(DateTime)) { return DateTime.Now; }
+            if (type == typeof(string) && type == typeof(String)) { return RandomUtil.NextRandomString(6); }
+
+            return type.GetFluentDefaultValue();
+        }
+
+        public static string GetExampleValueString(this Type type)
+        {
+            var obj = type.GetExampleValue();
+            if (type.IsPrimitiveOrPrimitiveNulable()) { return obj.ToString(); }
+            return obj.ToFluentJson(Formatting.Indented);
+        }
+
         public static object GetExampleValue(this Type type)
         {
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
-            var obj = Activator.CreateInstance(type);
+            object obj;
+
+            if (type.IsPrimitiveOrPrimitiveNulable()) { return type.GetPrimitiveExampleValue(); }
+
+            try
+            {
+                obj = Activator.CreateInstance(type);
+            }
+            catch (MissingMethodException)
+            {
+
+                return type.GetFluentDefaultValue();
+            }
 
             foreach (var property in type.GetProperties())
             {
@@ -620,7 +651,7 @@ namespace Fluent.Architecture.Extensions
         public static string GetFriendlyName(this Type type, bool useGenericT = true, bool fullName = false, string complement = "")
         {
             if (type == null) { return "null"; }
-            var friendlyName = fullName ? type.FullName : type.Name;
+            var friendlyName = fullName ? type.Name : type.Name;
             if (!type.IsGenericType) { return friendlyName; }
             var iBacktick = friendlyName.IndexOf('`', StringComparison.InvariantCultureIgnoreCase);
             if (iBacktick > 0)

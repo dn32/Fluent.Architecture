@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Fluent.Architecture.Core.Specifications;
+using System.ComponentModel.DataAnnotations;
 
 namespace Fluent.Architecture.EntityFramework.Oracle.Controllers
 {
@@ -13,9 +14,14 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Controllers
     {
         [HttpGet]
         [FluentAction(Pagination = true, DynamicSpec = true)]
-        public virtual async Task<DefaultPaginationResult<List<T>>> FindByProximity(string property, string term, int tolerance)
+        public virtual async Task<DefaultPaginationResult<List<T>>> FindByProximity(
+            [Description("The property whose value will be compared")] string Property,
+            [Description("The term to use as a comparator")] string Term,
+            [Description("The required acceptance percentage. The higher the value, the more demanding")][Range(0,100)]
+            int Tolerance
+        )
         {
-            var spec = CreateSpec<TermByProximitySpec<T>>().AddParameter(property, term, tolerance);
+            var spec = CreateSpec<TermByProximitySpec<T>>().AddParameter(Property, Term, Tolerance);
             var list = await Service.ListAsync(spec);
             return await ResultAsync<List<T>>(list, LastRequestPagination);
         }
@@ -24,18 +30,18 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Controllers
         [Route("/api/[controller]/ListByFilterAndProximity")]
         [Description("Get a paginated list of items based on filters and text proximity")]
         [FluentAction(Pagination = true, DynamicSpec = true)]
-        public virtual async Task<DefaultPaginationResult<List<T>>> ListByFilterAndProximityGet([FromBody] FiltersAndTerm filtersAndTerm)
+        public virtual async Task<DefaultPaginationResult<List<T>>> ListByFilterAndProximityGet([FromBody, Description("The query object")] FiltersAndTerm FiltersAndTerm)
         {
-            return await InternalListByFilterAndProximityAsync(filtersAndTerm);
+            return await InternalListByFilterAndProximityAsync(FiltersAndTerm);
         }
 
         [HttpPost]
         [Route("/api/[controller]/ListByFilterAndProximity")]
         [Description("Get a paginated list of items based on filters and text proximity")]
         [FluentAction(Pagination = true, DynamicSpec = true)]
-        public virtual async Task<DefaultPaginationResult<List<T>>> ListByFilterAndProximityPost([FromBody] FiltersAndTerm filtersAndTerm)
+        public virtual async Task<DefaultPaginationResult<List<T>>> ListByFilterAndProximityPost([FromBody, Description("The query object")] FiltersAndTerm FiltersAndTerm)
         {
-            return await InternalListByFilterAndProximityAsync(filtersAndTerm);
+            return await InternalListByFilterAndProximityAsync(FiltersAndTerm);
         }
 
         private async Task<DefaultPaginationResult<List<T>>> InternalListByFilterAndProximityAsync(FiltersAndTerm filtersAndTerm)
