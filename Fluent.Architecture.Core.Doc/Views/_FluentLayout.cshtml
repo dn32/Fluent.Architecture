@@ -4,6 +4,7 @@
     var action = ViewContext.RouteData.Values["Action"].ToString().ToLower();
     var controller = ViewContext.RouteData.Values["Controller"].ToString().ToLower();
 }
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +13,9 @@
     <title>@ViewData["Title"] - @(("Available services").G())</title>
 </head>
 <body>
+
     <header>
+        @await Html.PartialAsync("_fluent_custom_header")
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container principal-menu">
 
