@@ -28,20 +28,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Attributes\**" />
     <Compile Remove="Services\**" />
+    <Content Remove="Attributes\**" />
     <Content Remove="Services\**" />
+    <EmbeddedResource Remove="Attributes\**" />
     <EmbeddedResource Remove="Services\**" />
+    <None Remove="Attributes\**" />
     <None Remove="Services\**" />
   </ItemGroup>
 
 
   <ItemGroup>
     <ProjectReference Include="..\Fluent.Architecture\Fluent.Architecture.Core.csproj" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <Folder Include="Attributes\" />
   </ItemGroup>
 
 </Project>
