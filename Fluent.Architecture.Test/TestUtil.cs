@@ -7,6 +7,7 @@
 
 // ReSharper disable CommentTypo
 using Fluent.Architecture.Controllers;
+using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Test.Mock;
 using Fluent.Architecture.Test.Mock.ControllerMock;
 using Newtonsoft.Json;
