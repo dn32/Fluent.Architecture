@@ -7,11 +7,14 @@
 
 // ReSharper disable CommentTypo
 
+using System.ComponentModel;
+
 namespace Fluent.Architecture.Core.Models
 {
     /// <summary>
     /// Classe de solicitação de paginação padrão.
     /// </summary>
+    [Attributes.FluentDoc]
     public class FluentPagination
     {
         private const int ItemsPerPageDefault = 10;
@@ -22,22 +25,27 @@ namespace Fluent.Architecture.Core.Models
         /// <summary>
         /// Essa propriedade é preenchida durante a requisição e retornada com o valor da quantidade total de itens referentes à solicitação.
         /// </summary>
+        [Description("This property is filled during the request and returns the value of the total quantity of items")]
         public virtual int TotalQuantityOfItems { get; set; }
 
         //Todo2 - doc
+        [Description("If the first page is 0")]
         public virtual bool StartAtZero => _startAtZero;
 
         //Todo2 - doc
+        [Description("How many items are being \"skipped\" to get to the current page")]
         public virtual int Skip => ItemsPerPage * (StartAtZero ? CurrentPage : CurrentPage - 1);
 
         /// <summary>
         /// A quantidade de itens por página.
         /// </summary>
+        [Description("The number of items per page")]
         public virtual int ItemsPerPage => _itemsPerPage == 0 ? ItemsPerPageDefault : this._itemsPerPage;
 
         /// <summary>
         /// A página atual.
         /// </summary>
+        [Description("The current page")]
         public virtual int CurrentPage
         {
             get => !_startAtZero && _currentPage == 0 ? 1 : _currentPage;
@@ -48,6 +56,7 @@ namespace Fluent.Architecture.Core.Models
         /// Quantidade de páginas.
         /// Todo - Testar
         /// </summary>
+        [Description("Total number of pages")]
         public virtual int NumberOfPages
         {
             get

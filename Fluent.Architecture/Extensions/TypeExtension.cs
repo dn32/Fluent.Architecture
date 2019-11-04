@@ -154,6 +154,7 @@ namespace Fluent.Architecture.Extensions
             object obj;
 
             if (type.IsPrimitiveOrPrimitiveNulable()) { return type.GetPrimitiveExampleValue(); }
+            if (type.IsGenericType) { return null; }
 
             try
             {

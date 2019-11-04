@@ -7,7 +7,7 @@
 @model List<EntityModelAndName>
 
 @{
-    var title = "Available services";
+    var title = "Available entities";
     ViewData["Title"] = title.G();
 }
 
@@ -18,8 +18,8 @@
         foreach (var entity in Model)
         {
             <div class="service">
-                <span class="title"><a href="/FluentDoc/Service?name=@entity.Name">@entity.FriendlyName</a></span>
-                <span class="description">@entity.Description</span>
+                <span class="title"><a href="/FluentDoc/Model?name=@entity.FullName">@entity.Name</a></span>
+                <span class="description">@entity.FriendlyName</span>
             </div>
         }
     }

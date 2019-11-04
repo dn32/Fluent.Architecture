@@ -18,7 +18,7 @@
     {
         if (type.GetListTypeNonNull().IsFluentEntity())
         {
-            return $"<a href=\"/FluentDoc/Service?name={type.GetListTypeNonNull().GetFriendlyName(false)}\">{type.GetFriendlyName(false)}</a>";
+            return $"<a href=\"/FluentDoc/Model?name={type.GetListTypeNonNull().FullName}\">{type.GetFriendlyName(false)}</a>";
         }
         else
         {
@@ -54,7 +54,7 @@
                     <span class="description">@action.Description</span>
                     @if (@action.Method == "GET")
                     {
-                        <span class="route"><a href="@(action.ApiBaseUrl + action.Route)" target="_blank">@action.Route</a></span>
+                        <span class="route"><a href="@(action.ApiBaseUrl + action.Route)">@action.Route</a></span>
                     }
                     else
                     {

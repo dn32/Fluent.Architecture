@@ -13,18 +13,6 @@
 
 @{
     ViewData["Title"] = Model.FluentJsonForm.name;
-
-    string GetTypeName(Type type, string name)
-    {
-        if (type.GetListTypeNonNull().IsFluentEntity())
-        {
-            return $"<a href=\"/FluentDoc/Service?name={type.GetListTypeNonNull().GetFriendlyName(false)}\">{type.GetFriendlyName(false)}</a>";
-        }
-        else
-        {
-            return $"{name}: {type.GetFriendlyName(false)}";
-        }
-    }
 }
 <script>
     function navegate(url) {
@@ -32,7 +20,7 @@
     }
 </script>
 <div class="one-service-container">
-    <h4 class="general-title">@Model.FluentJsonForm?.Type.GetListTypeNonNull().Name</h4>
+    <h4 class="general-title">@Model.FluentJsonForm.name</h4>
 
     @{
         string Is(bool operation, string text)
@@ -40,7 +28,7 @@
             return operation ? text : "";
         }
 
-        <div class="properties-container" style="display:@(Model.Properties.Any()? "block" : "none")">
+        <div class="properties-container" style="display:@(Model.Properties.Any() ? "block" : "none")">
             <span class="title">@(("Properties").G())</span>
             <table class="properties">
                 <thead>
@@ -70,7 +58,7 @@
                         }
                         else
                         {
-                            <td class="type"><a href="@property.Link" target="_blank">@Html.Raw(property.Type.GetFriendlyName())</a></td>
+                            <td class="type"><a href="@property.Link">@Html.Raw(property.Type.GetFriendlyName())</a></td>
                         }
                         <td>
                             @Html.Raw(Is(property.IsEnum, "<span><img src='/FluentDoc/img/ok.png'/> " + "enum".G() + "</span>"))
@@ -78,22 +66,24 @@
                             @Html.Raw(Is(property.IsList, "<span><img src='/FluentDoc/img/ok.png'/> " + "list".G() + "</span>"))
                             @Html.Raw(Is(property.IsNullable, "<span><img src='/FluentDoc/img/ok.png'/> " + "nullable".G() + "</span>"))
                             @Html.Raw(Is(property.required, "<span><img src='/FluentDoc/img/ok.png'/> " + "required".G() + "</span>"))
-                            @Html.Raw(Is(property.IsFk, "<span><img src='/FluentDoc/img/ok.png'/>  " + "fk".G() + " <a href=\"/FluentDoc/Service?name=" + property.FkDestinal?.Type?.Name + "\">" + property.FkDestinal?.name + "</a></span>"))
+                            @Html.Raw(Is(property.FluentAggregation != null, "<span><img src='/FluentDoc/img/ok.png'/> " + "navegation".G() + "</span>"))
+                            @Html.Raw(Is(property.FluentComposition != null, "<span><img src='/FluentDoc/img/ok.png'/> " + "navegation".G() + "</span>"))
+                            @Html.Raw(Is(property.IsFk, "<span><img src='/FluentDoc/img/ok.png'/>  " + "fk".G() + " <a href=\"/FluentDoc/Model?name=" + property.FkDestinal?.Type?.Name + "\">" + property.FkDestinal?.propName + "</a></span>"))
                         </td>
                     </tr>
                 }
             </table>
-            <div class="example-value-container">
-                <span>@("Example value".G())</span>
+            @{
+                var exampleValue = Model.FluentJsonForm?.Type?.GetExampleValueString() ?? "";
 
-                @{
-                    var exampleValue = Model.FluentJsonForm?.Type?.GetExampleValue() ?? "";
-
-                    var json = exampleValue.ToFluentJson(Newtonsoft.Json.Formatting.Indented);
-
-                    <pre class="example-value">@json</pre>
+                if (!string.IsNullOrWhiteSpace(exampleValue) && exampleValue != "null")
+                {
+                    <div class="example-value-container">
+                        <span>@("Example value".G())</span>
+                        <pre class="example-value">@exampleValue</pre>
+                    </div>
                 }
-            </div>
+            }
         </div>
     }
 </div>

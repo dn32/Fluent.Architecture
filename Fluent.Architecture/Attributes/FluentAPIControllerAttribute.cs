@@ -1,5 +1,4 @@
-﻿using Fluent.Architecture.Core.Enumerator;
-using System;
+﻿using System;
 
 namespace Fluent.Architecture.Core.Attributes
 {

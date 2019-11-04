@@ -4,22 +4,18 @@
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
-
 // ReSharper disable CommentTypo
 
-using Fluent.Architecture.Extensions;
-
-namespace Fluent.Architecture.Controllers
+namespace Fluent.Architecture.Core.Models
 {
-    public interface IDefaultResult { }
-
-    public class DefaultResult<T> : IDefaultResult
+    [Attributes.FluentDoc]
+    public class DefaultPaginationResult<T> : DefaultResult<T>
     {
-        public T Data { get; set; }
+        public FluentPagination Pagination { get; set; }
 
-        public DefaultResult(object data)
+        public DefaultPaginationResult(object data, FluentPagination pagination) : base(data)
         {
-            Data = data.FluentResultOrValue<T>();
+            Pagination = pagination;
         }
     }
 }

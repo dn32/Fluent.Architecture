@@ -5,22 +5,12 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Fluent.Architecture.Core.Models;
 
 // ReSharper disable CommentTypo
 
-namespace Fluent.Architecture.Controllers
+namespace Fluent.Architecture.Core.Models
 {
-    public class DefaultPaginationTermResult<T> : DefaultPaginationResult<T>
-    {
-        public string Term { get; }
-
-        public DefaultPaginationTermResult(object data, FluentPagination pagination, string term) : base(data, pagination)
-        {
-            Term = term;
-        }
-    }
-
+    [Attributes.FluentDoc]
     public class DefaultTermResult<T> : DefaultResult<T>
     {
         public string Term { get; }

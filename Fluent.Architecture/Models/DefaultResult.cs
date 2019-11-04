@@ -5,19 +5,21 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Fluent.Architecture.Core.Models;
-
 // ReSharper disable CommentTypo
 
-namespace Fluent.Architecture.Controllers
-{
-    public class DefaultPaginationResult<T> : DefaultResult<T>
-    {
-        public FluentPagination Pagination { get; set; }
+using Fluent.Architecture.Core.Attributes;
+using Fluent.Architecture.Extensions;
 
-        public DefaultPaginationResult(object data, FluentPagination pagination) : base(data)
+namespace Fluent.Architecture.Core.Models
+{
+    [FluentDoc]
+    public class DefaultResult<T> 
+    {
+        public T Data { get; set; }
+
+        public DefaultResult(object data)
         {
-            Pagination = pagination;
+            Data = data.FluentResultOrValue<T>();
         }
     }
 }

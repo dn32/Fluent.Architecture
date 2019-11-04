@@ -45,7 +45,7 @@ namespace Fluent.Architecture.Controllers
         internal protected bool TransactionIsStarted { get; set; }
 
         [NonAction]
-        protected async Task<DefaultResult<T>> ResultAsync<T>(object data, string term)
+        protected async Task<DefaultTermResult<T>> ResultAsync<T>(object data, string term)
         {
             await CloseTransactionAsync();
             data = data.FluentResultOrValue();

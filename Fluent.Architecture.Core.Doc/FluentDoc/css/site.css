@@ -21,6 +21,7 @@
     padding: 6px 6px 6px 6px;
     border: solid 1px #ddd;
     border-radius: 4px;
+    overflow: auto;
 }
 
     .one-service-container .properties-container .properties {
@@ -205,4 +206,10 @@ body {
     width: 100%;
     white-space: nowrap;
     line-height: 60px; /* Vertically center the text there */
+}
+
+
+
+.navbar-brand.active {
+    font-weight:bold;
 }

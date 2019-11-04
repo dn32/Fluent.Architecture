@@ -40,7 +40,7 @@
                     <span class="description">@action.Description</span>
                     @if (@action.Method == "GET")
                     {
-                        <span class="route"><a href="@(action.ApiBaseUrl + action.Route)" target="_blank">@action.Route</a></span>
+                        <span class="route"><a href="@(action.ApiBaseUrl + action.Route)">@action.Route</a></span>
                     }
                     else
                     {
