@@ -31,6 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Public", "Public", "{DCA683
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Automatic", "Automatic", "{A8119674-A9A5-4E65-83B0-4A925629878C}"
 	ProjectSection(SolutionItems) = preProject
+		Build.ps1 = Build.ps1
 		deploy-delete-package.cmd = deploy-delete-package.cmd
 		deploy-package.cmd = deploy-package.cmd
 		Directory.Build.props = Directory.Build.props

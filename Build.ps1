@@ -26,7 +26,7 @@ echo "Build 3.0"
 $result = dotnet build "$dirBase\Fluent.Architecture.sln" --configuration Release /p:CopyOutputSymbolsToPublishDirectory=false --framework netcoreapp3.0
 CheckResult $result "Build 3.0 Sucess!"
 
-echo "Comp"
+echo "Cript"
 
 $dirsPack = 
 'Fluent.Architecture',
@@ -58,7 +58,7 @@ For ($i=0; $i -lt $files.Length; $i++)
    $out = "$dirBase$dir"   
  
    $result = dotfuscatorCLI -in:"$in" -out:"$out"
-   CheckResult $result "Comp $file Sucess!"
+   CheckResult $result "Cript $file Sucess!"
 }
 
 echo "Pack"
