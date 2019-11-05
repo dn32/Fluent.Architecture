@@ -63,7 +63,7 @@
                                         }
                                         else
                                         {
-                                            <td class="type"><a href="@parameter.Link" target="_blank">@Html.Raw(parameter.Type.GetFriendlyName())</a></td>
+                                            <td class="type"><a href="@parameter.Link">@Html.Raw(parameter.Type.GetFriendlyName())</a></td>
                                         }
                                         <td class="source">@parameter.Source.ToString().G()</td>
                                         <td class="description">@parameter.Description.G()</td>
