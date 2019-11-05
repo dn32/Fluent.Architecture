@@ -1,9 +1,6 @@
 ﻿@using Fluent.Architecture.Core.Doc.Controllers
 @using static Fluent.Architecture.FluentDocExtension
 
-<link rel="stylesheet" href="/FluentDoc/lib/bootstrap.min.css" />
-<link rel="stylesheet" href="/FluentDoc/css/site.css" />
-
 @model List<EntityModelAndName>
 
 @{
@@ -12,7 +9,12 @@
 }
 
 <div class="services-container">
-    <span class="general-title">@title.G() (@Model.Count)</span>
+
+    <span class="total-endpoints">@("Total".G()): @(string.Format("{0:0,0}",(Model.Count * 26))) @("endpoints".G())</span>
+  
+    <div style="display:inline-flex; width:100%">
+        <h4 class="general-title">@title.G() (@Model.Count)</h4>
+    </div>
 
     @{
         foreach (var entity in Model)

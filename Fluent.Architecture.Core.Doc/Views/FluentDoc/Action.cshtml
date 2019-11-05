@@ -19,11 +19,8 @@
     }
 }
 
-<link rel="stylesheet" href="/FluentDoc/lib/bootstrap.min.css" />
-<link rel="stylesheet" href="/FluentDoc/css/site.css" />
-
 <div class="one-service-container">
-    <h4 class="general-title">@Model.Name</h4>
+    <h4 class="general-title">@Model.Name.G()</h4>
 
     @{
         <div class="actions-container">
@@ -32,7 +29,7 @@
                 var action = Model;
                 <div class="action action-description">
                     <span class="method @action.Method.ToLower()">@action.Method</span>
-                    <span class="name">@action.Name</span>
+                    <span class="name">@action.Name.G()</span>
                     <span class="description">@action.Description</span>
                     @if (@action.Method == "GET")
                     {

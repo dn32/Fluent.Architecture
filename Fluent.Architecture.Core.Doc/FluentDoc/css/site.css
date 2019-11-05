@@ -15,7 +15,14 @@
 .one-service-container .property > span {
     display: block;
 }
-
+.total-endpoints {
+    font-size: 18px;
+    font-weight: bold;
+    float: right;
+    width: 100%;
+    text-align: right;
+    margin-bottom: -27px;
+}
 
 .one-service-container .properties-container {
     padding: 6px 6px 6px 6px;

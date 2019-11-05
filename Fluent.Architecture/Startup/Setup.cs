@@ -208,12 +208,13 @@ namespace Fluent.Architecture
                 }
 
                 ObjectInit();
+                LoadAssemblies();
 
-                var typeList = LoadAssemblies();
-
-                InitValidations(typeList);
+                InitValidations();
             }
         }
+
+        internal static List<Type> AllTypes { get; set; }
 
         private static void ObjectInit()
         {
@@ -230,62 +231,47 @@ namespace Fluent.Architecture
             Controllers.Add(typeof(FluentEntity), typeof(FluentController<FluentEntity>));
         }
 
-        private static List<Type[]> LoadAssemblies()
+        private static void LoadAssemblies()
         {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies().OrderBy(x => x.FullName).ToList();
-            var typeList = new List<Type[]>();
-
-            foreach (var assembly in assemblies)
-            {
-                try
-                {
-                    if (assembly.IsDynamic) { continue; }
-                    typeList.Add(assembly.ExportedTypes.ToArray());
-                }
-                catch
-                {
-                    continue;
-                }
-            }
-
-            return typeList;
+            AllTypes = AppDomain.CurrentDomain.GetAssemblies()
+                                    .Where(x => !x.IsDynamic)
+                                    .OrderBy(x => x.FullName)
+                                    .SelectMany(x => x.ExportedTypes)
+                                    .ToList();
         }
 
-        private static void InitValidations(List<Type[]> typeList)
+        private static void InitValidations()
         {
-            foreach (var types in typeList)
-            {
-                var transactionalServices = types.Where(x => x.IsSubclassOf(typeof(TransactionalService))).ToList();
+            var types = AllTypes;
+            var transactionalServices = types.Where(x => x.IsSubclassOf(typeof(TransactionalService))).ToList();
 
-                ValidateIfAllServicePropertiesNotHaveTheSetMethod(transactionalServices);
-                ValidateIfAllServicePropertiesAreVirtual(transactionalServices);
-                ValidateIfAllServicePropertiesNotHavePublic(transactionalServices);
-                ValidateIfAllServicePropertiesHaveDefaultConstructor(transactionalServices);
+            ValidateIfAllServicePropertiesNotHaveTheSetMethod(transactionalServices);
+            ValidateIfAllServicePropertiesAreVirtual(transactionalServices);
+            ValidateIfAllServicePropertiesNotHavePublic(transactionalServices);
+            ValidateIfAllServicePropertiesHaveDefaultConstructor(transactionalServices);
 
-                ValidateSpecifications(types.Where(x => x.IsSubclassOf(typeof(BaseSpecification))).ToList());
-                ValidateController(types.Where(x => x.IsSubclassOf(typeof(BaseController))).ToList());
+            ValidateSpecifications(types.Where(x => x.IsSubclassOf(typeof(BaseSpecification))).ToList());
+            ValidateController(types.Where(x => x.IsSubclassOf(typeof(BaseController))).ToList());
 
-                types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentService<BaseEntity>)))
-                    .Where(x => x.Item1 != null).ToList()
-                    .ForEach(AddService);
+            types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentService<BaseEntity>)))
+                .Where(x => x.Item1 != null).ToList()
+                .ForEach(AddService);
 
-                types.Select(x => GlobalUtil.GetFluentEntityTypeByInterface(x, typeof(IFluentRepository<BaseEntity>)))
-                   .Where(x => x?.Item1 != null).ToList()
-                   .ForEach(AddRepository);
+            types.Select(x => GlobalUtil.GetFluentEntityTypeByInterface(x, typeof(IFluentRepository<BaseEntity>)))
+               .Where(x => x?.Item1 != null).ToList()
+               .ForEach(AddRepository);
 
-                types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentValidation<BaseEntity>)))
-                   .Where(x => x.Item1 != null).ToList()
-                   .ForEach(AddValidation);
+            types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentValidation<BaseEntity>)))
+               .Where(x => x.Item1 != null).ToList()
+               .ForEach(AddValidation);
 
-                types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(BaseEntity)))
-                    .Where(x => x.Item1 != null && x.Item2 != typeof(BaseEntity)).ToList()
-                    .ForEach(AddModel);
+            types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(BaseEntity)))
+                .Where(x => x.Item1 != null && x.Item2 != typeof(BaseEntity)).ToList()
+                .ForEach(AddModel);
 
-                types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentController<BaseEntity>)))
-                   .Where(x => x.Item1 != null).ToList()
-                   .ForEach(AddController);
-
-            }
+            types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentController<BaseEntity>)))
+               .Where(x => x.Item1 != null).ToList()
+               .ForEach(AddController);
 
             // Todo - Não me recordo o motivo de estar comentado, mas acredito que tenha que descomentar
             // ValidateIfAllMethodsAreVirtual(Services.Values.ToList()); // To intercept

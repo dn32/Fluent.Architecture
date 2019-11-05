@@ -5,9 +5,6 @@
 @using Fluent.Architecture
 @using static Fluent.Architecture.FluentDocExtension
 
-<link rel="stylesheet" href="/FluentDoc/lib/bootstrap.min.css" />
-<link rel="stylesheet" href="/FluentDoc/css/site.css" />
-
 @model FluentJsonSchema
 
 @{
@@ -32,7 +29,7 @@
     }
 </script>
 <div class="one-service-container">
-    <h4 class="general-title">@Model.FluentJsonForm?.name</h4>
+    <h4 class="general-title">@Model.FluentJsonForm?.name (@actions.Count) </h4>
 
     @{
         string Is(bool operation, string text)
@@ -50,7 +47,7 @@
 
                 <div class="action" onclick="navegate('/FluentDoc/Action?service=@Model.FluentJsonForm.Type.GetListTypeNonNull().Name&actionName=@action.MethodName')">
                     <span class="method @action.Method.ToLower()">@action.Method</span>
-                    <span class="name">@action.Name</span>
+                    <span class="name">@action.Name.G()</span>
                     <span class="description">@action.Description</span>
                     @if (@action.Method == "GET")
                     {
@@ -62,9 +59,9 @@
                     }
 
                     @*@if (!string.IsNullOrWhiteSpace(paramString))
-                    {
-                        <span class="parameters">@(("params").G()): @Html.Raw(paramString)</span>
-                    }*@
+                {
+                    <span class="parameters">@(("params").G()): @Html.Raw(paramString)</span>
+                }*@
 
                 </div>
             }

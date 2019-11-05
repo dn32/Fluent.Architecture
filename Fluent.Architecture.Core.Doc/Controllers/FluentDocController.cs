@@ -53,16 +53,12 @@ namespace Fluent.Architecture.Core.Doc.Controllers
 
                 if (AllTypes == null)
                 {
-                    AllTypes = AppDomain.CurrentDomain
-                              .GetAssemblies()
-                              .Where(x => !x.IsDynamic)
-                              .SelectMany(x => x.GetTypes())
-                              .ToList()
-                              .GroupBy(x => x.FullName)
-                              .Select(x => x.First())
-                              .Where(x => x.GetCustomAttribute<FluentDocAttribute>()?.Display != EnumFluentDisplay.Hidden)
-                              .Where(x => x.GetCustomAttribute<FluentAPIControllerAttribute>()?.AutomaticGeneration != false)
-                              .ToDictionary(x => x.FullName, x => x);
+                    AllTypes = Setup.AllTypes
+                                  .GroupBy(x => x.FullName)
+                                  .Select(x => x.First())
+                                  .Where(x => x.GetCustomAttribute<FluentDocAttribute>()?.Display != EnumFluentDisplay.Hidden)
+                                  .Where(x => x.GetCustomAttribute<FluentAPIControllerAttribute>()?.AutomaticGeneration != false)
+                                  .ToDictionary(x => x.FullName, x => x);
                 }
 
                 AllEntities = Models.Values

@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
+using System.Linq;
 
 namespace Fluent.Architecture.Extensions
 {
@@ -63,6 +65,16 @@ namespace Fluent.Architecture.Extensions
             c = char.ToLowerInvariant(c);
 #endif
             return c;
+        }
+
+        public static string FirstCharToUpper(this string input)
+        {
+           return input switch
+            {
+                null => throw new ArgumentNullException(nameof(input)),
+                "" => throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input)),
+                _ => input.First().ToString().ToUpper() + input.Substring(1)
+            };
         }
 
         public static string ToTitleCase(this string text)
