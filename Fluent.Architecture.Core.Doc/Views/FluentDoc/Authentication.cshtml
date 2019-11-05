@@ -1,22 +1,23 @@
-﻿<link rel="stylesheet" href="/FluentDoc/lib/bootstrap.min.css" />
-<link rel = "stylesheet" href= "/FluentDoc/css/site.css" />
+﻿@using static Fluent.Architecture.FluentDocExtension
+
+<link rel="stylesheet" href="/FluentDoc/lib/bootstrap.min.css" />
+<link rel="stylesheet" href="/FluentDoc/css/site.css" />
 @{
-    ViewData["Title"] = "Autentication";
+    ViewData["Title"] = "Autentication".G();
 }
 
-<div class="services-container">
-    <span class="general-title">Autentication</span>
+<div class="auth-container">
 
     <form method="post">
         <div class="form-group">
-            <label for="user">E-mail</label>
-            <input class="form-control" placeholder="Enter the e-mail" name="email" />
-        </div>  
-        <div class="form-group">
-            <label for="user">Password</label>
-            <input type="password" class="form-control" placeholder="Enter a password" name="psw" />
+            <label for="user">@("E-mail".G())</label>
+            <input class="form-control" placeholder="@("Enter the e-mail".G())" name="email" />
         </div>
-        <button type="submit" class="btn btn-primary">Login</button>
+        <div class="form-group">
+            <label for="user">@("Password".G())</label>
+            <input type="password" class="form-control" placeholder="@("Enter the password".G())" name="psw" />
+        </div>
+        <button type="submit" class="btn btn-primary">@("Login".G())</button>
     </form>
 
 </div>

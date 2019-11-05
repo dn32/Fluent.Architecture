@@ -23,9 +23,9 @@
 
                 <a class="navbar-brand @(controller == "fluentdoc" && action == "entity" ? "active" : "")" asp-area="" asp-controller="FluentDoc" asp-action="Entity">@(("Entity").G())</a> |
 
-                <a class="navbar-brand @(controller == "fluentdoc" && action == "model" ? "active" : "")" asp-area="" asp-controller="FluentDoc" asp-action="ModelNoEntity">@(("Model").G())</a> |
+                <a class="navbar-brand @(controller == "fluentdoc" && (action == "model" || action == "modelnoentity") ? "active" : "")" asp-area="" asp-controller="FluentDoc" asp-action="ModelNoEntity">@(("Model").G())</a> |
 
-                <a class="navbar-brand @(controller == "authentication" ? "active" : "")" asp-area="" asp-controller="FluentDoc" asp-action="Authentication">@(("Authentication").G())</a>
+                <a class="navbar-brand @(controller == "authentication" ? "active" : "")" asp-area="" asp-controller="FluentDoc" asp-action="Token">@(("Authentication").G())</a>
 
             </div>
         </nav>

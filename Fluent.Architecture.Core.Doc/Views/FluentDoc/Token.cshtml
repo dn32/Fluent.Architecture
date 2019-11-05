@@ -1,0 +1,20 @@
+﻿@using static Fluent.Architecture.FluentDocExtension
+
+<link rel="stylesheet" href="/FluentDoc/lib/bootstrap.min.css" />
+<link rel="stylesheet" href="/FluentDoc/css/site.css" />
+@{
+    ViewData["Title"] = "Autentication".G();
+}
+
+<div class="auth-container">
+
+    <form method="post" action="/FluentDoc/Logout">
+        <div class="form-group">
+            <label for="user">@("Token".G())</label>
+            <textarea class="form-control" name="token" style="height: 361px;">@ViewBag.Token</textarea>
+        </div>
+       
+        <button type="submit" class="btn btn-primary">@("Logout".G())</button>
+    </form>
+
+</div>

@@ -25,11 +25,30 @@ namespace Fluent.Architecture.Core.Doc.Controllers
             return View("/Views/FluentDoc/Authentication.cshtml");
         }
 
+        [HttpGet]
+        [Route("FluentDoc/Token")]
+        public IActionResult Token()
+        {
+            var token = Request.Cookies["Authorization"];
+            if (string.IsNullOrWhiteSpace(token)) { return RedirectToAction(nameof(Index)); }
+            ViewBag.Token = token;
+            return View("/Views/FluentDoc/Token.cshtml");
+        }
+
+        [HttpPost]
+        [HttpGet]
+        [Route("FluentDoc/Logout")]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("Authorization");
+            return RedirectToAction(nameof(Index));
+        }
+
         [HttpPost]
         [Route("FluentDoc/Authentication")]
         public async Task<IActionResult> LoginAsync(string email, string psw)
         {
-            if(Setup.Config.Config.JwtInfo == null)
+            if (Setup.Config.Config.JwtInfo == null)
             {
                 throw new InvalidOperationException("Use UseJwt at architecture startup to set authentication parameters");
             }
@@ -48,7 +67,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
             }
 
             Response.Cookies.Append("Authorization", token, new CookieOptions() { Path = "/", HttpOnly = false, Secure = false });
-            return Redirect("/FluentDoc");
+            return RedirectToAction(nameof(Token));
         }
     }
 }
