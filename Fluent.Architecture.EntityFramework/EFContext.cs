@@ -18,6 +18,8 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Logging;
+using Fluent.Architecture.Core.Enumerator;
 
 namespace Fluent.Architecture.EntityFramework
 {
@@ -27,9 +29,9 @@ namespace Fluent.Architecture.EntityFramework
     /// </summary>
     public abstract class EfContext : DbContext
     {
-        internal delegate void EntityChangeEventHandler(FluentEventEntity fluentEventEntity);
-        internal event EntityChangeEventHandler EntityChangingEventEvent;
-        internal event EntityChangeEventHandler EntityChangedEventEvent;
+        internal protected delegate void EntityChangeEventHandler(FluentEventEntity fluentEventEntity);
+        internal protected event EntityChangeEventHandler EntityChangingEventEvent;
+        internal protected event EntityChangeEventHandler EntityChangedEventEvent;
 
         protected internal string ConnectionString { get; set; }
 
@@ -145,17 +147,27 @@ namespace Fluent.Architecture.EntityFramework
 
         protected virtual void SetEntity(EntityTypeBuilder entity, Type type) { }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+
+        protected static readonly LoggerFactory ContextLogFactory = new LoggerFactory(new[] { new Microsoft.Extensions.Logging.Debug.DebugLoggerProvider() });
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+#if DEBUG
+            optionsBuilder
+                .UseLoggerFactory(ContextLogFactory)
+                .EnableSensitiveDataLogging();
+#endif
+        }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             UpdateLogicalDeletion(ChangeTracker.Entries());
 
-            BeforeSave(out var changedEntities, out var eventChange);
+           var eventChange = BeforeSave();
 
             var ret = await base.SaveChangesAsync();
 
-            AfterSave(changedEntities, eventChange);
+            AfterSave(eventChange);
 
             return ret;
         }
@@ -171,43 +183,45 @@ namespace Fluent.Architecture.EntityFramework
 
         public virtual bool EnableLogicalDeletion { get; set; }
 
-        private void AfterSave(List<EntityEntry> changedEntities, List<FluentEventEntity> eventChange)
+       internal protected UserSessionRequest UserSessionRequest { get; internal set; }
+
+        private void AfterSave(List<FluentEventEntity> eventChange)
         {
             if (EntityChangedEventEvent == null)
             {
                 return;
             }
 
-            changedEntities.ForEach(x =>
+            eventChange.ForEach(x =>
             {
                 var fluentEventEntity = eventChange.Next();
-                SetEventChangeCurrentValue(x, fluentEventEntity);
+                SetEventChangeCurrentValue(fluentEventEntity);
                 EntityChangedEventEvent(fluentEventEntity);
             });
         }
 
-        private void BeforeSave(out List<EntityEntry> changedEntities, out List<FluentEventEntity> eventChange)
+        private List<FluentEventEntity> BeforeSave()
         {
-            changedEntities = ChangeTracker.Entries().Where(e => e.State == EntityState.Added || e.State == EntityState.Deleted || e.State == EntityState.Modified).ToList();
-            eventChange = changedEntities.Select(GetEventChange).ToList();
-
-            if (EntityChangingEventEvent == null)
+            var changedEntities = ChangeTracker.Entries().Where(e => e.State == EntityState.Added || e.State == EntityState.Deleted || e.State == EntityState.Modified).ToList();
+            var eventChange = changedEntities.Select(GetEventChange).Where(x => x != null).ToList();
+           
+            if (EntityChangingEventEvent != null)
             {
-                return;
+                eventChange.ForEach(x => EntityChangingEventEvent(x));
             }
 
-            eventChange.ForEach(x => EntityChangingEventEvent(x));
+            return eventChange;
         }
 
-        private void SetEventChangeCurrentValue(EntityEntry entityChanged, FluentEventEntity fluentEventEntity)
+        private void SetEventChangeCurrentValue(FluentEventEntity fluentEventEntity)
         {
-            var currentValuesGetValue = entityChanged.CurrentValues.GetType().GetMethod("GetValue", new[] { typeof(IProperty) });
-            var properties = entityChanged.CurrentValues.Properties.ToList();
+            var currentValuesGetValue = fluentEventEntity.ChangedEntity.CurrentValues.GetType().GetMethod("GetValue", new[] { typeof(IProperty) });
+            var properties = fluentEventEntity.ChangedEntity.CurrentValues.Properties.ToList();
 
             fluentEventEntity.Properties.ForEach(x =>
             {
                 var property = properties.Next();
-                x.CurrentValue = currentValuesGetValue.MakeGenericMethod(property.ClrType).Invoke(entityChanged.CurrentValues, new[] { property });
+                x.CurrentValue = currentValuesGetValue.MakeGenericMethod(property.ClrType).Invoke(fluentEventEntity.ChangedEntity.CurrentValues, new[] { property });
             });
         }
 
@@ -226,10 +240,19 @@ namespace Fluent.Architecture.EntityFramework
                 };
             }).ToList();
 
+            var currentEntityType = entityChanged.Entity.GetType();
+
+            if (currentEntityType.GetCustomAttribute<FluentLoggingAttribute>()?.Display == EnumFluentDisplay.Hidden)
+            {
+                return null;
+            }
+
             return new FluentEventEntity
             {
                 Properties = properties,
-                CurrentEntity = entityChanged.Entity
+                CurrentEntity = entityChanged.Entity,
+                CurrentEntityType = currentEntityType,
+                ChangedEntity = entityChanged
             };
         }
     }

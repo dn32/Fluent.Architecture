@@ -39,6 +39,7 @@ namespace Fluent.Architecture.EntityFramework
 
             var dbContextType = connection.DbContextType;
             var efContext = Activator.CreateInstance(dbContextType, new object[] { connectionString }) as EfContext;
+            efContext.UserSessionRequest = userSessionRequest;
 
             CreateDB(connectionString, createDatabaseIfNotExists, efContext);
 

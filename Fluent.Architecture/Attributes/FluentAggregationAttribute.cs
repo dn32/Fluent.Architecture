@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fluent.Architecture.Core.Enumerator;
+using System;
 
 namespace Fluent.Architecture.Core.Attributes
 {
@@ -8,5 +9,16 @@ namespace Fluent.Architecture.Core.Attributes
         public string Display { get; set; }
         public string PropertyForFindByProximity { get; set; }
         public FluentFilterAttribute FluentFilter { get; set; }
+    }
+
+
+    public class FluentLoggingAttribute : Attribute
+    {
+        public EnumFluentDisplay Display { get; set; }
+
+        public FluentLoggingAttribute(EnumFluentDisplay display = EnumFluentDisplay.Show)
+        {
+            Display = display;
+        }
     }
 }
