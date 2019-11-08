@@ -194,9 +194,8 @@ namespace Fluent.Architecture.EntityFramework
 
             eventChange.ForEach(x =>
             {
-                var fluentEventEntity = eventChange.Next();
-                SetEventChangeCurrentValue(fluentEventEntity);
-                EntityChangedEventEvent(fluentEventEntity);
+                SetEventChangeCurrentValue(x);
+                EntityChangedEventEvent(x);
             });
         }
 
@@ -252,7 +251,8 @@ namespace Fluent.Architecture.EntityFramework
                 Properties = properties,
                 CurrentEntity = entityChanged.Entity,
                 CurrentEntityType = currentEntityType,
-                ChangedEntity = entityChanged
+                ChangedEntity = entityChanged,
+                EntityState = entityChanged.State
             };
         }
     }

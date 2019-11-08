@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
@@ -13,5 +14,6 @@ namespace Fluent.Architecture.Core.Models
         public object CurrentEntity { get; set; }
         public Type CurrentEntityType { get; set; }
         internal EntityEntry ChangedEntity { get; set; }
+        public EntityState EntityState { get; internal set; }
     }
 }

@@ -13,6 +13,14 @@ namespace Fluent.Architecture.Core.Extensions
             return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(jsonObject));
         }
 
+        public static string ToFluentJsonOrPrimitive(this object obj, Formatting formatting = Formatting.None)
+        {
+            if(obj == null) { return null; }
+            var type = obj.GetType();
+            if (type.IsPrimitiveOrPrimitiveNulable()) { return obj.ToString(); }
+            return obj.ToFluentJson(formatting);
+        }
+
         public static string ToFluentJson(this object obj, Formatting formatting = Formatting.None)
         {
             return JsonConvert.SerializeObject(obj, formatting, JsonSerializerSettings);
