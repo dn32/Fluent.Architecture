@@ -108,7 +108,8 @@ namespace Fluent.Architecture.Test
 
         public virtual TModel GetNew()
         {
-            return new FluentAPIController<TModel>().ExampleData();
+            throw new NotImplementedException();
+         //   return new FluentAPIController<TModel>().ExampleData();
         }
 
         public virtual TModel Execute(Func<FluentAPIController<TModel>, DefaultResult<TModel>> actionMethod)

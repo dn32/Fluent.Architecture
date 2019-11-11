@@ -190,7 +190,7 @@ namespace Fluent.Architecture.EntityFramework
 
         #region ENTITY ITEMS
 
-        public virtual async Task<TE> FindAsync(TE entity) => await FindSelectAsync<TE>(entity);
+        public virtual async Task<TE> FindAsync(TE entity) => await FindSelectAsync(entity);
 
         public async Task<TO> FindSelectAsync<TO>(TO entity) where TO : BaseEntity
         {
@@ -220,7 +220,6 @@ namespace Fluent.Architecture.EntityFramework
 
             return null;
         }
-
 
         public virtual async Task<bool> ExistsAsync(TE entity, bool includeExcludedLogically = false)
         {

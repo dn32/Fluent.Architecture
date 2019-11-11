@@ -12,7 +12,7 @@ namespace Fluent.Architecture.Controllers
 {
     [Route("/api/[controller]/[action]")]
     [ApiController]
-    public class FluentAPIController<T> : FluentController<T> where T : FluentEntity, new()
+    public class FluentAPIController<T> : FluentController<T> where T : FluentEntity, new() // Nunca defina como abstract, pois o controle de log espera essa classe como concreta
     {
         #region MANY
 

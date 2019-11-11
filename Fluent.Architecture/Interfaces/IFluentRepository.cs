@@ -19,6 +19,7 @@ namespace Fluent.Architecture.Core.Interfaces
 
         void RemoveRange(IFluentSpecification spec);
 
+        TX Detach<TX>(TX entity);
         Task RemoveRangeAsync(params TE[] entities);
         Task<TE> UpdateAsync(TE entity);
         Task UpdateRangeAsync(IEnumerable<TE> entities);

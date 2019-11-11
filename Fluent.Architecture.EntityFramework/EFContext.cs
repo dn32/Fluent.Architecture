@@ -29,7 +29,7 @@ namespace Fluent.Architecture.EntityFramework
     /// </summary>
     public abstract class EfContext : DbContext
     {
-        internal protected delegate void EntityChangeEventHandler(FluentEventEntity fluentEventEntity);
+        internal protected delegate void EntityChangeEventHandler(ICollection<FluentEventEntity> fluentEventEntity);
         internal protected event EntityChangeEventHandler EntityChangingEventEvent;
         internal protected event EntityChangeEventHandler EntityChangedEventEvent;
 
@@ -71,7 +71,7 @@ namespace Fluent.Architecture.EntityFramework
                     var entity = modelBuilder.Entity(type);
                     entity.HasKey(keys);
 
-                    if (UseLogicalDeletion)
+                    if (UseLogicalDeletion(type, entity, modelBuilder))
                     {
                         entity.AddQueryFilter(IsAvailable());
                     }
@@ -163,7 +163,7 @@ namespace Fluent.Architecture.EntityFramework
         {
             UpdateLogicalDeletion(ChangeTracker.Entries());
 
-           var eventChange = BeforeSave();
+            var eventChange = BeforeSave();
 
             var ret = await base.SaveChangesAsync();
 
@@ -176,40 +176,28 @@ namespace Fluent.Architecture.EntityFramework
 
         protected virtual LambdaExpression IsAvailable()
         {
-            throw new IncorrectDevelopmentException($"The Enable {nameof(UseLogicalDeletion)} property set to 'true' requires the override of the {nameof(IsAvailable)} method in the context of the entity framework. Do not invoke the base.");
+            throw new IncorrectDevelopmentException($"The Enable {nameof(UseLogicalDeletion)} method set to 'true' requires the override of the {nameof(IsAvailable)} method in the context of the entity framework. Do not invoke the base.");
         }
 
-        protected virtual bool UseLogicalDeletion => false;
+        protected virtual bool UseLogicalDeletion(Type type, EntityTypeBuilder entity, ModelBuilder modelBuilder) => false;
 
         public virtual bool EnableLogicalDeletion { get; set; }
 
-       internal protected UserSessionRequest UserSessionRequest { get; internal set; }
+        internal protected UserSessionRequest UserSessionRequest { get; internal set; }
 
-        private void AfterSave(List<FluentEventEntity> eventChange)
+        private void AfterSave(List<FluentEventEntity> eventChangeList)
         {
-            if (EntityChangedEventEvent == null)
-            {
-                return;
-            }
-
-            eventChange.ForEach(x =>
-            {
-                SetEventChangeCurrentValue(x);
-                EntityChangedEventEvent(x);
-            });
+            if (EntityChangedEventEvent == null) { return; }
+            eventChangeList.ForEach(x => SetEventChangeCurrentValue(x));
+            EntityChangedEventEvent.Invoke(eventChangeList);
         }
 
         private List<FluentEventEntity> BeforeSave()
         {
             var changedEntities = ChangeTracker.Entries().Where(e => e.State == EntityState.Added || e.State == EntityState.Deleted || e.State == EntityState.Modified).ToList();
-            var eventChange = changedEntities.Select(GetEventChange).Where(x => x != null).ToList();
-           
-            if (EntityChangingEventEvent != null)
-            {
-                eventChange.ForEach(x => EntityChangingEventEvent(x));
-            }
-
-            return eventChange;
+            var eventChangeList = changedEntities.Select(GetEventChange).Where(x => x != null).ToList();
+            EntityChangingEventEvent?.Invoke(eventChangeList);
+            return eventChangeList;
         }
 
         private void SetEventChangeCurrentValue(FluentEventEntity fluentEventEntity)

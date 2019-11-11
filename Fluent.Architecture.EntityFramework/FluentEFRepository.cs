@@ -83,6 +83,11 @@ namespace Fluent.Architecture.EntityFramework
 
         #region COMPOSITION
 
+        public TX Detach<TX>(TX entity)
+        {
+            Session.Entry(entity).State = EntityState.Detached;
+            return entity;
+        }
 
         /* Unmerged change from project 'Fluent.Architecture.EntityFramework (netcoreapp3.0)'
         Before:
@@ -394,7 +399,7 @@ namespace Fluent.Architecture.EntityFramework
                 Session.EnableLogicalDeletion = false;
             }
 
-            var currentEntity = await Service.FindAsync(entity);
+            var currentEntity = await Service.FindAsync(entity, true, false);
 
             TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
 

@@ -84,7 +84,9 @@ namespace Fluent.Architecture.Services
         /// </returns>    
         public virtual async Task<List<TO>> ListSelectAsync<TO>(IFluentSpecification<TO> spec, FluentPagination pagination = null)
         {
-            return await Repository.ListSelectAsync(spec, pagination);
+            var list = await Repository.ListSelectAsync(spec, pagination);
+            list.ForEach(x => Repository.Detach(x));
+            return list;
         }
 
         /// <summary>
@@ -101,7 +103,9 @@ namespace Fluent.Architecture.Services
         /// </returns>
         public virtual async Task<List<T>> ListAsync(IFluentSpecification spec, FluentPagination pagination = null)
         {
-            return await Repository.ListAsync(spec, pagination);
+            var list = await Repository.ListAsync(spec, pagination);
+            list.ForEach(x => Repository.Detach(x));
+            return list;
         }
 
         /// <summary>
@@ -116,7 +120,11 @@ namespace Fluent.Architecture.Services
         /// <returns>
         /// O item referente à consulta ou nulo.
         /// </returns>
-        public virtual async Task<TO> FirstOrDefaultSelectAsync<TO>(IFluentSpecification<TO> spec) => await Repository.FirstOrDefaultSelectAsync(spec);
+        public virtual async Task<TO> FirstOrDefaultSelectAsync<TO>(IFluentSpecification<TO> spec)
+        {
+            var entity = await Repository.FirstOrDefaultSelectAsync(spec);
+            return Repository.Detach(entity);
+        }
 
         /// <summary>
         /// Executa uma solicitação baseada em uma especificação e retorna um resultado ou nulo quando a consulta não é satisfeita.
@@ -128,11 +136,24 @@ namespace Fluent.Architecture.Services
         /// O item referente à consulta ou nulo.
         /// </returns>
 
-        public virtual async Task<T> FirstOrDefaultAsync(IFluentSpecification spec) => await Repository.FirstOrDefaultAsync(spec);
+        public virtual async Task<T> FirstOrDefaultAsync(IFluentSpecification spec)
+        {
+            var entity = await Repository.FirstOrDefaultAsync(spec);
+            return Repository.Detach(entity);
+        }
 
-        public virtual async Task<T> SingleOrDefaultAsync(IFluentSpecification spec) => await Repository.SingleOrDefaultAsync(spec);
+        public virtual async Task<T> SingleOrDefaultAsync(IFluentSpecification spec)
+        {
+            var entity = await Repository.SingleOrDefaultAsync(spec);
+            return Repository.Detach(entity);
+        }
 
-        public virtual async Task<TO> SingleOrDefaultSelectAsync<TO>(IFluentSpecification<TO> spec) => await Repository.SingleOrDefaultSelectAsync<TO>(spec);
+        /// IsAsNoTracking
+        public virtual async Task<TO> SingleOrDefaultSelectAsync<TO>(IFluentSpecification<TO> spec)
+        {
+            var entity = await Repository.SingleOrDefaultSelectAsync(spec);
+            return Repository.Detach(entity);
+        }
 
         /// <summary>
         /// Retorna a quantidade de itens existentes que satisfaçam a uma especificação
@@ -195,6 +216,7 @@ namespace Fluent.Architecture.Services
         }
 
         /// <summary>
+        /// IsAsNoTracking
         /// Adiciona um item ao banco de dados.
         /// </summary>
         /// <param name="entity">
@@ -207,11 +229,13 @@ namespace Fluent.Architecture.Services
 
             if (await ExistsAsync(entity, true, true))
             {
+                // IsAsNoTracking
                 return await UpdateAsync(entity); // Restore deleted
             }
             else
             {
-                return await Repository.AddAsync(entity);
+                entity = await Repository.AddAsync(entity);
+                return Repository.Detach(entity);
             }
         }
 
@@ -234,13 +258,16 @@ namespace Fluent.Architecture.Services
             }
         }
 
-        public virtual async Task<T> FindAsync(T entity, bool checkId = true)
+        /// IsAsNoTracking
+        public virtual async Task<T> FindAsync(T entity, bool checkId = true, bool detach = true)
         {
             Validation.Find(entity, checkId);
-            return await Repository.FindAsync(entity);
+            entity = await Repository.FindAsync(entity);
+            return detach ? Repository.Detach(entity) : entity;
         }
 
         /// <summary>
+        /// IsAsNoTracking
         /// Atualiza um item do banco de dados baseado em seu identificador.
         /// </summary>
         /// <param name="entity">
@@ -250,7 +277,8 @@ namespace Fluent.Architecture.Services
         public virtual async Task<T> UpdateAsync(T entity)
         {
             await Validation.UpdateAsync(entity);
-            return await Repository.UpdateAsync(entity);
+            entity = await Repository.UpdateAsync(entity);
+            return Repository.Detach(entity);
         }
 
         /// <summary>
@@ -269,19 +297,19 @@ namespace Fluent.Architecture.Services
         }
 
         /// <summary>
+        /// IsAsNoTracking
         /// Remove um item do banco de dados baseado em seu identificador.
         /// </summary>
         /// <param name="entity">
         /// Entidade a ser removida.
         /// </param>
-
         public virtual async Task<T> RemoveAsync(T entity)
         {
             await Validation.RemoveAsync(entity);
-            return await Repository.RemoveAsync(entity);
+            entity = await Repository.RemoveAsync(entity);
+            return Repository.Detach(entity);
         }
 
-        // Todo2 documentar
 
         public virtual async Task RemoveRangeAsync(params T[] entities)
         {
