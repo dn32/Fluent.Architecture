@@ -13,7 +13,7 @@ namespace Fluent.Architecture.Core.Models
 #pragma warning restore CA2227 // Collection properties should be read only
         public object CurrentEntity { get; set; }
         public Type CurrentEntityType { get; set; }
-        internal EntityEntry ChangedEntity { get; set; }
-        public EntityState EntityState { get; internal set; }
+        public EntityEntry ChangedEntity { get; set; }
+        public EntityState EntityState { get; set; }
     }
 }

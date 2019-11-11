@@ -675,7 +675,7 @@ namespace Fluent.Architecture.Extensions
             return friendlyName;
         }
 
-        public static T FluentCast<T>(this object obj)
+        public static T FluentCast<T>(this object obj, bool throwException = true)
         {
             if (obj == null)
             {
@@ -686,10 +686,12 @@ namespace Fluent.Architecture.Extensions
             {
                 return value;
             }
-            else
+            else if (throwException)
             {
-                throw new InvalidOperationException($"{obj.GetType().Name} is not a {typeof(T).Name}.");
+                 throw new InvalidOperationException($"{obj.GetType().Name} is not a {typeof(T).Name}.");
             }
+
+            return default;
         }
 
         public static Type GetSpecializedService(this Type serviceType)

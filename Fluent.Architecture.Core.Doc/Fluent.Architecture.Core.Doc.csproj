@@ -1,5 +1,5 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+  
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.2;netcoreapp3.0</TargetFrameworks>
     <LangVersion>8</LangVersion>
@@ -26,18 +26,6 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.0.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Attributes\**" />
-    <Compile Remove="Services\**" />
-    <Content Remove="Attributes\**" />
-    <Content Remove="Services\**" />
-    <EmbeddedResource Remove="Attributes\**" />
-    <EmbeddedResource Remove="Services\**" />
-    <None Remove="Attributes\**" />
-    <None Remove="Services\**" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <ProjectReference Include="..\Fluent.Architecture\Fluent.Architecture.Core.csproj" />

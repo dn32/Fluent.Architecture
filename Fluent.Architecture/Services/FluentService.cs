@@ -229,13 +229,12 @@ namespace Fluent.Architecture.Services
 
             if (await ExistsAsync(entity, true, true))
             {
-                // IsAsNoTracking
                 return await UpdateAsync(entity); // Restore deleted
             }
             else
             {
-                entity = await Repository.AddAsync(entity);
-                return Repository.Detach(entity);
+                return await Repository.AddAsync(entity);
+                //return Repository.Detach(entity);//Detach aqui não permite salvar a entidade
             }
         }
 
@@ -277,8 +276,8 @@ namespace Fluent.Architecture.Services
         public virtual async Task<T> UpdateAsync(T entity)
         {
             await Validation.UpdateAsync(entity);
-            entity = await Repository.UpdateAsync(entity);
-            return Repository.Detach(entity);
+            return await Repository.UpdateAsync(entity);
+            //return Repository.Detach(entity);//Detach aqui não permite salvar a entidade
         }
 
         /// <summary>
@@ -306,8 +305,8 @@ namespace Fluent.Architecture.Services
         public virtual async Task<T> RemoveAsync(T entity)
         {
             await Validation.RemoveAsync(entity);
-            entity = await Repository.RemoveAsync(entity);
-            return Repository.Detach(entity);
+            return await Repository.RemoveAsync(entity);
+            //return Repository.Detach(entity);//Detach aqui não permite salvar a entidade
         }
 
 
