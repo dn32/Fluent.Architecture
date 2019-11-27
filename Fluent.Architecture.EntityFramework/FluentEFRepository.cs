@@ -81,13 +81,14 @@ namespace Fluent.Architecture.EntityFramework
 
         #endregion
 
-        #region COMPOSITION
 
         public TX Detach<TX>(TX entity)
         {
             Session.Entry(entity).State = EntityState.Detached;
             return entity;
         }
+
+        #region COMPOSITION
 
         /* Unmerged change from project 'Fluent.Architecture.EntityFramework (netcoreapp3.0)'
         Before:
