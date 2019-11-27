@@ -39,12 +39,12 @@ namespace Fluent.Architecture.Core.Util
             return new string(stringChars);
         }
 
-        internal static object GetRandomValue(PropertyInfo property)
+        internal static object GetRandomValue(PropertyInfo property, int max = 0)
         {
             if (property == null) { throw new ArgumentNullException(nameof(property)); }
             if (!property.PropertyType.GetNonNullableType().IsPrimitive()) { throw new InvalidOperationException($"Operation valid for primitive types only. {nameof(GetRandomValue)}"); }
 
-            return property.GetExampleValue();
+            return property.GetExampleValue(max);
         }
     }
 }

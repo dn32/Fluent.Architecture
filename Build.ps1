@@ -1,4 +1,4 @@
-$dirBase = "D:\Projetos\dn32\Fluent.Architecture\"
+$dirBase = "G:\Projetos\dn32\Fluent.Architecture\"
 
 function CheckResult {
     param( $result, $sucess )
@@ -69,7 +69,7 @@ For ($i=0; $i -lt $dirsPack.Length; $i++)
    $result = dotnet pack -c release "$dirBase$dir"
    CheckResult $result "Pack $dir Sucess!"
    
-   get-childitem "$dir\bin\release\*.nupkg" | foreach-object {move-item $_ -destination "C:\Users\Marcelo\Google Drive\FOut" -Force}
+   get-childitem "$dir\bin\release\*.nupkg" | foreach-object {move-item $_ -destination "D:\Drive\FOut" -Force}
 }
 
 pause

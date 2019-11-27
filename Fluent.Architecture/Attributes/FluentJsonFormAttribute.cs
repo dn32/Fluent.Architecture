@@ -10,5 +10,7 @@ namespace Fluent.Architecture.Core.Attributes
         public Type Type { get; set; }
 
         public bool IsIntermediateTable { get; set; }
+
+        public bool IsReadOnly { get; set; }
     }
 }

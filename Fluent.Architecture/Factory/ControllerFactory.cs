@@ -20,8 +20,13 @@ namespace Fluent.Architecture.Core.Factory
 
             foreach (var entity in entities)
             {
-                if (entity.GetCustomAttribute<FluentAPIControllerAttribute>()?.AutomaticGeneration == false) { return; }
+                if (entity.GetCustomAttribute<FluentAPIControllerAttribute>(true)?.AutomaticGeneration == false) { return; }
                 if (Setup.Controllers.ContainsKey(entity)) { continue; }
+
+                if (entity.GetCustomAttribute<FluentJsonFormAttribute>(true)?.IsReadOnly == true)
+                {
+                    baseController = typeof(FluentAPIReadOnlyController<>);
+                }
 
                 var typeName = entity.Name + "Controller";
                 if (feature.Controllers.Any(t => t.Name == typeName))

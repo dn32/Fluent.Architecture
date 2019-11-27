@@ -277,12 +277,13 @@ namespace Fluent.Architecture.EntityFramework
                 if (value.IsFluentNull() || value.FluentEquals(type.GetFluentDefaultValue()))
                 {
                     if (GetExistinEntityCode(compositionValue, property)) { return; }
-                    await GenerateNewEntityCodes(compositionValue, property);
+                    var attribute = property.GetCustomAttribute<FluentRandomKeyValueOnAddAttribute>();
+                    await GenerateNewEntityCodes(compositionValue, property, attribute.Max);
                 }
             }
         }
 
-        private async Task GenerateNewEntityCodes(object compositionValue, PropertyInfo property)
+        private async Task GenerateNewEntityCodes(object compositionValue, PropertyInfo property, int max = 0)
         {
             List<object> notExists;
             do
@@ -290,7 +291,7 @@ namespace Fluent.Architecture.EntityFramework
                 var list = new object[10];
                 for (int i = 0; i < list.Length; i++)
                 {
-                    list[i] = RandomUtil.GetRandomValue(property);
+                    list[i] = RandomUtil.GetRandomValue(property, max);
                 }
 
                 notExists = await ExistOnListAsync(property, compositionValue.GetType(), list); // Verificar se esse cast vai funcionar
