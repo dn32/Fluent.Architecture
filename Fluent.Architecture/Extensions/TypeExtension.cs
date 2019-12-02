@@ -65,35 +65,20 @@ namespace Fluent.Architecture.Extensions
             return info.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || info.GetCustomAttributeAny<KeyAttribute>(true);
         }
 
-        public static bool GetCustomAttributeAny<T>(this Type type, bool inherit = false) where T : Attribute
-        {
-            return type.GetCustomAttribute<T>(inherit) != null;
-        }
+        //public static bool GetCustomAttributeAny<T>(this Type type, bool inherit = false) where T : Attribute
+        //{
+        //    return type.GetCustomAttribute<T>(inherit) != null;
+        //}
 
-        public static bool GetCustomAttributeAny<T>(this PropertyInfo property, bool inherit = false) where T : Attribute
-        {
-            return property.GetCustomAttribute<T>(inherit) != null;
-        }
+        //public static bool GetCustomAttributeAny<T>(this MemberInfo methodInfo, bool inherit = false) where T : Attribute
+        //{
+        //    return methodInfo.GetCustomAttribute<T>(inherit) != null;
+        //}
 
-        public static bool GetCustomAttributeAny<T>(this TypeInfo typeInfo, bool inherit = false) where T : Attribute
-        {
-            return typeInfo.GetCustomAttribute<T>(inherit) != null;
-        }
-
-        public static bool GetCustomAttributeAny<T>(this MethodInfo methodInfo, bool inherit = false) where T : Attribute
-        {
-            return methodInfo.GetCustomAttribute<T>(inherit) != null;
-        }
-
-        public static bool GetCustomAttributeAny<T>(this MemberInfo methodInfo, bool inherit = false) where T : Attribute
-        {
-            return methodInfo.GetCustomAttribute<T>(inherit) != null;
-        }
-
-        public static bool GetCustomAttributeAny<T>(this ParameterInfo methodInfo, bool inherit = false) where T : Attribute
-        {
-            return methodInfo.GetCustomAttribute<T>(inherit) != null;
-        }
+        //public static bool GetCustomAttributeAny<T>(this ParameterInfo methodInfo, bool inherit = false) where T : Attribute
+        //{
+        //    return methodInfo.GetCustomAttribute<T>(inherit) != null;
+        //}
 
         //Todo2 doc
         public static TX Next<TX>(this List<TX> list)
@@ -673,25 +658,6 @@ namespace Fluent.Architecture.Extensions
 
             if (!string.IsNullOrWhiteSpace(complement)) { friendlyName = string.Format(complement, friendlyName); }
             return friendlyName;
-        }
-
-        public static T FluentCast<T>(this object obj, bool throwException = true)
-        {
-            if (obj == null)
-            {
-                return default;
-            }
-
-            if (obj is T value)
-            {
-                return value;
-            }
-            else if (throwException)
-            {
-                 throw new InvalidOperationException($"{obj.GetType().Name} is not a {typeof(T).Name}.");
-            }
-
-            return default;
         }
 
         public static Type GetSpecializedService(this Type serviceType)

@@ -38,4 +38,8 @@
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.19" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Fluent.Architecture.Base\Fluent.Architecture.Base.csproj" />
+  </ItemGroup>
+
 </Project>

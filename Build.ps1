@@ -30,6 +30,7 @@ echo "Cript"
 
 $dirsPack = 
 'Fluent.Architecture',
+'Fluent.Architecture.Base',
 'Fluent.Architecture.Core.Doc', 
 'Fluent.Architecture.EntityFramework',
 'Fluent.Architecture.EntityFramework.MemoryDatabase',

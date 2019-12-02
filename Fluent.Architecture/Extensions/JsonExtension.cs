@@ -26,6 +26,11 @@ namespace Fluent.Architecture.Core.Extensions
             return JsonConvert.SerializeObject(obj, formatting, JsonSerializerSettings);
         }
 
+        public static T ToFluentObject<T>(this string json)
+        {
+            return JsonConvert.DeserializeObject<T>(json, JsonSerializerSettings);
+        }
+
         public static string ToFluentJsonStringNormalized(this string text)
         {
             if (string.IsNullOrWhiteSpace(text)) { return text; }
