@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-#if NETCOREAPP3_0
+#if NETCOREAPP3_1
 
 using Microsoft.EntityFrameworkCore.Query;
 

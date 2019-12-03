@@ -143,7 +143,14 @@ namespace Fluent.Architecture.Extensions
 
             try
             {
-                obj = Activator.CreateInstance(type);
+                if (type.IsList())
+                {
+                    obj = Array.CreateInstance(type, 2);
+                }
+                else
+                {
+                    obj = Activator.CreateInstance(type);
+                }
             }
             catch (MissingMethodException)
             {

@@ -90,7 +90,7 @@ namespace Fluent.Architecture.EntityFramework
 
         #region COMPOSITION
 
-        /* Unmerged change from project 'Fluent.Architecture.EntityFramework (netcoreapp3.0)'
+        /* Unmerged change from project 'Fluent.Architecture.EntityFramework (netcoreapp3.1)'
         Before:
                 protected void UpdateCompositionList(TE entity)
         After:
@@ -346,7 +346,7 @@ namespace Fluent.Architecture.EntityFramework
         {
             var source = TransactionObjects.GetObjectInputDataInternal<TO>();
 
-#if NETCOREAPP3_0
+#if NETCOREAPP3_1
             return source.FromSqlRaw(sql, parameters);
 #else
             return source.FromSql(sql, parameters);

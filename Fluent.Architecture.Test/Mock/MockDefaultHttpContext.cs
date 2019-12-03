@@ -3,7 +3,7 @@ using System;
 
 namespace Fluent.Architecture.Test.Mock
 {
-#if NETCOREAPP3_0
+#if NETCOREAPP3_1
 
     public class MockDefaultHttpContext //: DefaultHttpContext
     {

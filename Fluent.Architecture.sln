@@ -39,7 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Automatic", "Automatic", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.Redis", "Fluent.Architecture.Redis\Fluent.Architecture.Redis.csproj", "{AF0642ED-8D64-40A5-871D-5BB737E2CC77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluent.Architecture.Base", "Fluent.Architecture.Base\Fluent.Architecture.Base.csproj", "{FC15FC84-8AC5-4104-826F-B1D7FC4106FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.Base", "Fluent.Architecture.Base\Fluent.Architecture.Base.csproj", "{FC15FC84-8AC5-4104-826F-B1D7FC4106FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

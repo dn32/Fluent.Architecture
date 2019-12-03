@@ -33,14 +33,14 @@ namespace Fluent.Architecture.Core.Doc.Controllers
         private static List<EntityModelAndName> AllEntities { get; set; }
         private static List<EntityModelAndName> AllModel { get; set; }
         private static object InitialLock { get; set; } = new object();
-        
+
         #endregion
 
         public FluentDocController()
         {
             Initialize();
         }
-        
+
         [Route("FluentDoc"), Route("FluentDoc/Index")]
         public IActionResult Index()
         {
@@ -72,7 +72,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
 
                         if (actionMethod == null) { return Content("Action not found"); }
 
-                        var actionData = GetActionData(actionMethod, type, controllerType, routeAtributeController);
+                        var actionData = GetActionData(actionMethod, type, controllerType, routeAtributeController).First();
 
                         return View(actionData);
                     }
@@ -158,7 +158,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
                               .Where(method => method.IsPublic && !method.IsDefined(typeof(NonActionAttribute)))
                               .Where(method => !method.Name.StartsWith("get_") && !method.Name.Equals("Dispose") && !method.Name.Equals("GetType") && !method.Name.StartsWith("set_"))
                               .Where(method => method.GetCustomAttribute<FluentDocAttribute>()?.Display != EnumFluentDisplay.Hidden)
-                              .Select(action =>
+                              .SelectMany(action =>
                               {
                                   return GetActionData(action, type, controllerType, routeAtributeController);
                               })
@@ -202,7 +202,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
             if (parameterInfo.GetCustomAttributeAny<FromServicesAttribute>()) { return EnumParameterSouce.Service; }
             if (orderMethod == 2 || orderMethod == 3) { return EnumParameterSouce.Body; } else return EnumParameterSouce.Query;
         }
-      
+
         internal static string GetModelLink(Type type)
         {
             var fullName = type.GetListTypeNonNull().FullName;
@@ -211,87 +211,92 @@ namespace Fluent.Architecture.Core.Doc.Controllers
             return string.Empty;
         }
 
-        private FluentActionSchema GetActionData(MethodInfo action, Type type, Type controllerType, RouteAttribute routeAtributeController)
+        private FluentActionSchema[] GetActionData(MethodInfo action, Type type, Type controllerType, RouteAttribute routeAtributeController)
         {
-            var met = action.GetCustomAttribute<HttpMethodAttribute>() ?? new HttpGetAttribute();
-            var routeAtributeAction = action.GetCustomAttribute<RouteAttribute>();
-            var routerAttribute = routeAtributeAction?.Template ?? routeAtributeController?.Template;
-            var template = routerAttribute ?? met.Template ?? action.Name;
+            var mets = action.GetCustomAttributes<HttpMethodAttribute>() ?? new List<HttpGetAttribute> { new HttpGetAttribute() };
+            return mets.Select(x => Onter(x)).ToArray();
 
-            var route = template.Replace("[controller]", controllerType.Name.Remove("Controller"), StringComparison.InvariantCultureIgnoreCase);
-            route = route.Replace("[action]", action.Name, StringComparison.InvariantCultureIgnoreCase);
-            var name = route.Split("/").Last();
-            var method = met.HttpMethods.FirstOrDefault().Replace("DELETE", "DEL");
-            var methodName = action.Name;
-
-            var returnType = GetReturn(action);
-
-            var orderMethod = method switch
+            FluentActionSchema Onter(HttpMethodAttribute met)
             {
-                "GET" => 1,
-                "POST" => 2,
-                "PUT" => 3,
-                "DEL" => 4,
-                _ => 5,
-            };
+                var routeAtributeAction = action.GetCustomAttribute<RouteAttribute>();
+                var routerAttribute = routeAtributeAction?.Template ?? routeAtributeController?.Template;
+                var template = routerAttribute ?? met.Template ?? action.Name;
 
-            var parameters = action.GetParameters().Select(x =>
-                            new DocParameter
-                            {
-                                Link = GetModelLink(x.ParameterType),
-                                Type = x.ParameterType,
-                                Name = x.Name,
-                                Description = (x.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? x.GetCustomAttribute<FluentJsonPropertyAttribute>(true)?.desc ?? x.Name).G(),
-                                Source = GetParameterSource(x, orderMethod),
-                                Example = x.ParameterType.GetExampleValueString()
-                            }).ToList();
+                var route = template.Replace("[controller]", controllerType.Name.Remove("Controller"), StringComparison.InvariantCultureIgnoreCase);
+                route = route.Replace("[action]", action.Name, StringComparison.InvariantCultureIgnoreCase);
+                var name = route.Split("/").Last();
+                var method = met.HttpMethods.FirstOrDefault().Replace("DELETE", "DEL");
+                var methodName = action.Name;
 
-            var description = action.GetCustomAttribute<DescriptionAttribute>()?.Description;
-            var fluentAction = action.GetCustomAttribute<FluentActionAttribute>();
+                var returnType = GetReturn(action);
 
-            if (fluentAction?.Pagination == true)
-            {
-                parameters.AddRange(new[] {
+                var orderMethod = method switch
+                {
+                    "GET" => 1,
+                    "POST" => 2,
+                    "PUT" => 3,
+                    "DEL" => 4,
+                    _ => 5,
+                };
+
+                var parameters = action.GetParameters().Select(x =>
+                                new DocParameter
+                                {
+                                    Link = GetModelLink(x.ParameterType),
+                                    Type = x.ParameterType,
+                                    Name = x.Name,
+                                    Description = (x.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? x.GetCustomAttribute<FluentJsonPropertyAttribute>(true)?.desc ?? x.Name).G(),
+                                    Source = GetParameterSource(x, orderMethod),
+                                    Example = x.ParameterType.GetExampleValueString()
+                                }).ToList();
+
+                var description = action.GetCustomAttribute<DescriptionAttribute>()?.Description;
+                var fluentAction = action.GetCustomAttribute<FluentActionAttribute>();
+
+                if (fluentAction?.Pagination == true)
+                {
+                    parameters.AddRange(new[] {
                     new DocParameter("CurrentPage", typeof(string), EnumParameterSouce.Header, "The current page", "1"),
                     new DocParameter("ItemsPerPage", typeof(string), EnumParameterSouce.Header, "The number of items per page", "10"),
                     new DocParameter("StartAtZero", typeof(bool), EnumParameterSouce.Header, "If the first page is 0", "true")
                 });
-            }
+                }
 
-            if (fluentAction?.DynamicSpec == true)
-            {
-                parameters.AddRange(new[] {
+                if (fluentAction?.DynamicSpec == true)
+                {
+                    parameters.AddRange(new[] {
                     //new DocParameter("PropertyToIgnore", typeof(string), EnumParameterSouce.Header, "The properties you want to ignore in the query", "Code,Adress.Code"),
                     new DocParameter("PropertyToShow", typeof(string), EnumParameterSouce.Header, "The properties you want to get in the query", "LastName,FirstName,Code,Andress.Name".G()),
                     new DocParameter("PropertyToOrder", typeof(string), EnumParameterSouce.Header, "The properties by which to sort", "LastName,FirstName".G())
                 });
+                }
+
+
+                if (Setup.Config.Config.JwtInfo != null)
+                {
+                    parameters.Add(new DocParameter("Authorization", typeof(string), EnumParameterSouce.Header, "The authentication Token", "Bearer xxxxx"));
+                }
+
+                var action_ = new FluentActionSchema
+                {
+                    ControllerType = controllerType,
+                    EntityType = type,
+                    Action = action,
+                    Name = name,
+                    Route = route,
+                    Method = method,
+                    OrderMethod = orderMethod,
+                    Parameters = parameters,
+                    Description = description.G(),
+                    ApiBaseUrl = FluentDocExtension.ApiBaseUrl,
+                    ReturnType = returnType,
+                    MethodName = methodName
+                };
+
+                action_.Example = GetExampleAction(action_);
+
+                return action_;
             }
-
-
-            if (Setup.Config.Config.JwtInfo != null)
-            {
-                parameters.Add(new DocParameter("Authorization", typeof(string), EnumParameterSouce.Header, "The authentication Token", "Bearer xxxxx"));
-            }
-
-            var action_ = new FluentActionSchema
-            {
-                ControllerType = controllerType,
-                EntityType = type,
-                Action = action,
-                Name = name,
-                Route = route,
-                Method = method,
-                OrderMethod = orderMethod,
-                Parameters = parameters,
-                Description = description.G(),
-                ApiBaseUrl = FluentDocExtension.ApiBaseUrl,
-                ReturnType = returnType,
-                MethodName = methodName
-            };
-
-            action_.Example = GetExampleAction(action_);
-
-            return action_;
         }
 
         private List<string> JsonToQueryString(string json)
@@ -344,7 +349,7 @@ xhr.addEventListener(""readystatechange"", function() {{
 ";
             return example;
         }
-      
+
         private void Initialize()
         {
             lock (InitialLock)

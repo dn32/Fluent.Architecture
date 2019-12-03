@@ -17,7 +17,7 @@ where lower({collumn}) is not null and UTL_MATCH.jaro_winkler_similarity(lower({
 order by UTL_MATCH.jaro_winkler_similarity(lower({collumn}), lower({{0}})) DESC
 ";
 
-#if NETCOREAPP3_0
+#if NETCOREAPP3_1
             var dbSet = query.FluentCast<DbSet<T>>();
             return dbSet.FromSqlRaw(sql, term);
 #else

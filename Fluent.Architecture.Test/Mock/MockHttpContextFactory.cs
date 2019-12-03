@@ -7,7 +7,7 @@ namespace Fluent.Architecture.Test.Mock
     {
         public static HttpContext Create(IHeaderDictionary Headers)
         {
-#if NETCOREAPP3_0
+#if NETCOREAPP3_1
             throw new NotImplementedException();
 #else
             return new MockDefaultHttpContext(Headers);

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 
-#if NETCOREAPP3_0
+#if NETCOREAPP3_1
 using Fluent.Architecture.Extensions;
 #else
 #endif
@@ -29,7 +29,7 @@ namespace Fluent.Architecture.EntityFramework.Specifications
         {
             IgnoreOrder = true;
 
-#if NETCOREAPP3_0
+#if NETCOREAPP3_1
             var dbSet = query.FluentCast<DbSet<TE>>();
             return dbSet.FromSqlRaw(Sql, Parameters);
 #else

@@ -23,8 +23,8 @@ $result = dotnet build "$dirBase\Fluent.Architecture.sln" --configuration Releas
 CheckResult $result "Build 2.2 Sucess!"
 
 echo "Build 3.0"
-$result = dotnet build "$dirBase\Fluent.Architecture.sln" --configuration Release /p:CopyOutputSymbolsToPublishDirectory=false --framework netcoreapp3.0
-CheckResult $result "Build 3.0 Sucess!"
+$result = dotnet build "$dirBase\Fluent.Architecture.sln" --configuration Release /p:CopyOutputSymbolsToPublishDirectory=false --framework netcoreapp3.1
+CheckResult $result "Build 3.1 Sucess!"
 
 echo "Cript"
 
@@ -43,8 +43,8 @@ $dirsPack =
 'Fluent.Architecture.Test'
 
 $dirs = 
-'Fluent.Architecture\bin\Release\netcoreapp2.2\','Fluent.Architecture\bin\Release\netcoreapp3.0\', 
-'Fluent.Architecture.Core.Doc\bin\Release\netcoreapp2.2\','Fluent.Architecture.Core.Doc\bin\Release\netcoreapp3.0\'
+'Fluent.Architecture\bin\Release\netcoreapp2.2\','Fluent.Architecture\bin\Release\netcoreapp3.1\', 
+'Fluent.Architecture.Core.Doc\bin\Release\netcoreapp2.2\','Fluent.Architecture.Core.Doc\bin\Release\netcoreapp3.1\'
 
 $files = 
 'Fluent.Architecture.Core.dll','Fluent.Architecture.Core.dll',
