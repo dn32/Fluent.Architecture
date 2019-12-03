@@ -375,6 +375,7 @@ namespace Fluent.Architecture.Extensions
                     IsNullable = property.PropertyType.IsOfNullableType(),
                     min = property.GetCustomAttribute<MinLengthAttribute>(true)?.Length ?? 0,
                     max = property.GetCustomAttribute<MaxLengthAttribute>(true)?.Length ?? 0,
+                    ConditionalFluentUIOperationAttributes = property.GetCustomAttributes<ConditionalFluentUIOperationAttribute>()
                 };
             }
 
