@@ -13,6 +13,8 @@ namespace Fluent.Architecture.Core.Models
     {
         public string Term { get; }
 
+        public DefaultPaginationTermResult() { }
+
         public DefaultPaginationTermResult(object data, FluentPagination pagination, string term) : base(data, pagination)
         {
             Term = term;

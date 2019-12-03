@@ -89,5 +89,7 @@ namespace Fluent.Architecture.Core.Models
             _itemsPerPage = itemsPerPage;
             _startAtZero = startAtZero;
         }
+
+        public FluentPagination() { }
     }
 }

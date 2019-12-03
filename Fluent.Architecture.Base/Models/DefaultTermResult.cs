@@ -15,6 +15,8 @@ namespace Fluent.Architecture.Core.Models
     {
         public string Term { get; }
 
+        public DefaultTermResult() { }
+
         public DefaultTermResult(object data, string term) : base(data)
         {
             Term = term;

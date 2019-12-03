@@ -211,6 +211,7 @@ namespace Fluent.Architecture.Controllers
         }
 
         // DELETE api/user/Remove
+        [HttpPost]
         [HttpDelete]
         [Description("Remove item based on their identifiers")]
         public virtual async Task<DefaultResult<bool>> Remove([FromBody, Description("The entity you want to remove")] T Entity)
@@ -220,6 +221,7 @@ namespace Fluent.Architecture.Controllers
         }
 
         // DELETE api/user/RemoveRange
+        [HttpPost]
         [HttpDelete]
         [Description("Remove a collection of items based on their identifiers")]
         public virtual async Task<DefaultResult<bool>> RemoveRange([FromBody, Description("The entities you want to remove")] T[] Entities)

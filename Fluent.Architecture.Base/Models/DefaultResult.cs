@@ -13,9 +13,11 @@ using Fluent.Architecture.Core.Extensions;
 namespace Fluent.Architecture.Core.Models
 {
     [FluentDoc]
-    public class DefaultResult<T> 
+    public class DefaultResult<T>
     {
         public T Data { get; set; }
+
+        public DefaultResult() { }
 
         public DefaultResult(object data)
         {
