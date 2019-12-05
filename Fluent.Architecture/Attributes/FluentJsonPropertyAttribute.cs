@@ -66,6 +66,6 @@ namespace Fluent.Architecture.Core.Attributes
         [JsonIgnore]
         public bool IsFk { get; internal set; }
 
-        public IEnumerable<ConditionalFluentUIOperationAttribute> ConditionalFluentUIOperationAttributes { get; internal set; }
+        public IEnumerable<ConditionalFluentUIOperationAttribute> ConditionalFluentUIOperations { get; internal set; }
     }
 }

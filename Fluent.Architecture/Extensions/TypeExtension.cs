@@ -381,11 +381,11 @@ namespace Fluent.Architecture.Extensions
                     IsList = property.PropertyType.IsList(),
                     IsNullable = property.PropertyType.IsOfNullableType(),
                     min = property.GetCustomAttribute<MinLengthAttribute>(true)?.Length ?? 0,
-                    max = property.GetCustomAttribute<MaxLengthAttribute>(true)?.Length ?? 0,
-                    ConditionalFluentUIOperationAttributes = property.GetCustomAttributes<ConditionalFluentUIOperationAttribute>()
+                    max = property.GetCustomAttribute<MaxLengthAttribute>(true)?.Length ?? 0
                 };
             }
 
+            attr.ConditionalFluentUIOperations = property.GetCustomAttributes<ConditionalFluentUIOperationAttribute>();
             attr.FluentAggregation = property.GetCustomAttribute<FluentManyToManyAggregationAttribute>(true) ?? property.GetCustomAttribute<FluentAggregationAttribute>(true);
             attr.FluentComposition = property.GetCustomAttribute<FluentCompositionAttribute>(true);
             attr.IsKey = property.GetCustomAttributeAny<KeyAttribute>();

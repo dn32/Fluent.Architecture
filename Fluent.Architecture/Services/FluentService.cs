@@ -64,6 +64,12 @@ namespace Fluent.Architecture.Services
         //    TransactionObjects.Session.SaveChanges();
         //}
 
+        protected virtual void TransformToPersist(T entity, bool update) { }
+
+        protected virtual void TransformToGet(T entity) { }
+
+        protected virtual void TransformToGet<TO>(TO entity) { }
+
         #region PASSAGEM DIRETA PARA O REPOSITÓRIO
 
         // Todo - Esses métoso são redundantes. Crier um mecanismo para não necessitar reencrever essas chamadas.
@@ -86,6 +92,7 @@ namespace Fluent.Architecture.Services
         {
             var list = await Repository.ListSelectAsync(spec, pagination);
             list.ForEach(x => Repository.Detach(x));
+            list.ForEach(TransformToGet);
             return list;
         }
 
@@ -105,6 +112,7 @@ namespace Fluent.Architecture.Services
         {
             var list = await Repository.ListAsync(spec, pagination);
             list.ForEach(x => Repository.Detach(x));
+            list.ForEach(TransformToGet);
             return list;
         }
 
@@ -123,7 +131,9 @@ namespace Fluent.Architecture.Services
         public virtual async Task<TO> FirstOrDefaultSelectAsync<TO>(IFluentSpecification<TO> spec)
         {
             var entity = await Repository.FirstOrDefaultSelectAsync(spec);
-            return Repository.Detach(entity);
+            entity = Repository.Detach(entity);
+            TransformToGet(entity);
+            return entity;
         }
 
         /// <summary>
@@ -139,20 +149,26 @@ namespace Fluent.Architecture.Services
         public virtual async Task<T> FirstOrDefaultAsync(IFluentSpecification spec)
         {
             var entity = await Repository.FirstOrDefaultAsync(spec);
-            return Repository.Detach(entity);
+            entity = Repository.Detach(entity);
+            TransformToGet(entity);
+            return entity;
         }
 
         public virtual async Task<T> SingleOrDefaultAsync(IFluentSpecification spec)
         {
             var entity = await Repository.SingleOrDefaultAsync(spec);
-            return Repository.Detach(entity);
+            entity = Repository.Detach(entity);
+            TransformToGet(entity);
+            return entity;
         }
 
         /// IsAsNoTracking
         public virtual async Task<TO> SingleOrDefaultSelectAsync<TO>(IFluentSpecification<TO> spec)
         {
             var entity = await Repository.SingleOrDefaultSelectAsync(spec);
-            return Repository.Detach(entity);
+            entity = Repository.Detach(entity);
+            TransformToGet(entity);
+            return entity;
         }
 
         /// <summary>
@@ -211,6 +227,7 @@ namespace Fluent.Architecture.Services
 
         public virtual async Task AddRangeAsync(params T[] entities)
         {
+            foreach (var item in entities) { TransformToPersist(item, false); }
             await Validation.AddRangeAsync(entities);
             await Repository.AddRangeAsync(entities);
         }
@@ -225,14 +242,14 @@ namespace Fluent.Architecture.Services
 
         public virtual async Task<T> AddAsync(T entity)
         {
-            await Validation.AddAsync(entity);
-
             if (await ExistsAsync(entity, true, true))
             {
                 return await UpdateAsync(entity); // Restore deleted
             }
             else
             {
+                TransformToPersist(entity, false);
+                await Validation.AddAsync(entity);
                 return await Repository.AddAsync(entity);
                 //return Repository.Detach(entity);//Detach aqui não permite salvar a entidade
             }
@@ -262,7 +279,9 @@ namespace Fluent.Architecture.Services
         {
             Validation.Find(entity, checkId);
             entity = await Repository.FindAsync(entity);
-            return detach ? Repository.Detach(entity) : entity;
+            entity = detach ? Repository.Detach(entity) : entity;
+            TransformToGet(entity);
+            return entity;
         }
 
         /// <summary>
@@ -275,6 +294,7 @@ namespace Fluent.Architecture.Services
 
         public virtual async Task<T> UpdateAsync(T entity)
         {
+            TransformToPersist(entity, true);
             await Validation.UpdateAsync(entity);
             return await Repository.UpdateAsync(entity);
             //return Repository.Detach(entity);//Detach aqui não permite salvar a entidade
@@ -291,6 +311,7 @@ namespace Fluent.Architecture.Services
 
         public virtual async Task UpdateRangeAsync(IEnumerable<T> entities)
         {
+            foreach (var item in entities) { TransformToPersist(item, true); }
             await Validation.UpdateRangeAsync(entities);
             await Repository.UpdateRangeAsync(entities);
         }
