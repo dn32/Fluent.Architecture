@@ -6,8 +6,10 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
+using Fluent.Architecture.Core.Attributes;
 using Fluent.Architecture.Core.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -96,7 +98,12 @@ namespace Fluent.Architecture.Extensions
 
             if (value.GetType().IsNullableEnum())
             {
-                return (int)value;
+                if (value.GetType().GetCustomAttributeAny<FluentUseEnumValueToDBAttribute>())
+                {
+                    return (int)value;
+                }
+
+                return $"'{value.ToString()}'";
             }
 
             return value;
@@ -156,7 +163,7 @@ namespace Fluent.Architecture.Extensions
             GetAllFieldsDataOfObject(objectToCheck, propertyData);
             return JsonConvert.SerializeObject(propertyData, Formatting.None);
         }
-        
+
         /// <summary>
         /// Obtem todos o nome e valor de todos os campos de um objeto.
         /// </summary>

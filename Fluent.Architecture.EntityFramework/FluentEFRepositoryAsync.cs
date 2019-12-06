@@ -233,7 +233,7 @@ namespace Fluent.Architecture.EntityFramework
             foreach (var entity in entities)
             {
                 DefineForeignKeyOfCompositionsOrAggregations(entity);
-                await UpdateCompositionListAsync(entity);
+                await UpdateCompositionListAsync(entity, false);
             }
 
             await Input.AddRangeAsync(entities);
@@ -256,7 +256,7 @@ namespace Fluent.Architecture.EntityFramework
         {
             RunTheContextValidation();
             DefineForeignKeyOfCompositionsOrAggregations(entity);
-            await UpdateCompositionListAsync(entity);
+            await UpdateCompositionListAsync(entity, false);
             await CompleteEmptyKeysAsync(entity);
             var ret = await Input.AddAsync(entity);
             return ret.Entity;

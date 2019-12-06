@@ -96,7 +96,7 @@ namespace Fluent.Architecture.EntityFramework
         After:
                 protected void UpdateCompositionListAsync(TE entity)
         */
-        protected async Task UpdateCompositionListAsync(TE entity)
+        protected async Task UpdateCompositionListAsync(TE entity, bool isUpdate)
         {
             var compositionProperties = entity.GetType().GetProperties().Where(x => x.GetCustomAttributeAny<FluentCompositionAttribute>());
             foreach (var compositionProperty in compositionProperties)
@@ -107,25 +107,29 @@ namespace Fluent.Architecture.EntityFramework
 
                 if (compositionPropertyType.IsList())
                 {
-                    var listType = compositionPropertyType.GenericTypeArguments[0];
-                    var allPersistedForThisEntity = ListAllByForeignKey(entity, listType).FluentCast<IList>();
                     var compositionListValue = compositionValue.FluentCast<IList>();
-
-                    var allPersistedForThisEntityForRemove = allPersistedForThisEntity;
-                    if (compositionListValue != null)
+                  
+                    if (isUpdate)
                     {
-                        foreach (var item in compositionListValue)
+                        var listType = compositionPropertyType.GenericTypeArguments[0];
+                        var allPersistedForThisEntity = ListAllByForeignKey(entity, listType).FluentCast<IList>();
+
+                        var allPersistedForThisEntityForRemove = allPersistedForThisEntity;
+                        if (compositionListValue != null)
                         {
-                            await CompleteEmptyKeysAsync(item);
-                            allPersistedForThisEntityForRemove.Remove(item);
+                            foreach (var item in compositionListValue)
+                            {
+                                await CompleteEmptyKeysAsync(item);
+                                allPersistedForThisEntityForRemove.Remove(item);
+                            }
                         }
-                    }
 
-                    if (allPersistedForThisEntityForRemove.Count > 0)
-                    {
-                        foreach (var entityToRemove in allPersistedForThisEntityForRemove)
+                        if (allPersistedForThisEntityForRemove.Count > 0)
                         {
-                            Session.Remove(entityToRemove);
+                            foreach (var entityToRemove in allPersistedForThisEntityForRemove)
+                            {
+                                Session.Remove(entityToRemove);
+                            }
                         }
                     }
 
@@ -410,7 +414,7 @@ namespace Fluent.Architecture.EntityFramework
                 Session.EnableLogicalDeletion = true;
             }
 
-            await UpdateCompositionListAsync(entity);
+            await UpdateCompositionListAsync(entity, true);
 
             return entity;
         }
@@ -424,7 +428,7 @@ namespace Fluent.Architecture.EntityFramework
                 DefineForeignKeyOfCompositionsOrAggregations(entity);
                 var currentEntity = await Service.FindAsync(entity);
                 TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
-                await UpdateCompositionListAsync(entity);
+                await UpdateCompositionListAsync(entity, true);
             }
         }
 
