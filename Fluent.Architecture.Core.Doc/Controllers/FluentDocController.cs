@@ -99,8 +99,8 @@ namespace Fluent.Architecture.Core.Doc.Controllers
             {
                 var jsonSchema = type.GetFluentJsonSchema(false);
                 jsonSchema.FluentJsonForm.name = type.GetFriendlyName();
-
-                jsonSchema.Properties.ForEach(x =>
+                jsonSchema.Properties.Where(x => x.Property.GetCustomAttribute<FluentDocAttribute>()?.Display != EnumFluentDisplay.Hidden).ToList()
+                .ForEach(x =>
                 {
                     x.desc = x.desc.G();
                     x.Link = GetModelLink(x.Type);

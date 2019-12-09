@@ -1,6 +1,10 @@
 ﻿@using Fluent.Architecture.Core.Models
 @using Fluent.Architecture.Extensions
 @using Fluent.Architecture
+@using Fluent.Architecture.Core.Attributes
+@using System.Reflection;
+@using Fluent.Architecture.Core.Enumerator
+
 @using static Fluent.Architecture.FluentDocExtension
 
 @model FluentJsonSchema
@@ -37,6 +41,7 @@
                 @foreach (var property in Model.Properties)
                 {
                     if (property.form == Fluent.Architecture.Core.Enumerator.EnumForm.NONE) { continue; }
+                    if (property.Property.GetCustomAttribute<FluentDocAttribute>()?.Display == Fluent.Architecture.Core.Enumerator.EnumFluentDisplay.Hidden) { continue; }
 
                     var range = (property.min == property.max ? property.min.ToString() : property.min + ", " + property.max);
                     range = range == "0" ? "" : $" ({range})";

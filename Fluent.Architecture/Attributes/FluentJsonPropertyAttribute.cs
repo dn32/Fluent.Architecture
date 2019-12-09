@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection;
 
 namespace Fluent.Architecture.Core.Attributes
 {
@@ -59,6 +60,9 @@ namespace Fluent.Architecture.Core.Attributes
         public int Row { get; set; }
 
         public Type Type { get; set; }
+
+        [JsonIgnore]
+        public PropertyInfo Property { get; set; }
 
         [JsonIgnore]
         public FluentJsonFormAttribute FkDestinal { get; internal set; }

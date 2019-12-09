@@ -368,6 +368,7 @@ namespace Fluent.Architecture.Extensions
                     name = property.Name,
                     propName = property.Name.ToFluentJsonStringNormalized(),
                     Type = property.PropertyType,
+                    Property = property,
                     Enums = null,
                     FkDestinal = null,
                     FluentAggregation = null,
@@ -394,6 +395,7 @@ namespace Fluent.Architecture.Extensions
             attr.required = attr.required || property.GetCustomAttributeAny<RequiredAttribute>(true);
             attr.IsNullable = (property.PropertyType.IsOfNullableType() && !attr.required);
             attr.Type = property.PropertyType.GetNonNullableType();
+            attr.Property = property;
 
             if (attr.max == 0 && property.PropertyType.IsNumeric())
             {

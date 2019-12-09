@@ -3,7 +3,7 @@ using System;
 
 namespace Fluent.Architecture.Core.Attributes
 {
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Enum)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Enum | AttributeTargets.Property)]
     public class FluentDocAttribute : Attribute
     {
         public EnumFluentDisplay Display { get; set; }
