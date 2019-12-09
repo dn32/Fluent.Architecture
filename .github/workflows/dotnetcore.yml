@@ -9,11 +9,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Setup .NET Core 3.0
+    - name: Setup .NET Core 3.1
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.0.100
-    - name: Build with dotnet netcoreapp3.0
-      run: dotnet build Fluent.Architecture.sln --configuration Release --framework netcoreapp3.0
+        dotnet-version: 3.0.101
+    - name: Build with dotnet netcoreapp3.1
+      run: dotnet build Fluent.Architecture.sln --configuration Release --framework netcoreapp3.1
     
       
