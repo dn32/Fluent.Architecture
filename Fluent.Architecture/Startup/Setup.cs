@@ -61,15 +61,7 @@ namespace Fluent.Architecture
 
         public static List<Type> GetFluentApiEntity()
         {
-            var entities = Setup.Model.Values.ToList().Where(x => !x.IsAbstract && x.IsPublic).ToList();
-            var list = entities
-           .SelectMany(x => x.GetProperties()
-                             .Select(p => new { type = p.PropertyType, attr = p.GetCustomAttribute<FluentCompositionAttribute>() }))
-                             .Where(x => x.attr != null)
-                             .Select(x => x.type.Name == "List`1" ? x.type.GenericTypeArguments[0] : x.type)
-                             .ToList();
-
-            return entities.Where(x => !list.Any(y => y.Name == x.Name)).ToList();
+            return Setup.Model.Values.ToList().Where(x => !x.IsAbstract && x.IsPublic).ToList();
         }
 
         public static Config SetGenericServiceType(this Config configClass, Type serviceType)

@@ -84,7 +84,11 @@ namespace Fluent.Architecture.EntityFramework
 
         public TX Detach<TX>(TX entity)
         {
-            Session.Entry(entity).State = EntityState.Detached;
+            if (entity != null)
+            {
+                Session.Entry(entity).State = EntityState.Detached;
+            }
+
             return entity;
         }
 
@@ -108,7 +112,7 @@ namespace Fluent.Architecture.EntityFramework
                 if (compositionPropertyType.IsList())
                 {
                     var compositionListValue = compositionValue.FluentCast<IList>();
-                  
+
                     if (isUpdate)
                     {
                         var listType = compositionPropertyType.GenericTypeArguments[0];
