@@ -367,7 +367,7 @@ namespace Fluent.Architecture.Extensions
                     group = "",
                     name = property.Name,
                     propName = property.Name.ToFluentJsonStringNormalized(),
-                    Type = property.PropertyType.GetListTypeNonNull(),
+                    Type = property.PropertyType,
                     Property = property,
                     Enums = null,
                     FkDestinal = null,
@@ -394,7 +394,7 @@ namespace Fluent.Architecture.Extensions
             attr.IsList = property.PropertyType.IsList();
             attr.required = attr.required || property.GetCustomAttributeAny<RequiredAttribute>(true);
             attr.IsNullable = (property.PropertyType.IsOfNullableType() && !attr.required);
-            attr.Type = property.PropertyType.GetListTypeNonNull();
+            attr.Type = property.PropertyType.GetNonNullableType();
             attr.Property = property;
 
             if (attr.max == 0 && property.PropertyType.IsNumeric())
@@ -461,7 +461,7 @@ namespace Fluent.Architecture.Extensions
 
                 if (attr.FluentComposition != null)
                 {
-                    attr.FluentComposition.SetType(property.PropertyType.Name);
+                    attr.FluentComposition.SetType(property.PropertyType.GetListTypeNonNull().Name);
                     attr.FluentComposition.SetName(property.Name);
                     attr.FluentComposition.Form = GetFluentJsonSchema(property.PropertyType, tablet);
                 }

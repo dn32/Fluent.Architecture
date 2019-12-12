@@ -64,7 +64,7 @@ namespace Fluent.Architecture.Services
         //    TransactionObjects.Session.SaveChanges();
         //}
 
-        protected virtual void TransformToPersist(T entity, bool update) { }
+        protected virtual void TransformToPersist(T entity, bool? update) { }
 
         protected virtual void TransformToGet(T entity) { }
 
@@ -242,13 +242,14 @@ namespace Fluent.Architecture.Services
 
         public virtual async Task<T> AddAsync(T entity)
         {
+            TransformToPersist(entity, false);
+
             if (await ExistsAsync(entity, true, true))
             {
                 return await UpdateAsync(entity); // Restore deleted
             }
             else
             {
-                TransformToPersist(entity, false);
                 await Validation.AddAsync(entity);
                 return await Repository.AddAsync(entity);
                 //return Repository.Detach(entity);//Detach aqui não permite salvar a entidade
@@ -259,6 +260,8 @@ namespace Fluent.Architecture.Services
 
         public virtual async Task<T> AddOrUpdateAsync(T entity)
         {
+            TransformToPersist(entity, null);
+           
             var anotherServices = await Validation.AddOrUpdateAsync(entity);
             var exists = SessionRequest.ContextFluentValidationException.Inconsistencies.RemoveAll(x => x.ExceptionType == nameof(EntityExistsFluentValidationException)) > 0;
 
