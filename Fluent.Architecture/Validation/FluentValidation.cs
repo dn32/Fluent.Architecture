@@ -52,7 +52,7 @@ namespace Fluent.Architecture.Validation
         // Composition
         public virtual async Task AddAsync(T entity)
         {
-            var method = GetType().GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
+            var method = typeof(FluentValidation<T>).GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
 
             var anotherServices = await (this).ExecuteEntityAndCompositions(entity, method);
             RunTheContextValidation(anotherServices);
@@ -61,14 +61,14 @@ namespace Fluent.Architecture.Validation
         // Composition
         public virtual async Task<List<TransactionalService>> AddOrUpdateAsync(T entity)
         {
-            var method = GetType().GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
-           return await (this).ExecuteEntityAndCompositions(entity, method);
+            var method = typeof(FluentValidation<T>).GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
+            return await (this).ExecuteEntityAndCompositions(entity, method);
         }
 
         // Composition
         public virtual async Task UpdateAsync(T entity)
         {
-            var method = GetType().GetMethod(nameof(UpdateRangeAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
+            var method = typeof(FluentValidation<T>).GetMethod(nameof(UpdateRangeAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
             var anotherServices = await (this).ExecuteEntityAndCompositions(entity, method);
 
             if (KeyValuesOk)
@@ -85,7 +85,7 @@ namespace Fluent.Architecture.Validation
         {
             this.ParameterMustBeInformed(entities, nameof(entities));
             var anotherServices = new List<TransactionalService>();
-            var method = GetType().GetMethod(nameof(UpdateRangeAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
+            var method = typeof(FluentValidation<T>).GetMethod(nameof(UpdateRangeAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
 
             if (entities != null)
             {
@@ -113,7 +113,7 @@ namespace Fluent.Architecture.Validation
             var anotherServices = new List<TransactionalService>();
             if (entities != null)
             {
-                var method = GetType().GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
+                var method = typeof(FluentValidation<T>).GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
 
                 foreach (var entity in entities)
                 {
@@ -124,7 +124,7 @@ namespace Fluent.Architecture.Validation
 
             RunTheContextValidation(anotherServices);
         }
-        
+
         #endregion
 
         public virtual async Task RemoveAsync(T entity)
