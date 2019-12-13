@@ -8,6 +8,7 @@
 // ReSharper disable CommentTypo
 
 using Fluent.Architecture.Core.Attributes;
+using Fluent.Architecture.Core.Enumerator;
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Core.Util;
@@ -105,6 +106,10 @@ namespace Fluent.Architecture.EntityFramework
             var compositionProperties = entity.GetType().GetProperties().Where(x => x.GetCustomAttributeAny<FluentCompositionAttribute>());
             foreach (var compositionProperty in compositionProperties)
             {
+                var attr = compositionProperty.GetCustomAttribute<FluentCompositionAttribute>();
+                if (attr?.OnSave == EnumOnSaveReference.IGNORE) { continue; }
+                if (attr?.OnSave == EnumOnSaveReference.ADD && isUpdate) { continue; }
+
                 var compositionValue = compositionProperty.GetValue(entity);
 
                 var compositionPropertyType = compositionProperty.PropertyType;

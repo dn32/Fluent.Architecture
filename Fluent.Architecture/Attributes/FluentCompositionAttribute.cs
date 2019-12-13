@@ -1,4 +1,5 @@
-﻿using Fluent.Architecture.Core.Models;
+﻿using Fluent.Architecture.Core.Enumerator;
+using Fluent.Architecture.Core.Models;
 using System;
 
 namespace Fluent.Architecture.Core.Attributes
@@ -7,5 +8,6 @@ namespace Fluent.Architecture.Core.Attributes
     public class FluentCompositionAttribute : FluentReferenceAttribute
     {
         public FluentJsonSchema Form { get; set; }
+        public EnumOnSaveReference OnSave { get; set; } = EnumOnSaveReference.ADD_AND_UPDATE;
     }
 }
