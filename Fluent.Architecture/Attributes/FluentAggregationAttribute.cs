@@ -8,18 +8,18 @@ namespace Fluent.Architecture.Core.Attributes
     public class FluentAggregationAttribute : FluentReferenceAttribute
     {
         public string Display { get; set; }
-        public string[] PropertiesForFindByProximity { get; set; }
+        public string[] PropertiesForFind { get; set; }
 
         [JsonIgnore]
-        public string PropertyForFindByProximity
+        public string PropertyForFind
         {
             get
             {
-                return PropertiesForFindByProximity?.Length > 0 ? PropertiesForFindByProximity[0] : null;
+                return PropertiesForFind?.Length > 0 ? PropertiesForFind[0] : null;
             }
             set
             {
-                PropertiesForFindByProximity = new[] { value };
+                PropertiesForFind = new[] { value };
             }
         }
 
