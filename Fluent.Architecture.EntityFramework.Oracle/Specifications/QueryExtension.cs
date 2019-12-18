@@ -30,11 +30,22 @@ order by UTL_MATCH.jaro_winkler_similarity(lower({column}), lower({{0}})) DESC
             if (string.IsNullOrWhiteSpace(term)) { return query.OrderBy(x => x); }
 
             var sqlArray = columns.Select(column => $@"
-SELECT UTL_MATCH.JARO_WINKLER_SIMILARITY(LOWER({column}), LOWER({{0}})) PRECISAO, {table}.* FROM {table} 
-WHERE LOWER({column}) IS NOT NULL AND UTL_MATCH.JARO_WINKLER_SIMILARITY(LOWER({column}), LOWER({{0}})) >= {tolerance}");
+
+SELECT 100 PRECISAO__, {table}.* FROM {table} 
+WHERE {column} IS NOT NULL AND LOWER({column}) = LOWER('{term}')
+UNION ALL
+
+SELECT 90 PRECISAO__, {table}.* FROM {table} 
+WHERE {column} IS NOT NULL AND LOWER({column}) like LOWER('%{term}%')
+UNION ALL
+
+SELECT UTL_MATCH.JARO_WINKLER_SIMILARITY(LOWER({column}), LOWER({{0}})) PRECISAO__, {table}.* FROM {table} 
+WHERE {column} IS NOT NULL AND UTL_MATCH.JARO_WINKLER_SIMILARITY(LOWER({column}), LOWER({term})) >= {tolerance}
+
+");
 
             var union = string.Join("\nUNION ALL\n", sqlArray);
-            var sql = $@"SELECT * FROM ({union}) ORDER BY PRECISAO DESC";
+            var sql = $@"SELECT * FROM ({union}) ORDER BY PRECISAO__ DESC";
 
 #if NETCOREAPP3_1
             var dbSet = query.FluentCast<DbSet<T>>();
