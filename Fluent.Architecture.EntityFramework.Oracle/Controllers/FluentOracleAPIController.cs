@@ -15,13 +15,13 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Controllers
         [HttpGet]
         [FluentAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<DefaultPaginationResult<List<T>>> FindByProximity(
-            [Description("The property whose value will be compared")] string Property,
+            [Description("The properties whose value will be compared")] string[] properties,
             [Description("The term to use as a comparator")] string Term,
             [Description("The required acceptance percentage. The higher the value, the more demanding")][Range(0,100)]
             int Tolerance
         )
         {
-            var spec = CreateSpec<TermByProximitySpec<T>>().AddParameter(Property, Term, Tolerance);
+            var spec = CreateSpec<TermByProximitySpec<T>>().AddParameter(properties, Term, Tolerance);
             var list = await Service.ListAsync(spec);
             return await ResultAsync<List<T>>(list, LastRequestPagination);
         }
@@ -46,7 +46,7 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Controllers
 
         private async Task<DefaultPaginationResult<List<T>>> InternalListByFilterAndProximityAsync(FiltersAndTerm filtersAndTerm)
         {
-            var spec = CreateSpec<TermByFilterAndProximitySpec<T>>().SetParameter(filtersAndTerm.Filters, isList: true, filtersAndTerm.Property, filtersAndTerm.Term, filtersAndTerm.Tolerance);
+            var spec = CreateSpec<TermByFilterAndProximitySpec<T>>().SetParameter(filtersAndTerm.Filters, isList: true, filtersAndTerm.Properties, filtersAndTerm.Term, filtersAndTerm.Tolerance);
             return await ResultAsync<List<T>>(Service.ListAsync(spec), LastRequestPagination);
         }
     }

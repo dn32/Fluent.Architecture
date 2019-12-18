@@ -1,4 +1,5 @@
 ﻿using Fluent.Architecture.Core.Enumerator;
+using Newtonsoft.Json;
 using System;
 
 namespace Fluent.Architecture.Core.Attributes
@@ -7,7 +8,21 @@ namespace Fluent.Architecture.Core.Attributes
     public class FluentAggregationAttribute : FluentReferenceAttribute
     {
         public string Display { get; set; }
-        public string PropertyForFindByProximity { get; set; }
+        public string[] PropertiesForFindByProximity { get; set; }
+
+        [JsonIgnore]
+        public string PropertyForFindByProximity
+        {
+            get
+            {
+                return PropertiesForFindByProximity?.Length > 0 ? PropertiesForFindByProximity[0] : null;
+            }
+            set
+            {
+                PropertiesForFindByProximity = new[] { value };
+            }
+        }
+
         public FluentFilterAttribute FluentFilter { get; set; }
     }
 

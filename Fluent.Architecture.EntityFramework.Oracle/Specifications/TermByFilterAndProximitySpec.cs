@@ -15,7 +15,7 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Specifications
 
         private string TableName { get; set; }
 
-        private string ColumnName { get; set; }
+        private string[] Columns { get; set; }
 
         private int Tolerance { get; set; }
 
@@ -23,16 +23,16 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Specifications
 
         public bool IsList { get; set; }
 
-        public TermByFilterAndProximitySpec<T> SetParameter(Filter[] filters, bool isList, string property, string term, int tolerance)
+        public TermByFilterAndProximitySpec<T> SetParameter(Filter[] filters, bool isList, string[] properties, string term, int tolerance)
         {
             Filters = filters;
             IsList = isList;
             TableName = typeof(T).GetTableName();
             Term = term;
 
-            if (!string.IsNullOrWhiteSpace(property) && !string.IsNullOrWhiteSpace(Term))
+            if (properties?.Length > 0 && !string.IsNullOrWhiteSpace(Term))
             {
-                ColumnName = typeof(T).GetProperties().FirstOrDefault(x => x.Name.Equals(property, StringComparison.InvariantCultureIgnoreCase))?.GetColumnName() ?? throw new Exception($"Property not found '{typeof(T).Name}.{property}'");
+                Columns = properties.Select(property => typeof(T).GetProperties().FirstOrDefault(x => x.Name.Equals(property, StringComparison.InvariantCultureIgnoreCase))?.GetColumnName() ?? throw new Exception($"Property not found '{typeof(T).Name}.{property}'")).ToArray();
             }
 
             Tolerance = tolerance == 0 ? 80 : tolerance;
@@ -48,9 +48,9 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Specifications
                      .Where(expression)
                      .GetInclusions(IsList);
 
-            if (!string.IsNullOrWhiteSpace(ColumnName) && !string.IsNullOrWhiteSpace(Term))
+            if (Columns?.Length > 0 && !string.IsNullOrWhiteSpace(Term))
             {
-                query = query.WhereProximityText(Term, TableName, ColumnName, Tolerance);
+                query = query.WhereProximityText(Term, TableName, Columns, Tolerance);
             }
 
             return query.FluentDynamicProjectTo(Service);

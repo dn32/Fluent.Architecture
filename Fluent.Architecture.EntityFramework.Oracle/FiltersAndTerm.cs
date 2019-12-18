@@ -8,8 +8,8 @@ namespace Fluent.Architecture.EntityFramework.Oracle
         [Description("Query Filters")]
         public Filter[] Filters { get; set; }
 
-        [Description("The property whose value will be compared")]
-        public string Property { get; set; }
+        [Description("The properties whose value will be compared")]
+        public string[] Properties { get; set; }
 
         [Description("The term to compare with the property value")]
         public string Term { get; set; }
