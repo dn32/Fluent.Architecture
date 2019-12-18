@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Fluent.Architecture.Core.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -42,7 +43,7 @@ namespace Fluent.Architecture.Filters
 
             if (string.IsNullOrWhiteSpace(tokenRequest) || tokenRequest == "undefined" && tokenRequest == "null")
             {
-                Forbidden(context);
+                Forbidden(context, "An authentication token is required");
             }
             else
             {
@@ -52,9 +53,9 @@ namespace Fluent.Architecture.Filters
                 {
                     context.HttpContext.User = handler.ValidateToken(tokenRequest, par, out SecurityToken tok);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    Forbidden(context);
+                    Forbidden(context, ex.Message);
                 }
             }
         }
@@ -63,9 +64,15 @@ namespace Fluent.Architecture.Filters
         {
         }
 
-        private void Forbidden(AuthorizationFilterContext context)
+        private void Forbidden(AuthorizationFilterContext context, string message)
         {
-            context.Result = new ForbidResult();
+            ContentResult content = new ContentResult
+            {
+                ContentType = "application/json",
+                Content = message.ToFluentJson()
+            };
+
+            context.Result = content;
             context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
             return;
         }
