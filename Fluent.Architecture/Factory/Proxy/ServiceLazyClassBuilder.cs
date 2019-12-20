@@ -28,7 +28,7 @@ namespace Fluent.Architecture.Factory.Proxy
             var dynamicClass = BuilderClassUtil.CreateClass(parent, AssemblyName, ModuleName);
             BuilderClassUtil.CreateConstructor(dynamicClass);
             OverwriteProperties(dynamicClass, sessionId);
-            var type = dynamicClass.CreateType();
+            var type = dynamicClass.CreateType()??throw new InvalidOperationException($"ServiceLazyClassBuilder not create {parent.Name}");
             return Activator.CreateInstance(type);
         }
 
@@ -51,6 +51,7 @@ namespace Fluent.Architecture.Factory.Proxy
         private static void OverwriteProperty(Type baseType, PropertyInfo property, TypeBuilder typeBuilder, Guid sessionId)
         {
             var method = property.GetGetMethod(true);
+            if(method == null) { throw new InvalidOperationException($"Get method of {property.Name} property not found"); }
             var propertyBuilder = typeBuilder.DefineProperty(
                 property.Name,
                 PropertyAttributes.HasDefault,

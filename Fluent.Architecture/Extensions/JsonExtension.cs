@@ -29,7 +29,7 @@ namespace Fluent.Architecture.Core.Extensions
         {
             if (string.IsNullOrWhiteSpace(text)) { return text; }
 
-            if (JsonExtensionBase.JsonSerializerSettings.ContractResolver.GetType().Name == "CamelCasePropertyNamesContractResolver")
+            if (JsonExtensionBase.JsonSerializerSettings?.ContractResolver?.GetType()?.Name == "CamelCasePropertyNamesContractResolver")
             {
                 return text.ToCamelCase();
             }

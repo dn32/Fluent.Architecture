@@ -90,7 +90,7 @@ namespace Fluent.Architecture.Extensions
 
         public static int GetKeyValue(this object entity)
         {
-            if (int.TryParse(entity?.GetType()?.GetKeyProperty()?.GetValue(entity).ToString(), out var id))
+            if (int.TryParse(entity?.GetType()?.GetKeyProperty()?.GetValue(entity)?.ToString(), out var id))
             {
                 return id;
             }

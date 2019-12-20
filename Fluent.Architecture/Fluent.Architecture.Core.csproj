@@ -6,6 +6,7 @@
     <TargetFrameworks>netcoreapp2.2;netcoreapp3.1</TargetFrameworks>
     <LangVersion>8</LangVersion>
     <AssemblyOriginatorKeyFile>Fluent.Architecture.Core.snk</AssemblyOriginatorKeyFile>
+    <Nullable>warnings</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,7 +25,7 @@
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Transactions" />
   </ItemGroup>
- 
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />

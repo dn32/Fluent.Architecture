@@ -39,11 +39,11 @@ namespace Fluent.Architecture.Core.Extensions
                         expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
                         break;
                     case EnumFilterType.GREATER:
-                        expression = ExpressionUtil.Greate<T>(property.Name, filter?.Value?.ToUpper(CultureInfo.InvariantCulture) ?? "", filter.Including, property.PropertyType);
+                        expression = ExpressionUtil.Greate<T>(property.Name, filter?.Value?.ToUpper(CultureInfo.InvariantCulture) ?? "", filter?.Including??false, property.PropertyType);
                         expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
                         break;
                     case EnumFilterType.SMALLER:
-                        expression = ExpressionUtil.Smaller<T>(property.Name, filter?.Value?.ToUpper(CultureInfo.InvariantCulture) ?? "", filter.Including, property.PropertyType);
+                        expression = ExpressionUtil.Smaller<T>(property.Name, filter?.Value?.ToUpper(CultureInfo.InvariantCulture) ?? "", filter?.Including??false, property.PropertyType);
                         expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
                         break;
                     case EnumFilterType.START_WITH:
@@ -55,7 +55,7 @@ namespace Fluent.Architecture.Core.Extensions
                         expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
                         break;
                     case EnumFilterType.EQUAL:
-                        expression = ExpressionUtil.Equals<T>(property.Name, filter.Value.ToUpper(), property.PropertyType);
+                        expression = ExpressionUtil.Equals<T>(property.Name, filter?.Value?.ToUpper(CultureInfo.InvariantCulture)??"", property.PropertyType);
                         // expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
                         break;
                     case EnumFilterType.TRUE:
@@ -71,7 +71,7 @@ namespace Fluent.Architecture.Core.Extensions
                         break;
                 }
 
-                if (filter.IsReverse)
+                if (filter?.IsReverse==true)
                 {
                     expression = expression.Not();
                 }
@@ -92,7 +92,7 @@ namespace Fluent.Architecture.Core.Extensions
                     }
                 }
 
-                LastJunctionType = filter.JunctionType;
+                LastJunctionType = filter?.JunctionType ?? EnumJunctionType.AND;
             }
 
             if (allExpression == null) { allExpression = x => true; }

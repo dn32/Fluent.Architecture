@@ -154,7 +154,7 @@ namespace Fluent.Architecture.Factory
             var serviceType = GetSpecializedService(service.GetType());
 
             var type = Setup.Config.Config.UserSessionRequestType ?? typeof(UserSessionRequest);
-            var userSession = Activator.CreateInstance(type) as UserSessionRequest;
+            var userSession = Activator.CreateInstance(type).FluentCast<UserSessionRequest>();
             userSession.TransactionObjects = transactionObjects;
             userSession.SessionRequestId = sessionId;
             userSession.Services = new Dictionary<Type, BaseService>();

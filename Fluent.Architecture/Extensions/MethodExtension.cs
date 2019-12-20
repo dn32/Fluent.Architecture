@@ -56,7 +56,7 @@ namespace Fluent.Architecture.Extensions
                     continue;
                 }
 
-                var currentMethod = method.IsGenericMethod && (generics == null || generics.Length == 0) ? method.MakeGenericMethod(generics) : method;
+                var currentMethod = method.IsGenericMethod && (generics?.Length > 0) ? method.MakeGenericMethod(generics) : method;
                 var parametersOfMethodType = currentMethod.GetParameters().Select(x => x.ParameterType).ToList();
                 var parametersListType = parameters.Select(x => x.GetType()).ToList();
 
@@ -75,6 +75,12 @@ namespace Fluent.Architecture.Extensions
             //method = generics == null ? method : method.MakeGenericMethod(generics);
             if (parameters == null) { parameters = Array.Empty<object>(); }
             var localParameters = method?.GetAllParameters();
+            
+            if(localParameters?.Length != parameters.Length)
+            {
+                throw new InvalidOperationException($"the number of method parameters {method?.Name} is different from the amount informed in the call");
+            }
+
             for (var i = 0; i < parameters.Length; i++)
             {
                 if (parameters[i] != null)

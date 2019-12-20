@@ -25,25 +25,27 @@ namespace Fluent.Architecture.Filters
     {
         public override void OnException(ExceptionContext filterContext)
         {
+            if (filterContext?.Exception == null) { return; }
+
             filterContext.ExceptionHandled = true;
             filterContext.HttpContext.Response.Clear();
 
-            if (filterContext?.Exception?.InnerException is DbUpdateException exception0)
+            if (filterContext.Exception?.InnerException is DbUpdateException exception0)
             {
                 filterContext.Exception = exception0.InnerException;
             }
 
-            while (filterContext?.Exception is TargetInvocationException exception1)
+            while (filterContext.Exception is TargetInvocationException exception1)
             {
                 filterContext.Exception = exception1.InnerException;
             }
 
-            if (filterContext?.Exception is TargetInvocationException exception2)
+            if (filterContext.Exception is TargetInvocationException exception2)
             {
                 filterContext.Exception = exception2.InnerException;
             }
-            
-            if (filterContext?.Exception is ContextFluentValidationException exception)
+
+            if (filterContext.Exception is ContextFluentValidationException exception)
             {
                 var inconsistencies = exception.Inconsistencies.Select(inconsistence =>
                 {
@@ -101,6 +103,7 @@ namespace Fluent.Architecture.Filters
             }
             else
             {
+                if (filterContext.Exception == null) { return; }
                 var stackTrace = new StackTrace(filterContext.Exception, true);
                 var frame = stackTrace.GetFrame(0);
                 var line = frame.GetFileLineNumber();
@@ -108,7 +111,7 @@ namespace Fluent.Architecture.Filters
                 var result = new
                 {
                     Error = true,
-                    filterContext.Exception.Message,
+                    filterContext.Exception?.Message,
                     stackTrace,
                     frame,
                     line
@@ -121,7 +124,6 @@ namespace Fluent.Architecture.Filters
                 };
 
                 filterContext.Result = content;
-
                 filterContext.HttpContext.Response.StatusCode = 500;
             }
         }

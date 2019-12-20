@@ -40,7 +40,7 @@ namespace Fluent.Architecture.Extensions
 
             if (Object.ReferenceEquals(obj1, null))
             {
-                return default(T);
+                return default;
             }
 
             System.Runtime.Serialization.IFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
@@ -193,9 +193,9 @@ namespace Fluent.Architecture.Extensions
                 var items = objectType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).ToList();
                 var type = objectType;
 
-                while (type.Is(typeof(object)) && type != typeof(object))
+                while (type != null && type.Is(typeof(object)) && type != typeof(object))
                 {
-                    type = type.BaseType;
+                    type = type?.BaseType ?? throw new InvalidOperationException("Parameter not set");
                     items.AddRange(type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic));
                 }
 
@@ -203,7 +203,7 @@ namespace Fluent.Architecture.Extensions
                 {
                     if (item.FieldType.IsPrimitive || item.FieldType.IsValueType || item.FieldType == typeof(string))
                     {
-                        propertyData.Add(new NameAndValue { Name = item?.Name?.Replace("k__BackingField", string.Empty, StringComparison.OrdinalIgnoreCase) ?? "", Value = item.GetValue(obj) });
+                        propertyData.Add(new NameAndValue { Name = item?.Name?.Replace("k__BackingField", string.Empty, StringComparison.OrdinalIgnoreCase) ?? "", Value = item?.GetValue(obj) });
                     }
                     else if (item.FieldType.IsClass && !typeof(IEnumerable).IsAssignableFrom(item.FieldType))
                     {

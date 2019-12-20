@@ -5,6 +5,7 @@ using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Factory.Proxy;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -39,7 +40,7 @@ namespace Fluent.Architecture.Core.Factory
 
                 var dynamicClass = BuilderClassUtil.CreateClass(parentClass, typeName, moduleName);
                 BuilderClassUtil.CreateConstructor(dynamicClass);
-                var type = dynamicClass.CreateType();
+                var type = dynamicClass.CreateType() ?? throw new InvalidOperationException($"ControllerFactory not create {typeName}");
 
                 var controllerType = type.GetTypeInfo();
                 feature.Controllers.Add(controllerType);
