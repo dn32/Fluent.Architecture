@@ -75,6 +75,7 @@ namespace Fluent.Architecture.Core.TestSupport
 
             foreach (var item in list)
             {
+                if(item == null) { continue; }
                 var aggregation = SortedAggregations.Single(x => x.EntityType == item.type);
                 object value = aggregation.Instance;
 
@@ -88,8 +89,8 @@ namespace Fluent.Architecture.Core.TestSupport
 
                     if (value != null)
                     {
-                        var externalValue = item.type.GetProperty(externalKey).GetValue(value);
-                        entity.GetType().GetProperty(localKey).SetValue(entity, externalValue);
+                        var externalValue = item.type.GetProperty(externalKey)?.GetValue(value);
+                        entity.GetType().GetProperty(localKey)?.SetValue(entity, externalValue);
                     }
                 }
 

@@ -33,7 +33,7 @@ namespace Fluent.Architecture.Controllers
     {
         public virtual FluentPagination LastRequestPagination => Service.SessionRequest.Pagination;
 
-        internal protected TS Service { get; set; }
+        protected internal TS Service { get; set; }
 
         protected internal Guid SessionRequestId => Service.SessionRequestId;
 
@@ -44,6 +44,11 @@ namespace Fluent.Architecture.Controllers
         // private IDbContextTransaction Transaction { get; set; }
 
         internal protected bool TransactionIsStarted { get; set; }
+
+        protected FluentServiceController() 
+        {
+            Service = null;
+        }
 
         [NonAction]
         protected async Task<DefaultTermResult<T>> ResultAsync<T>(object data, string term)
@@ -60,7 +65,7 @@ namespace Fluent.Architecture.Controllers
             data = data.FluentResultOrValue();
             return new DefaultResult<T>(data);
         }
-        
+
         [NonAction]
         protected async Task<DefaultPaginationResult<T>> ResultAsync<T>(object data, FluentPagination pagination)
         {

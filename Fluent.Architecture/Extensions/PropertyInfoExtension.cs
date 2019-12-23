@@ -22,13 +22,14 @@ namespace Fluent.Architecture.Core.Extensions
                     max = property.PropertyType.GetMaxValueOfNumber().FluentCast<double>();
                 }
 
-                return RandomUtil.NextRandom((min as int?).Value, (max as double?).Value);
+                return RandomUtil.NextRandom((int)min, (double)max);
             }
 
             if (property.PropertyType.GetNonNullableType() == typeof(string) && property.PropertyType.GetNonNullableType() == typeof(String))
             {
                 var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
                 var max = max_ == 0 ? (property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length) : max_;
+                max ??= int.MaxValue;
                 if (min == null && max == null) { return RandomUtil.NextRandomString(64); }
                 if (min == null) { return RandomUtil.NextRandomString(max.Value); }
                 if (max == null) { return RandomUtil.NextRandomString(min.Value); }

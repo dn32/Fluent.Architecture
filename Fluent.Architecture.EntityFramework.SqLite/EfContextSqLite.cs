@@ -11,8 +11,8 @@ namespace Fluent.Architecture.EntityFramework.SqLite
     [DbType(FluentDbType.SQLITE)]
     public class EfContextSqLite : EfContext
     {
-        public static readonly LoggerFactory _myLoggerFactory = new LoggerFactory(new[] { new Microsoft.Extensions.Logging.Debug.DebugLoggerProvider() });
-     
+        public static LoggerFactory LoggerFactory;
+
         public EfContextSqLite(string connectionString) : base(connectionString)
         {
         }
@@ -22,9 +22,13 @@ namespace Fluent.Architecture.EntityFramework.SqLite
             optionsBuilder.UseSqlite(ConnectionString);
 
 #if DEBUG
+#if NETCOREAPP3_1
+            LoggerFactory ??= new LoggerFactory(new[] { new Microsoft.Extensions.Logging.Debug.DebugLoggerProvider() });
+
             optionsBuilder
-                .UseLoggerFactory(_myLoggerFactory)
+                .UseLoggerFactory(LoggerFactory)
                 .EnableSensitiveDataLogging();
+#endif
 #endif
 
             base.OnConfiguring(optionsBuilder);

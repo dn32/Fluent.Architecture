@@ -261,7 +261,7 @@ namespace Fluent.Architecture.Services
         public virtual async Task<T> AddOrUpdateAsync(T entity)
         {
             TransformToPersist(entity, null);
-           
+
             var anotherServices = await Validation.AddOrUpdateAsync(entity);
             var exists = SessionRequest.ContextFluentValidationException.Inconsistencies.RemoveAll(x => x.ExceptionType == nameof(EntityExistsFluentValidationException)) > 0;
 
@@ -349,8 +349,8 @@ namespace Fluent.Architecture.Services
         /// </summary>
         private static void ValidateInit()
         {
-            var mth = new StackTrace().GetFrame(2).GetMethod();
-            var name = mth.ReflectedType?.Name;
+            var mth = new StackTrace()?.GetFrame(2)?.GetMethod() ?? null;
+            var name = mth?.ReflectedType?.Name;
             if (name == nameof(ServiceFactory))
             {
                 return;

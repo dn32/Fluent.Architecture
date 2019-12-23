@@ -38,7 +38,7 @@ namespace Fluent.Architecture.Extensions
                 throw new ArgumentException("The type must be serializable.", "source");
             }
 
-            if (Object.ReferenceEquals(obj1, null))
+            if (obj1 is null)
             {
                 return default;
             }

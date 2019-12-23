@@ -19,10 +19,8 @@ namespace Fluent.Architecture.Core.Services
 
         public virtual async Task<string> LoginAsync(FluentAuthenticationUser user)
         {
-            if (string.IsNullOrWhiteSpace(user?.Email))
-            {
-                throw new ArgumentNullException(nameof(user.Email));
-            }
+            if (user is null) { throw new ArgumentNullException(nameof(user)); }
+            if (string.IsNullOrWhiteSpace(user.Email)) { throw new ArgumentNullException(nameof(user.Email)); }
 
             var (sucess, claims) = await AuthenticateAsync(user);
 

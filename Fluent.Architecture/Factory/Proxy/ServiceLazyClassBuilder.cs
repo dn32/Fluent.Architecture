@@ -37,10 +37,10 @@ namespace Fluent.Architecture.Factory.Proxy
         {
             var serviceProperties = typeBuilder.BaseType?.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).Where(x => x.PropertyType.IsSubclassOf(typeof(BaseService))).ToList();
 
-            //if (serviceProperties == null)
-            //{
-            //    throw new InvalidOperationException("typeBuilder not contains a BaseType");
-            //}
+            if (serviceProperties == null)
+            {
+                throw new InvalidOperationException("typeBuilder not contains a BaseType");
+            }
 
             foreach (var property in serviceProperties)
             {
@@ -67,10 +67,10 @@ namespace Fluent.Architecture.Factory.Proxy
             var getIl = getProp.GetILGenerator();
             getIl.Emit(OpCodes.Ldarg_0);
             var methodInfo = baseType.GetMethod(nameof(BaseService.GetServiceDependency));
-            //if (methodInfo == null)
-            //{
-            //    throw new MethodNotFoundException(nameof(BaseService.GetServiceDependency));
-            //}
+            if (methodInfo == null)
+            {
+                throw new InvalidOperationException($"Method not found '{nameof(BaseService.GetServiceDependency)}'");
+            }
 
             methodInfo = methodInfo.MakeGenericMethod(property.PropertyType);
             getIl.Emit(OpCodes.Ldstr, sessionId.ToString());

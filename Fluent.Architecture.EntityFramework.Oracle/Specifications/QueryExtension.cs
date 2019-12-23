@@ -21,7 +21,9 @@ order by UTL_MATCH.jaro_winkler_similarity(lower({column}), lower({{0}})) DESC
             var dbSet = query.FluentCast<DbSet<T>>();
             return dbSet.FromSqlRaw(sql, term);
 #else
+#pragma warning disable EF1000 // Possible SQL injection vulnerability.
             return query.FromSql(sql, term);
+#pragma warning restore EF1000 // Possible SQL injection vulnerability.
 #endif
         }
 
@@ -41,7 +43,9 @@ WHERE {column} IS NOT NULL AND UTL_MATCH.JARO_WINKLER_SIMILARITY(LOWER({column})
             var dbSet = query.FluentCast<DbSet<T>>();
             return dbSet.FromSqlRaw(sql, term);
 #else
+#pragma warning disable EF1000 // Possible SQL injection vulnerability.
             return query.FromSql(sql, term);
+#pragma warning restore EF1000 // Possible SQL injection vulnerability.
 #endif
         }
     }

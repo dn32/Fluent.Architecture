@@ -4,6 +4,8 @@
     <TargetFrameworks>netcoreapp2.2;netcoreapp3.1</TargetFrameworks>
     <LangVersion>8</LangVersion>
     <AssemblyOriginatorKeyFile>Fluent.Architecture.EntityFramework.MemoryDatabase.snk</AssemblyOriginatorKeyFile>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.2' ">

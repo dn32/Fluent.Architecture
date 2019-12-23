@@ -147,15 +147,17 @@ namespace Fluent.Architecture.EntityFramework
 
         protected virtual void SetEntity(EntityTypeBuilder entity, Type type) { }
 
-
-        protected static readonly LoggerFactory ContextLogFactory = new LoggerFactory(new[] { new Microsoft.Extensions.Logging.Debug.DebugLoggerProvider() });
+        protected static LoggerFactory ContextLogFactory = null;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 #if DEBUG
+#if NETCOREAPP3_1
+            ContextLogFactory ??= new LoggerFactory(new[] { new Microsoft.Extensions.Logging.Debug.DebugLoggerProvider() });
             optionsBuilder
                 .UseLoggerFactory(ContextLogFactory)
-                .EnableSensitiveDataLogging();
+                    .EnableSensitiveDataLogging();
+#endif
 #endif
         }
 

@@ -323,14 +323,15 @@ namespace Fluent.Architecture.Extensions
             return type?.GetElementType()?.GetNonNullableType() ?? type.GetNonNullableType();
         }
 
-        public static object GetMaxValueOfNumber(this Type numberType)
+        public static object GetMaxValueOfNumber(this Type numberType_)
         {
-            numberType = numberType.GetNonNullableType();
+            if (numberType_ is null) { throw new ArgumentNullException(nameof(numberType_)); }
+            var numberType = numberType_.GetNonNullableType();
 
-            if (numberType.IsNumeric())
+            if (numberType?.IsNumeric() == true)
             {
-                var value = numberType.GetField(nameof(int.MaxValue)).GetValue(null);
-                return Convert.ChangeType(value, typeof(double));
+                var value = numberType?.GetField(nameof(int.MaxValue))?.GetValue(null)?? int.MaxValue;
+                return Convert.ChangeType(value ?? int.MaxValue, typeof(double));
             }
             else
             {
@@ -436,7 +437,7 @@ namespace Fluent.Architecture.Extensions
 
                 if (attr.FluentAggregation != null)
                 {
-                    if (attr.FluentAggregation?.GetType()?.Is(typeof(FluentManyToManyAggregationAttribute)) == true)
+                    if (attr.FluentAggregation.GetType()?.Is(typeof(FluentManyToManyAggregationAttribute)) == true)
                     {
 
                     }
@@ -590,12 +591,16 @@ namespace Fluent.Architecture.Extensions
             });
         }
 
-        public static bool IsNullableEnum(this Type t)
+#nullable disable
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+        public static bool IsNullableEnum(this Type? t)
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
         {
             if (t?.IsEnum == true) { return true; }
             var u = Nullable.GetUnderlyingType(t);
             return (u != null) && u.IsEnum;
         }
+#nullable restore
 
         public static Type GetTypeByNullType(this Type t)
         {
@@ -672,7 +677,10 @@ namespace Fluent.Architecture.Extensions
 
         public static Type GetSpecializedService(this Type serviceType)
         {
-            if (serviceType?.Name == "FluentDynamicProxy")
+            if (serviceType is null) { throw new ArgumentNullException(nameof(serviceType)); }
+            if (serviceType.BaseType is null) { throw new ArgumentNullException(nameof(serviceType.BaseType)); }
+
+            if (serviceType.Name == "FluentDynamicProxy")
             {
                 serviceType = serviceType.BaseType;
             }

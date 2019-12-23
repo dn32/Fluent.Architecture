@@ -12,11 +12,8 @@ namespace Fluent.Architecture.Extensions
         {
             if (serviceType == null) { throw new ArgumentNullException(nameof(serviceType)); }
             if (SessionRequest == null) { throw new ArgumentNullException(nameof(SessionRequest)); }
-
-            if (serviceType.Name == "FluentDynamicProxy")
-            {
-                serviceType = serviceType.BaseType;
-            }
+            if (serviceType.Name == "FluentDynamicProxy") { serviceType = serviceType.BaseType; }
+            if (serviceType == null) { throw new ArgumentNullException(nameof(serviceType)); }
 
             if (!serviceType.IsSubclassOf(typeof(TransactionalService)))
             {

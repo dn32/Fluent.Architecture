@@ -5,10 +5,16 @@
     <TargetFrameworks>netcoreapp2.2;netcoreapp3.1</TargetFrameworks>
     <LangVersion>8</LangVersion>
     <AssemblyOriginatorKeyFile>Fluent.Architecture.Test.snk</AssemblyOriginatorKeyFile>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.2' ">
+    <RuntimeFrameworkVersion>2.2.8</RuntimeFrameworkVersion>
+  </PropertyGroup>
+  
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.2' ">
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Net.Http" />

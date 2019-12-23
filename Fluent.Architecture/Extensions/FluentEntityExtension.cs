@@ -164,7 +164,7 @@ namespace Fluent.Architecture.Extensions
 
         public static List<KeyValue> GetForeignKeyValues(this object entity, Type outType)
         {
-            FluentReferenceAttribute GetReference(PropertyInfo property)
+            static FluentReferenceAttribute GetReference(PropertyInfo property)
             {
                 return property.GetCustomAttribute<FluentCompositionAttribute>(true) as FluentReferenceAttribute
                             ?? property.GetCustomAttribute<FluentManyToManyAggregationAttribute>(true) ?? null;

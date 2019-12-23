@@ -91,9 +91,9 @@ namespace Fluent.Architecture.Validation
                 {
                     var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
                     var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
-                    var mindouble = min == null ? double.MinValue : double.Parse(min.ToString(), CultureInfo.InvariantCulture);
-                    var maxdouble = max == null ? double.MaxValue : double.Parse(max.ToString(), CultureInfo.InvariantCulture);
-                    var stringValue = value.ToString();
+                    var mindouble = min == null ? double.MinValue : double.Parse(min?.ToString() ?? "", CultureInfo.InvariantCulture);
+                    var maxdouble = max == null ? double.MaxValue : double.Parse(max?.ToString() ?? "", CultureInfo.InvariantCulture);
+                    var stringValue = value?.ToString() ?? "";
                     if (stringValue.Contains(".")) { stringValue = stringValue.Split(".")[0]; }
                     if (stringValue.Contains(",")) { stringValue = stringValue.Split(",")[0]; }
                     var valuedoble = double.Parse(stringValue, CultureInfo.InvariantCulture);
@@ -121,6 +121,7 @@ namespace Fluent.Architecture.Validation
                     }
 
                     var maxint = Convert.ChangeType(max, typeof(int), CultureInfo.InvariantCulture) as int?;
+                    maxint ??= 0;
                     maxint = maxint == 0 ? int.MaxValue : maxint;
                     if (!new MaxLengthAttribute(maxint.Value).IsValid(value))
                     {
@@ -176,7 +177,7 @@ namespace Fluent.Architecture.Validation
                 if (property.GetCustomAttributeAny<FluentRandomKeyValueOnAddAttribute>(true)) { continue; }
                 if (!string.IsNullOrWhiteSpace(compositionProperty))
                 {
-                    if(property.GetCustomAttribute<FluentJsonPropertyAttribute>(true)?.form == Core.Enumerator.EnumForm.HIDDEN)
+                    if (property.GetCustomAttribute<FluentJsonPropertyAttribute>(true)?.form == Core.Enumerator.EnumForm.HIDDEN)
                     {
                         continue;
                     }

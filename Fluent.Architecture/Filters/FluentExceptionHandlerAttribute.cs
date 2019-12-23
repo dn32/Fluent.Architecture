@@ -106,14 +106,13 @@ namespace Fluent.Architecture.Filters
                 if (filterContext.Exception == null) { return; }
                 var stackTrace = new StackTrace(filterContext.Exception, true);
                 var frame = stackTrace.GetFrame(0);
-                var line = frame.GetFileLineNumber();
+                var line = frame?.GetFileLineNumber() ?? -1;
 
                 var result = new
                 {
                     Error = true,
                     filterContext.Exception?.Message,
                     stackTrace,
-                    frame,
                     line
                 };
 
