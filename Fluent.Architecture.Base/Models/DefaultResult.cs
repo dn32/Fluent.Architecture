@@ -17,7 +17,10 @@ namespace Fluent.Architecture.Core.Models
     {
         public T Data { get; set; }
 
-        public DefaultResult() { }
+        public DefaultResult() 
+        {
+            Data = default;
+        }
 
         public DefaultResult(object data)
         {
