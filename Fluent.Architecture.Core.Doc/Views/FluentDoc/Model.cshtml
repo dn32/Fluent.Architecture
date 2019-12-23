@@ -41,7 +41,7 @@
                 @foreach (var property in Model.Properties)
                 {
                     if (property.form == Fluent.Architecture.Core.Enumerator.EnumForm.NONE) { continue; }
-                    if (property.Property.GetCustomAttribute<FluentDocAttribute>()?.Display == Fluent.Architecture.Core.Enumerator.EnumFluentDisplay.Hidden) { continue; }
+                    if (property.Property?.GetCustomAttribute<FluentDocAttribute>()?.Display == Fluent.Architecture.Core.Enumerator.EnumFluentDisplay.Hidden) { continue; }
 
                     var range = (property.min == property.max ? property.min.ToString() : property.min + ", " + property.max);
                     range = range == "0" ? "" : $" ({range})";

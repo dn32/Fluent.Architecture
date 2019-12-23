@@ -29,8 +29,8 @@ namespace Fluent.Architecture.Core.Extensions
             {
                 var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
                 var max = max_ == 0 ? (property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length) : max_;
-                max ??= int.MaxValue;
-                if (min == null && max == null) { return RandomUtil.NextRandomString(64); }
+                max ??= 64;
+                min ??= 0;
                 if (min == null) { return RandomUtil.NextRandomString(max.Value); }
                 if (max == null) { return RandomUtil.NextRandomString(min.Value); }
 

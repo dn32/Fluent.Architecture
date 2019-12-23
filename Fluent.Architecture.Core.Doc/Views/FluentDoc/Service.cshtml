@@ -48,8 +48,9 @@
                 if (action == null) { continue; }
                 //var parameters = action.Parameters?.Select(x => GetTypeName(x.Type, x.Name)).ToArray() ?? new string[] { };
                 //var paramString = string.Join(", ", parameters);
+                var actionName = action?.MethodName ?? "";
 
-                <div class="action" onclick="navegate('/FluentDoc/Action?service=@Model.FluentJsonForm.Type.GetListTypeNonNull().Name&actionName=@action.MethodName')">
+                <div class="action" onclick="navegate('/FluentDoc/Action?service=@Model.FluentJsonForm.Type.GetListTypeNonNull().Name&actionName=@actionName')">
                     <span class="method @action.Method.ToLower()">@action.Method</span>
                     <span class="name">@action.Name.G()</span>
                     <span class="description">@action.Description</span>

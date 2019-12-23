@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fluent.Architecture.EntityFramework.Oracle
 {
-#if !NETCOREAPP3_1
-
     /// <inheritdoc />
     /// <summary>
     /// Contexto do EF no net Core
@@ -19,9 +17,10 @@ namespace Fluent.Architecture.EntityFramework.Oracle
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+#if !NETCOREAPP3_1
             optionsBuilder.UseOracle(ConnectionString);
+#endif
             base.OnConfiguring(optionsBuilder);
         }
     }
-#endif
 }

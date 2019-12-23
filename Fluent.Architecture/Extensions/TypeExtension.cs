@@ -429,7 +429,10 @@ namespace Fluent.Architecture.Extensions
 
             type.GetProperties().ToList().ForEach(property =>
             {
+                if(property == null) { return; }
+
                 var attr = GetFluentJsonPropertyAttributeByProperty(property);
+                attr.Property = property;
                 if (attr.form == EnumForm.NONE)
                 {
                     return;
