@@ -1,8 +1,11 @@
 ﻿@using Fluent.Architecture
 @using static Fluent.Architecture.FluentDocExtension
 @{
-    var action = ViewContext.RouteData.Values["Action"].ToString().ToLower();
-    var controller = ViewContext.RouteData.Values["Controller"].ToString().ToLower();
+    var values = ViewContext.RouteData.Values;
+    if (values == null) { throw new InvalidOperationException("ViewContext.RouteData.Values is null"); }
+
+    var action = values["Action"]?.ToString()?.ToLower() ?? "";
+    var controller = values["Controller"]?.ToString()?.ToLower() ?? "";
 }
 
 <!DOCTYPE html>

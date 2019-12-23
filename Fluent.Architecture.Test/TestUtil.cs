@@ -39,6 +39,7 @@ namespace Fluent.Architecture.Test
             }
 
             controller.OnActionExecuted(MockActionExecutedContextFactory.Create(controller));
+            if(result == null) { return default; }
             return JsonConvert.DeserializeObject<TR>(JsonConvert.SerializeObject(result.Data));
         }
 

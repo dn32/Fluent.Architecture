@@ -6,6 +6,7 @@
     <SignAssembly>true</SignAssembly>
     <CopyOutputSymbolsToPublishDirectory>false</CopyOutputSymbolsToPublishDirectory>
     <!--<GeneratePackageOnBuild>true</GeneratePackageOnBuild>-->
+    <Nullable>warnings</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

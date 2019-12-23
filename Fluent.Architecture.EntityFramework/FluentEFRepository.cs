@@ -246,8 +246,8 @@ namespace Fluent.Architecture.EntityFramework
                             {
                                 foreach (var item in List)
                                 {
-                                    var property = item.GetType().GetProperty(ext);
-                                    property.SetValue(item, localKeyValue);
+                                    var property = item?.GetType().GetProperty(ext);
+                                    property?.SetValue(item, localKeyValue);
                                 }
                             }
                         }
@@ -291,6 +291,7 @@ namespace Fluent.Architecture.EntityFramework
                 {
                     if (GetExistinEntityCode(compositionValue, property)) { return; }
                     var attribute = property.GetCustomAttribute<FluentRandomKeyValueOnAddAttribute>();
+                    if(attribute == null) { continue; }
                     await GenerateNewEntityCodes(compositionValue, property, attribute.Max);
                 }
             }
@@ -347,7 +348,7 @@ namespace Fluent.Architecture.EntityFramework
 
         private IQueryable FromSqlByType(string sql, Type dbEntityType, params object[] parameters)
         {
-            return GetType().GetMethod(nameof(FromSqlSelect), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(dbEntityType).Invoke(this, new object[] { sql, parameters }).FluentCast<IQueryable>();
+            return GetType().GetMethod(nameof(FromSqlSelect), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)?.MakeGenericMethod(dbEntityType).Invoke(this, new object[] { sql, parameters }).FluentCast<IQueryable>();
         }
 
         internal protected IQueryable<TE> FromSql(string sql, params object[] parameters)
@@ -369,7 +370,7 @@ namespace Fluent.Architecture.EntityFramework
         internal protected ICollection ListAllNotPaginate(string sql, Type dbEntityType)
         {
             var query = FromSqlByType(sql, dbEntityType);
-            return typeof(Enumerable).GetMethod(nameof(Enumerable.ToList)).MakeGenericMethod(dbEntityType).Invoke(null, new object[] { query }).FluentCast<ICollection>();
+            return typeof(Enumerable).GetMethod(nameof(Enumerable.ToList))?.MakeGenericMethod(dbEntityType).Invoke(null, new object[] { query }).FluentCast<ICollection>();
         }
 
         #endregion
@@ -379,8 +380,8 @@ namespace Fluent.Architecture.EntityFramework
         public virtual async Task<object> FindAsync(object entity)
         {
             var type = entity.GetType();
-            var method = GetType().GetMethod(nameof(FindSelectAsync)).MakeGenericMethod(type);
-            dynamic task = method.Invoke(this, new object[] { entity });
+            var method = GetType().GetMethod(nameof(FindSelectAsync))?.MakeGenericMethod(type);
+            dynamic task = method?.Invoke(this, new object[] { entity });
             return await task;
         }
 

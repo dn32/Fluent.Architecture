@@ -302,6 +302,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
         private List<string> JsonToQueryString(string json)
         {
             var jObj = (JObject)JsonConvert.DeserializeObject(json);
+            if (jObj == null) { return default; }
             return jObj.Children().Cast<JProperty>().Select(jp => jp.Name + "=" + HttpUtility.UrlEncode(jp.Value.ToString())).ToList();
         }
 
@@ -395,6 +396,7 @@ xhr.addEventListener(""readystatechange"", function() {{
                     }).ToList();
 
                 AllModel = AllTypes.Values
+                    .Where(x => x != null)
                     .Where(x => !Setup.Model.ContainsKey(x))
                     .Where(x => !Setup.Services.ContainsKey(x))
                     .Where(x => !Setup.Repositories.ContainsKey(x))
@@ -402,12 +404,12 @@ xhr.addEventListener(""readystatechange"", function() {{
                     .Where(x => !Setup.Validations.ContainsKey(x))
                     .Where(x => !x.Is(typeof(Controller)))
                     .Where(x => !x.Is(typeof(ControllerBase)))
-                    .Where(x => !x.FullName.Contains("+"))
-                    .Where(x => !x.FullName.StartsWith("System"))
-                    .Where(x => !x.FullName.StartsWith("Windows"))
-                    .Where(x => !x.FullName.StartsWith("Microsoft"))
-                    .Where(x => !x.FullName.StartsWith("Internal"))
-                    .Where(x => !x.FullName.StartsWith("FxResources"))
+                    .Where(x => x.FullName?.Contains("+") == false)
+                    .Where(x => x.FullName?.StartsWith("System") == false)
+                    .Where(x => x.FullName?.StartsWith("Windows") == false)
+                    .Where(x => x.FullName?.StartsWith("Microsoft") == false)
+                    .Where(x => x.FullName?.StartsWith("Internal") == false)
+                    .Where(x => x.FullName?.StartsWith("FxResources") == false)
                     .Where(x => x.GetCustomAttribute<FluentDocAttribute>()?.Display == EnumFluentDisplay.Show)
                     .Select(x => new EntityModelAndName
                     {

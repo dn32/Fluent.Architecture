@@ -40,18 +40,20 @@ namespace Fluent.Architecture.EntityFramework
         /// </returns>
         public IFluentRepository<T> Create<T>(ITransactionObjects transactionObjects, FluentService<T> service) where T : BaseEntity
         {
+            if (Setup.Config?.Config?.Connections == null) { throw new IncorrectDevelopmentException($"Architecture was not initialized properly"); }
+
             var dbType = GetTheEntityDBType(typeof(T));
             if (dbType == null)
             {
                 if (Setup.Config.Config.Connections.Count == 1)
                 {
-                    dbType = Setup.Config.Config.Connections.Single().DbContextType.GetCustomAttribute<DbTypeAttribute>();
+                    dbType = Setup.Config.Config.Connections.Single().DbContextType.GetCustomAttribute<DbTypeAttribute>() ?? throw new IncorrectDevelopmentException($"The entity {typeof(T).Name} needs a database type specification. Example: [DbType (FluentDbType.ORACLE)]"); ;
                 }
+            }
 
-                if (dbType == null)
-                {
-                    throw new IncorrectDevelopmentException($"The entity {typeof(T).Name} needs a database type specification. Example: [DbType (FluentDbType.ORACLE)]");
-                }
+            if (dbType == null)
+            {
+                throw new IncorrectDevelopmentException($"The entity {typeof(T).Name} needs a database type specification. Example: [DbType (FluentDbType.ORACLE)]"); ;
             }
 
             var localType = Setup.Config?.Config?.GenericRepositoryType?.MakeGenericType(typeof(T)) ?? typeof(FluentEFRepository<T>);
@@ -69,7 +71,7 @@ namespace Fluent.Architecture.EntityFramework
 
                 if (string.IsNullOrWhiteSpace(dbType.Identifier))
                 {
-                    var conn = Setup.Config.Config.Connections.Where(x => x.DbContextType.GetCustomAttribute<DbTypeAttribute>()?.DbType == dbType.DbType);
+                    var conn = Setup.Config?.Config?.Connections.Where(x => x.DbContextType.GetCustomAttribute<DbTypeAttribute>()?.DbType == dbType.DbType);
                     if (conn.Count() > 1)
                     {
                         throw new IncorrectDevelopmentException($"More than one connection of the same type was found with the same type \"{dbType.DbType}\". Add identifiers for them.");
@@ -83,6 +85,7 @@ namespace Fluent.Architecture.EntityFramework
                 }
                 else
                 {
+                    if (Setup.Config?.Config?.Connections == null) { throw new IncorrectDevelopmentException($"Architecture was not initialized properly"); }
                     var conn = Setup.Config.Config.Connections.Where(x =>
                                     x.DbContextType.GetCustomAttribute<DbTypeAttribute>()?.DbType == dbType.DbType &&
                                     x.Identifier.Equals(dbType.Identifier, StringComparison.InvariantCultureIgnoreCase));

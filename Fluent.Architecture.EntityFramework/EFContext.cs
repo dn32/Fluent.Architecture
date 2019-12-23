@@ -97,8 +97,8 @@ namespace Fluent.Architecture.EntityFramework
                             if (property.PropertyType.IsNullable())
                             {
                                 // Converte valores de enumeradores para null quando necessário
-                                var method = GetType().GetMethod(nameof(ConvertNulableEnum), BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(property.PropertyType.GetNonNullableType());
-                                method.Invoke(this, new object[] { entity, property });
+                                var method = GetType().GetMethod(nameof(ConvertNulableEnum), BindingFlags.NonPublic | BindingFlags.Instance)?.MakeGenericMethod(property.PropertyType.GetNonNullableType());
+                                method?.Invoke(this, new object[] { entity, property });
                             }
                             else
                             {
@@ -125,7 +125,7 @@ namespace Fluent.Architecture.EntityFramework
 
                 if (property.PropertyType.GetListTypeNonNull().GetCustomAttributeAny<FluentUseEnumValueToDBAttribute>())
                 {
-                    converter = new ValueConverter<TEnum, int?>(v => v.GetHashCode() == fluentEnumValueForSetNullAttribute.Value ? null : (int?)v.GetHashCode(), v => (TEnum)Enum.ToObject(typeof(TEnum), v));
+                    converter = new ValueConverter<TEnum, int?>(v => v.GetHashCode() == fluentEnumValueForSetNullAttribute.Value ? null : (int?)v.GetHashCode(), v => (TEnum)Enum.ToObject(typeof(TEnum), v ?? 0));
                 }
                 else
                 {
@@ -210,7 +210,7 @@ namespace Fluent.Architecture.EntityFramework
             fluentEventEntity.Properties.ForEach(x =>
             {
                 var property = properties.Next();
-                x.CurrentValue = currentValuesGetValue.MakeGenericMethod(property.ClrType).Invoke(fluentEventEntity.ChangedEntity.CurrentValues, new[] { property });
+                x.CurrentValue = currentValuesGetValue?.MakeGenericMethod(property.ClrType).Invoke(fluentEventEntity.ChangedEntity.CurrentValues, new[] { property });
             });
         }
 
@@ -223,8 +223,8 @@ namespace Fluent.Architecture.EntityFramework
             {
                 return new FluentEventEntityProperty
                 {
-                    CurrentValue = currentValuesGetValue.MakeGenericMethod(x.ClrType).Invoke(entityChanged.CurrentValues, new[] { x }),
-                    OriginalValue = originalValuesGetValue.MakeGenericMethod(x.ClrType).Invoke(entityChanged.OriginalValues, new[] { x }),
+                    CurrentValue = currentValuesGetValue?.MakeGenericMethod(x.ClrType).Invoke(entityChanged.CurrentValues, new[] { x }),
+                    OriginalValue = originalValuesGetValue?.MakeGenericMethod(x.ClrType).Invoke(entityChanged.OriginalValues, new[] { x }),
                     PropertyName = x.Name
                 };
             }).ToList();

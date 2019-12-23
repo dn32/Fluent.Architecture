@@ -13,7 +13,7 @@
 
 @{
     ViewData["Title"] = Model.FluentJsonForm.name;
-    var actions = ViewBag.actions as List<FluentActionSchema>;
+    var actions = ViewBag.actions as List<FluentActionSchema> ?? throw new InvalidOperationException("actions is not  List<FluentActionSchema>");
 
     string GetTypeName(Type type, string name)
     {

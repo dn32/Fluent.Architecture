@@ -23,7 +23,7 @@ namespace Fluent.Architecture.Extensions
         {
             return info.GetCustomAttribute<T>(inherit) != null;
         }
-
+       
         public static T FluentCast<T>(this object obj, bool throwException = true)
         {
             if (obj == null)

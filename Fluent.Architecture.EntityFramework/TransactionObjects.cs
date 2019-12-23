@@ -56,7 +56,7 @@ namespace Fluent.Architecture.EntityFramework
 
         public IQueryable GetObjectInputDataInternal(Type type)
         {
-            return typeof(DbContext).GetMethod(nameof(DbContext.Set)).MakeGenericMethod(type).Invoke(Session, null).FluentCast<IQueryable>();
+            return typeof(DbContext).GetMethod(nameof(DbContext.Set))?.MakeGenericMethod(type).Invoke(Session, null).FluentCast<IQueryable>();
         }
 
         /// <summary>

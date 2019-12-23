@@ -15,6 +15,7 @@
     <AssemblyOriginatorKeyFile>Fluent.Architecture.Core.Doc.snk</AssemblyOriginatorKeyFile>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
     <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
+    <Nullable>warnings</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
