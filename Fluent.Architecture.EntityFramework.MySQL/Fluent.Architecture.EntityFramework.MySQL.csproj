@@ -4,6 +4,10 @@
     <TargetFrameworks>netcoreapp2.2;netcoreapp3.1</TargetFrameworks>
     <LangVersion>8</LangVersion>
     <AssemblyOriginatorKeyFile>Fluent.Architecture.EntityFramework.MySQL.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
+    <Nullable>warnings</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
