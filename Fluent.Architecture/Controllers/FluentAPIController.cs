@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Fluent.Architecture.Core.Models;
 using System.Collections.Generic;
 using System;
+using System.IO;
+using Fluent.Architecture.Core.Util;
 
 namespace Fluent.Architecture.Controllers
 {
@@ -163,6 +165,38 @@ namespace Fluent.Architecture.Controllers
         public virtual string JsonForm([Description("If you want to generate a tablet layout")] bool Tablet = false)
         {
             return typeof(T).GetFluentJsonSchema(Tablet).ToFluentJson();
+        }
+
+        [HttpGet]
+        [Description("Get data import template")]
+        public ActionResult ImportationTemplate(EnumTemplateType type, int addExample = 0)
+        {
+            using var workbook = DataImportationUtil.ImportationTemplateXLSX<T>(addExample);
+            var fs = new MemoryStream();
+            workbook.SaveAs(fs);
+            fs.Position = 0;
+            return new FileStreamResult(fs, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") { FileDownloadName = $"{typeof(T).Name}.xlsx" };
+        }
+
+        [HttpPost]
+        [Description("")]
+        public async Task<ActionResult> UploadImportFile(EnumTemplateType type)
+        {
+            var file = HttpContext.Request.Form.Files[0];
+            if (file.ContentType == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            {
+                using var stream = file.OpenReadStream();
+                using var workbook = await Service.ImportFileStreamAsync(stream);
+
+                var fs = new MemoryStream();
+                workbook.SaveAs(fs);
+                fs.Position = 0;
+                return new FileStreamResult(fs, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") { FileDownloadName = $"{typeof(T).Name}.xlsx" };
+            }
+            else
+            {
+                throw new InvalidOperationException("Formato de arquivo inválido");
+            }
         }
 
         #endregion               

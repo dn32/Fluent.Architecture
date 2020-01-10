@@ -49,13 +49,23 @@ namespace Fluent.Architecture.Validation
             this.Service.SessionRequest.ContextFluentValidationException.AddInconsistency(ex);
         }
 
+        public void ClearInconsistencies()
+        {
+            this.Service.SessionRequest.ContextFluentValidationException.Inconsistencies.Clear();
+        }
+
         public void RunTheContextValidation()
         {
+            if (PauseRunTheContextValidation) return;
             this.Service.SessionRequest.ContextFluentValidationException.Validate();
         }
 
+        public bool PauseRunTheContextValidation { get; set; }
+
         public void RunTheContextValidation(List<TransactionalService> anotherServices)
         {
+            if (PauseRunTheContextValidation) return;
+
             anotherServices.SelectMany(x => x.SessionRequest.ContextFluentValidationException.Inconsistencies).ToList().ForEach(ex =>
             {
                 Service.SessionRequest.ContextFluentValidationException.AddInconsistency(ex);

@@ -7,16 +7,22 @@
 
 // ReSharper disable CommentTypo
 
+using ClosedXML.Excel;
 using Fluent.Architecture.Core.Interfaces;
 using Fluent.Architecture.Core.Models;
+using Fluent.Architecture.Core.Util;
 using Fluent.Architecture.Exceptions;
 using Fluent.Architecture.Exceptions.ValidationException;
+using Fluent.Architecture.Extensions;
 using Fluent.Architecture.Factory;
 using Fluent.Architecture.Interfaces;
 using Fluent.Architecture.Validation;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Fluent.Architecture.Services
@@ -59,16 +65,44 @@ namespace Fluent.Architecture.Services
         }
 
         //Todo - ATENÇÃO! AO USAR ESSE MÉTODO, A OPERAÇÃO NÃO É MAIS TRANSACIONADA. REMOVER ISSO DEPOIS DE IMPLEMENTAR O MODELO DE COMPOSIÇÃO ENTRE AS ENTIDADES
-        //protected void SaveChanges()
-        //{
-        //    TransactionObjects.Session.SaveChanges();
-        //}
+        private void SaveChanges()
+        {
+            TransactionObjects.Session.SaveChanges();
+        }
 
         protected virtual void TransformToPersist(T entity, bool? update) { }
 
         protected virtual void TransformToGet(T entity) { }
 
         protected virtual void TransformToGet<TO>(TO entity) { }
+
+        internal virtual async Task<XLWorkbook> ImportFileStreamAsync(Stream stream)
+        {
+            var workbook = new XLWorkbook(stream);
+            var list = DataImportationUtil.ImportFileStream<T>(workbook);
+
+            foreach (var item in list)
+            {
+                try
+                {
+                    Validation.ClearInconsistencies();
+                    await AddOrUpdateAsync(item.Item2);
+                    item.Item1.Value = "Sucess!";
+                    item.Item1.Style.Font.FontColor = XLColor.FromArgb(0x04AC15);
+                }
+                catch (Exception ex)
+                {
+                    item.Item1.Style.Font.FontColor = XLColor.FromArgb(0xDC4C3F);
+                    item.Item1.Value = ex.Message.Replace("* ", "").Trim();
+                }
+            }
+
+            Validation.ClearInconsistencies();
+
+            //stream.Close();
+            //stream.Dispose();
+            return workbook;
+        }
 
         #region PASSAGEM DIRETA PARA O REPOSITÓRIO
 
