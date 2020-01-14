@@ -85,8 +85,22 @@ namespace Fluent.Architecture.Services
             {
                 try
                 {
+                    var entity = item.Item2;
                     Validation.ClearInconsistencies();
-                    await AddOrUpdateAsync(item.Item2);
+                                   
+                    if (await ExistsAsync(entity, true, true))
+                    {
+                        await Validation.UpdateAsync(entity);
+                        await Repository.UpdateAsync(entity);
+                    }
+                    else
+                    {
+                        await Validation.AddAsync(entity);
+                        await Repository.AddAsync(entity);
+                    }
+
+                    Validation.RunTheContextValidation();
+
                     item.Item1.Value = "Sucess!";
                     item.Item1.Style.Font.FontColor = XLColor.FromArgb(0x04AC15);
                 }

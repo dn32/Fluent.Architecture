@@ -179,7 +179,7 @@ namespace Fluent.Architecture.Controllers
         }
 
         [HttpPost]
-        [Description("")]
+        [Description("Data Import File Upload")]
         public async Task<ActionResult> UploadImportFile(EnumTemplateType type)
         {
             var file = HttpContext.Request.Form.Files[0];
