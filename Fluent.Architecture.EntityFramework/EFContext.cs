@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
 using Fluent.Architecture.Core.Enumerator;
+using Microsoft.Extensions.Logging.Debug;
 
 namespace Fluent.Architecture.EntityFramework
 {
@@ -152,12 +153,12 @@ namespace Fluent.Architecture.EntityFramework
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 #if DEBUG
-#if NETCOREAPP3_1
-            ContextLogFactory ??= new LoggerFactory(new[] { new Microsoft.Extensions.Logging.Debug.DebugLoggerProvider() });
+
+            ContextLogFactory ??= new LoggerFactory(new[] { new DebugLoggerProvider() });
             optionsBuilder
                 .UseLoggerFactory(ContextLogFactory)
                     .EnableSensitiveDataLogging();
-#endif
+
 #endif
         }
 

@@ -4,7 +4,6 @@ using Fluent.Architecture.Core.Models;
 using Fluent.Architecture.Core.Util;
 using Fluent.Architecture.Factory.Proxy;
 using Fluent.Architecture.Services;
-using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;

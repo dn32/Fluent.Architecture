@@ -15,7 +15,7 @@ namespace Fluent.Architecture.Core.Models
 
         public DefaultPaginationResult() : base() { }
 
-        public DefaultPaginationResult(object data, FluentPagination pagination) : base(data)
+        public DefaultPaginationResult(T data, FluentPagination pagination) : base(data)
         {
             Pagination = pagination;
         }

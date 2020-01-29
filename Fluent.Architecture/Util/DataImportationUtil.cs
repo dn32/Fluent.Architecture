@@ -42,8 +42,6 @@ namespace Fluent.Architecture.Core.Util
 
         public static List<Tuple<IXLCell, T>> ImportFileStream<T>(XLWorkbook workbook)
         {
-
-
             {
                 var worksheets = workbook.Worksheets.ToList();
                 var worksheet = worksheets.FirstOrDefault(x => x.Name.Equals(typeof(T).Name, StringComparison.InvariantCultureIgnoreCase));
