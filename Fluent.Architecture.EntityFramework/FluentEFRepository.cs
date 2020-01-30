@@ -219,6 +219,8 @@ namespace Fluent.Architecture.EntityFramework
                 var externalProperties = LocalProperty.PropertyType.GetListTypeNonNull().GetProperties();
                 var externalValue = LocalProperty.GetValue(entity);
 
+                if (composition.ExternalKeys == null) throw new IncorrectDevelopmentException(entity.GetType().Name + "- When indicating an aggregation or composition attribute, it is necessary to inform the properties {ExternalKeys}");
+
                 for (int i = 0; i < composition.ExternalKeys.Length; i++)
                 {
                     var externalKey = composition.ExternalKeys[i];
@@ -291,7 +293,7 @@ namespace Fluent.Architecture.EntityFramework
                 {
                     if (GetExistinEntityCode(compositionValue, property)) { return; }
                     var attribute = property.GetCustomAttribute<FluentRandomKeyValueOnAddAttribute>();
-                    if(attribute == null) { continue; }
+                    if (attribute == null) { continue; }
                     await GenerateNewEntityCodes(compositionValue, property, attribute.Max);
                 }
             }
