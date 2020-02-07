@@ -8,17 +8,16 @@
 // ReSharper disable CommentTypo
 
 using Newtonsoft.Json;
-using System;
 using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Fluent.Architecture.Interfaces
 {
-    public class Attr2 : Attribute { }
     public interface IFluentInclusionEntity
     {
-        [NotMapped, JsonIgnore, Attr2]
+        [NotMapped, JsonIgnore]
         string[] InclusionsForList { get; }
 
-        [NotMapped, JsonIgnore, Attr2]
+        [NotMapped, JsonIgnore]
         string[] InclusionsForOne { get; }
     }
 }
