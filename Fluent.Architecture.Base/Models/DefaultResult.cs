@@ -24,7 +24,7 @@ namespace Fluent.Architecture.Core.Models
 
         public DefaultResult(T data)
         {
-            Data = data.FluentResultOrValue<T>();
+            Data = data;
         }
     }
 }

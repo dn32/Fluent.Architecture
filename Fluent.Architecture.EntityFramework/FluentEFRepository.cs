@@ -269,8 +269,13 @@ namespace Fluent.Architecture.EntityFramework
                                     localKeyProperty.SetValue(entity, externalKeyValue);
                                 }
 
-                                if (composition is FluentAggregationAttribute && externalValue != null)
+                                if (composition is FluentAggregationAttribute aggre && externalValue != null)
                                 {
+                                    if (Session.Entry(externalValue).State == EntityState.Added && aggre.AllowAdd)
+                                    {
+                                        continue;
+                                    }
+
                                     Session.Entry(externalValue).State = EntityState.Unchanged;
                                 }
                             }

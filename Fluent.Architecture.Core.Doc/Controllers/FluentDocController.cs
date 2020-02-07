@@ -381,6 +381,7 @@ xhr.addEventListener(""readystatechange"", function() {{
                                   .Select(x => x.First())
                                   .Where(x => x.GetCustomAttribute<FluentDocAttribute>()?.Display != EnumFluentDisplay.Hidden)
                                   .Where(x => x.GetCustomAttribute<FluentAPIControllerAttribute>()?.AutomaticGeneration != false)
+                                  .OrderBy(x => x.Name)
                                   .ToDictionary(x => x.FullName, x => x);
                 }
 
@@ -393,7 +394,9 @@ xhr.addEventListener(""readystatechange"", function() {{
                         FriendlyName = x.GetCustomAttribute<FluentJsonFormAttribute>(true)?.name ?? x.GetFriendlyName().ToLower().ToTitleCase(),
                         Name = x.Name.ToFluentJsonStringNormalized(),
                         FullName = x.FullName
-                    }).ToList();
+                    })
+                    .OrderBy(x => x.Name)
+                    .ToList();
 
                 AllModel = AllTypes.Values
                     .Where(x => x != null)
@@ -417,7 +420,9 @@ xhr.addEventListener(""readystatechange"", function() {{
                         FriendlyName = x.GetCustomAttribute<FluentJsonFormAttribute>(true)?.name ?? x.GetFriendlyName(),
                         Name = x.Name.ToFluentJsonStringNormalized(),
                         FullName = x.FullName
-                    }).ToList();
+                    })
+                    .OrderBy(x => x.Name)
+                    .ToList();
             }
         }
 

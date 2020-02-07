@@ -162,7 +162,7 @@ namespace Fluent.Architecture.Extensions
             {
                 if (property.PropertyType.IsNullableEnum())
                 {
-                    var firstEnum = Enum.GetValues(property.PropertyType.GetTypeByNullType()).GetValue(1);
+                    var firstEnum = Enum.GetValues(property.PropertyType.GetTypeByNullType()).GetValue(0);
                     property.SetValue(obj, firstEnum);
                 }
                 else

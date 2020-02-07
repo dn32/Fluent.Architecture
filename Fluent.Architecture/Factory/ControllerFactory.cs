@@ -21,7 +21,7 @@ namespace Fluent.Architecture.Core.Factory
 
             foreach (var entity in entities)
             {
-                if (entity.GetCustomAttribute<FluentAPIControllerAttribute>(true)?.AutomaticGeneration == false) { return; }
+                if (entity.GetCustomAttribute<FluentAPIControllerAttribute>(true)?.AutomaticGeneration == false) { continue; }
                 if (Setup.Controllers.ContainsKey(entity)) { continue; }
 
                 if (entity.GetCustomAttribute<FluentJsonFormAttribute>(true)?.IsReadOnly == true)

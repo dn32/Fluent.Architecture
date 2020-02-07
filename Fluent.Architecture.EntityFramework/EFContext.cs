@@ -175,7 +175,10 @@ namespace Fluent.Architecture.EntityFramework
             return ret;
         }
 
-        protected virtual void UpdateLogicalDeletion(IEnumerable<EntityEntry> entries) { }
+        protected virtual void UpdateLogicalDeletion(IEnumerable<EntityEntry> entries) 
+        {
+            var entities = entries.ToList();
+        }
 
         protected virtual LambdaExpression IsAvailable()
         {

@@ -9,6 +9,7 @@ namespace Fluent.Architecture.Core.Attributes
     {
         public string Display { get; set; }
         public string[] PropertiesForFind { get; set; }
+        public bool AllowAdd { get; set; }
 
         [JsonIgnore]
         public string PropertyForFind
