@@ -1,4 +1,4 @@
-$dirBase = "G:\Projetos\dn32\Fluent.Architecture\"
+$dirBase = "D:\Projetos\dn32\Fluent.Architecture\"
 
 function CheckResult {
     param( $result, $sucess )
