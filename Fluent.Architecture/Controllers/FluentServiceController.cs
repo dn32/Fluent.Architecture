@@ -54,7 +54,7 @@ namespace Fluent.Architecture.Controllers
         protected async Task<DefaultTermResult<T>> ResultAsync<T>(T data, string term)
         {
             await CloseTransactionAsync();
-            data = (T)data.FluentResultOrValue();
+            //data = (T)data.FluentResultOrValue();
             return new DefaultTermResult<T>(data, term);
         }
 
@@ -62,7 +62,7 @@ namespace Fluent.Architecture.Controllers
         protected async Task<DefaultResult<T>> ResultAsync<T>(T data)
         {
             await CloseTransactionAsync();
-            data = (T)data.FluentResultOrValue();
+            //data = (T)data.FluentResultOrValue();
             return new DefaultResult<T>(data);
         }
 
