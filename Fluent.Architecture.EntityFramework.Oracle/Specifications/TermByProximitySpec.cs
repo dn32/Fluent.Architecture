@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Fluente.Arquitetura.EntityFramework.Oracle.Specifications
 {
-    public class TermByProximitySpec<TE> : FluenteSpecification<TE> where TE : FluenteEntity
+    public class TermByProximitySpec<TE> : FluenteSpecification<TE> where TE : FluenteEntidade
     {
         private string Term { get; set; }
 

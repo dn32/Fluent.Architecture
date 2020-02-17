@@ -9,7 +9,7 @@ namespace Fluente.Arquitetura.Nucleo.Extensoes
 {
     public static class SpecExtension2
     {
-        public static IQueryable<T> GetInclusions<T>(this IQueryable<T> query, bool list) where T : FluenteEntity
+        public static IQueryable<T> GetInclusions<T>(this IQueryable<T> query, bool list) where T : FluenteEntidade
         {
             //typeof(T)
             //    .GetProperties()

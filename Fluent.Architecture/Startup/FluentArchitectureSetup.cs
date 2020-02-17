@@ -24,7 +24,7 @@ namespace Fluente.Arquitetura
                 throw new System.ArgumentNullException(nameof(jsonSerializerSettings));
             }
 
-            JsonExtensionBase.JsonSerializerSettings = jsonSerializerSettings;
+            ExtensoesJson.JsonSerializerSettings = jsonSerializerSettings;
             Setup.ClientServices = builder.Services;
             Setup.InternalInitialize();
             builder.ConfigureApplicationPartManager(apm => apm.FeatureProviders.Add(new ControllerFactory()));

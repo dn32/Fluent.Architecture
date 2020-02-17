@@ -130,7 +130,7 @@ namespace Fluente.Arquitetura.Extensoes
         {
             var obj = type.GetExampleValue();
             if (type.IsPrimitiveOrPrimitiveNulable()) { return obj.ToString(); }
-            return obj.ToFluenteJson(Formatting.Indented);
+            return obj.SerializarParaFluenteJson(Formatting.Indented);
         }
 
         public static object GetExampleValue(this Type type)
@@ -294,12 +294,12 @@ namespace Fluente.Arquitetura.Extensoes
 
         public static bool IsFluenteEntity(this Type type)
         {
-            return type.GetNonNullableType().Is(typeof(FluenteEntity));
+            return type.GetNonNullableType().Is(typeof(FluenteEntidade));
         }
 
         public static bool IsFluenteEntity(this object obj)
         {
-            return obj?.GetType().GetNonNullableType().Is(typeof(FluenteEntity)) ?? false;
+            return obj?.GetType().GetNonNullableType().Is(typeof(FluenteEntidade)) ?? false;
         }
         public static Type GetTaskType(this Type type)
         {
@@ -374,7 +374,7 @@ namespace Fluente.Arquitetura.Extensoes
                     FkDestinal = null,
                     FluenteAggregation = null,
                     FluenteComposition = null,
-                    form = EnumForm.TEXTBOX,
+                    form = EnumTipoDeComponenteDeFormularioDeTela.Texto,
                     grid = property.Name,
                     IsEnum = property.PropertyType.IsNullableEnum(),
                     IsFk = false,
@@ -387,7 +387,7 @@ namespace Fluente.Arquitetura.Extensoes
                 };
             }
 
-            attr.ConditionalFluenteUIOperations = property.GetCustomAttributes<ConditionalFluenteUIOperationAttribute>();
+            attr.ConditionalFluenteUIOperations = property.GetCustomAttributes<FluenteOperacaoDeCondicionalDeTelaAttribute>();
             attr.FluenteAggregation = property.GetCustomAttribute<FluenteManyToManyAggregationAttribute>(true) ?? property.GetCustomAttribute<FluenteAggregationAttribute>(true);
             attr.FluenteComposition = property.GetCustomAttribute<FluenteCompositionAttribute>(true);
             attr.IsKey = property.GetCustomAttributeAny<KeyAttribute>();
@@ -405,7 +405,7 @@ namespace Fluente.Arquitetura.Extensoes
 
             if (property.GetCustomAttributeAny<JsonIgnoreAttribute>())
             {
-                attr.form = EnumForm.NONE;
+                attr.form = EnumTipoDeComponenteDeFormularioDeTela.Nenhum;
             }
 
             return attr;
@@ -433,7 +433,7 @@ namespace Fluente.Arquitetura.Extensoes
 
                 var attr = GetFluenteJsonPropertyAttributeByProperty(property);
                 attr.Property = property;
-                if (attr.form == EnumForm.NONE)
+                if (attr.form == EnumTipoDeComponenteDeFormularioDeTela.Nenhum)
                 {
                     return;
                 }
@@ -498,13 +498,13 @@ namespace Fluente.Arquitetura.Extensoes
                                 .SelectMany(x => x)
                                 .ToList();
 
-            root.Properties.Where(x => x.form == EnumForm.HIDDEN).ToList().ForEach(property =>
+            root.Properties.Where(x => x.form == EnumTipoDeComponenteDeFormularioDeTela.Hidden).ToList().ForEach(property =>
             {
                 property.lGrid = 0;
                 property.Row = 0;
             });
 
-            var properties = root.Properties.Where(x => x.form != EnumForm.HIDDEN).ToList();
+            var properties = root.Properties.Where(x => x.form != EnumTipoDeComponenteDeFormularioDeTela.Hidden).ToList();
             properties.ForEach(property =>
             {
                 if (tablet)

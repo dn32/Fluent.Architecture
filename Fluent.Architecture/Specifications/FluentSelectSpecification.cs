@@ -20,7 +20,7 @@ namespace Fluente.Arquitetura.Specifications
     /// </summary>
     /// <typeparam name="TE">Tipo de entidade da especificação.</typeparam>
     /// <typeparam name="TO">Tipo de objeto de saida da especificação.</typeparam>
-    public abstract class FluenteSelectSpecification<TE, TO> : BaseSpecification, IFluenteSpecification<TO> where TE : BaseEntity
+    public abstract class FluenteSelectSpecification<TE, TO> : BaseSpecification, IFluenteSpecification<TO> where TE : EntidadeBase
     {
         /// <summary>
         /// A especificação.

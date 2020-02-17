@@ -31,7 +31,7 @@ namespace Fluente.Arquitetura.Controllers
     /// <typeparam name="TS">O serviço a ser usado pelo controlador.</typeparam>
     public abstract class FluenteServiceController<TS> : BaseController where TS : TransactionalService, new()
     {
-        public virtual FluentePagination LastRequestPagination => Service.SessionRequest.Pagination;
+        public virtual FluentePaginacao LastRequestPagination => Service.SessionRequest.Pagination;
 
         protected internal TS Service { get; set; }
 
@@ -51,35 +51,35 @@ namespace Fluente.Arquitetura.Controllers
         }
 
         [NonAction]
-        protected async Task<DefaultTermResult<T>> ResultAsync<T>(T data, string term)
+        protected async Task<ResultadoPadraoComTermo<T>> ResultAsync<T>(T data, string term)
         {
             await CloseTransactionAsync();
             //data = (T)data.FluenteResultOrValue();
-            return new DefaultTermResult<T>(data, term);
+            return new ResultadoPadraoComTermo<T>(data, term);
         }
 
         [NonAction]
-        protected async Task<DefaultResult<T>> ResultAsync<T>(T data)
+        protected async Task<ResultadoPadrao<T>> ResultAsync<T>(T data)
         {
             await CloseTransactionAsync();
             //data = (T)data.FluenteResultOrValue();
-            return new DefaultResult<T>(data);
+            return new ResultadoPadrao<T>(data);
         }
 
         [NonAction]
-        protected async Task<DefaultPaginationResult<T>> ResultAsync<T>(T data, FluentePagination pagination)
+        protected async Task<ResultadoPadraoPaginado<T>> ResultAsync<T>(T data, FluentePaginacao pagination)
         {
             await CloseTransactionAsync();
             data = (T)data.FluenteResultOrValue();
-            return new DefaultPaginationResult<T>(data, pagination);
+            return new ResultadoPadraoPaginado<T>(data, pagination);
         }
 
         [NonAction]
-        protected async Task<DefaultPaginationTermResult<T>> ResultAsync<T>(T data, FluentePagination pagination, string term)
+        protected async Task<ResultadoPasdraoPaginadoComTermo<T>> ResultAsync<T>(T data, FluentePaginacao pagination, string term)
         {
             await CloseTransactionAsync();
             data = (T)data.FluenteResultOrValue();
-            return new DefaultPaginationTermResult<T>(data, pagination, term);
+            return new ResultadoPasdraoPaginadoComTermo<T>(data, pagination, term);
         }
 
         [NonAction]

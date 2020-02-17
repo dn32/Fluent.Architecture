@@ -12,7 +12,7 @@ namespace Fluente.Arquitetura.Extensoes
             return (bool)spec.Execute(nameof(Exists));
         }
 
-        public static object List(this ISpec spec, FluentePagination pagination = null)
+        public static object List(this ISpec spec, FluentePaginacao pagination = null)
         {
             return spec.Execute(nameof(List), new object[] { pagination });
         }

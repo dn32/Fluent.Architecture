@@ -33,7 +33,7 @@ namespace Fluente.Arquitetura.Validation
          =============================         
         */
 
-        internal static void FluenteValidateAttribute<T>(this IFluenteValidation validation, T entity, string compositionProperty, string compositionFieldName) where T : BaseEntity
+        internal static void FluenteValidateAttribute<T>(this IFluenteValidation validation, T entity, string compositionProperty, string compositionFieldName) where T : EntidadeBase
         {
             if (!validation.NullParameterOk)
             {
@@ -67,7 +67,7 @@ namespace Fluente.Arquitetura.Validation
             validation.NullParameterOk = true;
         }
 
-        internal static void MaxMinLenghtPropertyMustBeInformed<T>(this IFluenteValidation validation, T entity, string compositionProperty, string compositionFieldName) where T : BaseEntity
+        internal static void MaxMinLenghtPropertyMustBeInformed<T>(this IFluenteValidation validation, T entity, string compositionProperty, string compositionFieldName) where T : EntidadeBase
         {
             if (!validation.NullParameterOk)
             {
@@ -80,7 +80,7 @@ namespace Fluente.Arquitetura.Validation
                 if (property.GetCustomAttributeAny<FluenteRandomKeyValueOnAddAttribute>(true)) { continue; }
                 if (!string.IsNullOrWhiteSpace(compositionProperty))
                 {
-                    if (property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.form == Nucleo.Enumerator.EnumForm.HIDDEN)
+                    if (property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.form == Nucleo.Enumerator.EnumTipoDeComponenteDeFormularioDeTela.Hidden)
                     {
                         continue;
                     }
@@ -131,7 +131,7 @@ namespace Fluente.Arquitetura.Validation
             }
         }
 
-        internal static void RequiredPropertyMustBeInformed<T>(this IFluenteValidation validation, T entity, string compositionProperty, string compositionFieldName) where T : BaseEntity
+        internal static void RequiredPropertyMustBeInformed<T>(this IFluenteValidation validation, T entity, string compositionProperty, string compositionFieldName) where T : EntidadeBase
         {
             if (!validation.NullParameterOk)
             {
@@ -154,7 +154,7 @@ namespace Fluente.Arquitetura.Validation
                 if (property.GetCustomAttributeAny<FluenteRandomKeyValueOnAddAttribute>(true)) { continue; }
                 if (!string.IsNullOrWhiteSpace(compositionProperty))
                 {
-                    if (property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.form == Nucleo.Enumerator.EnumForm.HIDDEN)
+                    if (property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.form == Nucleo.Enumerator.EnumTipoDeComponenteDeFormularioDeTela.Hidden)
                     {
                         continue;
                     }
@@ -167,7 +167,7 @@ namespace Fluente.Arquitetura.Validation
             }
         }
 
-        internal static void AllKeysMustBeInformed<T>(this IFluenteValidation validation, T entity, string compositionProperty, string compositionFieldName) where T : BaseEntity
+        internal static void AllKeysMustBeInformed<T>(this IFluenteValidation validation, T entity, string compositionProperty, string compositionFieldName) where T : EntidadeBase
         {
             validation.KeyValuesOk = true;
 
@@ -177,7 +177,7 @@ namespace Fluente.Arquitetura.Validation
                 if (property.GetCustomAttributeAny<FluenteRandomKeyValueOnAddAttribute>(true)) { continue; }
                 if (!string.IsNullOrWhiteSpace(compositionProperty))
                 {
-                    if (property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.form == Nucleo.Enumerator.EnumForm.HIDDEN)
+                    if (property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.form == Nucleo.Enumerator.EnumTipoDeComponenteDeFormularioDeTela.Hidden)
                     {
                         continue;
                     }
@@ -191,7 +191,7 @@ namespace Fluente.Arquitetura.Validation
             }
         }
 
-        internal static void AllKeysShouldBeInformedWhenThereAreMoreThanOne<T>(this IFluenteValidation validation, T entity, string compositionProperty, string compositionFieldName, bool isUpdate = false) where T : BaseEntity
+        internal static void AllKeysShouldBeInformedWhenThereAreMoreThanOne<T>(this IFluenteValidation validation, T entity, string compositionProperty, string compositionFieldName, bool isUpdate = false) where T : EntidadeBase
         {
             if (!validation.NullParameterOk || !validation.KeyValuesOk)
             {
@@ -217,7 +217,7 @@ namespace Fluente.Arquitetura.Validation
                     if (property.GetCustomAttributeAny<FluenteRandomKeyValueOnAddAttribute>(true)) { return; }
                     if (!string.IsNullOrWhiteSpace(compositionProperty))
                     {
-                        if (property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.form == Nucleo.Enumerator.EnumForm.HIDDEN)
+                        if (property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.form == Nucleo.Enumerator.EnumTipoDeComponenteDeFormularioDeTela.Hidden)
                         {
                             return;
                         }
@@ -240,7 +240,7 @@ namespace Fluente.Arquitetura.Validation
             }
         }
 
-        internal static async Task EntityMustExistInDatabaseAsync<T>(this IFluenteValidation validation, T entity, bool includeExcludedLogically = false) where T : BaseEntity
+        internal static async Task EntityMustExistInDatabaseAsync<T>(this IFluenteValidation validation, T entity, bool includeExcludedLogically = false) where T : EntidadeBase
         {
             if (!validation.NullParameterOk)
             {
@@ -255,7 +255,7 @@ namespace Fluente.Arquitetura.Validation
             }
         }
 
-        internal static async Task ThereIsOnlyOneEntityAsync<T>(this IFluenteValidation validation, T entity, bool includeExcludedLogically = false) where T : BaseEntity
+        internal static async Task ThereIsOnlyOneEntityAsync<T>(this IFluenteValidation validation, T entity, bool includeExcludedLogically = false) where T : EntidadeBase
         {
             if (!validation.NullParameterOk)
             {
@@ -270,7 +270,7 @@ namespace Fluente.Arquitetura.Validation
             }
         }
 
-        internal static async Task EntityShouldNotExistInDatabaseBasedOnKeysAsync<T>(this IFluenteValidation validation, T entity, bool checkId) where T : BaseEntity
+        internal static async Task EntityShouldNotExistInDatabaseBasedOnKeysAsync<T>(this IFluenteValidation validation, T entity, bool checkId) where T : EntidadeBase
         {
             if (!validation.NullParameterOk || !validation.KeyValuesOk)
             {

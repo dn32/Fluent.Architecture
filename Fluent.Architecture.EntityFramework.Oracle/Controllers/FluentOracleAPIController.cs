@@ -10,11 +10,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Fluente.Arquitetura.EntityFramework.Oracle.Controllers
 {
-    public class FluenteOracleAPIController<T> : FluenteAPIController<T> where T : FluenteEntity, new()
+    public class FluenteOracleAPIController<T> : FluenteAPIController<T> where T : FluenteEntidade, new()
     {
         [HttpGet]
         [FluenteAction(Pagination = true, DynamicSpec = true)]
-        public virtual async Task<DefaultPaginationResult<List<T>>> FindByProximity(
+        public virtual async Task<ResultadoPadraoPaginado<List<T>>> FindByProximity(
             [Description("The properties whose value will be compared")] string[] properties,
             [Description("The term to use as a comparator")] string Term,
             [Description("The required acceptance percentage. The higher the value, the more demanding")][Range(0,100)]
@@ -30,7 +30,7 @@ namespace Fluente.Arquitetura.EntityFramework.Oracle.Controllers
         [Route("/api/[controller]/ListByFilterAndProximity")]
         [Description("Get a paginated list of items based on filters and text proximity")]
         [FluenteAction(Pagination = true, DynamicSpec = true)]
-        public virtual async Task<DefaultPaginationResult<List<T>>> ListByFilterAndProximityGet([FromBody, Description("The query object")] FiltersAndTerm FiltersAndTerm)
+        public virtual async Task<ResultadoPadraoPaginado<List<T>>> ListByFilterAndProximityGet([FromBody, Description("The query object")] FiltersAndTerm FiltersAndTerm)
         {
             return await InternalListByFilterAndProximityAsync(FiltersAndTerm);
         }
@@ -39,12 +39,12 @@ namespace Fluente.Arquitetura.EntityFramework.Oracle.Controllers
         [Route("/api/[controller]/ListByFilterAndProximity")]
         [Description("Get a paginated list of items based on filters and text proximity")]
         [FluenteAction(Pagination = true, DynamicSpec = true)]
-        public virtual async Task<DefaultPaginationResult<List<T>>> ListByFilterAndProximityPost([FromBody, Description("The query object")] FiltersAndTerm FiltersAndTerm)
+        public virtual async Task<ResultadoPadraoPaginado<List<T>>> ListByFilterAndProximityPost([FromBody, Description("The query object")] FiltersAndTerm FiltersAndTerm)
         {
             return await InternalListByFilterAndProximityAsync(FiltersAndTerm);
         }
 
-        private async Task<DefaultPaginationResult<List<T>>> InternalListByFilterAndProximityAsync(FiltersAndTerm filtersAndTerm)
+        private async Task<ResultadoPadraoPaginado<List<T>>> InternalListByFilterAndProximityAsync(FiltersAndTerm filtersAndTerm)
         {
             var spec = CreateSpec<TermByFilterAndProximitySpec<T>>().SetParameter(filtersAndTerm.Filters, isList: true, filtersAndTerm.Properties, filtersAndTerm.Term, filtersAndTerm.Tolerance);
             var list = await Service.ListAsync(spec);

@@ -23,7 +23,7 @@ namespace Fluente.Arquitetura.Specifications
     /// Especificação base para todas as especificações do sistema.
     /// </summary>
     /// <typeparam name="TE">Tipo de entidade da especificação.</typeparam>
-    public abstract partial class FluenteSpecification<TE> : BaseSpecification, IFluenteSpecification where TE : BaseEntity
+    public abstract partial class FluenteSpecification<TE> : BaseSpecification, IFluenteSpecification where TE : EntidadeBase
     {
         public Type FluenteEntityType => typeof(TE);
 

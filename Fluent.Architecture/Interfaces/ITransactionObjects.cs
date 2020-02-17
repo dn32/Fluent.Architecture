@@ -9,9 +9,9 @@ namespace Fluente.Arquitetura.Nucleo.Interfaces
     {
         DbContext Session { get; }
 
-        IQueryable<TX> GetObjectQueryInternal<TX>() where TX : BaseEntity;
+        IQueryable<TX> GetObjectQueryInternal<TX>() where TX : EntidadeBase;
 
-        DbSet<T> GetObjectInputDataInternal<T>() where T : BaseEntity;
+        DbSet<T> GetObjectInputDataInternal<T>() where T : EntidadeBase;
 
         IQueryable GetObjectInputDataInternal(Type type);
     }

@@ -34,7 +34,7 @@ namespace Fluente.Arquitetura.Specifications
         /// <returns>
         /// A referência da tabela do banco de dados.
         /// </returns>
-        protected IQueryable<TX> Get<TX>() where TX : BaseEntity
+        protected IQueryable<TX> Get<TX>() where TX : EntidadeBase
         {
             if (Service == null)
             {

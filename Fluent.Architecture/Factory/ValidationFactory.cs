@@ -28,7 +28,7 @@ namespace Fluente.Arquitetura.Factory
         /// <returns>
         /// A validação criada.
         /// </returns>
-        internal static FluenteValidation<T> Create<T>() where T : BaseEntity
+        internal static FluenteValidation<T> Create<T>() where T : EntidadeBase
         {
             var localType = Setup.Config?.Config?.GenericValidationType?.MakeGenericType(typeof(T)) ?? typeof(FluenteValidation<T>);
             return Create(localType) as FluenteValidation<T>;

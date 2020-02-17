@@ -76,11 +76,11 @@ namespace Fluente.Arquitetura.Util
 
         private static string[] FluenteEntityNames => new[]
         {
-            typeof(FluenteController<FluenteEntity>).Name,
-            typeof(FluenteService<FluenteEntity>).Name,
-            typeof(IFluenteRepository<FluenteEntity>).Name,
-            typeof(FluenteValidation<FluenteEntity>).Name,
-            typeof(FluenteSpecification<FluenteEntity>).Name
+            typeof(FluenteController<FluenteEntidade>).Name,
+            typeof(FluenteService<FluenteEntidade>).Name,
+            typeof(IFluenteRepository<FluenteEntidade>).Name,
+            typeof(FluenteValidation<FluenteEntidade>).Name,
+            typeof(FluenteSpecification<FluenteEntidade>).Name
         };
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Fluente.Arquitetura.Util
                 }
 
                 var localType = type.GetGenericArguments().First();
-                if (!localType.IsSubclassOf(typeof(BaseEntity)))
+                if (!localType.IsSubclassOf(typeof(EntidadeBase)))
                 {
                     throw new InvalidOperationException();
                 }

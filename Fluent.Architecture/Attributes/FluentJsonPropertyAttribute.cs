@@ -24,7 +24,7 @@ namespace Fluente.Arquitetura.Nucleo.Atributos
 
         [DisplayName("Form")]
         [JsonProperty("Form")]
-        public EnumForm form { get; set; }
+        public EnumTipoDeComponenteDeFormularioDeTela form { get; set; }
 
         [DisplayName("LayoutGrid")]
         [JsonProperty("LayoutGrid")]
@@ -40,7 +40,7 @@ namespace Fluente.Arquitetura.Nucleo.Atributos
 
         [DisplayName("GroupType")]
         [JsonProperty("GroupType")]
-        public EnumGrupType tgroup { get; set; }
+        public EnumTipoDeAgrupamentoDeTela tgroup { get; set; }
 
         [DisplayName("DefaultValue")]
         [JsonProperty("DefaultValue")]
@@ -70,6 +70,6 @@ namespace Fluente.Arquitetura.Nucleo.Atributos
         [JsonIgnore]
         public bool IsFk { get; internal set; }
 
-        public IEnumerable<ConditionalFluenteUIOperationAttribute> ConditionalFluenteUIOperations { get; internal set; }
+        public IEnumerable<FluenteOperacaoDeCondicionalDeTelaAttribute> ConditionalFluenteUIOperations { get; internal set; }
     }
 }

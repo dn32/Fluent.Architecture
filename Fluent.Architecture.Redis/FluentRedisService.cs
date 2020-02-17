@@ -17,9 +17,9 @@ namespace Fluente.Arquitetura.Redis
 
         public async Task<T> GetValueAsync<T>(string key) => await RedisRepository.GetValueAsync<T>(key);
 
-        public async Task<T> GetFluenteEntityAsync<T>(FluenteEntity entity) => await RedisRepository.GetValueAsync<T>(entity.GetHashCode().ToString());
+        public async Task<T> GetFluenteEntityAsync<T>(FluenteEntidade entity) => await RedisRepository.GetValueAsync<T>(entity.GetHashCode().ToString());
 
-        public async Task<bool> SetFluenteEntityAsync(FluenteEntity entity, TimeSpan? timeOut = null) => await RedisRepository.SetValueAsync(entity.GetHashCode().ToString(), entity, timeOut);
+        public async Task<bool> SetFluenteEntityAsync(FluenteEntidade entity, TimeSpan? timeOut = null) => await RedisRepository.SetValueAsync(entity.GetHashCode().ToString(), entity, timeOut);
 
         public async Task<bool> SetValueAsync(string key, object value, TimeSpan? timeOut = null) => await RedisRepository.SetValueAsync(key, value, timeOut);
 

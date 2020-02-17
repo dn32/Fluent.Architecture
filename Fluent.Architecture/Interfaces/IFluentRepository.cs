@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Fluente.Arquitetura.Nucleo.Interfaces
 {
-    public interface IFluenteRepository<TE> : ITransactionlRepository where TE : BaseEntity
+    public interface IFluenteRepository<TE> : ITransactionlRepository where TE : EntidadeBase
     {
         #region PROPERTIES
 
@@ -27,8 +27,8 @@ namespace Fluente.Arquitetura.Nucleo.Interfaces
         Task<TE> RemoveAsync(TE entity);
         Task<bool> ExistsSelectAsync<TO>(ISpec spec);
         Task<bool> ExistsAsync(ISpec spec);
-        Task<List<TE>> ListAsync(IFluenteSpecification spec, FluentePagination pagination = null);
-        Task<List<TO>> ListSelectAsync<TO>(IFluenteSpecification<TO> spec, FluentePagination pagination = null);
+        Task<List<TE>> ListAsync(IFluenteSpecification spec, FluentePaginacao pagination = null);
+        Task<List<TO>> ListSelectAsync<TO>(IFluenteSpecification<TO> spec, FluentePaginacao pagination = null);
         Task<TO> FirstOrDefaultSelectAsync<TO>(IFluenteSpecification<TO> spec);
         Task<TE> FirstOrDefaultAsync(IFluenteSpecification spec);
         Task<TE> SingleOrDefaultAsync(IFluenteSpecification spec);

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Fluente.Arquitetura.Nucleo.Specifications
 {
-    public class FluenteAllSpec<T> : FluenteSpecification<T> where T : FluenteEntity
+    public class FluenteAllSpec<T> : FluenteSpecification<T> where T : FluenteEntidade
     {
         public bool IsList { get; set; } = true;
 

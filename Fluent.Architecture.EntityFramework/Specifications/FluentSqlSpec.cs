@@ -12,7 +12,7 @@ using Fluente.Arquitetura.Extensoes;
 
 namespace Fluente.Arquitetura.EntityFramework.Specifications
 {
-    public class FluenteSqlSpec<TE> : FluenteSpecification<TE> where TE : FluenteEntity
+    public class FluenteSqlSpec<TE> : FluenteSpecification<TE> where TE : FluenteEntidade
     {
         private string Sql { get; set; }
 

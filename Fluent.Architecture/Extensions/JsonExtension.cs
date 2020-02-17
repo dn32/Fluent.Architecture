@@ -1,5 +1,4 @@
-﻿
-using Fluente.Arquitetura.Extensoes;
+﻿using Fluente.Arquitetura.Extensoes;
 using Newtonsoft.Json;
 
 namespace Fluente.Arquitetura.Nucleo.Extensoes
@@ -16,20 +15,20 @@ namespace Fluente.Arquitetura.Nucleo.Extensoes
             if(obj == null) { return null; }
             var type = obj.GetType();
             if (type.IsPrimitiveOrPrimitiveNulable()) { return obj.ToString(); }
-            return obj.ToFluenteJson(formatting);
+            return obj.SerializarParaFluenteJson(formatting);
         }
 
 
         public static T ToFluenteObject<T>(this string json)
         {
-            return JsonConvert.DeserializeObject<T>(json, JsonExtensionBase.JsonSerializerSettings);
+            return JsonConvert.DeserializeObject<T>(json, ExtensoesJson.JsonSerializerSettings);
         }
 
         public static string ToFluenteJsonStringNormalized(this string text)
         {
             if (string.IsNullOrWhiteSpace(text)) { return text; }
 
-            if (JsonExtensionBase.JsonSerializerSettings?.ContractResolver?.GetType()?.Name == "CamelCasePropertyNamesContractResolver")
+            if (ExtensoesJson.JsonSerializerSettings?.ContractResolver?.GetType()?.Name == "CamelCasePropertyNamesContractResolver")
             {
                 return text.ToCamelCase();
             }

@@ -8,7 +8,7 @@ using System;
 
 namespace Fluente.Arquitetura.Test
 {
-    public class FluenteTest<TModel> where TModel : FluenteEntity, new()
+    public class FluenteTest<TModel> where TModel : FluenteEntidade, new()
     {
         public virtual FluenteAPIController<TModel> GetNewController()
         {
@@ -66,7 +66,7 @@ namespace Fluente.Arquitetura.Test
             return TestUtil.Execute<FluenteAPIController<TModel>, TModel[]>(newController, (FluenteAPIController<TModel> controller) => controller.List().Result);
         }
 
-        public virtual TModel[] List(Filter[] filters)
+        public virtual TModel[] List(Filtro[] filters)
         {
             var newController = GetNewController();
             return TestUtil.Execute<FluenteAPIController<TModel>, TModel[]>(newController, (FluenteAPIController<TModel> controller) => controller.ListByFilterGet(filters).Result);
@@ -77,7 +77,7 @@ namespace Fluente.Arquitetura.Test
             return TestUtil.Execute<FluenteAPIController<TModel>, int>(newController, (FluenteAPIController<TModel> controller) => controller.Count().Result);
         }
 
-        public virtual int Count(Filter[] filters)
+        public virtual int Count(Filtro[] filters)
         {
             var newController = GetNewController();
             return TestUtil.Execute<FluenteAPIController<TModel>, int>(newController, (FluenteAPIController<TModel> controller) => controller.CountByFilter(filters).Result);
@@ -112,13 +112,13 @@ namespace Fluente.Arquitetura.Test
          //   return new FluenteAPIController<TModel>().ExampleData();
         }
 
-        public virtual TModel Execute(Func<FluenteAPIController<TModel>, DefaultResult<TModel>> actionMethod)
+        public virtual TModel Execute(Func<FluenteAPIController<TModel>, ResultadoPadrao<TModel>> actionMethod)
         {
             var newController = GetNewController();
             newController.OnActionExecuting(MockActionExecutingContextFactory.Create(newController));
             var ret = actionMethod(newController);
             newController.OnActionExecuted(MockActionExecutedContextFactory.Create(newController));
-            return JsonConvert.DeserializeObject<TModel>(JsonConvert.SerializeObject(ret.Data));
+            return JsonConvert.DeserializeObject<TModel>(JsonConvert.SerializeObject(ret.Dados));
         }
     }
 }

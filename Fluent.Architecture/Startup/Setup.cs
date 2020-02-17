@@ -217,10 +217,10 @@ namespace Fluente.Arquitetura
             Model = new Dictionary<Type, Type>();
             Controllers = new Dictionary<Type, Type>();
             UserSessionList = new Dictionary<Guid, UserSessionRequest>();
-            Services.Add(typeof(FluenteEntity), typeof(FluenteService<FluenteEntity>));
-            Repositories.Add(typeof(FluenteEntity), typeof(IFluenteRepository<FluenteEntity>));
-            Validations.Add(typeof(FluenteEntity), typeof(FluenteValidation<FluenteEntity>));
-            Controllers.Add(typeof(FluenteEntity), typeof(FluenteController<FluenteEntity>));
+            Services.Add(typeof(FluenteEntidade), typeof(FluenteService<FluenteEntidade>));
+            Repositories.Add(typeof(FluenteEntidade), typeof(IFluenteRepository<FluenteEntidade>));
+            Validations.Add(typeof(FluenteEntidade), typeof(FluenteValidation<FluenteEntidade>));
+            Controllers.Add(typeof(FluenteEntidade), typeof(FluenteController<FluenteEntidade>));
         }
 
         private static void LoadAssemblies()
@@ -245,23 +245,23 @@ namespace Fluente.Arquitetura
             ValidateSpecifications(types.Where(x => x.IsSubclassOf(typeof(BaseSpecification))).ToList());
             ValidateController(types.Where(x => x.IsSubclassOf(typeof(BaseController))).ToList());
 
-            types.Select(x => GlobalUtil.GetFluenteEntityType(x, typeof(FluenteService<BaseEntity>)))
+            types.Select(x => GlobalUtil.GetFluenteEntityType(x, typeof(FluenteService<EntidadeBase>)))
                 .Where(x => x.Item1 != null).ToList()
                 .ForEach(AddService);
 
-            types.Select(x => GlobalUtil.GetFluenteEntityTypeByInterface(x, typeof(IFluenteRepository<BaseEntity>)))
+            types.Select(x => GlobalUtil.GetFluenteEntityTypeByInterface(x, typeof(IFluenteRepository<EntidadeBase>)))
                .Where(x => x?.Item1 != null).ToList()
                .ForEach(AddRepository);
 
-            types.Select(x => GlobalUtil.GetFluenteEntityType(x, typeof(FluenteValidation<BaseEntity>)))
+            types.Select(x => GlobalUtil.GetFluenteEntityType(x, typeof(FluenteValidation<EntidadeBase>)))
                .Where(x => x.Item1 != null).ToList()
                .ForEach(AddValidation);
 
-            types.Select(x => GlobalUtil.GetFluenteEntityType(x, typeof(BaseEntity)))
-                .Where(x => x.Item1 != null && x.Item2 != typeof(BaseEntity)).ToList()
+            types.Select(x => GlobalUtil.GetFluenteEntityType(x, typeof(EntidadeBase)))
+                .Where(x => x.Item1 != null && x.Item2 != typeof(EntidadeBase)).ToList()
                 .ForEach(AddModel);
 
-            types.Select(x => GlobalUtil.GetFluenteEntityType(x, typeof(FluenteController<BaseEntity>)))
+            types.Select(x => GlobalUtil.GetFluenteEntityType(x, typeof(FluenteController<EntidadeBase>)))
                .Where(x => x.Item1 != null).ToList()
                .ForEach(AddController);
 
@@ -464,7 +464,7 @@ namespace Fluente.Arquitetura
                 foreach (var method in methods)
                 {
                     var name = $"{type.Name}.{method.Name}";
-                    if (method.IsPublic && method.ReturnType.Name == typeof(IEnumerable<FluenteEntity>).Name || method.ReturnType.Name == typeof(IQueryable<FluenteEntity>).Name)
+                    if (method.IsPublic && method.ReturnType.Name == typeof(IEnumerable<FluenteEntidade>).Name || method.ReturnType.Name == typeof(IQueryable<FluenteEntidade>).Name)
                     {
                         throw new IncorrectDevelopmentException($"The use of non-materialized returns in repositories is not allowed. Change the return type and execute the ToList before the return in the {name}.");
                     }

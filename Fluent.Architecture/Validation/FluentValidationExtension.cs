@@ -23,7 +23,7 @@ namespace Fluente.Arquitetura.Validation
 {
     internal static class FluenteValidationExtension
     {
-        internal static async Task<List<TransactionalService>> ExecuteEntityAndCompositions<T>(this FluenteValidation<T> validation, object entity, MethodInfo method) where T : BaseEntity
+        internal static async Task<List<TransactionalService>> ExecuteEntityAndCompositions<T>(this FluenteValidation<T> validation, object entity, MethodInfo method) where T : EntidadeBase
         {
             if (validation is null) { throw new ArgumentNullException("validation"); }
             if (method is null) { throw new ArgumentNullException("method"); }

@@ -42,7 +42,7 @@ namespace Fluente.Arquitetura.EntityFramework
     /// <typeparam name="TE">
     /// O tipo de entidade do repositório.
     /// </typeparam>
-    public partial class FluenteEFRepository<TE> : IFluenteRepository<TE> where TE : BaseEntity
+    public partial class FluenteEFRepository<TE> : IFluenteRepository<TE> where TE : EntidadeBase
     {
         public FluenteEFRepository()
         {
@@ -107,8 +107,8 @@ namespace Fluente.Arquitetura.EntityFramework
             foreach (var compositionProperty in compositionProperties)
             {
                 var attr = compositionProperty.GetCustomAttribute<FluenteCompositionAttribute>();
-                if (attr?.OnSave == EnumOnSaveReference.IGNORE) { continue; }
-                if (attr?.OnSave == EnumOnSaveReference.ADD && isUpdate) { continue; }
+                if (attr?.OnSave == EnumTipoDeOperacaoParaComAsReferencias.Ignorar) { continue; }
+                if (attr?.OnSave == EnumTipoDeOperacaoParaComAsReferencias.Adicionar && isUpdate) { continue; }
 
                 var compositionValue = compositionProperty.GetValue(entity);
 
@@ -363,7 +363,7 @@ namespace Fluente.Arquitetura.EntityFramework
             return FromSqlSelect<TE>(sql, parameters);
         }
 
-        internal protected IQueryable<TO> FromSqlSelect<TO>(string sql, params object[] parameters) where TO : BaseEntity
+        internal protected IQueryable<TO> FromSqlSelect<TO>(string sql, params object[] parameters) where TO : EntidadeBase
         {
             var source = TransactionObjects.GetObjectInputDataInternal<TO>();
 
@@ -506,13 +506,13 @@ namespace Fluente.Arquitetura.EntityFramework
         // return sql;
         // }
 
-        private FluentePagination GetPagination()
+        private FluentePaginacao GetPagination()
         {
             var currentPageInt = int.TryParse(GetParameter("CurrentPage"), out var currentPageInt_) ? currentPageInt_ : 0;
             var itemsPerPageInt = int.TryParse(GetParameter("ItemsPerPage"), out var itemsPerPageInt_) ? itemsPerPageInt_ : 20;
             var startAtZeroBool = !bool.TryParse(GetParameter("StartAtZero"), out var startAtZeroBool_) || startAtZeroBool_;
 
-            return new FluentePagination(currentPageInt, startAtZeroBool, itemsPerPageInt);
+            return FluentePaginacao.Criar(currentPageInt, startAtZeroBool, itemsPerPageInt);
         }
 
         private string GetParameter(string key)

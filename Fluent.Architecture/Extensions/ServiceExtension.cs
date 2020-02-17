@@ -33,9 +33,9 @@ namespace Fluente.Arquitetura.Extensoes
 
         public static TransactionalService GetServiceInstanceByEntity(this Type entityType, UserSessionRequest SessionRequest)
         {
-            if (entityType?.IsSubclassOf(typeof(FluenteEntity)) != true)
+            if (entityType?.IsSubclassOf(typeof(FluenteEntidade)) != true)
             {
-                throw new IncorrectDevelopmentException($"The service instance attempt using the {nameof(GetServiceInstanceByEntity)} method failed because the passed type is not a {nameof(FluenteEntity)}");
+                throw new IncorrectDevelopmentException($"The service instance attempt using the {nameof(GetServiceInstanceByEntity)} method failed because the passed type is not a {nameof(FluenteEntidade)}");
             }
 
             var type = (Setup.Config.Config.GenericServiceType) ?? typeof(FluenteService<>);

@@ -3,7 +3,7 @@
 namespace Fluente.Arquitetura.EntityFramework.SqLite
 {
     [DbType(FluenteDbType.SQLITE)]
-    public abstract class FluenteSqLiteEntity : FluenteEntity
+    public abstract class FluenteSqLiteEntity : FluenteEntidade
     {
     }
 }

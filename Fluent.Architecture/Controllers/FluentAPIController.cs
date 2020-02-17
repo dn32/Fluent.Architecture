@@ -15,14 +15,14 @@ namespace Fluente.Arquitetura.Controllers
 {
     [Route("/api/[controller]/[action]")]
     [ApiController]
-    public class FluenteAPIController<T> : FluenteController<T> where T : FluenteEntity, new() // Nunca defina como abstract, pois o controle de log espera essa classe como concreta
+    public class FluenteAPIController<T> : FluenteController<T> where T : FluenteEntidade, new() // Nunca defina como abstract, pois o controle de log espera essa classe como concreta
     {
         #region MANY
 
         [HttpGet]
         [Description("Get a paged list of all items")]
         [FluenteAction(Pagination = true, DynamicSpec = true)]
-        public virtual async Task<DefaultPaginationResult<List<T>>> List()
+        public virtual async Task<ResultadoPadraoPaginado<List<T>>> List()
         {
             var spec = CreateSpec<FluenteAllSpec<T>>().SetParameter(isList: true);
             var list = Service.ListAsync(spec);
@@ -33,7 +33,7 @@ namespace Fluente.Arquitetura.Controllers
         [Route("/api/[controller]/ListByFilter")]
         [Description("Get a paginated list of items based on filters")]
         [FluenteAction(Pagination = true, DynamicSpec = true)]
-        public virtual async Task<DefaultPaginationResult<List<T>>> ListByFilterGet([FromQuery, Description("The filters to apply to the query")] Filter[] Filters)
+        public virtual async Task<ResultadoPadraoPaginado<List<T>>> ListByFilterGet([FromQuery, Description("The filters to apply to the query")] Filtro[] Filters)
         {
             return await InternalListByFilterAsync(Filters);
         }
@@ -42,12 +42,12 @@ namespace Fluente.Arquitetura.Controllers
         [Route("/api/[controller]/ListByFilter")]
         [Description("Get a paginated list of items based on filters")]
         [FluenteAction(Pagination = true, DynamicSpec = true)]
-        public virtual async Task<DefaultPaginationResult<List<T>>> ListByFilterPostAsync([FromBody, Description("The filters to apply to the query")] Filter[] Filters)
+        public virtual async Task<ResultadoPadraoPaginado<List<T>>> ListByFilterPostAsync([FromBody, Description("The filters to apply to the query")] Filtro[] Filters)
         {
             return await InternalListByFilterAsync(Filters);
         }
 
-        protected async Task<DefaultPaginationResult<List<T>>> InternalListByFilterAsync([FromBody, Description("The filters to apply to the query")] Filter[] Filters)
+        protected async Task<ResultadoPadraoPaginado<List<T>>> InternalListByFilterAsync([FromBody, Description("The filters to apply to the query")] Filtro[] Filters)
         {
             var spec = CreateSpec<FluenteFilterSpec<T>>().SetParameter(Filters, isList: true);
             return await ResultAsync<List<T>>(await Service.ListAsync(spec), LastRequestPagination);
@@ -56,7 +56,7 @@ namespace Fluente.Arquitetura.Controllers
         [HttpGet]
         [Description("Get a paginated list of items based on a term")]
         [FluenteAction(Pagination = true, DynamicSpec = true)]
-        public virtual async Task<DefaultPaginationTermResult<List<T>>> ListByTerm([Description("The term to use as a comparator")] string Term)
+        public virtual async Task<ResultadoPasdraoPaginadoComTermo<List<T>>> ListByTerm([Description("The term to use as a comparator")] string Term)
         {
             var spec = CreateSpec<TermSpec<T>>().SetParameter(Term, isList: true);
             var list = Service.ListAsync(spec);
@@ -70,7 +70,7 @@ namespace Fluente.Arquitetura.Controllers
         [HttpGet]
         [Route("/api/[controller]/FindByEntity")]
         [Description("Get an item based on its identifiers")]
-        public virtual async Task<DefaultResult<T>> FindByEntityGet([FromQuery, Description("The entity you want to query")] T Entity)
+        public virtual async Task<ResultadoPadrao<T>> FindByEntityGet([FromQuery, Description("The entity you want to query")] T Entity)
         {
             return await ResultAsync<T>(await Service.FindAsync(Entity, false));
         }
@@ -78,7 +78,7 @@ namespace Fluente.Arquitetura.Controllers
         [HttpPost]
         [Route("/api/[controller]/FindByEntity")]
         [Description("Get an item based on its identifiers")]
-        public virtual async Task<DefaultResult<T>> FindByEntityPost([FromBody, Description("The entity you want to query")] T Entity)
+        public virtual async Task<ResultadoPadrao<T>> FindByEntityPost([FromBody, Description("The entity you want to query")] T Entity)
         {
             return await ResultAsync<T>(await Service.FindAsync(Entity, false));
         }
@@ -87,7 +87,7 @@ namespace Fluente.Arquitetura.Controllers
         [Route("/api/[controller]/FindByFilter")]
         [Description("Get an item based on its filters")]
         [FluenteAction(DynamicSpec = true)]
-        public virtual async Task<DefaultResult<T>> FindByFilterGet([FromQuery, Description("The filters to apply to the query")] Filter[] Filters)
+        public virtual async Task<ResultadoPadrao<T>> FindByFilterGet([FromQuery, Description("The filters to apply to the query")] Filtro[] Filters)
         {
             return await InternalFindByFilterAsync(Filters);
         }
@@ -96,12 +96,12 @@ namespace Fluente.Arquitetura.Controllers
         [Route("/api/[controller]/FindByFilter")]
         [Description("Get an item based on filters")]
         [FluenteAction(DynamicSpec = true)]
-        public virtual async Task<DefaultResult<T>> FindByFilterPost([FromBody, Description("The filters to apply to the query")] Filter[] Filters)
+        public virtual async Task<ResultadoPadrao<T>> FindByFilterPost([FromBody, Description("The filters to apply to the query")] Filtro[] Filters)
         {
             return await InternalFindByFilterAsync(Filters);
         }
 
-        private async Task<DefaultResult<T>> InternalFindByFilterAsync([FromBody] Filter[] Filters)
+        private async Task<ResultadoPadrao<T>> InternalFindByFilterAsync([FromBody] Filtro[] Filters)
         {
             var spec = CreateSpec<FluenteFilterSpec<T>>().SetParameter(Filters, isList: false);
             var item = await Service.SingleOrDefaultAsync(spec);
@@ -111,7 +111,7 @@ namespace Fluente.Arquitetura.Controllers
         [HttpGet]
         [Description("Get an item based on a term")]
         [FluenteAction(DynamicSpec = true)]
-        public virtual async Task<DefaultResult<T>> FindByTerm([Description("The term to use as a comparator")] string Term)
+        public virtual async Task<ResultadoPadrao<T>> FindByTerm([Description("The term to use as a comparator")] string Term)
         {
             var spec = CreateSpec<TermSpec<T>>().SetParameter(Term, isList: false);
             var item = Service.SingleOrDefaultAsync(spec);
@@ -131,14 +131,14 @@ namespace Fluente.Arquitetura.Controllers
 
         [HttpGet]
         [Description("Get total amount of items")]
-        public virtual async Task<DefaultResult<int>> Count()
+        public virtual async Task<ResultadoPadrao<int>> Count()
         {
             return await ResultAsync<int>(await Service.CountAsync());
         }
 
         [HttpPost]
         [Description("Get the number of items based on filters")]
-        public virtual async Task<DefaultResult<int>> CountByFilter([FromBody, Description("The filters to apply to the query")] Filter[] Filters)
+        public virtual async Task<ResultadoPadrao<int>> CountByFilter([FromBody, Description("The filters to apply to the query")] Filtro[] Filters)
         {
             var spec = CreateSpec<FluenteFilterSpec<T>>().SetParameter(Filters, isList: true);
             return await ResultAsync<int>(await Service.CountAsync(spec));
@@ -147,7 +147,7 @@ namespace Fluente.Arquitetura.Controllers
         [HttpGet]
         [Route("/api/[controller]/ExistsByEntity")]
         [Description("Checks if an entity exists based on filters")]
-        public virtual async Task<DefaultResult<bool>> ExistsByEntityGet([FromQuery, Description("The entity that wants to check for existence")] T Entity)
+        public virtual async Task<ResultadoPadrao<bool>> ExistsByEntityGet([FromQuery, Description("The entity that wants to check for existence")] T Entity)
         {
             return await ResultAsync<bool>(await Service.ExistsAsync(Entity));
         }
@@ -155,7 +155,7 @@ namespace Fluente.Arquitetura.Controllers
         [HttpPost]
         [Route("/api/[controller]/ExistsByEntity")]
         [Description("Checks if an item exists based on their identifiers")]
-        public virtual async Task<DefaultResult<bool>> ExistsByEntityPost([FromBody, Description("The entity that wants to check for existence")] T Entity)
+        public virtual async Task<ResultadoPadrao<bool>> ExistsByEntityPost([FromBody, Description("The entity that wants to check for existence")] T Entity)
         {
             return await ResultAsync<bool>(await Service.ExistsAsync(Entity));
         }
@@ -164,12 +164,12 @@ namespace Fluente.Arquitetura.Controllers
         [Description("Get item type schema")]
         public virtual string JsonForm([Description("If you want to generate a tablet layout")] bool Tablet = false)
         {
-            return typeof(T).GetFluenteJsonSchema(Tablet).ToFluenteJson();
+            return typeof(T).GetFluenteJsonSchema(Tablet).SerializarParaFluenteJson();
         }
 
         [HttpGet]
         [Description("Get data import template")]
-        public ActionResult ImportationTemplate(EnumTemplateType type, int addExample = 0)
+        public ActionResult ImportationTemplate(EnumTipoDeTemplate type, int addExample = 0)
         {
             using var workbook = DataImportationUtil.ImportationTemplateXLSX<T>(addExample);
             var fs = new MemoryStream();
@@ -180,7 +180,7 @@ namespace Fluente.Arquitetura.Controllers
 
         [HttpPost]
         [Description("Data Import File Upload")]
-        public async Task<ActionResult> UploadImportFile(EnumTemplateType type)
+        public async Task<ActionResult> UploadImportFile(EnumTipoDeTemplate type)
         {
             var file = HttpContext.Request.Form.Files[0];
             if (file.ContentType == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
@@ -204,7 +204,7 @@ namespace Fluente.Arquitetura.Controllers
         // POST api/user/Add/
         [HttpPost]
         [Description("Add an item")]
-        public virtual async Task<DefaultResult<T>> Add([FromBody, Description("The entity you want to add")] T Entity)
+        public virtual async Task<ResultadoPadrao<T>> Add([FromBody, Description("The entity you want to add")] T Entity)
         {
             return await ResultAsync<T>(await Service.AddAsync(Entity));
         }
@@ -212,7 +212,7 @@ namespace Fluente.Arquitetura.Controllers
         // POST api/user/AddOrUpdate/
         [HttpPost]
         [Description("Add or update an item")]
-        public virtual async Task<DefaultResult<T>> AddOrUpdate([FromBody, Description("The entity you want to add or update")] T Entity)
+        public virtual async Task<ResultadoPadrao<T>> AddOrUpdate([FromBody, Description("The entity you want to add or update")] T Entity)
         {
             return await ResultAsync<T>(await Service.AddOrUpdateAsync(Entity));
         }
@@ -220,7 +220,7 @@ namespace Fluente.Arquitetura.Controllers
         // POST api/user/AddRange
         [HttpPost]
         [Description("Add an item collection")]
-        public virtual async Task<DefaultResult<T[]>> AddRange([FromBody, Description("The entities you want to add")] T[] Entities)
+        public virtual async Task<ResultadoPadrao<T[]>> AddRange([FromBody, Description("The entities you want to add")] T[] Entities)
         {
             await Service.AddRangeAsync(Entities);
             return await ResultAsync<T[]>(Entities);
@@ -229,7 +229,7 @@ namespace Fluente.Arquitetura.Controllers
         // PUT api/user/Update
         [HttpPut]
         [Description("Update an item")]
-        public virtual async Task<DefaultResult<bool>> Update([FromBody, Description("The entity you want to update")] T Entity)
+        public virtual async Task<ResultadoPadrao<bool>> Update([FromBody, Description("The entity you want to update")] T Entity)
         {
             await Service.UpdateAsync(Entity);
             return await ResultAsync<bool>(true);
@@ -238,7 +238,7 @@ namespace Fluente.Arquitetura.Controllers
         // PUT api/user/UpdateRange
         [HttpPut]
         [Description("Update an item collection")]
-        public virtual async Task<DefaultResult<bool>> UpdateRange([FromBody, Description("The entities you want to update")] T[] Entities)
+        public virtual async Task<ResultadoPadrao<bool>> UpdateRange([FromBody, Description("The entities you want to update")] T[] Entities)
         {
             await Service.UpdateRangeAsync(Entities);
             return await ResultAsync<bool>(true);
@@ -248,7 +248,7 @@ namespace Fluente.Arquitetura.Controllers
         [HttpPost]
         [HttpDelete]
         [Description("Remove item based on their identifiers")]
-        public virtual async Task<DefaultResult<bool>> Remove([FromBody, Description("The entity you want to remove")] T Entity)
+        public virtual async Task<ResultadoPadrao<bool>> Remove([FromBody, Description("The entity you want to remove")] T Entity)
         {
             await Service.RemoveAsync(Entity);
             return await ResultAsync<bool>(true);
@@ -258,7 +258,7 @@ namespace Fluente.Arquitetura.Controllers
         [HttpPost]
         [HttpDelete]
         [Description("Remove a collection of items based on their identifiers")]
-        public virtual async Task<DefaultResult<bool>> RemoveRange([FromBody, Description("The entities you want to remove")] T[] Entities)
+        public virtual async Task<ResultadoPadrao<bool>> RemoveRange([FromBody, Description("The entities you want to remove")] T[] Entities)
         {
             await Service.RemoveRangeAsync(Entities);
             return await ResultAsync<bool>(true);
@@ -266,7 +266,7 @@ namespace Fluente.Arquitetura.Controllers
 
         [HttpDelete]
         [Description("Physically delete all elements of a table")]
-        public virtual async Task<DefaultResult<bool>> Truncate([FromHeader, Description("Confirmation that you really want to delete the data. If yes, enter \"Yes\"")] string ERASE_ALL_DATA = "false")
+        public virtual async Task<ResultadoPadrao<bool>> Truncate([FromHeader, Description("Confirmation that you really want to delete the data. If yes, enter \"Yes\"")] string ERASE_ALL_DATA = "false")
         {
             await Service.TruncateAsync(ERASE_ALL_DATA);
             return await ResultAsync<bool>(true);

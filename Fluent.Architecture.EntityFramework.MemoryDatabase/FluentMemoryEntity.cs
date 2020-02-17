@@ -3,7 +3,7 @@
 namespace Fluente.Arquitetura.EntityFramework.MemoryDatabase
 {
     [DbType(FluenteDbType.MEMORY)]
-    public abstract class FluenteMySQLEntity : FluenteEntity
+    public abstract class FluenteMySQLEntity : FluenteEntidade
     {
     }
 }

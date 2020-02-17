@@ -34,7 +34,7 @@ namespace Fluente.Arquitetura.Services
     /// <typeparam name="T">
     /// A entidade relacionada ao serviço.
     /// </typeparam>
-    public class FluenteService<T> : TransactionalService where T : BaseEntity
+    public class FluenteService<T> : TransactionalService where T : EntidadeBase
     {
         ///// <summary>
         ///// O repositório do serviço.
@@ -136,7 +136,7 @@ namespace Fluente.Arquitetura.Services
         /// <returns>
         /// A lista paginada de resultados.
         /// </returns>    
-        public virtual async Task<List<TO>> ListSelectAsync<TO>(IFluenteSpecification<TO> spec, FluentePagination pagination = null)
+        public virtual async Task<List<TO>> ListSelectAsync<TO>(IFluenteSpecification<TO> spec, FluentePaginacao pagination = null)
         {
             var list = await Repository.ListSelectAsync(spec, pagination);
             list.ForEach(x => Repository.Detach(x));
@@ -156,7 +156,7 @@ namespace Fluente.Arquitetura.Services
         /// <returns>
         /// A lista paginada de resultados.
         /// </returns>
-        public virtual async Task<List<T>> ListAsync(IFluenteSpecification spec, FluentePagination pagination = null)
+        public virtual async Task<List<T>> ListAsync(IFluenteSpecification spec, FluentePaginacao pagination = null)
         {
             var list = await Repository.ListAsync(spec, pagination);
             list.ForEach(x => Repository.Detach(x));

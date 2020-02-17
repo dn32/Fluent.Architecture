@@ -8,6 +8,6 @@ namespace Fluente.Arquitetura.Nucleo.Atributos
     public class FluenteCompositionAttribute : FluenteReferenceAttribute
     {
         public FluenteJsonSchema Form { get; set; }
-        public EnumOnSaveReference OnSave { get; set; } = EnumOnSaveReference.ADD_AND_UPDATE;
+        public EnumTipoDeOperacaoParaComAsReferencias OnSave { get; set; } = EnumTipoDeOperacaoParaComAsReferencias.AdicionarEAtualizar;
     }
 }

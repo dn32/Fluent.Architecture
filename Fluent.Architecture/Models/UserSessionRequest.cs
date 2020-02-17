@@ -25,7 +25,7 @@ namespace Fluente.Arquitetura.Nucleo.Models
         internal ITransactionObjects TransactionObjects { get; set; }
         internal Guid SessionRequestId { get; set; }
         public ContextFluenteValidationException ContextFluenteValidationException { get; set; }
-        public FluentePagination Pagination { get; set; }
+        public FluentePaginacao Pagination { get; set; }
 
         internal object HttpContext;
 

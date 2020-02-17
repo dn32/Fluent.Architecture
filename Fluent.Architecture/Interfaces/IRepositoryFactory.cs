@@ -5,6 +5,6 @@ namespace Fluente.Arquitetura.Nucleo.Interfaces
 {
     internal interface IRepositoryFactory
     {
-        IFluenteRepository<T> Create<T>(ITransactionObjects transactionObjects, FluenteService<T> service) where T : BaseEntity;
+        IFluenteRepository<T> Create<T>(ITransactionObjects transactionObjects, FluenteService<T> service) where T : EntidadeBase;
     }
 }

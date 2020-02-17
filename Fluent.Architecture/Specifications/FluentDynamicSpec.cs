@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Fluente.Arquitetura.Nucleo.Specifications
 {
-    public class FluenteDynamicSpec<T> : FluenteSpecification<T> where T : FluenteEntity
+    public class FluenteDynamicSpec<T> : FluenteSpecification<T> where T : FluenteEntidade
     {
         public string[] Fields { get; set; }
 

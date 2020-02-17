@@ -61,7 +61,7 @@ namespace Fluente.Arquitetura.EntityFramework
                     continue;
                 }
 
-                if (type.IsSubclassOf(typeof(FluenteEntity)))
+                if (type.IsSubclassOf(typeof(FluenteEntidade)))
                 {
                     var keys = type.GetProperties().Where(x => x.GetCustomAttribute<KeyAttribute>() != null).Select(x => x.Name).ToArray();
                     if (keys.Length == 0)
@@ -235,7 +235,7 @@ namespace Fluente.Arquitetura.EntityFramework
 
             var currentEntityType = entityChanged.Entity.GetType();
 
-            if (currentEntityType.GetCustomAttribute<FluenteLoggingAttribute>()?.Display == EnumFluenteDisplay.Hidden)
+            if (currentEntityType.GetCustomAttribute<FluenteLoggingAttribute>()?.Display == EnumMostrar.Ocultar)
             {
                 return null;
             }

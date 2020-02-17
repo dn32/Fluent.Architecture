@@ -10,7 +10,7 @@ using System.Reflection;
 
 namespace Fluente.Arquitetura.Nucleo.Specifications
 {
-    public class TermSpec<T> : FluenteSpecification<T> where T : FluenteEntity
+    public class TermSpec<T> : FluenteSpecification<T> where T : FluenteEntidade
     {
         private string Term { get; set; }
 

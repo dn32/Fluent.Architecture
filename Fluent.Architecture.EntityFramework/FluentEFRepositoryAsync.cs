@@ -47,7 +47,7 @@ namespace Fluente.Arquitetura.EntityFramework
             return ret;
         }
 
-        internal protected async Task<TO> FindSingleOrDefaultSqlAsync<TO>(string sql) where TO : BaseEntity
+        internal protected async Task<TO> FindSingleOrDefaultSqlAsync<TO>(string sql) where TO : EntidadeBase
         {
             try
             {
@@ -69,7 +69,7 @@ namespace Fluente.Arquitetura.EntityFramework
             return await GetSpecSelect<TO>(spec).ToIQueryable(Query).AnyAsync();
         }
 
-        public virtual async Task<List<TE>> ListAsync(IFluenteSpecification ispec, FluentePagination pagination = null)
+        public virtual async Task<List<TE>> ListAsync(IFluenteSpecification ispec, FluentePaginacao pagination = null)
         {
             var spec = GetSpec(ispec);
             var query = spec.ToIQueryable(Query);
@@ -141,7 +141,7 @@ namespace Fluente.Arquitetura.EntityFramework
 
         #endregion
 
-        public virtual async Task<List<TO>> ListSelectAsync<TO>(IFluenteSpecification<TO> ispec, FluentePagination pagination = null)
+        public virtual async Task<List<TO>> ListSelectAsync<TO>(IFluenteSpecification<TO> ispec, FluentePaginacao pagination = null)
         {
             var spec = GetSpecSelect<TO>(ispec);
             var query = spec.ToIQueryable(Query);
@@ -192,7 +192,7 @@ namespace Fluente.Arquitetura.EntityFramework
 
         public virtual async Task<TE> FindAsync(TE entity) => await FindSelectAsync(entity);
 
-        public async Task<TO> FindSelectAsync<TO>(TO entity) where TO : BaseEntity
+        public async Task<TO> FindSelectAsync<TO>(TO entity) where TO : EntidadeBase
         {
             {
                 var sql = RepositoryUtil.GetKeyFilterSql(entity, out bool nonKeys);
@@ -239,17 +239,17 @@ namespace Fluente.Arquitetura.EntityFramework
             await Input.AddRangeAsync(entities);
         }
 
-        protected async Task<IQueryable<TX>> FluentePaginateAsync<TX>(IQueryable<TX> query, FluentePagination pagination = null)
+        protected async Task<IQueryable<TX>> FluentePaginateAsync<TX>(IQueryable<TX> query, FluentePaginacao pagination = null)
         {
             if (pagination == null)
             {
-                pagination = GetPagination() ?? new FluentePagination(0, true, 20);
+                pagination = GetPagination() ?? FluentePaginacao.Criar(0, true, 20);
             }
 
-            pagination.TotalQuantityOfItems = await query.CountAsync();
+            pagination.QuantidadeTotalDeItens = await query.CountAsync();
             SessionRequest.Pagination = pagination;
 
-            return query.Skip(pagination.Skip).Take(pagination.ItemsPerPage);
+            return query.Skip(pagination.Salto).Take(pagination.ItensPorPagina);
         }
 
         public virtual async Task<TE> AddAsync(TE entity)

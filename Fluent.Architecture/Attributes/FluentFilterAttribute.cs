@@ -8,7 +8,7 @@ namespace Fluente.Arquitetura.Nucleo.Atributos
     [AttributeUsage(AttributeTargets.Property)]
     public class FluenteFilterAttribute : Attribute
     {
-        public EnumFilterType FilterType { get; set; } = EnumFilterType.EQUAL;
+        public EnumTipoDeFiltro FilterType { get; set; } = EnumTipoDeFiltro.Igual;
 
         public string[] LocalKeys { get; set; }
 

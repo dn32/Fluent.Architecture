@@ -69,7 +69,7 @@ namespace Fluente.Arquitetura.Filters
             ContentResult content = new ContentResult
             {
                 ContentType = "application/json",
-                Content = message.ToFluenteJson()
+                Content = message.SerializarParaFluenteJson()
             };
 
             context.Result = content;

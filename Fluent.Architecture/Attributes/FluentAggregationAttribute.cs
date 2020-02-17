@@ -30,9 +30,9 @@ namespace Fluente.Arquitetura.Nucleo.Atributos
 
     public class FluenteLoggingAttribute : Attribute
     {
-        public EnumFluenteDisplay Display { get; set; }
+        public EnumMostrar Display { get; set; }
 
-        public FluenteLoggingAttribute(EnumFluenteDisplay display = EnumFluenteDisplay.Show)
+        public FluenteLoggingAttribute(EnumMostrar display = EnumMostrar.Mostrar)
         {
             Display = display;
         }

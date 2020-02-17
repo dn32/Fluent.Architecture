@@ -9,7 +9,7 @@ using Fluente.Arquitetura.Nucleo.Extensoes;
 
 namespace Fluente.Arquitetura.EntityFramework.Oracle.Specifications
 {
-    public class TermByFilterAndProximitySpec<T> : FluenteSpecification<T> where T : FluenteEntity
+    public class TermByFilterAndProximitySpec<T> : FluenteSpecification<T> where T : FluenteEntidade
     {
         private string Term { get; set; }
 
@@ -19,11 +19,11 @@ namespace Fluente.Arquitetura.EntityFramework.Oracle.Specifications
 
         private int Tolerance { get; set; }
 
-        public Filter[] Filters { get; set; }
+        public Filtro[] Filters { get; set; }
 
         public bool IsList { get; set; }
 
-        public TermByFilterAndProximitySpec<T> SetParameter(Filter[] filters, bool isList, string[] properties, string term, int tolerance)
+        public TermByFilterAndProximitySpec<T> SetParameter(Filtro[] filters, bool isList, string[] properties, string term, int tolerance)
         {
             Filters = filters;
             IsList = isList;

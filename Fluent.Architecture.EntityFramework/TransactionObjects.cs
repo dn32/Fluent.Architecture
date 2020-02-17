@@ -49,7 +49,7 @@ namespace Fluente.Arquitetura.EntityFramework
             this.Session = ContextFactory.Create(connection, UserSessionRequest);
         }
 
-        public DbSet<TX> GetObjectInputDataInternal<TX>() where TX : BaseEntity
+        public DbSet<TX> GetObjectInputDataInternal<TX>() where TX : EntidadeBase
         {
             return this.Session.Set<TX>();
         }
@@ -68,7 +68,7 @@ namespace Fluente.Arquitetura.EntityFramework
         /// <returns>
         /// A referência da tabela do banco de dados.
         /// </returns>
-        public virtual IQueryable<TX> GetObjectQueryInternal<TX>() where TX : BaseEntity
+        public virtual IQueryable<TX> GetObjectQueryInternal<TX>() where TX : EntidadeBase
         {
             return this.Session.Set<TX>();
         }

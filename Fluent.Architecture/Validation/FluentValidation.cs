@@ -24,7 +24,7 @@ namespace Fluente.Arquitetura.Validation
     /// A classe de validação base de todas as validações com entidade do sistema.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class FluenteValidation<T> : TransactionalValidation, IFluenteValidation where T : BaseEntity
+    public class FluenteValidation<T> : TransactionalValidation, IFluenteValidation where T : EntidadeBase
     {
         #region INTERNAL
 
@@ -155,7 +155,7 @@ namespace Fluente.Arquitetura.Validation
             RunTheContextValidation();
         }
 
-        internal void FilteredList(Filter[] filters)
+        internal void FilteredList(Filtro[] filters)
         {
             this.ParameterMustBeInformed(filters, nameof(filters));
 
@@ -163,10 +163,10 @@ namespace Fluente.Arquitetura.Validation
 
             foreach (var filter in filters)
             {
-                var property = properties.SingleOrDefault(x => x.Name.Equals(filter.PropertyName, StringComparison.InvariantCultureIgnoreCase));
+                var property = properties.SingleOrDefault(x => x.Name.Equals(filter.NomeDaPropriedade, StringComparison.InvariantCultureIgnoreCase));
                 if (property == null)
                 {
-                    AddInconsistency(new FilteredPropertyNotFound(typeof(T).Name, filter.PropertyName));
+                    AddInconsistency(new FilteredPropertyNotFound(typeof(T).Name, filter.NomeDaPropriedade));
                 }
             }
 
@@ -212,7 +212,7 @@ namespace Fluente.Arquitetura.Validation
 
         #region INTERNAL
 
-        internal static void UpdateAsyncInternal<T2>(IFluenteValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : BaseEntity
+        internal static void UpdateAsyncInternal<T2>(IFluenteValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : EntidadeBase
         {
             validation.ParameterMustBeInformed(entity, compositionProperty);
             validation.FluenteValidateAttribute(entity, compositionProperty, compositionFieldName);
@@ -221,7 +221,7 @@ namespace Fluente.Arquitetura.Validation
             validation.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, compositionProperty, compositionFieldName);
         }
 
-        internal static async Task AdddAsyncInternal<T2>(IFluenteValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : BaseEntity
+        internal static async Task AdddAsyncInternal<T2>(IFluenteValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : EntidadeBase
         {
             validation.ParameterMustBeInformed(entity, compositionProperty);
             validation.FluenteValidateAttribute(entity, compositionProperty, compositionFieldName);
@@ -235,7 +235,7 @@ namespace Fluente.Arquitetura.Validation
             }
         }
 
-        internal static void UpdateRangeAsyncInternal<T2>(IFluenteValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : BaseEntity
+        internal static void UpdateRangeAsyncInternal<T2>(IFluenteValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : EntidadeBase
         {
             validation.ParameterMustBeInformed(entity, compositionProperty);
             validation.FluenteValidateAttribute(entity, compositionProperty, compositionFieldName);

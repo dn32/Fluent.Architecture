@@ -7,7 +7,7 @@ namespace Fluente.Arquitetura.EntityFramework.Oracle.Specifications
 {
     public static class QueryExtension
     {
-        public static IQueryable<T> WhereProximityText<T>(this IQueryable<T> query, string term, string table, string column, int tolerance) where T : FluenteEntity
+        public static IQueryable<T> WhereProximityText<T>(this IQueryable<T> query, string term, string table, string column, int tolerance) where T : FluenteEntidade
         {
             if (string.IsNullOrWhiteSpace(term)) { return query.OrderBy(x => x); }
 
@@ -27,7 +27,7 @@ order by UTL_MATCH.jaro_winkler_similarity(lower({column}), lower({{0}})) DESC
 #endif
         }
 
-        public static IQueryable<T> WhereProximityText<T>(this IQueryable<T> query, string term, string table, string[] columns, int tolerance) where T : FluenteEntity
+        public static IQueryable<T> WhereProximityText<T>(this IQueryable<T> query, string term, string table, string[] columns, int tolerance) where T : FluenteEntidade
         {
             if (string.IsNullOrWhiteSpace(term)) { return query.OrderBy(x => x); }
 

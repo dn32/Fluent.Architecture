@@ -38,7 +38,7 @@ namespace Fluente.Arquitetura.EntityFramework
         /// <returns>
         /// O repositório criado.
         /// </returns>
-        public IFluenteRepository<T> Create<T>(ITransactionObjects transactionObjects, FluenteService<T> service) where T : BaseEntity
+        public IFluenteRepository<T> Create<T>(ITransactionObjects transactionObjects, FluenteService<T> service) where T : EntidadeBase
         {
             if (Setup.Config?.Config?.Connections == null) { throw new IncorrectDevelopmentException($"Arquitetura was not initialized properly"); }
 
@@ -112,7 +112,7 @@ namespace Fluente.Arquitetura.EntityFramework
             return repository;
         }
 
-        internal IFluenteRepository<T> Create<T>(Type repositoryType) where T : BaseEntity
+        internal IFluenteRepository<T> Create<T>(Type repositoryType) where T : EntidadeBase
         {
             return Activator.CreateInstance(repositoryType) as IFluenteRepository<T>;
         }

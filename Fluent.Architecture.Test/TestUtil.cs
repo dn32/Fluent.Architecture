@@ -27,11 +27,11 @@ namespace Fluente.Arquitetura.Test
         public static TR Execute<TC, TR>(TC controller, Func<TC, object> actionMethod) where TC : BaseController
         {
             controller.OnActionExecuting(MockActionExecutingContextFactory.Create(controller));
-            DefaultResult<TR> result;
+            ResultadoPadrao<TR> result;
 
             try
             {
-                result = actionMethod(controller) as DefaultResult<TR>;
+                result = actionMethod(controller) as ResultadoPadrao<TR>;
             }
             catch (Exception ex)
             {
@@ -40,7 +40,7 @@ namespace Fluente.Arquitetura.Test
 
             controller.OnActionExecuted(MockActionExecutedContextFactory.Create(controller));
             if(result == null) { return default; }
-            return JsonConvert.DeserializeObject<TR>(JsonConvert.SerializeObject(result.Data));
+            return JsonConvert.DeserializeObject<TR>(JsonConvert.SerializeObject(result.Dados));
         }
 
         public static object Execute<TC>(TC controller, Func<TC, object> actionMethod) where TC : BaseController

@@ -41,7 +41,7 @@ namespace Fluente.Arquitetura.Extensoes
             return Request.GetParameters("propertyToOrder");
         }
 
-        public static IQueryable<object> FluenteDynamicSelectProjectTo<T>(this IQueryable<T> query, TransactionalService service) where T : BaseEntity
+        public static IQueryable<object> FluenteDynamicSelectProjectTo<T>(this IQueryable<T> query, TransactionalService service) where T : EntidadeBase
         {
             var Request = service.LocalHttpContext.Request;
             var fields = Request.GetPropertiesToShow();
@@ -49,7 +49,7 @@ namespace Fluente.Arquitetura.Extensoes
             return query.FluenteDynamicSelectProjectTo(fields, out _);
         }
 
-        public static IQueryable<T> FluenteDynamicProjectTo<T>(this IQueryable<T> query, TransactionalService service, string[] fields = null) where T : BaseEntity
+        public static IQueryable<T> FluenteDynamicProjectTo<T>(this IQueryable<T> query, TransactionalService service, string[] fields = null) where T : EntidadeBase
         {
             var Request = service.LocalHttpContext.Request;
             if (fields == null || fields.Length == 0) { fields = Request.GetPropertiesToShow(); }
@@ -57,7 +57,7 @@ namespace Fluente.Arquitetura.Extensoes
             return query.FluenteDynamicProjectTo(fields);
         }
 
-        public static IOrderedQueryable<T> FluenteDynamicProjectToOrder<T>(this IQueryable<T> query, TransactionalService service, string[] fields = null) where T : BaseEntity
+        public static IOrderedQueryable<T> FluenteDynamicProjectToOrder<T>(this IQueryable<T> query, TransactionalService service, string[] fields = null) where T : EntidadeBase
         {
             var Request = service.LocalHttpContext.Request;
             if (fields == null || fields.Length == 0) { fields = Request.GetPropertiesToShow(); }

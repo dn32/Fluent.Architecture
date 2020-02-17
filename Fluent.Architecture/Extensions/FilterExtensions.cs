@@ -15,63 +15,63 @@ namespace Fluente.Arquitetura.Nucleo.Extensoes
 {
     internal static class FilterExtensions
     {
-        internal static Expression<Func<T, bool>> FiltersToExtression<T>(this Filter[] filters)
+        internal static Expression<Func<T, bool>> FiltersToExtression<T>(this Filtro[] filters)
         {
             var properties = typeof(T).GetProperties().ToList();
             Expression<Func<T, bool>> allExpression = null;
-            EnumJunctionType LastJunctionType = EnumJunctionType.OR;
+            EnumTipoDeJuncao LastJunctionType = EnumTipoDeJuncao.Ou;
 
             foreach (var filter in filters)
             {
                 //Todo - Como validar se a propriedade existe antes de chegar aqui?
-                var property = properties.FirstOrDefault(x => x.Name.Equals(filter.PropertyName, StringComparison.InvariantCultureIgnoreCase));
+                var property = properties.FirstOrDefault(x => x.Name.Equals(filter.NomeDaPropriedade, StringComparison.InvariantCultureIgnoreCase));
                 if (property == null)
                 {
-                    throw new InvalidOperationException($"Entity '{typeof(T).GetFriendlyName()}' does not have a property with the name '{filter.PropertyName}' requested in the filtered query.");
+                    throw new InvalidOperationException($"Entity '{typeof(T).GetFriendlyName()}' does not have a property with the name '{filter.NomeDaPropriedade}' requested in the filtered query.");
                 }
 
                 Expression<Func<T, bool>> expression = x => true;
 
-                switch (filter.FilterType)
+                switch (filter.TipoDeFiltro)
                 {
-                    case EnumFilterType.CONTAINS:
-                        expression = ExpressionUtil.Contains<T>(property.Name, filter?.Value?.ToUpper(CultureInfo.InvariantCulture) ?? "", property.PropertyType);
+                    case EnumTipoDeFiltro.Contem:
+                        expression = ExpressionUtil.Contains<T>(property.Name, filter?.Valor?.ToUpper(CultureInfo.InvariantCulture) ?? "", property.PropertyType);
                         expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
                         break;
-                    case EnumFilterType.GREATER:
-                        expression = ExpressionUtil.Greate<T>(property.Name, filter?.Value?.ToUpper(CultureInfo.InvariantCulture) ?? "", filter?.Including??false, property.PropertyType);
+                    case EnumTipoDeFiltro.MaiorQue:
+                        expression = ExpressionUtil.Greate<T>(property.Name, filter?.Valor?.ToUpper(CultureInfo.InvariantCulture) ?? "", filter?.Inclusive??false, property.PropertyType);
                         expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
                         break;
-                    case EnumFilterType.SMALLER:
-                        expression = ExpressionUtil.Smaller<T>(property.Name, filter?.Value?.ToUpper(CultureInfo.InvariantCulture) ?? "", filter?.Including??false, property.PropertyType);
+                    case EnumTipoDeFiltro.MenorQue:
+                        expression = ExpressionUtil.Smaller<T>(property.Name, filter?.Valor?.ToUpper(CultureInfo.InvariantCulture) ?? "", filter?.Inclusive??false, property.PropertyType);
                         expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
                         break;
-                    case EnumFilterType.START_WITH:
-                        expression = ExpressionUtil.StartWith<T>(property.Name, filter?.Value?.ToUpper(CultureInfo.InvariantCulture) ?? "", property.PropertyType);
+                    case EnumTipoDeFiltro.IniciaCom:
+                        expression = ExpressionUtil.StartWith<T>(property.Name, filter?.Valor?.ToUpper(CultureInfo.InvariantCulture) ?? "", property.PropertyType);
                         expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
                         break;
-                    case EnumFilterType.ENDS_WITH:
-                        expression = ExpressionUtil.EndsWith<T>(property.Name, filter?.Value?.ToUpper(CultureInfo.InvariantCulture) ?? "", property.PropertyType);
+                    case EnumTipoDeFiltro.TerminaCom:
+                        expression = ExpressionUtil.EndsWith<T>(property.Name, filter?.Valor?.ToUpper(CultureInfo.InvariantCulture) ?? "", property.PropertyType);
                         expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
                         break;
-                    case EnumFilterType.EQUAL:
-                        expression = ExpressionUtil.Equals<T>(property.Name, filter?.Value?.ToUpper(CultureInfo.InvariantCulture)??"", property.PropertyType);
+                    case EnumTipoDeFiltro.Igual:
+                        expression = ExpressionUtil.Equals<T>(property.Name, filter?.Valor?.ToUpper(CultureInfo.InvariantCulture)??"", property.PropertyType);
                         // expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
                         break;
-                    case EnumFilterType.TRUE:
+                    case EnumTipoDeFiltro.Verdadeiro:
                         expression = ExpressionUtil.IsTrue<T>(property.Name, property.PropertyType);
                         expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
                         break;
-                    case EnumFilterType.FALSE:
+                    case EnumTipoDeFiltro.Falso:
                         expression = ExpressionUtil.IsFalse<T>(property.Name, property.PropertyType);
                         expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
                         break;
-                    case EnumFilterType.NULL:
+                    case EnumTipoDeFiltro.Nulo:
                         expression = ExpressionUtil.IsNull<T>(property.Name);
                         break;
                 }
 
-                if (filter?.IsReverse==true)
+                if (filter?.Inverter==true)
                 {
                     expression = expression.Not();
                 }
@@ -82,7 +82,7 @@ namespace Fluente.Arquitetura.Nucleo.Extensoes
                 }
                 else
                 {
-                    if (LastJunctionType == EnumJunctionType.OR)
+                    if (LastJunctionType == EnumTipoDeJuncao.Ou)
                     {
                         allExpression = allExpression.Or(expression);
                     }
@@ -92,7 +92,7 @@ namespace Fluente.Arquitetura.Nucleo.Extensoes
                     }
                 }
 
-                LastJunctionType = filter?.JunctionType ?? EnumJunctionType.AND;
+                LastJunctionType = filter?.TipoDeJuncao ?? EnumTipoDeJuncao.E;
             }
 
             if (allExpression == null) { allExpression = x => true; }

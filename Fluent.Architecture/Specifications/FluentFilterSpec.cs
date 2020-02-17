@@ -7,13 +7,13 @@ using System.Linq;
 
 namespace Fluente.Arquitetura.Nucleo.Specifications
 {
-    public class FluenteFilterSpec<T> : FluenteSpecification<T> where T : FluenteEntity
+    public class FluenteFilterSpec<T> : FluenteSpecification<T> where T : FluenteEntidade
     {
-        protected Filter[] Filters { get; set; }
+        protected Filtro[] Filters { get; set; }
 
         public bool IsList { get; set; }
 
-        public FluenteFilterSpec<T> SetParameter(Filter[] filters, bool isList)
+        public FluenteFilterSpec<T> SetParameter(Filtro[] filters, bool isList)
         {
             Filters = filters;
             IsList = isList;

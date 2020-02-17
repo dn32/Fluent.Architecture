@@ -6,7 +6,7 @@ namespace Fluente.Arquitetura.EntityFramework.Oracle
     public class FiltersAndTerm
     {
         [Description("Query Filters")]
-        public Filter[] Filters { get; set; }
+        public Filtro[] Filters { get; set; }
 
         [Description("The properties whose value will be compared")]
         public string[] Properties { get; set; }

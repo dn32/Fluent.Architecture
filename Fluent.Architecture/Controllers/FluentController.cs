@@ -21,7 +21,7 @@ namespace Fluente.Arquitetura.Controllers
     /// Controlador genérico padrão recomendado para herança por todos os controladores que tiverem entidade.
     /// </summary>
     /// <typeparam name="T">O tipo da entidade do controller.</typeparam>
-    public abstract partial class FluenteController<T> : FluenteServiceController<FluenteService<T>> where T : BaseEntity
+    public abstract partial class FluenteController<T> : FluenteServiceController<FluenteService<T>> where T : EntidadeBase
     {
         protected T2 CreateSpec<T2>() where T2 : BaseSpecification
         {

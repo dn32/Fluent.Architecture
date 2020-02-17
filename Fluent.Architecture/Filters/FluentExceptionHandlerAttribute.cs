@@ -95,7 +95,7 @@ namespace Fluente.Arquitetura.Filters
                 ContentResult content = new ContentResult
                 {
                     ContentType = "application/json",
-                    Content = result.ToFluenteJson()
+                    Content = result.SerializarParaFluenteJson()
                 };
 
                 filterContext.Result = content;
@@ -119,7 +119,7 @@ namespace Fluente.Arquitetura.Filters
                 ContentResult content = new ContentResult
                 {
                     ContentType = "application/json",
-                    Content = result.ToFluenteJson()
+                    Content = result.SerializarParaFluenteJson()
                 };
 
                 filterContext.Result = content;
