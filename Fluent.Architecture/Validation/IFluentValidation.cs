@@ -1,23 +1,23 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
 
-using Fluent.Architecture.Exceptions.ValidationException;
-using Fluent.Architecture.Services;
+using Fluente.Arquitetura.Exceptions.ValidationException;
+using Fluente.Arquitetura.Services;
 
-namespace Fluent.Architecture.Validation
+namespace Fluente.Arquitetura.Validation
 {
-    internal interface IFluentValidation
+    internal interface IFluenteValidation
     {
         bool NullParameterOk { get; set; }
         bool KeyValuesOk { get; set; }
         //TransactionalService Service { get; set; }
 
-        void AddInconsistency(FluentValidationException ex);
+        void AddInconsistency(FluenteValidationException ex);
     }
 }

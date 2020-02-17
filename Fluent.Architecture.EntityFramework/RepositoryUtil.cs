@@ -1,11 +1,11 @@
-﻿using Fluent.Architecture.Extensions;
+﻿using Fluente.Arquitetura.Extensoes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Fluent.Architecture.Core.Models;
+using Fluente.Arquitetura.Nucleo.Models;
 using System.Reflection;
 
-namespace Fluent.Architecture.EntityFramework
+namespace Fluente.Arquitetura.EntityFramework
 {
     internal static class RepositoryUtil
     {
@@ -44,10 +44,10 @@ namespace Fluent.Architecture.EntityFramework
             return $"select * from {tableName} where ({string.Join(" and ", fluentUniqueKeyValues)})";// O and está no lugar certo sim
         }
 
-        internal static string GetFluentUniqueKeyFilterSql(object entity, out bool nonKeys)
+        internal static string GetFluenteUniqueKeyFilterSql(object entity, out bool nonKeys)
         {
             var tableName = entity.GetTableName();
-            var fluentUniqueKeyValues = entity.GetFluentUniqueKeyValues().Select(GetStringOrNumberValue).ToArray();
+            var fluentUniqueKeyValues = entity.GetFluenteUniqueKeyValues().Select(GetStringOrNumberValue).ToArray();
             nonKeys = fluentUniqueKeyValues.Length == 0;
             return $"select * from {tableName} where ({string.Join(" and ", fluentUniqueKeyValues)})";// O and está no lugar certo sim
         }
@@ -60,11 +60,11 @@ namespace Fluent.Architecture.EntityFramework
             return $"select * from {tableName} where ({string.Join(" and ", keyValues)})"; // O and está no lugar certo sim
         }
 
-        internal static string GetKeyAndFluentUniqueKeyFilterSql(object entity)
+        internal static string GetKeyAndFluenteUniqueKeyFilterSql(object entity)
         {
             var tableName = entity.GetTableName();
             var keyValues = entity.GetKeyValues().Select(GetStringOrNumberValue).ToArray();
-            var fluentUniqueKeyValues = entity.GetFluentUniqueKeyValues().Select(GetStringOrNumberValue).ToArray();
+            var fluentUniqueKeyValues = entity.GetFluenteUniqueKeyValues().Select(GetStringOrNumberValue).ToArray();
 
             var sql = $"({string.Join(" and ", keyValues)})";// O and está no lugar certo sim
 

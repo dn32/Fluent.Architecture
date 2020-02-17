@@ -1,11 +1,11 @@
-﻿using Fluent.Architecture.Controllers;
+﻿using Fluente.Arquitetura.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace Fluent.Architecture.Test.Mock
+namespace Fluente.Arquitetura.Test.Mock
 {
     public static class MockUtil
     {

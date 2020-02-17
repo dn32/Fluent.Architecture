@@ -1,12 +1,12 @@
-﻿//using Fluent.Architecture.Enumerator;
+﻿//using Fluente.Arquitetura.Enumerator;
 
-namespace Fluent.Architecture.Core.Models
+namespace Fluente.Arquitetura.Nucleo.Models
 {
-    //namespace Fluent.Architecture.Model
+    //namespace Fluente.Arquitetura.Model
     //{
     //    public abstract class BaseEvent
     //    {
-    //        public FluentEventEntity ObjectEvent { get; set; }
+    //        public FluenteEventEntity ObjectEvent { get; set; }
 
     //        public EnumEventType EventType { get; set; }
 

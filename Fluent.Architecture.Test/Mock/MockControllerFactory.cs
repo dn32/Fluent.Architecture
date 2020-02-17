@@ -1,14 +1,14 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Fluent.Architecture.Controllers;
+using Fluente.Arquitetura.Controllers;
 using System;
 
-namespace Fluent.Architecture.Test.Mock
+namespace Fluente.Arquitetura.Test.Mock
 {
     public static class MockControllerFactory
     {

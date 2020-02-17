@@ -1,6 +1,6 @@
-﻿namespace Fluent.Architecture.Core.Models
+﻿namespace Fluente.Arquitetura.Nucleo.Models
 {
-    public class FluentAuthenticationUser
+    public class FluenteAuthenticationUser
     {
         public string Name { get; set; }
         public string Email { get; set; }

@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -10,9 +10,9 @@
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Fluent.Architecture.Interfaces
+namespace Fluente.Arquitetura.Interfaces
 {
-    public interface IFluentInclusionEntity
+    public interface IFluenteInclusionEntity
     {
         [NotMapped, JsonIgnore]
         string[] InclusionsForList { get; }

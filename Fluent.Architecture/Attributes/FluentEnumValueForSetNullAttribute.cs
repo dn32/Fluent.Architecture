@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -8,14 +8,14 @@
 // ReSharper disable CommentTypo
 using System;
 
-namespace Fluent.Architecture.Attributes
+namespace Fluente.Arquitetura.Attributes
 {
     [AttributeUsage(AttributeTargets.Enum, Inherited = false)]
-    public class FluentEnumValueForSetNullAttribute : Attribute
+    public class FluenteEnumValueForSetNullAttribute : Attribute
     {
         public int Value { get; }
      
-        public FluentEnumValueForSetNullAttribute(int value)
+        public FluenteEnumValueForSetNullAttribute(int value)
         {
             Value = value;
         }

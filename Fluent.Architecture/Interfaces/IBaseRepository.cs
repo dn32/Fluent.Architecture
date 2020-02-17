@@ -1,4 +1,4 @@
-﻿namespace Fluent.Architecture.Core.Interfaces
+﻿namespace Fluente.Arquitetura.Nucleo.Interfaces
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1040:Avoid empty interfaces", Justification = "<Pending>")]
     public interface IBaseRepository

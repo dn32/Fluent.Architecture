@@ -1,8 +1,8 @@
 ﻿
-using Fluent.Architecture.Extensions;
+using Fluente.Arquitetura.Extensoes;
 using Newtonsoft.Json;
 
-namespace Fluent.Architecture.Core.Extensions
+namespace Fluente.Arquitetura.Nucleo.Extensoes
 {
     public static class JsonExtension
     {
@@ -11,21 +11,21 @@ namespace Fluent.Architecture.Core.Extensions
             return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(jsonObject));
         }
 
-        public static string ToFluentJsonOrPrimitive(this object obj, Formatting formatting = Formatting.None)
+        public static string ToFluenteJsonOrPrimitive(this object obj, Formatting formatting = Formatting.None)
         {
             if(obj == null) { return null; }
             var type = obj.GetType();
             if (type.IsPrimitiveOrPrimitiveNulable()) { return obj.ToString(); }
-            return obj.ToFluentJson(formatting);
+            return obj.ToFluenteJson(formatting);
         }
 
 
-        public static T ToFluentObject<T>(this string json)
+        public static T ToFluenteObject<T>(this string json)
         {
             return JsonConvert.DeserializeObject<T>(json, JsonExtensionBase.JsonSerializerSettings);
         }
 
-        public static string ToFluentJsonStringNormalized(this string text)
+        public static string ToFluenteJsonStringNormalized(this string text)
         {
             if (string.IsNullOrWhiteSpace(text)) { return text; }
 

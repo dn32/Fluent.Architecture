@@ -1,18 +1,18 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluent.Architecture.Extensions;
+using Fluente.Arquitetura.Extensoes;
 using Newtonsoft.Json;
 using System.Reflection;
 
-namespace Fluent.Architecture.Exceptions.ValidationException
+namespace Fluente.Arquitetura.Exceptions.ValidationException
 {
-    public class FluentPropertyValidationException : FluentValidationException
+    public class FluentePropertyValidationException : FluenteValidationException
     {
         [JsonProperty("property_name")]
         public string PropertyName { get; set; }
@@ -20,7 +20,7 @@ namespace Fluent.Architecture.Exceptions.ValidationException
         [JsonIgnore]
         public PropertyInfo Property { get; set; }
 
-        public FluentPropertyValidationException(PropertyInfo property, bool globalizeValues, string message, string compositionProperty) : base(message, globalizeValues)
+        public FluentePropertyValidationException(PropertyInfo property, bool globalizeValues, string message, string compositionProperty) : base(message, globalizeValues)
         {
             Property = property;
             if (string.IsNullOrWhiteSpace(compositionProperty))
@@ -36,6 +36,6 @@ namespace Fluent.Architecture.Exceptions.ValidationException
         }
 
         [JsonProperty("globalization_key")]
-        public override string GlobalizationKey => "FluentPropertyValidationException";
+        public override string GlobalizationKey => "FluentePropertyValidationException";
     }
 }

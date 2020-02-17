@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel;
 
-namespace Fluent.Architecture.Core.Models
+namespace Fluente.Arquitetura.Nucleo.Models
 {
     //Todo - 001 Testar
     /// <summary>
     /// Classe de solicitação de paginação padrão.
     /// </summary>
-    [Attributes.FluentDoc]
-    public class FluentPagination
+    [Atributos.FluenteDoc]
+    public class FluentePagination
     {
         private const int ItemsPerPageDefault = 10;
         private int _currentPage;
@@ -54,7 +54,7 @@ namespace Fluent.Architecture.Core.Models
         [Description("Total number of pages")]
         public virtual int NumberOfPages => GetPageNumber();
 
-        public FluentPagination() { }
+        public FluentePagination() { }
 
         /// <summary>
         /// Inicializa uma nova paginação.
@@ -68,7 +68,7 @@ namespace Fluent.Architecture.Core.Models
         /// <param name="itemsPerPage">
         /// A quantidade de itens por página. Quando não informado, é preencido com o valor padrão do sistema <see cref="ItemsPerPageDefault"/>.
         /// </param>
-        public FluentPagination(int currentPage, bool startAtZero = true, int itemsPerPage = ItemsPerPageDefault)
+        public FluentePagination(int currentPage, bool startAtZero = true, int itemsPerPage = ItemsPerPageDefault)
         {
             _currentPage = currentPage;
             _itemsPerPage = itemsPerPage;

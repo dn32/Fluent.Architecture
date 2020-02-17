@@ -1,18 +1,18 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
 
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Interfaces;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Interfaces;
 using System;
 using System.Linq;
 
-namespace Fluent.Architecture.Specifications
+namespace Fluente.Arquitetura.Specifications
 {
     /// <summary>
     /// Especificação base para todas as especificações do sistema que tiverem a saida diferente da entrada.
@@ -20,7 +20,7 @@ namespace Fluent.Architecture.Specifications
     /// </summary>
     /// <typeparam name="TE">Tipo de entidade da especificação.</typeparam>
     /// <typeparam name="TO">Tipo de objeto de saida da especificação.</typeparam>
-    public abstract class FluentSelectSpecification<TE, TO> : BaseSpecification, IFluentSpecification<TO> where TE : BaseEntity
+    public abstract class FluenteSelectSpecification<TE, TO> : BaseSpecification, IFluenteSpecification<TO> where TE : BaseEntity
     {
         /// <summary>
         /// A especificação.
@@ -42,8 +42,8 @@ namespace Fluent.Architecture.Specifications
             return Order(Where(query));
         }
 
-        public Type FluentEntityType => typeof(TE);
+        public Type FluenteEntityType => typeof(TE);
 
-        public Type FluentEntityOutType => typeof(TO);
+        public Type FluenteEntityOutType => typeof(TO);
     }
 }

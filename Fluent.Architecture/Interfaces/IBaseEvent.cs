@@ -1,4 +1,4 @@
-﻿//namespace Fluent.Architecture.Interfaces
+﻿//namespace Fluente.Arquitetura.Interfaces
 //{
 //    public interface IBaseEvent
 //    {

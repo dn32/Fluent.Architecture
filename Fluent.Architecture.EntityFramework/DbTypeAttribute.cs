@@ -1,20 +1,20 @@
 ﻿using System;
 
-namespace Fluent.Architecture.EntityFramework
+namespace Fluente.Arquitetura.EntityFramework
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = true)]
     public class DbTypeAttribute : Attribute
     {
-        public FluentDbType DbType { get; set; }
+        public FluenteDbType DbType { get; set; }
 
         public string Identifier { get; set; }
 
-        public DbTypeAttribute(FluentDbType dbType)
+        public DbTypeAttribute(FluenteDbType dbType)
         {
             DbType = dbType;
         }
 
-        public DbTypeAttribute(FluentDbType dbType, string identifier)
+        public DbTypeAttribute(FluenteDbType dbType, string identifier)
         {
             DbType = dbType;
             Identifier = identifier;

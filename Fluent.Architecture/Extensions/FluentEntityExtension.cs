@@ -1,16 +1,16 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluent.Architecture.Attributes;
-using Fluent.Architecture.Core.Attributes;
-using Fluent.Architecture.Core.Extensions;
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Exceptions;
+using Fluente.Arquitetura.Attributes;
+using Fluente.Arquitetura.Nucleo.Atributos;
+using Fluente.Arquitetura.Nucleo.Extensoes;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Exceptions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -20,9 +20,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
 
-namespace Fluent.Architecture.Extensions
+namespace Fluente.Arquitetura.Extensoes
 {
-    public static class FluentEntityExtension
+    public static class FluenteEntityExtension
     {
         // Todo2 documentar
         public static string GetTypeName(this object entity)
@@ -68,7 +68,7 @@ namespace Fluent.Architecture.Extensions
             var name = property.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName;
             if (string.IsNullOrEmpty(name))
             {
-                name = property?.Name?.ToFluentJsonStringNormalized();
+                name = property?.Name?.ToFluenteJsonStringNormalized();
             }
 
             return name;
@@ -76,10 +76,10 @@ namespace Fluent.Architecture.Extensions
 
         public static string GetUiPropertyName(this PropertyInfo property)
         {
-            return property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.name ??
+            return property.GetCustomAttribute<FluenteJsonPropertyAttribute>()?.name ??
                    property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ??
                    property.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName ??
-                   property?.Name.ToFluentJsonStringNormalized();
+                   property?.Name.ToFluenteJsonStringNormalized();
         }
 
         public static PropertyInfo GetKeyProperty(this Type entityType)
@@ -103,19 +103,19 @@ namespace Fluent.Architecture.Extensions
             return entityType?.GetProperties()?.Where(x => x.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || x.GetCustomAttribute<KeyAttribute>(true) != null)?.ToList();
         }
 
-        public static List<PropertyInfo> GetFluentUniqueKeyProperties(this Type entityType)
+        public static List<PropertyInfo> GetFluenteUniqueKeyProperties(this Type entityType)
         {
-            return entityType?.GetProperties()?.Where(x => x.GetCustomAttributeAny<FluentUniqueKeyAttribute>(true))?.ToList();
+            return entityType?.GetProperties()?.Where(x => x.GetCustomAttributeAny<FluenteUniqueKeyAttribute>(true))?.ToList();
         }
 
-        public static List<PropertyInfo> GetKeyAndFluentUniqueKeyProperties(this Type entityType)
+        public static List<PropertyInfo> GetKeyAndFluenteUniqueKeyProperties(this Type entityType)
         {
-            return entityType?.GetProperties()?.Where(x => x.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || x?.GetCustomAttribute<KeyAttribute>(true) != null || x?.GetCustomAttribute<FluentUniqueKeyAttribute>(true) != null)?.ToList();
+            return entityType?.GetProperties()?.Where(x => x.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || x?.GetCustomAttribute<KeyAttribute>(true) != null || x?.GetCustomAttribute<FluenteUniqueKeyAttribute>(true) != null)?.ToList();
         }
 
-        public static List<KeyValue> GetKeyAndFluentUniqueKeyValues(this object entity)
+        public static List<KeyValue> GetKeyAndFluenteUniqueKeyValues(this object entity)
         {
-            var properties = entity?.GetType()?.GetKeyAndFluentUniqueKeyProperties();
+            var properties = entity?.GetType()?.GetKeyAndFluenteUniqueKeyProperties();
             return PropertiesToKeyValueList(entity, properties);
         }
 
@@ -133,8 +133,8 @@ namespace Fluent.Architecture.Extensions
         {
             if (property.PropertyType.IsNumeric())
             {
-                var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
-                var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
+                var min = property.GetCustomAttribute<FluenteJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
+                var max = property.GetCustomAttribute<FluenteJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
                 if (min == null || max == null) { return null; }
 
                 int minInt = min.ChangeType<int>();
@@ -145,8 +145,8 @@ namespace Fluent.Architecture.Extensions
 
             if (property.PropertyType == typeof(string) && property.PropertyType == typeof(String))
             {
-                var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
-                var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length;
+                var min = property.GetCustomAttribute<FluenteJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
+                var max = property.GetCustomAttribute<FluenteJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length;
                 if (min == null || max == null) { return null; }
 
                 return (min.Value, max.Value);
@@ -156,18 +156,18 @@ namespace Fluent.Architecture.Extensions
         }
 
         // Todo2 documentar
-        public static List<KeyValue> GetFluentUniqueKeyValues(this object entity)
+        public static List<KeyValue> GetFluenteUniqueKeyValues(this object entity)
         {
-            var properties = entity?.GetType()?.GetFluentUniqueKeyProperties();
+            var properties = entity?.GetType()?.GetFluenteUniqueKeyProperties();
             return PropertiesToKeyValueList(entity, properties);
         }
 
         public static List<KeyValue> GetForeignKeyValues(this object entity, Type outType)
         {
-            static FluentReferenceAttribute GetReference(PropertyInfo property)
+            static FluenteReferenceAttribute GetReference(PropertyInfo property)
             {
-                return property.GetCustomAttribute<FluentCompositionAttribute>(true) as FluentReferenceAttribute
-                            ?? property.GetCustomAttribute<FluentManyToManyAggregationAttribute>(true) ?? null;
+                return property.GetCustomAttribute<FluenteCompositionAttribute>(true) as FluenteReferenceAttribute
+                            ?? property.GetCustomAttribute<FluenteManyToManyAggregationAttribute>(true) ?? null;
             }
 
             var returnList = new List<KeyValue>();

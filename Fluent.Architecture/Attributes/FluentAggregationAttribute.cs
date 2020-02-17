@@ -1,11 +1,11 @@
-﻿using Fluent.Architecture.Core.Enumerator;
+﻿using Fluente.Arquitetura.Nucleo.Enumerator;
 using Newtonsoft.Json;
 using System;
 
-namespace Fluent.Architecture.Core.Attributes
+namespace Fluente.Arquitetura.Nucleo.Atributos
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class FluentAggregationAttribute : FluentReferenceAttribute
+    public class FluenteAggregationAttribute : FluenteReferenceAttribute
     {
         public string Display { get; set; }
         public string[] PropertiesForFind { get; set; }
@@ -24,15 +24,15 @@ namespace Fluent.Architecture.Core.Attributes
             }
         }
 
-        public FluentFilterAttribute FluentFilter { get; set; }
+        public FluenteFilterAttribute FluenteFilter { get; set; }
     }
 
 
-    public class FluentLoggingAttribute : Attribute
+    public class FluenteLoggingAttribute : Attribute
     {
-        public EnumFluentDisplay Display { get; set; }
+        public EnumFluenteDisplay Display { get; set; }
 
-        public FluentLoggingAttribute(EnumFluentDisplay display = EnumFluentDisplay.Show)
+        public FluenteLoggingAttribute(EnumFluenteDisplay display = EnumFluenteDisplay.Show)
         {
             Display = display;
         }

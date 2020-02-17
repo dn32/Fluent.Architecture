@@ -1,6 +1,6 @@
-﻿using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Filters;
-using Fluent.Architecture.Services;
+﻿using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Filters;
+using Fluente.Arquitetura.Services;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -9,15 +9,15 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 
-namespace Fluent.Architecture.Core.Services
+namespace Fluente.Arquitetura.Nucleo.Services
 {
-    public abstract class FluentAuthenticationService : TransactionalService
+    public abstract class FluenteAuthenticationService : TransactionalService
     {
-        public abstract Task<(bool sucess, List<Claim> claims)> AuthenticateAsync(FluentAuthenticationUser user);
+        public abstract Task<(bool sucess, List<Claim> claims)> AuthenticateAsync(FluenteAuthenticationUser user);
 
-        public virtual void Register(FluentAuthenticationUser user) { }
+        public virtual void Register(FluenteAuthenticationUser user) { }
 
-        public virtual async Task<string> LoginAsync(FluentAuthenticationUser user)
+        public virtual async Task<string> LoginAsync(FluenteAuthenticationUser user)
         {
             if (user is null) { throw new ArgumentNullException(nameof(user)); }
             if (string.IsNullOrWhiteSpace(user.Email)) { throw new ArgumentNullException(nameof(user.Email)); }

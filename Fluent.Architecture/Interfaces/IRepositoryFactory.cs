@@ -1,10 +1,10 @@
-﻿using Fluent.Architecture.Services;
-using Fluent.Architecture.Core.Models;
+﻿using Fluente.Arquitetura.Services;
+using Fluente.Arquitetura.Nucleo.Models;
 
-namespace Fluent.Architecture.Core.Interfaces
+namespace Fluente.Arquitetura.Nucleo.Interfaces
 {
     internal interface IRepositoryFactory
     {
-        IFluentRepository<T> Create<T>(ITransactionObjects transactionObjects, FluentService<T> service) where T : BaseEntity;
+        IFluenteRepository<T> Create<T>(ITransactionObjects transactionObjects, FluenteService<T> service) where T : BaseEntity;
     }
 }

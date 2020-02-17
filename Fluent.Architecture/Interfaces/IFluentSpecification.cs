@@ -1,19 +1,19 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 
-using Fluent.Architecture.Services;
+using Fluente.Arquitetura.Services;
 using System;
 
-namespace Fluent.Architecture.Interfaces
+namespace Fluente.Arquitetura.Interfaces
 {
-    public interface IFluentSpecification : ISpec
+    public interface IFluenteSpecification : ISpec
     {
-        Type FluentEntityType { get; }
+        Type FluenteEntityType { get; }
     }
 
     public interface ISpec

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Expressions;
 
-namespace Fluent.Architecture.Extensions
+namespace Fluente.Arquitetura.Extensoes
 {
     public static class ExpressionUtil
     {

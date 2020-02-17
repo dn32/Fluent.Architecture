@@ -1,25 +1,25 @@
-﻿using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Services;
+﻿using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Services;
 using StackExchange.Redis;
 using System;
 using System.Threading.Tasks;
 
-namespace Fluent.Architecture.Redis
+namespace Fluente.Arquitetura.Redis
 {
-    public class FluentRedisService : TransactionalService
+    public class FluenteRedisService : TransactionalService
     {
-        private FluentRedisRepository RedisRepository { get; set; }
+        private FluenteRedisRepository RedisRepository { get; set; }
 
-        public FluentRedisService()
+        public FluenteRedisService()
         {
-            RedisRepository = new FluentRedisRepository(Setup.Config.Config.RedisConnectionString);
+            RedisRepository = new FluenteRedisRepository(Setup.Config.Config.RedisConnectionString);
         }
 
         public async Task<T> GetValueAsync<T>(string key) => await RedisRepository.GetValueAsync<T>(key);
 
-        public async Task<T> GetFluentEntityAsync<T>(FluentEntity entity) => await RedisRepository.GetValueAsync<T>(entity.GetHashCode().ToString());
+        public async Task<T> GetFluenteEntityAsync<T>(FluenteEntity entity) => await RedisRepository.GetValueAsync<T>(entity.GetHashCode().ToString());
 
-        public async Task<bool> SetFluentEntityAsync(FluentEntity entity, TimeSpan? timeOut = null) => await RedisRepository.SetValueAsync(entity.GetHashCode().ToString(), entity, timeOut);
+        public async Task<bool> SetFluenteEntityAsync(FluenteEntity entity, TimeSpan? timeOut = null) => await RedisRepository.SetValueAsync(entity.GetHashCode().ToString(), entity, timeOut);
 
         public async Task<bool> SetValueAsync(string key, object value, TimeSpan? timeOut = null) => await RedisRepository.SetValueAsync(key, value, timeOut);
 

@@ -1,30 +1,30 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluent.Architecture.Exceptions.ValidationException;
+using Fluente.Arquitetura.Exceptions.ValidationException;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Fluent.Architecture.Validation
+namespace Fluente.Arquitetura.Validation
 {
     /// <inheritdoc />
     /// <summary>
     /// Retorno de validação padrão do sistema.
     /// </summary>
     [Serializable]
-    public class ContextFluentValidationException : Exception
+    public class ContextFluenteValidationException : Exception
     {
         public bool ValidationError => true;
 
         [JsonProperty("inconsistencies")]
-        public List<FluentValidationException> Inconsistencies { get; }
+        public List<FluenteValidationException> Inconsistencies { get; }
 
         /// <summary>
         /// Se a validação retornou sucesso.
@@ -48,18 +48,18 @@ namespace Fluent.Architecture.Validation
         /// <param name="exception">
         /// A inconsistência que deseja adicionar.
         /// </param>
-        public void AddInconsistency(FluentValidationException exception)
+        public void AddInconsistency(FluenteValidationException exception)
         {
             Inconsistencies.Add(exception);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ContextFluentValidationException"/> class. 
+        /// Initializes a new instance of the <see cref="ContextFluenteValidationException"/> class. 
         /// Inicializa o contexto de validação.
         /// </summary>
-        public ContextFluentValidationException() : base(string.Empty)
+        public ContextFluenteValidationException() : base(string.Empty)
         {
-            Inconsistencies = new List<FluentValidationException>();
+            Inconsistencies = new List<FluenteValidationException>();
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Fluent.Architecture.Validation
             }
         }
 
-        protected ContextFluentValidationException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
+        protected ContextFluenteValidationException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
         {
             throw new NotImplementedException();
         }

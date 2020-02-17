@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 
-namespace Fluent.Architecture.Core.Models
+namespace Fluente.Arquitetura.Nucleo.Models
 {
-    internal class FluentClassDescription
+    internal class FluenteClassDescription
     {
-        public FluentClassDescription(Type principalType, string[] fields)
+        public FluenteClassDescription(Type principalType, string[] fields)
         {
-            Properties = new List<FluentPropertyDescription>();
+            Properties = new List<FluentePropertyDescription>();
 
             var compositions = fields.OrderBy(x => x).Where(x => x.Contains(".")).ToList();
             var anotherProperties = fields.OrderBy(x => x).Where(x => !x.Contains(".")).ToList();
@@ -26,7 +26,7 @@ namespace Fluent.Architecture.Core.Models
             }
         }
 
-        private static void AddCompositionProperty(List<FluentPropertyDescription> Properties, Type principalType, string property)
+        private static void AddCompositionProperty(List<FluentePropertyDescription> Properties, Type principalType, string property)
         {
             var index = property.IndexOf(".");
             var className = property.Substring(0, index);
@@ -36,29 +36,29 @@ namespace Fluent.Architecture.Core.Models
 
             if (complexPropertyFound == null)
             {
-                var complexProperty = new FluentPropertyDescription { Name = className, Type = propertyInfo.PropertyType, FluentClassDescription = new FluentClassDescription(propertyInfo.PropertyType, new[] { propertyName }) };
+                var complexProperty = new FluentePropertyDescription { Name = className, Type = propertyInfo.PropertyType, FluenteClassDescription = new FluenteClassDescription(propertyInfo.PropertyType, new[] { propertyName }) };
                 Properties.Add(complexProperty);
             }
             else
             {
                 if (propertyName.Contains("."))
                 {
-                    AddCompositionProperty(complexPropertyFound.FluentClassDescription.Properties, propertyInfo.PropertyType, propertyName);
+                    AddCompositionProperty(complexPropertyFound.FluenteClassDescription.Properties, propertyInfo.PropertyType, propertyName);
                 }
                 else
                 {
                     var simpleProperty = GetSimpleProperty(propertyInfo.PropertyType, propertyName);
-                    complexPropertyFound.FluentClassDescription.Properties.Add(simpleProperty);
+                    complexPropertyFound.FluenteClassDescription.Properties.Add(simpleProperty);
                 }
             }
         }
 
-        private static FluentPropertyDescription GetSimpleProperty(Type principalType, string property)
+        private static FluentePropertyDescription GetSimpleProperty(Type principalType, string property)
         {
             var propertyInfo = principalType.GetProperties().FirstOrDefault(x => x.Name.Equals(property, StringComparison.InvariantCultureIgnoreCase)) ?? throw new InvalidOperationException($"Entity {principalType.Name} does not have property {property}");
-            return new FluentPropertyDescription { Name = property, Type = propertyInfo.PropertyType };
+            return new FluentePropertyDescription { Name = property, Type = propertyInfo.PropertyType };
         }
 
-        public List<FluentPropertyDescription> Properties { get; set; }
+        public List<FluentePropertyDescription> Properties { get; set; }
     }
 }

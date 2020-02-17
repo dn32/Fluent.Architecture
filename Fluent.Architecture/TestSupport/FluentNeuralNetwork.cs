@@ -1,19 +1,19 @@
-﻿using Fluent.Architecture.Core.Attributes;
-using Fluent.Architecture.Extensions;
+﻿using Fluente.Arquitetura.Nucleo.Atributos;
+using Fluente.Arquitetura.Extensoes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Fluent.Architecture.Core.TestSupport
+namespace Fluente.Arquitetura.Nucleo.TestSupport
 {
-    public class FluentNeuralNetwork
+    public class FluenteNeuralNetwork
     {
-        public List<FluentNode> SortedAggregations { get; } = new List<FluentNode>();
+        public List<FluenteNode> SortedAggregations { get; } = new List<FluenteNode>();
 
-        public Dictionary<Type, FluentNode> DictionaryOfAggregations { get; } = new Dictionary<Type, FluentNode>();
+        public Dictionary<Type, FluenteNode> DictionaryOfAggregations { get; } = new Dictionary<Type, FluenteNode>();
 
-        public List<FluentNode> ExplainToTheTree(List<Type> types, bool setValues)
+        public List<FluenteNode> ExplainToTheTree(List<Type> types, bool setValues)
         {
             types.ForEach(x => ExplainToTheTree(x));
 
@@ -28,7 +28,7 @@ namespace Fluent.Architecture.Core.TestSupport
             return SortedAggregations;
         }
 
-        private void Setvalue(FluentNode node)
+        private void Setvalue(FluenteNode node)
         {
             foreach (var internalNode in node.ReferencePointers)
             {
@@ -68,7 +68,7 @@ namespace Fluent.Architecture.Core.TestSupport
                                     property = p,
                                     isList = p.PropertyType.Name == "List`1",
                                     type = p.PropertyType.Name == "List`1" ? p.PropertyType.GenericTypeArguments[0] : p.PropertyType,
-                                    attr = p.GetCustomAttribute<FluentAggregationAttribute>(true)
+                                    attr = p.GetCustomAttribute<FluenteAggregationAttribute>(true)
                                 })
                             .Where(x => x.attr != null)
                             .ToList();
@@ -114,15 +114,15 @@ namespace Fluent.Architecture.Core.TestSupport
             }
         }
 
-        private void ExplainToTheTree(Type type, FluentNode parent = null)
+        private void ExplainToTheTree(Type type, FluenteNode parent = null)
         {
             var node = GetTreeNode(type);
             if (node == null)
             {
-                node = new FluentNode { EntityType = type };
+                node = new FluenteNode { EntityType = type };
                 DictionaryOfAggregations.Add(type, node);
 
-                var properties = node.EntityType.GetProperties().Where(x => x.GetCustomAttribute<FluentAggregationAttribute>(true) != null).ToList();
+                var properties = node.EntityType.GetProperties().Where(x => x.GetCustomAttribute<FluenteAggregationAttribute>(true) != null).ToList();
                 var types = properties.Select(x => x.PropertyType).ToList();
                 if (types.Count == 0)
                 {
@@ -143,15 +143,15 @@ namespace Fluent.Architecture.Core.TestSupport
             }
         }
 
-        private void AddAggregation(FluentNode node)
+        private void AddAggregation(FluenteNode node)
         {
             Console.WriteLine($"{node.EntityType.Name} Mapped");
             SortedAggregations.Add(node);
         }
 
-        private FluentNode GetTreeNode(Type entityType)
+        private FluenteNode GetTreeNode(Type entityType)
         {
-            DictionaryOfAggregations.TryGetValue(entityType, out FluentNode value);
+            DictionaryOfAggregations.TryGetValue(entityType, out FluenteNode value);
             return value;
         }
     }

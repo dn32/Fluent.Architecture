@@ -1,8 +1,8 @@
-﻿using Fluent.Architecture.Test.Mock.Novos;
+﻿using Fluente.Arquitetura.Test.Mock.Novos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Fluent.Architecture.Test.Mock
+namespace Fluente.Arquitetura.Test.Mock
 {
     public static class MockHttpControllerContextFactory
     {

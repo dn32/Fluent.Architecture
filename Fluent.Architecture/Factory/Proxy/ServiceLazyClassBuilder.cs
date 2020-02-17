@@ -1,18 +1,18 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluent.Architecture.Services;
+using Fluente.Arquitetura.Services;
 using System;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace Fluent.Architecture.Factory.Proxy
+namespace Fluente.Arquitetura.Factory.Proxy
 {
     /// <summary>
     /// Classe interna.
@@ -21,7 +21,7 @@ namespace Fluent.Architecture.Factory.Proxy
     internal class ServiceLazyClassBuilder
     {
         private const string ModuleName = "ServiceModule";
-        private const string AssemblyName = "FluentDynamicProxy";
+        private const string AssemblyName = "FluenteDynamicProxy";
 
         internal static object CreateObject(Type parent, Guid sessionId)
         {

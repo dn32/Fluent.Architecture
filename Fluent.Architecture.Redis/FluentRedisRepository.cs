@@ -2,15 +2,15 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Fluent.Architecture.Redis
+namespace Fluente.Arquitetura.Redis
 {
-    internal class FluentRedisRepository
+    internal class FluenteRedisRepository
     {
-        private FluentRedisContext Context { get; set; }
+        private FluenteRedisContext Context { get; set; }
 
-        internal FluentRedisRepository(string connectionString)
+        internal FluenteRedisRepository(string connectionString)
         {
-            Context = new FluentRedisContext(connectionString);
+            Context = new FluenteRedisContext(connectionString);
         }
 
         internal async Task<T> GetValueAsync<T>(string key, bool renewTimeout = false)

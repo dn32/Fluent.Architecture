@@ -1,9 +1,9 @@
-﻿using Fluent.Architecture.Core.Models;
+﻿using Fluente.Arquitetura.Nucleo.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 
-namespace Fluent.Architecture.Core.Interfaces
+namespace Fluente.Arquitetura.Nucleo.Interfaces
 {
     public interface ITransactionObjects : IDisposable
     {

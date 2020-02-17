@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -8,14 +8,14 @@
 // ReSharper disable CommentTypo
 using Newtonsoft.Json;
 
-namespace Fluent.Architecture.Exceptions.ValidationException
+namespace Fluente.Arquitetura.Exceptions.ValidationException
 {
-    public class EntityExistsFluentValidationException : FluentValidationException
+    public class EntityExistsFluenteValidationException : FluenteValidationException
     {
         [JsonProperty("globalization_key")]
-        public override string GlobalizationKey => "EntityExistsFluentValidationException";
+        public override string GlobalizationKey => "EntityExistsFluenteValidationException";
 
-        public EntityExistsFluentValidationException(string entityKeys) : base($"An entity with any of these keys already exists in the database: {entityKeys}", false, entityKeys)
+        public EntityExistsFluenteValidationException(string entityKeys) : base($"An entity with any of these keys already exists in the database: {entityKeys}", false, entityKeys)
         {
         }
     }

@@ -1,19 +1,19 @@
-﻿using Fluent.Architecture.Core.Enumerator;
-using Fluent.Architecture.Core.Extensions;
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Specifications;
+﻿using Fluente.Arquitetura.Nucleo.Enumerator;
+using Fluente.Arquitetura.Nucleo.Extensoes;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Extensoes;
+using Fluente.Arquitetura.Specifications;
 using System.Linq;
 
-namespace Fluent.Architecture.Core.Specifications
+namespace Fluente.Arquitetura.Nucleo.Specifications
 {
-    public class FluentFilterSpec<T> : FluentSpecification<T> where T : FluentEntity
+    public class FluenteFilterSpec<T> : FluenteSpecification<T> where T : FluenteEntity
     {
         protected Filter[] Filters { get; set; }
 
         public bool IsList { get; set; }
 
-        public FluentFilterSpec<T> SetParameter(Filter[] filters, bool isList)
+        public FluenteFilterSpec<T> SetParameter(Filter[] filters, bool isList)
         {
             Filters = filters;
             IsList = isList;
@@ -27,12 +27,12 @@ namespace Fluent.Architecture.Core.Specifications
             return query
                  .Where(expression)
                  .GetInclusions(IsList)
-                 .FluentDynamicProjectTo(Service);
+                 .FluenteDynamicProjectTo(Service);
         }
 
         public override IOrderedQueryable<T> Order(IQueryable<T> query)
         {
-            return query.FluentDynamicProjectToOrder(Service);
+            return query.FluenteDynamicProjectToOrder(Service);
         }
     }
 }

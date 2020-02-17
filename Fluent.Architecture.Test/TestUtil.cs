@@ -1,20 +1,20 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Test.Mock;
-using Fluent.Architecture.Test.Mock.ControllerMock;
+using Fluente.Arquitetura.Controllers;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Test.Mock;
+using Fluente.Arquitetura.Test.Mock.ControllerMock;
 using Newtonsoft.Json;
 using System;
 using System.Runtime.InteropServices;
 
-namespace Fluent.Architecture.Test
+namespace Fluente.Arquitetura.Test
 {
     [ComVisible(true)]
     public static class TestUtil

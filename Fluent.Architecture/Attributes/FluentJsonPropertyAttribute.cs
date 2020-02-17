@@ -1,14 +1,14 @@
-﻿using Fluent.Architecture.Core.Enumerator;
+﻿using Fluente.Arquitetura.Nucleo.Enumerator;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 
-namespace Fluent.Architecture.Core.Attributes
+namespace Fluente.Arquitetura.Nucleo.Atributos
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class FluentJsonPropertyAttribute : FluentJsoSchemaAttribute
+    public class FluenteJsonPropertyAttribute : FluenteJsoSchemaAttribute
     {
         [DisplayName("Required")]
         [JsonProperty("Required")]
@@ -46,13 +46,13 @@ namespace Fluent.Architecture.Core.Attributes
         [JsonProperty("DefaultValue")]
         public object value { get; set; }
 
-        public FluentCompositionAttribute FluentComposition { get; set; }
+        public FluenteCompositionAttribute FluenteComposition { get; set; }
 
-        public FluentAggregationAttribute FluentAggregation { get; set; }
+        public FluenteAggregationAttribute FluenteAggregation { get; set; }
 
         public bool IsEnum { get; set; }
         public bool IsKey { get; set; }
-        public bool IsFluentUniqueKeyKey { get; set; }
+        public bool IsFluenteUniqueKeyKey { get; set; }
         public bool IsNullable { get; set; }
         public bool IsList { get; set; }
         public List<KeyValuePair<string, string>> Enums { get; set; }
@@ -65,11 +65,11 @@ namespace Fluent.Architecture.Core.Attributes
         public PropertyInfo Property { get; set; }
 
         [JsonIgnore]
-        public FluentJsonFormAttribute FkDestinal { get; internal set; }
+        public FluenteJsonFormAttribute FkDestinal { get; internal set; }
 
         [JsonIgnore]
         public bool IsFk { get; internal set; }
 
-        public IEnumerable<ConditionalFluentUIOperationAttribute> ConditionalFluentUIOperations { get; internal set; }
+        public IEnumerable<ConditionalFluenteUIOperationAttribute> ConditionalFluenteUIOperations { get; internal set; }
     }
 }

@@ -1,20 +1,20 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
 
-using Fluent.Architecture.Util;
+using Fluente.Arquitetura.Util;
 using Newtonsoft.Json;
 using System.Threading;
 
-namespace Fluent.Architecture.Exceptions.ValidationException
+namespace Fluente.Arquitetura.Exceptions.ValidationException
 {
     /// <inheritdoc />
-    public class FluentValidationException
+    public class FluenteValidationException
     {
         private readonly string globalizationKey;
 
@@ -41,7 +41,7 @@ namespace Fluent.Architecture.Exceptions.ValidationException
         [JsonProperty("exception_type")]
         public string ExceptionType => GetType().Name;
 
-        public FluentValidationException(string message, string globalizationKeyParam, bool globalizeValues = false, params string[] values)
+        public FluenteValidationException(string message, string globalizationKeyParam, bool globalizeValues = false, params string[] values)
         {
             globalizationKey = globalizationKeyParam;
             Message = message;
@@ -50,7 +50,7 @@ namespace Fluent.Architecture.Exceptions.ValidationException
             //Inicialize(message);
         }
 
-        public FluentValidationException(string message, bool globalizeValues = false, params string[] values)
+        public FluenteValidationException(string message, bool globalizeValues = false, params string[] values)
         {
             Message = message;
             Values = values;

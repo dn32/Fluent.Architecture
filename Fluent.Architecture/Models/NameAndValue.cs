@@ -1,13 +1,13 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
 
-namespace Fluent.Architecture.Core.Models
+namespace Fluente.Arquitetura.Nucleo.Models
 {
     /// <summary>
     /// Model de Nome e Valor para uso genérico.

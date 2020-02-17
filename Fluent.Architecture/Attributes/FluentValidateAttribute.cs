@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Fluent.Architecture.Core.Attributes
+namespace Fluente.Arquitetura.Nucleo.Atributos
 {
-    public abstract class FluentValidateAttribute : Attribute
+    public abstract class FluenteValidateAttribute : Attribute
     {
         public abstract bool IsValidWhen(object value);
         public abstract string InvalidMessage { get; }

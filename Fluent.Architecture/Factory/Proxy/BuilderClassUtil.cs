@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -10,7 +10,7 @@ using System;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace Fluent.Architecture.Factory.Proxy
+namespace Fluente.Arquitetura.Factory.Proxy
 {
     internal static class BuilderClassUtil
     {

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Fluent.Architecture.Extensions;
+using Fluente.Arquitetura.Extensoes;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 
-namespace Fluent.Architecture.Redis
+namespace Fluente.Arquitetura.Redis
 {
-    public class FluentRedisContext
+    public class FluenteRedisContext
     {
         private ConnectionMultiplexer _multiplexer { get; set; }
 
@@ -28,7 +28,7 @@ namespace Fluent.Architecture.Redis
         }
 
 
-        public FluentRedisContext(string connectionString)
+        public FluenteRedisContext(string connectionString)
         {
             ConfigurationOptions = new ConfigurationOptions
             {
@@ -55,7 +55,7 @@ namespace Fluent.Architecture.Redis
             if (string.IsNullOrEmpty(stringValue)) return default;
             if (renewTimeout) { await RenewTimeOut(key, stringValue); }
             var newValue = Convert.ChangeType(stringValue, typeof(T));
-            return newValue.FluentCast<T>();
+            return newValue.FluenteCast<T>();
         }
 
         public async Task<T> GetObjectAsync<T>(string key, bool renewTimeout = false)
@@ -73,7 +73,7 @@ namespace Fluent.Architecture.Redis
             var time = redisValueTime.ToString();
             if (!string.IsNullOrEmpty(time))
             {
-                var redisValue = stringValue.FluentCast<RedisValue>();
+                var redisValue = stringValue.FluenteCast<RedisValue>();
                 return await Db.StringSetAsync($"{key}:value", redisValue, TimeSpan.FromMinutes(Convert.ToDouble(time)));
             }
 

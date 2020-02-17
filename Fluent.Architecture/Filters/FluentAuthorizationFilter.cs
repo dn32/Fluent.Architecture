@@ -1,4 +1,4 @@
-﻿using Fluent.Architecture.Core.Extensions;
+﻿using Fluente.Arquitetura.Nucleo.Extensoes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -10,9 +10,9 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 
-namespace Fluent.Architecture.Filters
+namespace Fluente.Arquitetura.Filters
 {
-    public class FluentAuthorizationFilter : IAuthorizationFilter
+    public class FluenteAuthorizationFilter : IAuthorizationFilter
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
@@ -29,13 +29,13 @@ namespace Fluent.Architecture.Filters
 
             if (Setup.Config.Config.JwtInfo != null)
             {
-                JWTOnFluentAuthorizationFilter(context);
+                JWTOnFluenteAuthorizationFilter(context);
             }
 
-            OnFluentAuthorizationFilter(context);
+            OnFluenteAuthorizationFilter(context);
         }
 
-        protected virtual void JWTOnFluentAuthorizationFilter(AuthorizationFilterContext context)
+        protected virtual void JWTOnFluenteAuthorizationFilter(AuthorizationFilterContext context)
         {
             var tokenRequest = context.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Replace("Bearer", "").Trim();
             tokenRequest = string.IsNullOrWhiteSpace(tokenRequest) ? context.HttpContext.Request.Query["Authorization"].ToString()?.Replace("Bearer", "")?.Trim() : tokenRequest;
@@ -60,7 +60,7 @@ namespace Fluent.Architecture.Filters
             }
         }
 
-        protected virtual void OnFluentAuthorizationFilter(AuthorizationFilterContext context)
+        protected virtual void OnFluenteAuthorizationFilter(AuthorizationFilterContext context)
         {
         }
 
@@ -69,7 +69,7 @@ namespace Fluent.Architecture.Filters
             ContentResult content = new ContentResult
             {
                 ContentType = "application/json",
-                Content = message.ToFluentJson()
+                Content = message.ToFluenteJson()
             };
 
             context.Result = content;

@@ -2,13 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Fluent.Architecture.EntityFramework.SqLite
+namespace Fluente.Arquitetura.EntityFramework.SqLite
 {
     /// <inheritdoc />
     /// <summary>
     /// Contexto do EF no net Core
     /// </summary>
-    [DbType(FluentDbType.SQLITE)]
+    [DbType(FluenteDbType.SQLITE)]
     public class EfContextSqLite : EfContext
     {
         public static LoggerFactory LoggerFactory;

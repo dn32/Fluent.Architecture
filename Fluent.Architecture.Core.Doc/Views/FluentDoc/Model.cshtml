@@ -1,16 +1,16 @@
-﻿@using Fluent.Architecture.Core.Models
-@using Fluent.Architecture.Extensions
-@using Fluent.Architecture
-@using Fluent.Architecture.Core.Attributes
+﻿@using Fluente.Arquitetura.Nucleo.Models
+@using Fluente.Arquitetura.Extensoes
+@using Fluente.Arquitetura
 @using System.Reflection;
-@using Fluent.Architecture.Core.Enumerator
+@using Fluente.Arquitetura.Nucleo.Enumerator
+@using Fluente.Arquitetura.Nucleo.Atributos
 
-@using static Fluent.Architecture.FluentDocExtension
+@using static Fluente.Arquitetura.FluenteDocExtension
 
-@model FluentJsonSchema
+@model FluenteJsonSchema
 
 @{
-    ViewData["Title"] = Model.FluentJsonForm.name;
+    ViewData["Title"] = Model.FluenteJsonForm.name;
 }
 <script>
     function navegate(url) {
@@ -18,7 +18,7 @@
     }
 </script>
 <div class="one-service-container">
-    <h4 class="general-title">@Model.FluentJsonForm.name</h4>
+    <h4 class="general-title">@Model.FluenteJsonForm.name</h4>
 
     @{
         string Is(bool operation, string text)
@@ -40,8 +40,8 @@
                 </thead>
                 @foreach (var property in Model.Properties)
                 {
-                    if (property.form == Fluent.Architecture.Core.Enumerator.EnumForm.NONE) { continue; }
-                    if (property.Property?.GetCustomAttribute<FluentDocAttribute>()?.Display == Fluent.Architecture.Core.Enumerator.EnumFluentDisplay.Hidden) { continue; }
+                    if (property.form == Fluente.Arquitetura.Nucleo.Enumerator.EnumForm.NONE) { continue; }
+                    if (property.Property?.GetCustomAttribute<FluenteDocAttribute>()?.Display == Fluente.Arquitetura.Nucleo.Enumerator.EnumFluenteDisplay.Hidden) { continue; }
 
                     var range = (property.min == property.max ? property.min.ToString() : property.min + ", " + property.max);
                     range = range == "0" ? "" : $" ({range})";
@@ -60,20 +60,20 @@
                             <td class="type"><a href="@property.Link">@Html.Raw(property.Type.GetFriendlyName())</a></td>
                         }
                         <td>
-                            @Html.Raw(Is(property.IsEnum, "<span><img src='/FluentDoc/img/ok.png'/> " + "enum".G() + "</span>"))
-                            @Html.Raw(Is(property.IsKey || property.IsFluentUniqueKeyKey, "<span><img src='/FluentDoc/img/ok.png'/> " + "key".G() + "</span>"))
-                            @Html.Raw(Is(property.IsList, "<span><img src='/FluentDoc/img/ok.png'/> " + "list".G() + "</span>"))
-                            @Html.Raw(Is(property.IsNullable, "<span><img src='/FluentDoc/img/ok.png'/> " + "nullable".G() + "</span>"))
-                            @Html.Raw(Is(property.required, "<span><img src='/FluentDoc/img/ok.png'/> " + "required".G() + "</span>"))
-                            @Html.Raw(Is(property.FluentAggregation != null, "<span><img src='/FluentDoc/img/ok.png'/> " + "navegation".G() + "</span>"))
-                            @Html.Raw(Is(property.FluentComposition != null, "<span><img src='/FluentDoc/img/ok.png'/> " + "navegation".G() + "</span>"))
-                            @Html.Raw(Is(property.IsFk, "<span><img src='/FluentDoc/img/ok.png'/>  " + "fk".G() + " <a href=\"/FluentDoc/Model?name=" + property.FkDestinal?.Type?.Name + "\">" + property.FkDestinal?.propName + "</a></span>"))
+                            @Html.Raw(Is(property.IsEnum, "<span><img src='/FluenteDoc/img/ok.png'/> " + "enum".G() + "</span>"))
+                            @Html.Raw(Is(property.IsKey || property.IsFluenteUniqueKeyKey, "<span><img src='/FluenteDoc/img/ok.png'/> " + "key".G() + "</span>"))
+                            @Html.Raw(Is(property.IsList, "<span><img src='/FluenteDoc/img/ok.png'/> " + "list".G() + "</span>"))
+                            @Html.Raw(Is(property.IsNullable, "<span><img src='/FluenteDoc/img/ok.png'/> " + "nullable".G() + "</span>"))
+                            @Html.Raw(Is(property.required, "<span><img src='/FluenteDoc/img/ok.png'/> " + "required".G() + "</span>"))
+                            @Html.Raw(Is(property.FluenteAggregation != null, "<span><img src='/FluenteDoc/img/ok.png'/> " + "navegation".G() + "</span>"))
+                            @Html.Raw(Is(property.FluenteComposition != null, "<span><img src='/FluenteDoc/img/ok.png'/> " + "navegation".G() + "</span>"))
+                            @Html.Raw(Is(property.IsFk, "<span><img src='/FluenteDoc/img/ok.png'/>  " + "fk".G() + " <a href=\"/FluenteDoc/Model?name=" + property.FkDestinal?.Type?.Name + "\">" + property.FkDestinal?.propName + "</a></span>"))
                         </td>
                     </tr>
                 }
             </table>
             @{
-                var exampleValue = Model.FluentJsonForm?.Type?.GetExampleValueString() ?? "";
+                var exampleValue = Model.FluenteJsonForm?.Type?.GetExampleValueString() ?? "";
 
                 if (!string.IsNullOrWhiteSpace(exampleValue) && exampleValue != "null")
                 {

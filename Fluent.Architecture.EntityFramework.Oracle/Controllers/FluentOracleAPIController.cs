@@ -1,19 +1,19 @@
-﻿using Fluent.Architecture.Controllers;
-using Fluent.Architecture.EntityFramework.Oracle.Specifications;
+﻿using Fluente.Arquitetura.Controllers;
+using Fluente.Arquitetura.EntityFramework.Oracle.Specifications;
 using Microsoft.AspNetCore.Mvc;
-using Fluent.Architecture.Core.Models;
+using Fluente.Arquitetura.Nucleo.Models;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Fluent.Architecture.Core.Specifications;
+using Fluente.Arquitetura.Nucleo.Specifications;
 using System.ComponentModel.DataAnnotations;
 
-namespace Fluent.Architecture.EntityFramework.Oracle.Controllers
+namespace Fluente.Arquitetura.EntityFramework.Oracle.Controllers
 {
-    public class FluentOracleAPIController<T> : FluentAPIController<T> where T : FluentEntity, new()
+    public class FluenteOracleAPIController<T> : FluenteAPIController<T> where T : FluenteEntity, new()
     {
         [HttpGet]
-        [FluentAction(Pagination = true, DynamicSpec = true)]
+        [FluenteAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<DefaultPaginationResult<List<T>>> FindByProximity(
             [Description("The properties whose value will be compared")] string[] properties,
             [Description("The term to use as a comparator")] string Term,
@@ -29,7 +29,7 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Controllers
         [HttpGet]
         [Route("/api/[controller]/ListByFilterAndProximity")]
         [Description("Get a paginated list of items based on filters and text proximity")]
-        [FluentAction(Pagination = true, DynamicSpec = true)]
+        [FluenteAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<DefaultPaginationResult<List<T>>> ListByFilterAndProximityGet([FromBody, Description("The query object")] FiltersAndTerm FiltersAndTerm)
         {
             return await InternalListByFilterAndProximityAsync(FiltersAndTerm);
@@ -38,7 +38,7 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Controllers
         [HttpPost]
         [Route("/api/[controller]/ListByFilterAndProximity")]
         [Description("Get a paginated list of items based on filters and text proximity")]
-        [FluentAction(Pagination = true, DynamicSpec = true)]
+        [FluenteAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<DefaultPaginationResult<List<T>>> ListByFilterAndProximityPost([FromBody, Description("The query object")] FiltersAndTerm FiltersAndTerm)
         {
             return await InternalListByFilterAndProximityAsync(FiltersAndTerm);

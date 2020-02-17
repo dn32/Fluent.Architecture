@@ -1,17 +1,17 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
 
-using Fluent.Architecture.Core.Extensions;
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Factory;
-using Fluent.Architecture.Services;
+using Fluente.Arquitetura.Nucleo.Extensoes;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Extensoes;
+using Fluente.Arquitetura.Factory;
+using Fluente.Arquitetura.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -20,8 +20,8 @@ using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-[assembly: InternalsVisibleTo(@"Fluent.Architecture.Controller.Test, PublicKey= 00240000048000009400000006020000002400005253413100040000010001006d1cca26da4daf8230bb524d15453c319d38c381589ab07912b8ab6afff8174aad961a74f171790b60e5ed604bc7bad410214a7d59ed6e101c03440e3b1cd055e2bdba377915b076aa15ac9cd6da1acf488a633cb9bc2bb34536b62593950249111ac7c572e02523978ac82d829fe8be29fba6cc4f4e5b668a6cd57d39eee2aa ")]
-namespace Fluent.Architecture.Controllers
+[assembly: InternalsVisibleTo(@"Fluente.Arquitetura.Controller.Test, PublicKey= 00240000048000009400000006020000002400005253413100040000010001006d1cca26da4daf8230bb524d15453c319d38c381589ab07912b8ab6afff8174aad961a74f171790b60e5ed604bc7bad410214a7d59ed6e101c03440e3b1cd055e2bdba377915b076aa15ac9cd6da1acf488a633cb9bc2bb34536b62593950249111ac7c572e02523978ac82d829fe8be29fba6cc4f4e5b668a6cd57d39eee2aa ")]
+namespace Fluente.Arquitetura.Controllers
 {
     /// <inheritdoc />
     /// <summary>
@@ -29,9 +29,9 @@ namespace Fluent.Architecture.Controllers
     /// O serviço é inicializado a cada ActionExecuting.
     /// </summary>
     /// <typeparam name="TS">O serviço a ser usado pelo controlador.</typeparam>
-    public abstract class FluentServiceController<TS> : BaseController where TS : TransactionalService, new()
+    public abstract class FluenteServiceController<TS> : BaseController where TS : TransactionalService, new()
     {
-        public virtual FluentPagination LastRequestPagination => Service.SessionRequest.Pagination;
+        public virtual FluentePagination LastRequestPagination => Service.SessionRequest.Pagination;
 
         protected internal TS Service { get; set; }
 
@@ -45,7 +45,7 @@ namespace Fluent.Architecture.Controllers
 
         internal protected bool TransactionIsStarted { get; set; }
 
-        protected FluentServiceController() 
+        protected FluenteServiceController() 
         {
             Service = null;
         }
@@ -54,7 +54,7 @@ namespace Fluent.Architecture.Controllers
         protected async Task<DefaultTermResult<T>> ResultAsync<T>(T data, string term)
         {
             await CloseTransactionAsync();
-            //data = (T)data.FluentResultOrValue();
+            //data = (T)data.FluenteResultOrValue();
             return new DefaultTermResult<T>(data, term);
         }
 
@@ -62,23 +62,23 @@ namespace Fluent.Architecture.Controllers
         protected async Task<DefaultResult<T>> ResultAsync<T>(T data)
         {
             await CloseTransactionAsync();
-            //data = (T)data.FluentResultOrValue();
+            //data = (T)data.FluenteResultOrValue();
             return new DefaultResult<T>(data);
         }
 
         [NonAction]
-        protected async Task<DefaultPaginationResult<T>> ResultAsync<T>(T data, FluentPagination pagination)
+        protected async Task<DefaultPaginationResult<T>> ResultAsync<T>(T data, FluentePagination pagination)
         {
             await CloseTransactionAsync();
-            data = (T)data.FluentResultOrValue();
+            data = (T)data.FluenteResultOrValue();
             return new DefaultPaginationResult<T>(data, pagination);
         }
 
         [NonAction]
-        protected async Task<DefaultPaginationTermResult<T>> ResultAsync<T>(T data, FluentPagination pagination, string term)
+        protected async Task<DefaultPaginationTermResult<T>> ResultAsync<T>(T data, FluentePagination pagination, string term)
         {
             await CloseTransactionAsync();
-            data = (T)data.FluentResultOrValue();
+            data = (T)data.FluenteResultOrValue();
             return new DefaultPaginationTermResult<T>(data, pagination, term);
         }
 
@@ -108,7 +108,7 @@ namespace Fluent.Architecture.Controllers
         {
             if (TransactionIsStarted)
             {
-                if (Service.SessionRequest.ContextFluentValidationException.IsValid)
+                if (Service.SessionRequest.ContextFluenteValidationException.IsValid)
                 {
                     if (Service.TransactionObjects != null)
                     {

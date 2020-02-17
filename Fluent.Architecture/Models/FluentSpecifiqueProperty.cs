@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Fluent.Architecture.Core.Models
+namespace Fluente.Arquitetura.Nucleo.Models
 {
-    public class FluentSpecificProperty
+    public class FluenteSpecificProperty
     {
         public string Name { get; set; }
         public Type Type { get; set; }

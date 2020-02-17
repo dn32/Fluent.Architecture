@@ -1,19 +1,19 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
 
-using Fluent.Architecture.Core.Interfaces;
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Factory;
-using Fluent.Architecture.Specifications;
-using Fluent.Architecture.Validation;
+using Fluente.Arquitetura.Nucleo.Interfaces;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Factory;
+using Fluente.Arquitetura.Specifications;
+using Fluente.Arquitetura.Validation;
 
-namespace Fluent.Architecture.Services
+namespace Fluente.Arquitetura.Services
 {
     ///<inheritdoc/>
     /// <summary>

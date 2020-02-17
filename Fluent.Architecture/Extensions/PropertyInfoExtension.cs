@@ -1,11 +1,11 @@
-﻿using Fluent.Architecture.Core.Attributes;
-using Fluent.Architecture.Core.Util;
-using Fluent.Architecture.Extensions;
+﻿using Fluente.Arquitetura.Nucleo.Atributos;
+using Fluente.Arquitetura.Nucleo.Util;
+using Fluente.Arquitetura.Extensoes;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
-namespace Fluent.Architecture.Core.Extensions
+namespace Fluente.Arquitetura.Nucleo.Extensoes
 {
     public static class PropertyInfoExtension
     {
@@ -13,13 +13,13 @@ namespace Fluent.Architecture.Core.Extensions
         {
             if (property.PropertyType.GetNonNullableType().IsNumeric())
             {
-                var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
-                var max = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
+                var min = property.GetCustomAttribute<FluenteJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
+                var max = property.GetCustomAttribute<FluenteJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
                 if (min == null || max == null) { return RandomUtil.NextRandom(int.MaxValue); }
 
                 if (max.ToString() == "0" && property.PropertyType.IsNumeric())
                 {
-                    max = property.PropertyType.GetMaxValueOfNumber().FluentCast<double>();
+                    max = property.PropertyType.GetMaxValueOfNumber().FluenteCast<double>();
                 }
 
                 return RandomUtil.NextRandom((int)min, (double)max);
@@ -27,8 +27,8 @@ namespace Fluent.Architecture.Core.Extensions
 
             if (property.PropertyType.GetNonNullableType() == typeof(string) && property.PropertyType.GetNonNullableType() == typeof(String))
             {
-                var min = property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
-                var max = max_ == 0 ? (property.GetCustomAttribute<FluentJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length) : max_;
+                var min = property.GetCustomAttribute<FluenteJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
+                var max = max_ == 0 ? (property.GetCustomAttribute<FluenteJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length) : max_;
                 max ??= 64;
                 min ??= 0;
                 if (min == null) { return RandomUtil.NextRandomString(max.Value); }
@@ -37,7 +37,7 @@ namespace Fluent.Architecture.Core.Extensions
                 return RandomUtil.NextRandomString(max.Value);
             }
 
-            return property.PropertyType.GetFluentDefaultValue();
+            return property.PropertyType.GetFluenteDefaultValue();
         }
     }
 }

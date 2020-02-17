@@ -1,6 +1,6 @@
-﻿namespace Fluent.Architecture.EntityFramework
+﻿namespace Fluente.Arquitetura.EntityFramework
 {
-    public enum FluentDbType
+    public enum FluenteDbType
     {
         SQL_SERVER,
         ORACLE,

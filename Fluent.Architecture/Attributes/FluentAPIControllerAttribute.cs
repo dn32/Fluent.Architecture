@@ -1,18 +1,18 @@
 ﻿using System;
 
-namespace Fluent.Architecture.Core.Attributes
+namespace Fluente.Arquitetura.Nucleo.Atributos
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class FluentAPIControllerAttribute : Attribute
+    public class FluenteAPIControllerAttribute : Attribute
     {
         public bool AutomaticGeneration { get; set; }
 
-        public FluentAPIControllerAttribute()
+        public FluenteAPIControllerAttribute()
         {
             AutomaticGeneration = true;
         }
 
-        public FluentAPIControllerAttribute(bool automaticGeneration = true)
+        public FluenteAPIControllerAttribute(bool automaticGeneration = true)
         {
             AutomaticGeneration = automaticGeneration;
         }

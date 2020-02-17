@@ -1,23 +1,23 @@
 ﻿
-using Fluent.Architecture.Exceptions.ValidationException;
+using Fluente.Arquitetura.Exceptions.ValidationException;
 using Newtonsoft.Json;
 
-namespace Fluent.Architecture.Core.Inconsistences
+namespace Fluente.Arquitetura.Nucleo.Inconsistences
 {
-    public class FluentInconsistence
+    public class FluenteInconsistence
     {
         public string Message { get; set; }
         public string GlobalizationKey { get; set; }
         [JsonIgnore]
-        public FluentValidationException FluentException { get; set; }
+        public FluenteValidationException FluenteException { get; set; }
     }
 
-    public class FluentPropertyInconsistence : FluentInconsistence
+    public class FluentePropertyInconsistence : FluenteInconsistence
     {
         public string PropertyName { get; set; }
     }
 
-    public class FluentUiFieldInconsistence : FluentPropertyInconsistence
+    public class FluenteUiFieldInconsistence : FluentePropertyInconsistence
     {
         public string Field { get; set; }
     }

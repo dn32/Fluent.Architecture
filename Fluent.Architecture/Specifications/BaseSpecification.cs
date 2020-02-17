@@ -1,18 +1,18 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
 
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Exceptions;
-using Fluent.Architecture.Services;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Exceptions;
+using Fluente.Arquitetura.Services;
 using System.Linq;
 
-namespace Fluent.Architecture.Specifications
+namespace Fluente.Arquitetura.Specifications
 {
     /// <summary>
     /// Especificação base para todas as especificações do sistema.

@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -8,11 +8,11 @@
 // ReSharper disable CommentTypo
 using Newtonsoft.Json;
 
-namespace Fluent.Architecture.Exceptions.ValidationException
+namespace Fluente.Arquitetura.Exceptions.ValidationException
 {
-    public class EntityNotFoundFluentValidationException : FluentValidationException
+    public class EntityNotFoundFluenteValidationException : FluenteValidationException
     {
-        public EntityNotFoundFluentValidationException(string entityKeys)
+        public EntityNotFoundFluenteValidationException(string entityKeys)
             : base($"No entity with this key(s) was found in the database: {entityKeys}", false, entityKeys)
         {
         }

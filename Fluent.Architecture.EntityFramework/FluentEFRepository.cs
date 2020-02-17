@@ -1,22 +1,22 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
 
-using Fluent.Architecture.Core.Attributes;
-using Fluent.Architecture.Core.Enumerator;
-using Fluent.Architecture.Core.Interfaces;
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Core.Util;
-using Fluent.Architecture.Exceptions;
-using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Interfaces;
-using Fluent.Architecture.Services;
-using Fluent.Architecture.Specifications;
+using Fluente.Arquitetura.Nucleo.Atributos;
+using Fluente.Arquitetura.Nucleo.Enumerator;
+using Fluente.Arquitetura.Nucleo.Interfaces;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Nucleo.Util;
+using Fluente.Arquitetura.Exceptions;
+using Fluente.Arquitetura.Extensoes;
+using Fluente.Arquitetura.Interfaces;
+using Fluente.Arquitetura.Services;
+using Fluente.Arquitetura.Specifications;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using System;
@@ -30,10 +30,10 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-[assembly: InternalsVisibleTo(@"Fluent.Architecture.EntityFramework.SqlServer, PublicKey=00240000048000009400000006020000002400005253413100040000010001002d98533364f3b3fbd11e7a3f14cd73d169e1daabd62ba2d1e5bc6a48a9bc709a503960db0e76c190e7a8dcefaed037e539682d6a891b242ddb91a3ab20fbfa0c04fb6304c8903857e1ed75399850fca4037dd2c810749e75770e5d455e950ccb9d06cf6fea5f30b00557a29408ce4c45021c412eca32616f47809bfe2cf404cc")]
-[assembly: InternalsVisibleTo(@"Fluent.Architecture.EntityFramework.PostgreSQL, PublicKey=0024000004800000940000000602000000240000525341310004000001000100192d4ee01ba583399ab1d381c4301592f8520d29c628f3220e1550b2068e540e26886fa8d8b52618553f89fed1dccb18d5d3c07c548fca3c916a10823f411c23ef0e85bf0526ed94aa3cfbdf79a9595861348cfc369670f8ed9f7c4afd08de5f3cd87a0c7c6b1d8a0b94622c163a764813ba95d39dc44ea1baf7b663800a49bc")]
-[assembly: InternalsVisibleTo(@"Fluent.Architecture.EntityFramework.MySQL, PublicKey=0024000004800000940000000602000000240000525341310004000001000100617593ae2b67e94c33ea38be9727f7a4a0e18fe316ea3cddceaaadd51d47546be3f27dc1d1c6c84d0a0cb43db45a7c476479c7ebd881d76b5dad404cafd086743036bd3c929dbf14c759ff504d798ca1097eb96b02dde75ee1bc120adc0e94553298c8749271502eb50cb427db851b1a26044bcb8e8fae1acf106069d2a349c0")]
-namespace Fluent.Architecture.EntityFramework
+[assembly: InternalsVisibleTo(@"Fluente.Arquitetura.EntityFramework.SqlServer, PublicKey=00240000048000009400000006020000002400005253413100040000010001002d98533364f3b3fbd11e7a3f14cd73d169e1daabd62ba2d1e5bc6a48a9bc709a503960db0e76c190e7a8dcefaed037e539682d6a891b242ddb91a3ab20fbfa0c04fb6304c8903857e1ed75399850fca4037dd2c810749e75770e5d455e950ccb9d06cf6fea5f30b00557a29408ce4c45021c412eca32616f47809bfe2cf404cc")]
+[assembly: InternalsVisibleTo(@"Fluente.Arquitetura.EntityFramework.PostgreSQL, PublicKey=0024000004800000940000000602000000240000525341310004000001000100192d4ee01ba583399ab1d381c4301592f8520d29c628f3220e1550b2068e540e26886fa8d8b52618553f89fed1dccb18d5d3c07c548fca3c916a10823f411c23ef0e85bf0526ed94aa3cfbdf79a9595861348cfc369670f8ed9f7c4afd08de5f3cd87a0c7c6b1d8a0b94622c163a764813ba95d39dc44ea1baf7b663800a49bc")]
+[assembly: InternalsVisibleTo(@"Fluente.Arquitetura.EntityFramework.MySQL, PublicKey=0024000004800000940000000602000000240000525341310004000001000100617593ae2b67e94c33ea38be9727f7a4a0e18fe316ea3cddceaaadd51d47546be3f27dc1d1c6c84d0a0cb43db45a7c476479c7ebd881d76b5dad404cafd086743036bd3c929dbf14c759ff504d798ca1097eb96b02dde75ee1bc120adc0e94553298c8749271502eb50cb427db851b1a26044bcb8e8fae1acf106069d2a349c0")]
+namespace Fluente.Arquitetura.EntityFramework
 {
     /// <inheritdoc />
     /// <summary>
@@ -42,9 +42,9 @@ namespace Fluent.Architecture.EntityFramework
     /// <typeparam name="TE">
     /// O tipo de entidade do repositório.
     /// </typeparam>
-    public partial class FluentEFRepository<TE> : IFluentRepository<TE> where TE : BaseEntity
+    public partial class FluenteEFRepository<TE> : IFluenteRepository<TE> where TE : BaseEntity
     {
-        public FluentEFRepository()
+        public FluenteEFRepository()
         {
         }
 
@@ -74,11 +74,11 @@ namespace Fluent.Architecture.EntityFramework
         /// <summary>
         /// O serviço qual esse repositório representa.
         /// </summary>
-        public FluentService<TE> Service { get; set; }
+        public FluenteService<TE> Service { get; set; }
 
-        // FluentService<TE> IFluentRepository<TE>.Service { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        // FluenteService<TE> IFluenteRepository<TE>.Service { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
-        internal protected void RunTheContextValidation() => Service.SessionRequest.ContextFluentValidationException.Validate();
+        internal protected void RunTheContextValidation() => Service.SessionRequest.ContextFluenteValidationException.Validate();
 
         #endregion
 
@@ -95,7 +95,7 @@ namespace Fluent.Architecture.EntityFramework
 
         #region COMPOSITION
 
-        /* Unmerged change from project 'Fluent.Architecture.EntityFramework (netcoreapp3.1)'
+        /* Unmerged change from project 'Fluente.Arquitetura.EntityFramework (netcoreapp3.1)'
         Before:
                 protected void UpdateCompositionList(TE entity)
         After:
@@ -103,10 +103,10 @@ namespace Fluent.Architecture.EntityFramework
         */
         protected async Task UpdateCompositionListAsync(TE entity, bool isUpdate)
         {
-            var compositionProperties = entity.GetType().GetProperties().Where(x => x.GetCustomAttributeAny<FluentCompositionAttribute>());
+            var compositionProperties = entity.GetType().GetProperties().Where(x => x.GetCustomAttributeAny<FluenteCompositionAttribute>());
             foreach (var compositionProperty in compositionProperties)
             {
-                var attr = compositionProperty.GetCustomAttribute<FluentCompositionAttribute>();
+                var attr = compositionProperty.GetCustomAttribute<FluenteCompositionAttribute>();
                 if (attr?.OnSave == EnumOnSaveReference.IGNORE) { continue; }
                 if (attr?.OnSave == EnumOnSaveReference.ADD && isUpdate) { continue; }
 
@@ -116,12 +116,12 @@ namespace Fluent.Architecture.EntityFramework
 
                 if (compositionPropertyType.IsList())
                 {
-                    var compositionListValue = compositionValue.FluentCast<IList>();
+                    var compositionListValue = compositionValue.FluenteCast<IList>();
 
                     if (isUpdate)
                     {
                         var listType = compositionPropertyType.GenericTypeArguments[0];
-                        var allPersistedForThisEntity = ListAllByForeignKey(entity, listType).FluentCast<IList>();
+                        var allPersistedForThisEntity = ListAllByForeignKey(entity, listType).FluenteCast<IList>();
 
                         var allPersistedForThisEntityForRemove = allPersistedForThisEntity;
                         if (compositionListValue != null)
@@ -165,7 +165,7 @@ namespace Fluent.Architecture.EntityFramework
                 {
                     await CompleteEmptyKeysAsync(compositionValue);
 
-                    var list = ListAllByForeignKey(entity, compositionPropertyType).FluentCast<IList>();
+                    var list = ListAllByForeignKey(entity, compositionPropertyType).FluenteCast<IList>();
                     var currentEntity = list.Count == 1 ? list[0] : null;
 
                     if (currentEntity == null)
@@ -214,7 +214,7 @@ namespace Fluent.Architecture.EntityFramework
 
             localProperties.ToList().ForEach(LocalProperty =>
             {
-                var composition = LocalProperty.GetCustomAttribute<FluentReferenceAttribute>(true);
+                var composition = LocalProperty.GetCustomAttribute<FluenteReferenceAttribute>(true);
                 if (composition == null) { return; }
                 var externalProperties = LocalProperty.PropertyType.GetListTypeNonNull().GetProperties();
                 var externalValue = LocalProperty.GetValue(entity);
@@ -269,7 +269,7 @@ namespace Fluent.Architecture.EntityFramework
                                     localKeyProperty.SetValue(entity, externalKeyValue);
                                 }
 
-                                if (composition is FluentAggregationAttribute aggre && externalValue != null)
+                                if (composition is FluenteAggregationAttribute aggre && externalValue != null)
                                 {
                                     if (Session.Entry(externalValue).State == EntityState.Added && aggre.AllowAdd)
                                     {
@@ -288,16 +288,16 @@ namespace Fluent.Architecture.EntityFramework
         private async Task CompleteEmptyKeysAsync(object compositionValue)
         {
             if (compositionValue == null) { return; }
-            var keyPoroperties = compositionValue.GetType().GetProperties().Where(x => x.GetCustomAttributeAny<FluentRandomKeyValueOnAddAttribute>()).ToList();
+            var keyPoroperties = compositionValue.GetType().GetProperties().Where(x => x.GetCustomAttributeAny<FluenteRandomKeyValueOnAddAttribute>()).ToList();
             //Todo - Permitir esse atributo somente em tipos primitivos
             foreach (var property in keyPoroperties)
             {
                 var type = property.PropertyType;
                 var value = property.GetValue(compositionValue);
-                if (value.IsFluentNull() || value.FluentEquals(type.GetFluentDefaultValue()))
+                if (value.IsFluenteNull() || value.FluenteEquals(type.GetFluenteDefaultValue()))
                 {
                     if (GetExistinEntityCode(compositionValue, property)) { return; }
-                    var attribute = property.GetCustomAttribute<FluentRandomKeyValueOnAddAttribute>();
+                    var attribute = property.GetCustomAttribute<FluenteRandomKeyValueOnAddAttribute>();
                     if (attribute == null) { continue; }
                     await GenerateNewEntityCodes(compositionValue, property, attribute.Max);
                 }
@@ -355,7 +355,7 @@ namespace Fluent.Architecture.EntityFramework
 
         private IQueryable FromSqlByType(string sql, Type dbEntityType, params object[] parameters)
         {
-            return GetType().GetMethod(nameof(FromSqlSelect), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)?.MakeGenericMethod(dbEntityType).Invoke(this, new object[] { sql, parameters }).FluentCast<IQueryable>();
+            return GetType().GetMethod(nameof(FromSqlSelect), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)?.MakeGenericMethod(dbEntityType).Invoke(this, new object[] { sql, parameters }).FluenteCast<IQueryable>();
         }
 
         internal protected IQueryable<TE> FromSql(string sql, params object[] parameters)
@@ -377,7 +377,7 @@ namespace Fluent.Architecture.EntityFramework
         internal protected ICollection ListAllNotPaginate(string sql, Type dbEntityType)
         {
             var query = FromSqlByType(sql, dbEntityType);
-            return typeof(Enumerable).GetMethod(nameof(Enumerable.ToList))?.MakeGenericMethod(dbEntityType).Invoke(null, new object[] { query }).FluentCast<ICollection>();
+            return typeof(Enumerable).GetMethod(nameof(Enumerable.ToList))?.MakeGenericMethod(dbEntityType).Invoke(null, new object[] { query }).FluenteCast<ICollection>();
         }
 
         #endregion
@@ -449,7 +449,7 @@ namespace Fluent.Architecture.EntityFramework
             }
         }
 
-        public virtual void RemoveRange(IFluentSpecification spec)
+        public virtual void RemoveRange(IFluenteSpecification spec)
         {
             var list = GetSpec(spec).ToIQueryable(Query).ToList();
             this.Input.RemoveRange(list);
@@ -465,33 +465,33 @@ namespace Fluent.Architecture.EntityFramework
 
         #region INTERNAL
 
-        private FluentSelectSpecification<TE, TO> GetSpecSelect<TO>(ISpec spec1)
+        private FluenteSelectSpecification<TE, TO> GetSpecSelect<TO>(ISpec spec1)
         {
-            if (spec1 is IFluentSpecification<TO> spec)
+            if (spec1 is IFluenteSpecification<TO> spec)
             {
-                if (spec.FluentEntityType != typeof(TE))
+                if (spec.FluenteEntityType != typeof(TE))
                 {
-                    var serviceName = $"{spec.FluentEntityType.Name}Service";
-                    throw new IncorrectDevelopmentException($"The type of input reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.FluentEntityType}.\r\nRequisition Type: {typeof(TE)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
+                    var serviceName = $"{spec.FluenteEntityType.Name}Service";
+                    throw new IncorrectDevelopmentException($"The type of input reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.FluenteEntityType}.\r\nRequisition Type: {typeof(TE)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
                 }
 
-                if (spec.FluentEntityOutType != typeof(TO))
+                if (spec.FluenteEntityOutType != typeof(TO))
                 {
                     var serviceName = $"{typeof(TE).Name}Service";
-                    throw new IncorrectDevelopmentException($"The type of output reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.FluentEntityType}.\r\nRequisition Type: {typeof(TO)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
+                    throw new IncorrectDevelopmentException($"The type of output reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.FluenteEntityType}.\r\nRequisition Type: {typeof(TO)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
                 }
 
-                return spec as FluentSelectSpecification<TE, TO>;
+                return spec as FluenteSelectSpecification<TE, TO>;
             }
 
             throw new IncorrectDevelopmentException("The specification is of a different type than expected");
         }
 
-        protected FluentSpecification<TE> GetSpec(ISpec spec1)
+        protected FluenteSpecification<TE> GetSpec(ISpec spec1)
         {
-            if (spec1 is FluentSpecification<TE> spec)
+            if (spec1 is FluenteSpecification<TE> spec)
             {
-                return spec as FluentSpecification<TE>;
+                return spec as FluenteSpecification<TE>;
             }
 
             throw new IncorrectDevelopmentException("The specification is of a different type than expected");
@@ -506,13 +506,13 @@ namespace Fluent.Architecture.EntityFramework
         // return sql;
         // }
 
-        private FluentPagination GetPagination()
+        private FluentePagination GetPagination()
         {
             var currentPageInt = int.TryParse(GetParameter("CurrentPage"), out var currentPageInt_) ? currentPageInt_ : 0;
             var itemsPerPageInt = int.TryParse(GetParameter("ItemsPerPage"), out var itemsPerPageInt_) ? itemsPerPageInt_ : 20;
             var startAtZeroBool = !bool.TryParse(GetParameter("StartAtZero"), out var startAtZeroBool_) || startAtZeroBool_;
 
-            return new FluentPagination(currentPageInt, startAtZeroBool, itemsPerPageInt);
+            return new FluentePagination(currentPageInt, startAtZeroBool, itemsPerPageInt);
         }
 
         private string GetParameter(string key)

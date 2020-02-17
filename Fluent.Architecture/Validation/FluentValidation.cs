@@ -1,39 +1,39 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
 
-using Fluent.Architecture.Core.Attributes;
-using Fluent.Architecture.Core.Enumerator;
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Exceptions.ValidationException;
-using Fluent.Architecture.Services;
+using Fluente.Arquitetura.Nucleo.Atributos;
+using Fluente.Arquitetura.Nucleo.Enumerator;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Exceptions.ValidationException;
+using Fluente.Arquitetura.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Fluent.Architecture.Validation
+namespace Fluente.Arquitetura.Validation
 {
     /// <summary>
     /// A classe de validação base de todas as validações com entidade do sistema.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class FluentValidation<T> : TransactionalValidation, IFluentValidation where T : BaseEntity
+    public class FluenteValidation<T> : TransactionalValidation, IFluenteValidation where T : BaseEntity
     {
         #region INTERNAL
 
         /// <summary>
         /// A validação do serviço.
         /// </summary>
-        protected internal new FluentService<T> Service
+        protected internal new FluenteService<T> Service
         {
-            get => base.Service as FluentService<T>;
+            get => base.Service as FluenteService<T>;
             set => base.Service = value;
         }
 
@@ -52,7 +52,7 @@ namespace Fluent.Architecture.Validation
         // Composition
         public virtual async Task AddAsync(T entity)
         {
-            var method = typeof(FluentValidation<T>).GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
+            var method = typeof(FluenteValidation<T>).GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
 
             var anotherServices = await (this).ExecuteEntityAndCompositions(entity, method);
             RunTheContextValidation(anotherServices);
@@ -61,14 +61,14 @@ namespace Fluent.Architecture.Validation
         // Composition
         public virtual async Task<List<TransactionalService>> AddOrUpdateAsync(T entity)
         {
-            var method = typeof(FluentValidation<T>).GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
+            var method = typeof(FluenteValidation<T>).GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
             return await (this).ExecuteEntityAndCompositions(entity, method);
         }
 
         // Composition
         public virtual async Task UpdateAsync(T entity)
         {
-            var method = typeof(FluentValidation<T>).GetMethod(nameof(UpdateRangeAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
+            var method = typeof(FluenteValidation<T>).GetMethod(nameof(UpdateRangeAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
             var anotherServices = await (this).ExecuteEntityAndCompositions(entity, method);
 
             if (KeyValuesOk)
@@ -85,7 +85,7 @@ namespace Fluent.Architecture.Validation
         {
             this.ParameterMustBeInformed(entities, nameof(entities));
             var anotherServices = new List<TransactionalService>();
-            var method = typeof(FluentValidation<T>).GetMethod(nameof(UpdateRangeAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
+            var method = typeof(FluenteValidation<T>).GetMethod(nameof(UpdateRangeAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
 
             if (entities != null)
             {
@@ -113,7 +113,7 @@ namespace Fluent.Architecture.Validation
             var anotherServices = new List<TransactionalService>();
             if (entities != null)
             {
-                var method = typeof(FluentValidation<T>).GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
+                var method = typeof(FluenteValidation<T>).GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
 
                 foreach (var entity in entities)
                 {
@@ -189,7 +189,7 @@ namespace Fluent.Architecture.Validation
         {
             if (string.IsNullOrEmpty(term))
             {
-                AddInconsistency(new NullParameterFluentValidationException(nameof(term)));
+                AddInconsistency(new NullParameterFluenteValidationException(nameof(term)));
             }
 
             if (!typeof(T).GetProperties().Any(x => x.GetCustomAttribute<SearchableAttribute>() != null))
@@ -212,19 +212,19 @@ namespace Fluent.Architecture.Validation
 
         #region INTERNAL
 
-        internal static void UpdateAsyncInternal<T2>(IFluentValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : BaseEntity
+        internal static void UpdateAsyncInternal<T2>(IFluenteValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : BaseEntity
         {
             validation.ParameterMustBeInformed(entity, compositionProperty);
-            validation.FluentValidateAttribute(entity, compositionProperty, compositionFieldName);
+            validation.FluenteValidateAttribute(entity, compositionProperty, compositionFieldName);
             validation.RequiredPropertyMustBeInformed(entity, compositionProperty, compositionFieldName);
             validation.MaxMinLenghtPropertyMustBeInformed(entity, compositionProperty, compositionFieldName);
             validation.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, compositionProperty, compositionFieldName);
         }
 
-        internal static async Task AdddAsyncInternal<T2>(IFluentValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : BaseEntity
+        internal static async Task AdddAsyncInternal<T2>(IFluenteValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : BaseEntity
         {
             validation.ParameterMustBeInformed(entity, compositionProperty);
-            validation.FluentValidateAttribute(entity, compositionProperty, compositionFieldName);
+            validation.FluenteValidateAttribute(entity, compositionProperty, compositionFieldName);
             validation.RequiredPropertyMustBeInformed(entity, compositionProperty, compositionFieldName);
             validation.MaxMinLenghtPropertyMustBeInformed(entity, compositionProperty, compositionFieldName);
             validation.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, compositionProperty, compositionFieldName);
@@ -235,10 +235,10 @@ namespace Fluent.Architecture.Validation
             }
         }
 
-        internal static void UpdateRangeAsyncInternal<T2>(IFluentValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : BaseEntity
+        internal static void UpdateRangeAsyncInternal<T2>(IFluenteValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : BaseEntity
         {
             validation.ParameterMustBeInformed(entity, compositionProperty);
-            validation.FluentValidateAttribute(entity, compositionProperty, compositionFieldName);
+            validation.FluenteValidateAttribute(entity, compositionProperty, compositionFieldName);
             validation.RequiredPropertyMustBeInformed(entity, compositionProperty, compositionFieldName);
             validation.MaxMinLenghtPropertyMustBeInformed(entity, compositionProperty, compositionFieldName);
             validation.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, compositionProperty, compositionFieldName, isUpdate: true);

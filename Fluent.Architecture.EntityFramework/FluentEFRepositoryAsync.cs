@@ -1,16 +1,16 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
 
-using Fluent.Architecture.Exceptions;
-using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Interfaces;
-using Fluent.Architecture.Core.Models;
+using Fluente.Arquitetura.Exceptions;
+using Fluente.Arquitetura.Extensoes;
+using Fluente.Arquitetura.Interfaces;
+using Fluente.Arquitetura.Nucleo.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,14 +18,14 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
-using Fluent.Architecture.Core.Attributes;
+using Fluente.Arquitetura.Nucleo.Atributos;
 using System.Collections;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Fluent.Architecture.EntityFramework
+namespace Fluente.Arquitetura.EntityFramework
 {
-    public partial class FluentEFRepository<TE>
+    public partial class FluenteEFRepository<TE>
     {
         internal protected async Task<int> CountSqlAsync(string sql, bool includeExcludedLogically = false)
         {
@@ -69,32 +69,32 @@ namespace Fluent.Architecture.EntityFramework
             return await GetSpecSelect<TO>(spec).ToIQueryable(Query).AnyAsync();
         }
 
-        public virtual async Task<List<TE>> ListAsync(IFluentSpecification ispec, FluentPagination pagination = null)
+        public virtual async Task<List<TE>> ListAsync(IFluenteSpecification ispec, FluentePagination pagination = null)
         {
             var spec = GetSpec(ispec);
             var query = spec.ToIQueryable(Query);
-            var taskList = await FluentPaginateAsync(query, pagination);
+            var taskList = await FluentePaginateAsync(query, pagination);
             return await taskList.ToListAsync();
         }
 
         public virtual async Task<int> CountAsync(TE entity, bool includeExcludedLogically = false)
         {
-            var sql = RepositoryUtil.GetKeyAndFluentUniqueKeyFilterSql(entity);
+            var sql = RepositoryUtil.GetKeyAndFluenteUniqueKeyFilterSql(entity);
             return await CountSqlAsync(sql, includeExcludedLogically);
         }
 
-        public virtual async Task<int> CountSelectAsync<TO>(IFluentSpecification<TO> spec)
+        public virtual async Task<int> CountSelectAsync<TO>(IFluenteSpecification<TO> spec)
         {
-            if (spec.FluentEntityType != typeof(TE))
+            if (spec.FluenteEntityType != typeof(TE))
             {
-                var serviceName = $"{spec.FluentEntityType.Name}Service";
-                throw new IncorrectDevelopmentException($"The type of input reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.FluentEntityType}.\r\nRequisition Type: {typeof(TE)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
+                var serviceName = $"{spec.FluenteEntityType.Name}Service";
+                throw new IncorrectDevelopmentException($"The type of input reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.FluenteEntityType}.\r\nRequisition Type: {typeof(TE)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
             }
 
             return await GetSpecSelect<TO>(spec).ToIQueryable(Query).CountAsync();
         }
 
-        public virtual async Task<int> CountAsync(IFluentSpecification spec)
+        public virtual async Task<int> CountAsync(IFluenteSpecification spec)
         {
             return await GetSpec(spec).ToIQueryable(Query).CountAsync();
         }
@@ -106,26 +106,26 @@ namespace Fluent.Architecture.EntityFramework
 
         public virtual async Task<bool> ExistsOnlyOneAsync(TE entity, bool includeExcludedLogically = false)
         {
-            var sql = RepositoryUtil.GetKeyAndFluentUniqueKeyFilterSql(entity);
+            var sql = RepositoryUtil.GetKeyAndFluenteUniqueKeyFilterSql(entity);
             return await CountSqlAsync(sql, includeExcludedLogically) == 1;
         }
 
 
         #region SPEC TE
 
-        public virtual async Task<TE> FirstOrDefaultAsync(IFluentSpecification spec)
+        public virtual async Task<TE> FirstOrDefaultAsync(IFluenteSpecification spec)
         {
             var val = GetSpec(spec).ToIQueryable(Query);
             return await val.FirstOrDefaultAsync();
         }
 
-        public virtual async Task<TO> SingleOrDefaultSelectAsync<TO>(IFluentSpecification<TO> spec)
+        public virtual async Task<TO> SingleOrDefaultSelectAsync<TO>(IFluenteSpecification<TO> spec)
         {
             var query = GetSpecSelect<TO>(spec).ToIQueryable(Query);
             return await query.FirstOrDefaultAsync();
         }
 
-        public virtual async Task<TE> SingleOrDefaultAsync(IFluentSpecification spec)
+        public virtual async Task<TE> SingleOrDefaultAsync(IFluenteSpecification spec)
         {
             var val = GetSpec(spec).ToIQueryable(Query);
 
@@ -141,15 +141,15 @@ namespace Fluent.Architecture.EntityFramework
 
         #endregion
 
-        public virtual async Task<List<TO>> ListSelectAsync<TO>(IFluentSpecification<TO> ispec, FluentPagination pagination = null)
+        public virtual async Task<List<TO>> ListSelectAsync<TO>(IFluenteSpecification<TO> ispec, FluentePagination pagination = null)
         {
             var spec = GetSpecSelect<TO>(ispec);
             var query = spec.ToIQueryable(Query);
-            var fluentPagination = await FluentPaginateAsync(query, pagination);
+            var fluentPagination = await FluentePaginateAsync(query, pagination);
             return await fluentPagination.ToListAsync();
         }
 
-        public virtual async Task<TO> FirstOrDefaultSelectAsync<TO>(IFluentSpecification<TO> ispec)
+        public virtual async Task<TO> FirstOrDefaultSelectAsync<TO>(IFluenteSpecification<TO> ispec)
         {
             var spec = GetSpecSelect<TO>(ispec);
             var query = spec.ToIQueryable(Query);
@@ -207,7 +207,7 @@ namespace Fluent.Architecture.EntityFramework
             }
 
             {
-                var sql = RepositoryUtil.GetFluentUniqueKeyFilterSql(entity, out bool nonKeys);
+                var sql = RepositoryUtil.GetFluenteUniqueKeyFilterSql(entity, out bool nonKeys);
                 if (nonKeys == false)
                 {
                     var valueFound = await FindSingleOrDefaultSqlAsync<TO>(sql);
@@ -223,7 +223,7 @@ namespace Fluent.Architecture.EntityFramework
 
         public virtual async Task<bool> ExistsAsync(TE entity, bool includeExcludedLogically = false)
         {
-            var sql = RepositoryUtil.GetKeyAndFluentUniqueKeyFilterSql(entity);
+            var sql = RepositoryUtil.GetKeyAndFluenteUniqueKeyFilterSql(entity);
             return await ExistsSqlAsync(sql, includeExcludedLogically);
         }
 
@@ -239,11 +239,11 @@ namespace Fluent.Architecture.EntityFramework
             await Input.AddRangeAsync(entities);
         }
 
-        protected async Task<IQueryable<TX>> FluentPaginateAsync<TX>(IQueryable<TX> query, FluentPagination pagination = null)
+        protected async Task<IQueryable<TX>> FluentePaginateAsync<TX>(IQueryable<TX> query, FluentePagination pagination = null)
         {
             if (pagination == null)
             {
-                pagination = GetPagination() ?? new FluentPagination(0, true, 20);
+                pagination = GetPagination() ?? new FluentePagination(0, true, 20);
             }
 
             pagination.TotalQuantityOfItems = await query.CountAsync();
@@ -279,16 +279,16 @@ namespace Fluent.Architecture.EntityFramework
             var teEntity = await Service.FindAsync(entity, false);
             var ret = Input.Remove(teEntity).Entity;
 
-            RemoveFluentCompositionsAndFluentAggregations(entity);
+            RemoveFluenteCompositionsAndFluenteAggregations(entity);
             return ret;
         }
 
-        private void RemoveFluentCompositionsAndFluentAggregations(TE entity)
+        private void RemoveFluenteCompositionsAndFluenteAggregations(TE entity)
         {
             var type = entity.GetType();
-            if (type.GetCustomAttribute<FluentJsonFormAttribute>()?.IsIntermediateTable == true) { return; }
+            if (type.GetCustomAttribute<FluenteJsonFormAttribute>()?.IsIntermediateTable == true) { return; }
 
-            var compositionProperties = type.GetProperties().Where(x => x.GetCustomAttributeAny<FluentCompositionAttribute>() || x.GetCustomAttributeAny<FluentManyToManyAggregationAttribute>());
+            var compositionProperties = type.GetProperties().Where(x => x.GetCustomAttributeAny<FluenteCompositionAttribute>() || x.GetCustomAttributeAny<FluenteManyToManyAggregationAttribute>());
             foreach (var compositionProperty in compositionProperties)
             {
                 var compositionPropertyType = compositionProperty.PropertyType;

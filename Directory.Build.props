@@ -1,8 +1,8 @@
 <Project>
 
   <PropertyGroup>
-    <PackageProjectUrl>https://github.com/dn32/Fluent.Infrastructure.Doc</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/dn32/Fluent.Infrastructure.Doc</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/dn32/Fluente.Infrastructure.Doc</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dn32/Fluente.Infrastructure.Doc</RepositoryUrl>
     <SignAssembly>true</SignAssembly>
     <CopyOutputSymbolsToPublishDirectory>false</CopyOutputSymbolsToPublishDirectory>
     <!--<GeneratePackageOnBuild>true</GeneratePackageOnBuild>-->

@@ -1,6 +1,6 @@
 ﻿//// -----------------------------------------------------------------------
-//// <copyright company="Fluent System">
-////     Copyright © Fluent System. All rights reserved.
+//// <copyright company="Fluente System">
+////     Copyright © Fluente System. All rights reserved.
 ////     TODOS OS DIREITOS RESERVADOS.
 //// </copyright>
 //// -----------------------------------------------------------------------
@@ -18,13 +18,13 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Reflection;
-//using Fluent.Architecture.Attributes;
-//using Fluent.Architecture.Extensions;
-//using Fluent.Architecture.Interfaces;
-//using Fluent.Architecture.Model;
-//using Fluent.Architecture.Sample.Test.SupportElements.Model;
+//using Fluente.Arquitetura.Attributes;
+//using Fluente.Arquitetura.Extensoes;
+//using Fluente.Arquitetura.Interfaces;
+//using Fluente.Arquitetura.Model;
+//using Fluente.Arquitetura.Sample.Test.SupportElements.Model;
 
-//namespace Fluent.Architecture.EntityFramework.SqlServer
+//namespace Fluente.Arquitetura.EntityFramework.SqlServer
 //{
 //    /// <inheritdoc />
 //    /// <summary>
@@ -33,7 +33,7 @@
 //    /// <typeparam name="TE">
 //    /// O tipo de entidade do repositório.
 //    /// </typeparam>
-//    public class FluentGlobalizedRepository<TE> : FluentSQLRepository<TE> where TE : FluentGlobalizedEntity
+//    public class FluenteGlobalizedRepository<TE> : FluenteSQLRepository<TE> where TE : FluenteGlobalizedEntity
 //    {
 //        // Tradução ok
 //        /// <summary>
@@ -47,7 +47,7 @@
 //        {
 //            if (string.IsNullOrWhiteSpace(entity.Language))
 //            {
-//                entity.Language = FluentLanguage.DefaultLanguage;
+//                entity.Language = FluenteLanguage.DefaultLanguage;
 //            }
 
 //            entity.IsDefaultLanguage = true;
@@ -100,7 +100,7 @@
 
 //        // Tradução ok
 
-//        public virtual List<TE> List(IFluentSpecification spec, FluentPagination pagination, string language)
+//        public virtual List<TE> List(IFluenteSpecification spec, FluentePagination pagination, string language)
 //        {
 //            var list = base.List(spec, pagination);
 
@@ -122,7 +122,7 @@
 
 //        // Tradução ok
 
-//        public virtual TE FirstOrDefault(IFluentSpecification spec, string language)
+//        public virtual TE FirstOrDefault(IFluenteSpecification spec, string language)
 //        {
 //            var persistedEntity = base.FirstOrDefault(spec);
 //            return UpdateTranslationForFoundEntity(persistedEntity, language);
@@ -167,7 +167,7 @@
 //            return FindAllTranslationsOfAnEntity(entity).Where(x => x.Language == language);
 //        }
 
-//        private void AddTranslation(FluentGlobalizedEntity entity)
+//        private void AddTranslation(FluenteGlobalizedEntity entity)
 //        {
 //            var translations = ExtractTranslactionsOfEntity(entity);
 
@@ -177,9 +177,9 @@
 //            }
 //        }
 
-//        private static List<Translation> ExtractTranslactionsOfEntity(FluentGlobalizedEntity entity)
+//        private static List<Translation> ExtractTranslactionsOfEntity(FluenteGlobalizedEntity entity)
 //        {
-//            var properties = typeof(TE).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => x.GetCustomAttribute<FluentGlobalizationAttribute>() != null).ToList();
+//            var properties = typeof(TE).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => x.GetCustomAttribute<FluenteGlobalizationAttribute>() != null).ToList();
 //            var translations = properties.Select(x =>
 //                    new Translation
 //                    {
@@ -224,7 +224,7 @@
 
 //        private void DoNotAllowChangeGlobalizedProperties(TE persistedEntity)
 //        {
-//            var properties = typeof(TE).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => x.GetCustomAttribute<FluentGlobalizationAttribute>() != null).ToList();
+//            var properties = typeof(TE).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => x.GetCustomAttribute<FluenteGlobalizationAttribute>() != null).ToList();
 
 //            properties.ForEach(property => Session.Entry(persistedEntity).Property(property.Name).IsModified = false);
 //            Session.Entry(persistedEntity).Property(x => x.Language).IsModified = false;

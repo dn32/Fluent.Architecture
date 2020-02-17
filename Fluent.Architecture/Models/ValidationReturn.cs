@@ -1,16 +1,16 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
 
-using Fluent.Architecture.Core.Inconsistences;
+using Fluente.Arquitetura.Nucleo.Inconsistences;
 using System.Collections.Generic;
 
-namespace Fluent.Architecture.Core.Models
+namespace Fluente.Arquitetura.Nucleo.Models
 {
     public class ValidationReturn
     {
@@ -18,18 +18,18 @@ namespace Fluent.Architecture.Core.Models
 
         public bool ValidationError { get; set; }
 
-        public List<FluentInconsistence> Inconsistencies { get; set; }
+        public List<FluenteInconsistence> Inconsistencies { get; set; }
     }
 
     //public class ValidationExceptionReturn : ValidationReturn
     //{
-    //    public ValidationExceptionReturn(ContextFluentValidationException validationException)
+    //    public ValidationExceptionReturn(ContextFluenteValidationException validationException)
     //    {
     //        ValidationException = validationException;
     //    }
 
     //    [JsonProperty("inconsistencies")]
-    //    public List<FluentValidationException> Inconsistencies => ValidationException?.Inconsistencies;
+    //    public List<FluenteValidationException> Inconsistencies => ValidationException?.Inconsistencies;
 
     //    [JsonProperty("validation_error")]
     //    public new bool ValidationError => ValidationException?.ValidationError ?? true;
@@ -54,6 +54,6 @@ namespace Fluent.Architecture.Core.Models
     //    public new string Message => ValidationException?.Message ?? string.Empty;
 
     //    [JsonIgnore]
-    //    public ContextFluentValidationException ValidationException { get; set; }
+    //    public ContextFluenteValidationException ValidationException { get; set; }
     //}
 }

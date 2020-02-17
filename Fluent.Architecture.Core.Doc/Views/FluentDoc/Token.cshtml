@@ -1,4 +1,4 @@
-﻿@using static Fluent.Architecture.FluentDocExtension
+﻿@using static Fluente.Arquitetura.FluenteDocExtension
 
 @{
     ViewData["Title"] = "Autentication".G();
@@ -6,7 +6,7 @@
 
 <div class="auth-container">
 
-    <form method="post" action="/FluentDoc/Logout">
+    <form method="post" action="/FluenteDoc/Logout">
         <div class="form-group">
             <label for="user">@("Token".G())</label>
             <textarea class="form-control" name="token" style="height: 361px;">@ViewBag.Token</textarea>

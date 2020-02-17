@@ -1,22 +1,22 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
 
-using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Core.Interfaces;
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Services;
-using Fluent.Architecture.Specifications;
-using Fluent.Architecture.Validation;
+using Fluente.Arquitetura.Controllers;
+using Fluente.Arquitetura.Nucleo.Interfaces;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Services;
+using Fluente.Arquitetura.Specifications;
+using Fluente.Arquitetura.Validation;
 using System;
 using System.Linq;
 
-namespace Fluent.Architecture.Util
+namespace Fluente.Arquitetura.Util
 {
     /// <summary>
     /// Utilitários de uso global.
@@ -24,18 +24,18 @@ namespace Fluent.Architecture.Util
     public static class GlobalUtil
     {
         /// <summary>
-        /// Obtem o tipo da entidade de um objeto baseado em um tipo esperado. Ex <see cref="FluentService{T}"/>, <see cref="FluentRepository{TE}"/>, etc. O retorno será o tipo de T.
+        /// Obtem o tipo da entidade de um objeto baseado em um tipo esperado. Ex <see cref="FluenteService{T}"/>, <see cref="FluenteRepository{TE}"/>, etc. O retorno será o tipo de T.
         /// </summary>
         /// <param name="objectTypeToCheck">
         /// Objeto a ser avaliado.
         /// </param>
         /// <param name="expectedType">
-        /// Tipo esperado. Exemplo:  <see cref="FluentService{T}"/>, <see cref="FluentRepository{TE}"/>
+        /// Tipo esperado. Exemplo:  <see cref="FluenteService{T}"/>, <see cref="FluenteRepository{TE}"/>
         /// </param>
         /// <returns>
         /// O tipo.
         /// </returns>
-        internal static Tuple<Type, Type> GetFluentEntityType(Type objectTypeToCheck, Type expectedType)
+        internal static Tuple<Type, Type> GetFluenteEntityType(Type objectTypeToCheck, Type expectedType)
         {
             return new Tuple<Type, Type>(GetBase(objectTypeToCheck.BaseType), objectTypeToCheck);
 
@@ -61,7 +61,7 @@ namespace Fluent.Architecture.Util
             }
         }
 
-        internal static Tuple<Type, Type> GetFluentEntityTypeByInterface(Type objectTypeToCheck, Type expectedType)
+        internal static Tuple<Type, Type> GetFluenteEntityTypeByInterface(Type objectTypeToCheck, Type expectedType)
         {
             var ints = objectTypeToCheck.GetInterfaces();
             var interface_ = ints.FirstOrDefault(x => x.Name == expectedType.Name);
@@ -74,17 +74,17 @@ namespace Fluent.Architecture.Util
             return null;
         }
 
-        private static string[] FluentEntityNames => new[]
+        private static string[] FluenteEntityNames => new[]
         {
-            typeof(FluentController<FluentEntity>).Name,
-            typeof(FluentService<FluentEntity>).Name,
-            typeof(IFluentRepository<FluentEntity>).Name,
-            typeof(FluentValidation<FluentEntity>).Name,
-            typeof(FluentSpecification<FluentEntity>).Name
+            typeof(FluenteController<FluenteEntity>).Name,
+            typeof(FluenteService<FluenteEntity>).Name,
+            typeof(IFluenteRepository<FluenteEntity>).Name,
+            typeof(FluenteValidation<FluenteEntity>).Name,
+            typeof(FluenteSpecification<FluenteEntity>).Name
         };
 
         /// <summary>
-        /// Obtem o tipo da entidade de um tipo. Ex <see cref="FluentService{T}"/>. O tipo a ser encontrado é o tipo de T.
+        /// Obtem o tipo da entidade de um tipo. Ex <see cref="FluenteService{T}"/>. O tipo a ser encontrado é o tipo de T.
         /// </summary>
         /// <param name="currentType">
         /// Objeto a ser avaliado.
@@ -92,7 +92,7 @@ namespace Fluent.Architecture.Util
         /// <returns>
         /// O tipo.
         /// </returns>
-        public static Type GetFluentEntityType(this Type currentType)
+        public static Type GetFluenteEntityType(this Type currentType)
         {
             return GetBase(currentType);
 
@@ -103,7 +103,7 @@ namespace Fluent.Architecture.Util
                     return null;
                 }
 
-                if (!FluentEntityNames.Contains(type.Name))
+                if (!FluenteEntityNames.Contains(type.Name))
                 {
                     return GetBase(type.BaseType);
                 }

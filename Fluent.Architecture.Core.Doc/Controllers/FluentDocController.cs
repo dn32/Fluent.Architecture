@@ -1,9 +1,8 @@
-﻿using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Core.Attributes;
-using Fluent.Architecture.Core.Enumerator;
-using Fluent.Architecture.Core.Extensions;
-using Fluent.Architecture.Core.Specifications;
-using Fluent.Architecture.Extensions;
+﻿using Fluente.Arquitetura.Extensoes;
+using Fluente.Arquitetura.Nucleo.Atributos;
+using Fluente.Arquitetura.Nucleo.Enumerator;
+using Fluente.Arquitetura.Nucleo.Extensoes;
+using Fluente.Arquitetura.Nucleo.Specifications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -14,17 +13,16 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Web;
 
-namespace Fluent.Architecture.Core.Doc.Controllers
+namespace Fluente.Arquitetura.Nucleo.Doc.Controllers
 {
 
 #if (!DEBUG)
     [ResponseCache(Duration = 60000, Location = ResponseCacheLocation.Client)]
 #endif
     [AllowAnonymous]
-    public partial class FluentDocController : Controller
+    public partial class FluenteDocController : Controller
     {
         #region PROPERTIES
 
@@ -36,30 +34,30 @@ namespace Fluent.Architecture.Core.Doc.Controllers
 
         #endregion
 
-        public FluentDocController()
+        public FluenteDocController()
         {
             Initialize();
         }
 
-        [Route("FluentDoc"), Route("FluentDoc/Index")]
+        [Route("FluenteDoc"), Route("FluenteDoc/Index")]
         public IActionResult Index()
         {
             return View(AllEntities);
         }
 
-        [Route("FluentDoc/Action")]
+        [Route("FluenteDoc/Action")]
         public IActionResult Action(string service, string actionName)
         {
             if (Models.TryGetValue<string, Type>(service, StringComparison.InvariantCultureIgnoreCase, out Type type))
             {
                 if (Setup.Controllers.TryGetValue(type, out Type controllerType))
                 {
-                    if (controllerType.GetCustomAttribute<FluentDocAttribute>()?.Display == EnumFluentDisplay.Hidden)
+                    if (controllerType.GetCustomAttribute<FluenteDocAttribute>()?.Display == EnumFluenteDisplay.Hidden)
                     {
-                        throw new InvalidOperationException("FluentDocAttributeAttribute is EnumFluentDisplay.Hidden");
+                        throw new InvalidOperationException("FluenteDocAttributeAttribute is EnumFluenteDisplay.Hidden");
                     }
 
-                    var model = type.GetFluentJsonSchema(false);
+                    var model = type.GetFluenteJsonSchema(false);
                     if (model != null)
                     {
                         var routeAtributeController = controllerType.GetCustomAttributes<RouteAttribute>(true).FirstOrDefault();
@@ -67,7 +65,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
                               .GetMethods()
                               .Where(method => method.IsPublic && !method.IsDefined(typeof(NonActionAttribute)))
                               .Where(method => !method.Name.StartsWith("get_") && !method.Name.Equals("Dispose") && !method.Name.Equals("GetType") && !method.Name.StartsWith("set_"))
-                              .Where(method => method.GetCustomAttribute<FluentDocAttribute>()?.Display != EnumFluentDisplay.Hidden)
+                              .Where(method => method.GetCustomAttribute<FluenteDocAttribute>()?.Display != EnumFluenteDisplay.Hidden)
                               .FirstOrDefault(method => method.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
 
                         if (actionMethod == null) { return Content("Action not found"); }
@@ -92,14 +90,14 @@ namespace Fluent.Architecture.Core.Doc.Controllers
             }
         }
 
-        [Route("FluentDoc/Model")]
+        [Route("FluenteDoc/Model")]
         public IActionResult Model(string name)
         {
             if (AllTypes.TryGetValue(name, out Type type))
             {
-                var jsonSchema = type.GetFluentJsonSchema(false);
-                jsonSchema.FluentJsonForm.name = type.GetFriendlyName();
-                jsonSchema.Properties.Where(x => x.Property.GetCustomAttribute<FluentDocAttribute>()?.Display != EnumFluentDisplay.Hidden).ToList()
+                var jsonSchema = type.GetFluenteJsonSchema(false);
+                jsonSchema.FluenteJsonForm.name = type.GetFriendlyName();
+                jsonSchema.Properties.Where(x => x.Property.GetCustomAttribute<FluenteDocAttribute>()?.Display != EnumFluenteDisplay.Hidden).ToList()
                 .ForEach(x =>
                 {
                     x.desc = x.desc.G();
@@ -109,11 +107,11 @@ namespace Fluent.Architecture.Core.Doc.Controllers
                 if (type.IsNullableEnum())
                 {
                     jsonSchema.Properties = type.GetFields().Where(x => x.Name != "value__").Select(x =>
-                    new FluentJsonPropertyAttribute
+                    new FluenteJsonPropertyAttribute
                     {
                         propName = x.Name,
-                        name = (x.GetCustomAttribute<FluentJsonPropertyAttribute>(true)?.desc ?? x.Name.ToLower().ToTitleCase()),
-                        desc = (x.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? x.GetCustomAttribute<FluentJsonPropertyAttribute>(true)?.desc ?? x.Name).G(),
+                        name = (x.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.desc ?? x.Name.ToLower().ToTitleCase()),
+                        desc = (x.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? x.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.desc ?? x.Name).G(),
                         form = EnumForm.TEXTBOX,
                         Type = x.FieldType.BaseType
                     }).ToList();
@@ -125,31 +123,31 @@ namespace Fluent.Architecture.Core.Doc.Controllers
             return Content("Model not found");
         }
 
-        [Route("FluentDoc/Entity")]
+        [Route("FluenteDoc/Entity")]
         public IActionResult Entity()
         {
             return View(AllEntities);
         }
 
-        [Route("FluentDoc/ModelNoEntity")]
+        [Route("FluenteDoc/ModelNoEntity")]
         public IActionResult ModelNoEntity()
         {
             return View(AllModel);
         }
 
-        [Route("FluentDoc/Service")]
+        [Route("FluenteDoc/Service")]
         public IActionResult Service(string name)
         {
             if (Models.TryGetValue<string, Type>(name, StringComparison.InvariantCultureIgnoreCase, out Type type))
             {
                 if (Setup.Controllers.TryGetValue(type, out Type controllerType))
                 {
-                    if (controllerType.GetCustomAttribute<FluentDocAttribute>()?.Display == EnumFluentDisplay.Hidden)
+                    if (controllerType.GetCustomAttribute<FluenteDocAttribute>()?.Display == EnumFluenteDisplay.Hidden)
                     {
-                        throw new InvalidOperationException("FluentDocAttributeAttribute is EnumFluentDisplay.Hidden");
+                        throw new InvalidOperationException("FluenteDocAttributeAttribute is EnumFluenteDisplay.Hidden");
                     }
 
-                    var model = type.GetFluentJsonSchema(false);
+                    var model = type.GetFluenteJsonSchema(false);
                     if (model != null)
                     {
                         var routeAtributeController = controllerType.GetCustomAttributes<RouteAttribute>(true).FirstOrDefault();
@@ -157,7 +155,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
                               .GetMethods()
                               .Where(method => method.IsPublic && !method.IsDefined(typeof(NonActionAttribute)))
                               .Where(method => !method.Name.StartsWith("get_") && !method.Name.Equals("Dispose") && !method.Name.Equals("GetType") && !method.Name.StartsWith("set_"))
-                              .Where(method => method.GetCustomAttribute<FluentDocAttribute>()?.Display != EnumFluentDisplay.Hidden)
+                              .Where(method => method.GetCustomAttribute<FluenteDocAttribute>()?.Display != EnumFluenteDisplay.Hidden)
                               .SelectMany(action =>
                               {
                                   return GetActionData(action, type, controllerType, routeAtributeController);
@@ -207,16 +205,16 @@ namespace Fluent.Architecture.Core.Doc.Controllers
         {
             var fullName = type.GetListTypeNonNull().FullName;
             if (string.IsNullOrWhiteSpace(fullName)) { return string.Empty; }
-            if (AllTypes.TryGetValue(type.GetListTypeNonNull().FullName, out _)) { return $"/FluentDoc/Model?name={type.GetListTypeNonNull().FullName}"; }
+            if (AllTypes.TryGetValue(type.GetListTypeNonNull().FullName, out _)) { return $"/FluenteDoc/Model?name={type.GetListTypeNonNull().FullName}"; }
             return string.Empty;
         }
 
-        private FluentActionSchema[] GetActionData(MethodInfo action, Type type, Type controllerType, RouteAttribute routeAtributeController)
+        private FluenteActionSchema[] GetActionData(MethodInfo action, Type type, Type controllerType, RouteAttribute routeAtributeController)
         {
             var mets = action.GetCustomAttributes<HttpMethodAttribute>() ?? new List<HttpGetAttribute> { new HttpGetAttribute() };
             return mets.Select(x => Onter(x)).ToArray();
 
-            FluentActionSchema Onter(HttpMethodAttribute met)
+            FluenteActionSchema Onter(HttpMethodAttribute met)
             {
                 var routeAtributeAction = action.GetCustomAttribute<RouteAttribute>();
                 var routerAttribute = routeAtributeAction?.Template ?? routeAtributeController?.Template;
@@ -245,13 +243,13 @@ namespace Fluent.Architecture.Core.Doc.Controllers
                                     Link = GetModelLink(x.ParameterType),
                                     Type = x.ParameterType,
                                     Name = x.Name,
-                                    Description = (x.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? x.GetCustomAttribute<FluentJsonPropertyAttribute>(true)?.desc ?? x.Name).G(),
+                                    Description = (x.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? x.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.desc ?? x.Name).G(),
                                     Source = GetParameterSource(x, orderMethod),
                                     Example = x.ParameterType.GetExampleValueString()
                                 }).ToList();
 
                 var description = action.GetCustomAttribute<DescriptionAttribute>()?.Description;
-                var fluentAction = action.GetCustomAttribute<FluentActionAttribute>();
+                var fluentAction = action.GetCustomAttribute<FluenteActionAttribute>();
 
                 if (fluentAction?.Pagination == true)
                 {
@@ -277,7 +275,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
                     parameters.Add(new DocParameter("Authorization", typeof(string), EnumParameterSouce.Header, "The authentication Token", "Bearer xxxxx"));
                 }
 
-                var action_ = new FluentActionSchema
+                var action_ = new FluenteActionSchema
                 {
                     ControllerType = controllerType,
                     EntityType = type,
@@ -288,7 +286,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
                     OrderMethod = orderMethod,
                     Parameters = parameters,
                     Description = description.G(),
-                    ApiBaseUrl = FluentDocExtension.ApiBaseUrl,
+                    ApiBaseUrl = FluenteDocExtension.ApiBaseUrl,
                     ReturnType = returnType,
                     MethodName = methodName
                 };
@@ -306,11 +304,11 @@ namespace Fluent.Architecture.Core.Doc.Controllers
             return jObj.Children().Cast<JProperty>().Select(jp => jp.Name + "=" + HttpUtility.UrlEncode(jp.Value.ToString())).ToList();
         }
 
-        private string GetExampleAction(FluentActionSchema action)
+        private string GetExampleAction(FluenteActionSchema action)
         {
             var parametersArray = action.Parameters.Where(x => x.Source == EnumParameterSouce.Header).Select(x => $"xhr.setRequestHeader(\"{x.Name}\", \"{x.Example}\");").ToArray();
-            var parametersQueryArray = action.Parameters.Where(x => x.Source == EnumParameterSouce.Query).Where(x => !x.Type.IsFluentEntity()).Select(x => $"{x.Name}={x.Example}").ToList();
-            var parametersQueryArray3 = action.Parameters.Where(x => x.Source == EnumParameterSouce.Query).Where(x => x.Type.IsFluentEntity()).SelectMany(x => JsonToQueryString(x.Example)).ToList();
+            var parametersQueryArray = action.Parameters.Where(x => x.Source == EnumParameterSouce.Query).Where(x => !x.Type.IsFluenteEntity()).Select(x => $"{x.Name}={x.Example}").ToList();
+            var parametersQueryArray3 = action.Parameters.Where(x => x.Source == EnumParameterSouce.Query).Where(x => x.Type.IsFluenteEntity()).SelectMany(x => JsonToQueryString(x.Example)).ToList();
             parametersQueryArray.AddRange(parametersQueryArray3);
 
             var parametersQueryArrayString = "";
@@ -358,13 +356,13 @@ xhr.addEventListener(""readystatechange"", function() {{
                 if (Models == null)
                 {
                     Models = new Dictionary<string, Type>();
-                    var entities = Setup.GetFluentApiEntity();
+                    var entities = Setup.GetFluenteApiEntity();
                     entities.ForEach(type =>
                     {
 
                         if (Setup.Controllers.TryGetValue(type, out Type controllerType))
                         {
-                            if (controllerType.GetCustomAttribute<FluentDocAttribute>()?.Display == EnumFluentDisplay.Hidden)
+                            if (controllerType.GetCustomAttribute<FluenteDocAttribute>()?.Display == EnumFluenteDisplay.Hidden)
                             {
                                 return;
                             }
@@ -379,20 +377,20 @@ xhr.addEventListener(""readystatechange"", function() {{
                     AllTypes = Setup.AllTypes
                                   .GroupBy(x => x.FullName)
                                   .Select(x => x.First())
-                                  .Where(x => x.GetCustomAttribute<FluentDocAttribute>()?.Display != EnumFluentDisplay.Hidden)
-                                  .Where(x => x.GetCustomAttribute<FluentAPIControllerAttribute>()?.AutomaticGeneration != false)
+                                  .Where(x => x.GetCustomAttribute<FluenteDocAttribute>()?.Display != EnumFluenteDisplay.Hidden)
+                                  .Where(x => x.GetCustomAttribute<FluenteAPIControllerAttribute>()?.AutomaticGeneration != false)
                                   .OrderBy(x => x.Name)
                                   .ToDictionary(x => x.FullName, x => x);
                 }
 
                 AllEntities = Models.Values
-                    .Where(x => x.GetCustomAttribute<FluentDocAttribute>()?.Display != EnumFluentDisplay.Hidden)
-                    .Where(x => x.GetCustomAttribute<FluentAPIControllerAttribute>()?.AutomaticGeneration != false)
+                    .Where(x => x.GetCustomAttribute<FluenteDocAttribute>()?.Display != EnumFluenteDisplay.Hidden)
+                    .Where(x => x.GetCustomAttribute<FluenteAPIControllerAttribute>()?.AutomaticGeneration != false)
                     .Select(x => new EntityModelAndName
                     {
-                        Description = (x.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? x.GetCustomAttribute<FluentJsonFormAttribute>(true)?.desc ?? x.Name).G(),
-                        FriendlyName = x.GetCustomAttribute<FluentJsonFormAttribute>(true)?.name ?? x.GetFriendlyName().ToLower().ToTitleCase(),
-                        Name = x.Name.ToFluentJsonStringNormalized(),
+                        Description = (x.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? x.GetCustomAttribute<FluenteJsonFormAttribute>(true)?.desc ?? x.Name).G(),
+                        FriendlyName = x.GetCustomAttribute<FluenteJsonFormAttribute>(true)?.name ?? x.GetFriendlyName().ToLower().ToTitleCase(),
+                        Name = x.Name.ToFluenteJsonStringNormalized(),
                         FullName = x.FullName
                     })
                     .OrderBy(x => x.Name)
@@ -413,12 +411,12 @@ xhr.addEventListener(""readystatechange"", function() {{
                     .Where(x => x.FullName?.StartsWith("Microsoft") == false)
                     .Where(x => x.FullName?.StartsWith("Internal") == false)
                     .Where(x => x.FullName?.StartsWith("FxResources") == false)
-                    .Where(x => x.GetCustomAttribute<FluentDocAttribute>()?.Display == EnumFluentDisplay.Show)
+                    .Where(x => x.GetCustomAttribute<FluenteDocAttribute>()?.Display == EnumFluenteDisplay.Show)
                     .Select(x => new EntityModelAndName
                     {
-                        Description = (x.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? x.GetCustomAttribute<FluentJsonFormAttribute>(true)?.desc ?? x.GetFriendlyName()).G(),
-                        FriendlyName = x.GetCustomAttribute<FluentJsonFormAttribute>(true)?.name ?? x.GetFriendlyName(),
-                        Name = x.Name.ToFluentJsonStringNormalized(),
+                        Description = (x.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? x.GetCustomAttribute<FluenteJsonFormAttribute>(true)?.desc ?? x.GetFriendlyName()).G(),
+                        FriendlyName = x.GetCustomAttribute<FluenteJsonFormAttribute>(true)?.name ?? x.GetFriendlyName(),
+                        Name = x.Name.ToFluenteJsonStringNormalized(),
                         FullName = x.FullName
                     })
                     .OrderBy(x => x.Name)

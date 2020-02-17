@@ -1,16 +1,16 @@
-﻿@using Fluent.Architecture.Extensions
-@using Fluent.Architecture.Core.Doc.Controllers
-@using Fluent.Architecture
-@using static Fluent.Architecture.FluentDocExtension
-@model FluentActionSchema
+﻿@using Fluente.Arquitetura.Extensoes
+@using Fluente.Arquitetura.Nucleo.Doc.Controllers
+@using Fluente.Arquitetura
+@using static Fluente.Arquitetura.FluenteDocExtension
+@model FluenteActionSchema
 @{
     ViewData["Title"] = Model.Name;
 
     string GetTypeName(Type type, string name)
     {
-        if (type.GetListTypeNonNull().IsFluentEntity())
+        if (type.GetListTypeNonNull().IsFluenteEntity())
         {
-            return $"<a href=\"/FluentDoc/Model?name={type.GetListTypeNonNull().FullName}\">{type.GetFriendlyName(false)}</a>";
+            return $"<a href=\"/FluenteDoc/Model?name={type.GetListTypeNonNull().FullName}\">{type.GetFriendlyName(false)}</a>";
         }
         else
         {

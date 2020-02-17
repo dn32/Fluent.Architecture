@@ -4,7 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
-namespace Fluent.Architecture.Util
+namespace Fluente.Arquitetura.Util
 {
     public static class AuthenticationUtil
     {

@@ -1,12 +1,12 @@
 ﻿//// -----------------------------------------------------------------------
-//// <copyright company="Fluent System">
-////     Copyright © Fluent System. All rights reserved.
+//// <copyright company="Fluente System">
+////     Copyright © Fluente System. All rights reserved.
 ////     TODOS OS DIREITOS RESERVADOS.
 //// </copyright>
 //// -----------------------------------------------------------------------
 
-//using Fluent.Architecture.EntityFramework;
-//using Fluent.Architecture.EntityFramework.SqLite;
+//using Fluente.Arquitetura.EntityFramework;
+//using Fluente.Arquitetura.EntityFramework.SqLite;
 //using Microsoft.AspNetCore.Hosting;
 //using Microsoft.AspNetCore.Mvc.Testing;
 //using Microsoft.Extensions.DependencyInjection;
@@ -14,9 +14,9 @@
 //using Newtonsoft.Json.Serialization;
 //using System;
 //using System.Net.Http;
-//using static Fluent.Architecture.Test.IndexPageTests;
+//using static Fluente.Arquitetura.Test.IndexPageTests;
 
-//namespace Fluent.Architecture.Test
+//namespace Fluente.Arquitetura.Test
 //{
 //    public class IndexPageTests : IClassFixture<CustomWebApplicationFactory<RazorPagesProject.Startup>>
 //    {
@@ -50,11 +50,11 @@
 //                {
 
 //                    var jsonSerializerSettings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
-//                    /* 1. Startup Architecture */
+//                    /* 1. Startup Arquitetura */
 //                    services
 //                        .AddMvc()
 //                        .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver())
-//                        .AddFluentArchitecture(jsonSerializerSettings)
+//                        .AddFluenteArquitetura(jsonSerializerSettings)
 //                        .UseEntityFramework()
 //                        .AddConnectionString(string.IsNullOrWhiteSpace(ConnectionString) ? $"Data Source=unit-tests-{Ticks}.db;" : ConnectionString, createDatabaseIfNotExists: true, typeof(EfContextSqLite))
 //                        .Build();

@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -11,7 +11,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Fluent.Architecture.Extensions
+namespace Fluente.Arquitetura.Extensoes
 {
     /// <summary>
     /// Extensão de MethodBase e MethodInfo.
@@ -70,7 +70,7 @@ namespace Fluent.Architecture.Extensions
         }
 
         // Todo2 doc
-        public static object FluentInvoke(this MethodInfo method, object entity, object[] parameters)//, params Type[] generics)
+        public static object FluenteInvoke(this MethodInfo method, object entity, object[] parameters)//, params Type[] generics)
         {
             //method = generics == null ? method : method.MakeGenericMethod(generics);
             if (parameters == null) { parameters = Array.Empty<object>(); }

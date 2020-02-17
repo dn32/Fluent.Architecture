@@ -2,9 +2,9 @@
 using System;
 using System.Text;
 
-namespace Fluent.Architecture.Filters
+namespace Fluente.Arquitetura.Filters
 {
-    public class FluentJwtInfo
+    public class FluenteJwtInfo
     {
         public string Issuer { get; set; }
 
@@ -14,7 +14,7 @@ namespace Fluent.Architecture.Filters
 
         public TimeSpan? Expires { get; set; }
 
-        public Type FluentAuthenticationServiceType { get; set; }
+        public Type FluenteAuthenticationServiceType { get; set; }
 
         public bool ValidateIssuerSigningKey { get; set; } = true;
 

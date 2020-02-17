@@ -3,7 +3,7 @@ using Microsoft.Extensions.Primitives;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace Fluent.Architecture.Core.Doc.Controllers
+namespace Fluente.Arquitetura.Nucleo.Doc.Controllers
 {
     internal class DocEmbeddedStaticFileProvider : IFileProvider
     {
@@ -11,7 +11,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
 
         public DocEmbeddedStaticFileProvider()
         {
-            EmbeddedFileProvider = new EmbeddedFileProvider(typeof(FluentDocController).Assembly);
+            EmbeddedFileProvider = new EmbeddedFileProvider(typeof(FluenteDocController).Assembly);
         }
 
         public IDirectoryContents GetDirectoryContents(string subpath)
@@ -24,7 +24,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
             path = path.Replace("/", "\\");
             if (path.StartsWith("\\")) { path = path.Substring(1, path.Length - 1); };
 
-            if (!path.StartsWith("FluentDoc"))
+            if (!path.StartsWith("FluenteDoc"))
             {
                 path = Path.Combine("wwwroot", path);
                 bool isLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);

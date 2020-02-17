@@ -1,21 +1,21 @@
 ﻿using ClosedXML.Excel;
-using Fluent.Architecture.Core.Attributes;
-using Fluent.Architecture.Extensions;
+using Fluente.Arquitetura.Nucleo.Atributos;
+using Fluente.Arquitetura.Extensoes;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Fluent.Architecture.Core.Util
+namespace Fluente.Arquitetura.Nucleo.Util
 {
     public static class DataImportationUtil
     {
         public static XLWorkbook ImportationTemplateXLSX<T>(int addExample)
         {
-            var schema = typeof(T).GetFluentJsonSchema(false);
-            var table = schema.FluentJsonForm.propName;
-            var properties = schema.Properties.Where(x => x.FluentComposition == null && x.FluentAggregation == null).ToList();
+            var schema = typeof(T).GetFluenteJsonSchema(false);
+            var table = schema.FluenteJsonForm.propName;
+            var properties = schema.Properties.Where(x => x.FluenteComposition == null && x.FluenteAggregation == null).ToList();
 
             var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add(table);
@@ -47,9 +47,9 @@ namespace Fluent.Architecture.Core.Util
                 var worksheet = worksheets.FirstOrDefault(x => x.Name.Equals(typeof(T).Name, StringComparison.InvariantCultureIgnoreCase));
                 if (worksheet == null) throw new InvalidOperationException($"worksheet {typeof(T).Name} not found");
 
-                var schema = typeof(T).GetFluentJsonSchema(false);
-                var table = schema.FluentJsonForm.propName;
-                var properties = schema.Properties.Where(x => x.FluentComposition == null && x.FluentAggregation == null).ToList();
+                var schema = typeof(T).GetFluenteJsonSchema(false);
+                var table = schema.FluenteJsonForm.propName;
+                var properties = schema.Properties.Where(x => x.FluenteComposition == null && x.FluenteAggregation == null).ToList();
 
                 var propertiesExample = typeof(T).GetProperties();
                 int i;
@@ -121,7 +121,7 @@ namespace Fluent.Architecture.Core.Util
                         var celNum = linha * columns.Count + i;
                         var cell = cells[celNum];
                         var valor = cell.Value;
-                        property.SetValue(entidade, cell.Value?.ToString() ?? property.PropertyType.GetFluentDefaultValue());
+                        property.SetValue(entidade, cell.Value?.ToString() ?? property.PropertyType.GetFluenteDefaultValue());
                     }
                 }
             }
@@ -129,7 +129,7 @@ namespace Fluent.Architecture.Core.Util
             return null;
         }
 
-        private static void Example<T>(int addExample, IXLWorksheet worksheet, PropertyInfo[] propertiesExample, int i, FluentJsonPropertyAttribute property)
+        private static void Example<T>(int addExample, IXLWorksheet worksheet, PropertyInfo[] propertiesExample, int i, FluenteJsonPropertyAttribute property)
         {
             for (var x = 0; x < addExample; x++)
             {
@@ -140,7 +140,7 @@ namespace Fluent.Architecture.Core.Util
             }
         }
 
-        private static void Style(FluentJsonPropertyAttribute property, IXLCell headerCell)
+        private static void Style(FluenteJsonPropertyAttribute property, IXLCell headerCell)
         {
             headerCell.Style.Font.FontSize = 11;
             headerCell.Style.Protection.Locked = true;
@@ -161,9 +161,9 @@ namespace Fluent.Architecture.Core.Util
                 headerCell.Style.Font.Bold = true;
         }
 
-        private static void Comment(FluentJsonPropertyAttribute property, IXLCell headerCell)
+        private static void Comment(FluenteJsonPropertyAttribute property, IXLCell headerCell)
         {
-            var isKeyComment = property.IsKey || property.IsFluentUniqueKeyKey ? $"\nIs Key" : "";
+            var isKeyComment = property.IsKey || property.IsFluenteUniqueKeyKey ? $"\nIs Key" : "";
             var isPkComment = property.IsFk ? $"\nIs Fk" : "";
             var isRequiredComment = property.required ? $"\nIs required" : "";
             var isListComment = property.IsList ? $"\nIs list" : "";

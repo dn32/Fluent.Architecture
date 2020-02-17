@@ -1,8 +1,8 @@
-﻿using Fluent.Architecture.Core.Attributes;
+﻿using Fluente.Arquitetura.Nucleo.Atributos;
 
-namespace Fluent.Architecture.Core.Models
+namespace Fluente.Arquitetura.Nucleo.Models
 {
-    [FluentDoc]
+    [FluenteDoc]
     public class DefaultResult<T>
     {
         public T Data { get; set; }

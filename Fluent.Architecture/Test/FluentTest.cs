@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -9,12 +9,12 @@
 
 using System;
 
-namespace Fluent.Architecture.Test
+namespace Fluente.Arquitetura.Test
 {
     /// <summary>
     /// Extensão de testes automatizados.
     /// </summary>
-    public static class FluentTest
+    public static class FluenteTest
     {
         /// <summary>
         /// Obtem uma data baseado em string como exemplo: 31/12/18.

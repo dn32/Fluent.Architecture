@@ -1,11 +1,11 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System;
 
-namespace Fluent.Architecture.Filters
+namespace Fluente.Arquitetura.Filters
 {
     public static class SigningConfigurations
     {
-        private static FluentJwtInfo Info => Setup.Config.Config.JwtInfo;
+        private static FluenteJwtInfo Info => Setup.Config.Config.JwtInfo;
 
         internal static TokenValidationParameters GetTokenValidationParameters()
         {

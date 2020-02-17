@@ -3,31 +3,27 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.Core", "Fluent.Architecture\Fluent.Architecture.Core.csproj", "{BFABD6C5-8AFD-4D50-9127-6CAA35CF23A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluente.Arquitetura.Nucleo", "Fluent.Architecture\Fluente.Arquitetura.Nucleo.csproj", "{BFABD6C5-8AFD-4D50-9127-6CAA35CF23A4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.Test", "Fluent.Architecture.Test\Fluent.Architecture.Test.csproj", "{AB51F7C9-E955-404F-B808-9D6C211950A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluente.Arquitetura.Teste", "Fluent.Architecture.Test\Fluente.Arquitetura.Teste.csproj", "{AB51F7C9-E955-404F-B808-9D6C211950A6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{3CDE6F00-CAA7-48F5-9E60-1D1A6A81667C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{B8A70513-1332-4DC5-88EB-B9FB43D556AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluente.Arquitetura.EntityFramework.SqlServer", "Fluent.Architecture.EntityFramework.SqlServer\Fluente.Arquitetura.EntityFramework.SqlServer.csproj", "{5354F543-E7F6-46E3-99DC-7F56D4573ACF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.EntityFramework.SqlServer", "Fluent.Architecture.EntityFramework.SqlServer\Fluent.Architecture.EntityFramework.SqlServer.csproj", "{5354F543-E7F6-46E3-99DC-7F56D4573ACF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluente.Arquitetura.EntityFramework.PostgreSQL", "Fluent.Architecture.EntityFramework.PostgreSQL\Fluente.Arquitetura.EntityFramework.PostgreSQL.csproj", "{7908F454-A8C8-42A8-8949-C1B33E2B56EF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.EntityFramework.PostgreSQL", "Fluent.Architecture.EntityFramework.PostgreSQL\Fluent.Architecture.EntityFramework.PostgreSQL.csproj", "{7908F454-A8C8-42A8-8949-C1B33E2B56EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluente.Arquitetura.EntityFramework", "Fluent.Architecture.EntityFramework\Fluente.Arquitetura.EntityFramework.csproj", "{B79539C3-9A24-437C-A8B0-578C2FF80763}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.EntityFramework", "Fluent.Architecture.EntityFramework\Fluent.Architecture.EntityFramework.csproj", "{B79539C3-9A24-437C-A8B0-578C2FF80763}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluente.Arquitetura.EntityFramework.MySQL", "Fluent.Architecture.EntityFramework.MySQL\Fluente.Arquitetura.EntityFramework.MySQL.csproj", "{2F970D78-25E7-4374-848D-5FE159B23983}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.EntityFramework.MySQL", "Fluent.Architecture.EntityFramework.MySQL\Fluent.Architecture.EntityFramework.MySQL.csproj", "{2F970D78-25E7-4374-848D-5FE159B23983}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluente.Arquitetura.EntityFramework.Oracle", "Fluent.Architecture.EntityFramework.Oracle\Fluente.Arquitetura.EntityFramework.Oracle.csproj", "{E0BABC2B-C759-4F1E-9109-BC52F9A9E7DF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.EntityFramework.Oracle", "Fluent.Architecture.EntityFramework.Oracle\Fluent.Architecture.EntityFramework.Oracle.csproj", "{E0BABC2B-C759-4F1E-9109-BC52F9A9E7DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluente.Arquitetura.EntityFramework.MemoryDatabase", "Fluent.Architecture.EntityFramework.MemoryDatabase\Fluente.Arquitetura.EntityFramework.MemoryDatabase.csproj", "{39C0FE33-A0C6-4276-8C04-61314F5770FC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.EntityFramework.MemoryDatabase", "Fluent.Architecture.EntityFramework.MemoryDatabase\Fluent.Architecture.EntityFramework.MemoryDatabase.csproj", "{39C0FE33-A0C6-4276-8C04-61314F5770FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluente.Arquitetura.EntityFramework.SqLite", "Fluent.Architecture.EntityFramework.SqLite\Fluente.Arquitetura.EntityFramework.SqLite.csproj", "{83544903-F9F7-4DB3-A444-3D191BBB4D10}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.EntityFramework.SqLite", "Fluent.Architecture.EntityFramework.SqLite\Fluent.Architecture.EntityFramework.SqLite.csproj", "{83544903-F9F7-4DB3-A444-3D191BBB4D10}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.Core.Doc", "Fluent.Architecture.Core.Doc\Fluent.Architecture.Core.Doc.csproj", "{D64F1786-68BF-47D9-8AA8-8758E75386A4}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Public", "Public", "{DCA683DC-EB06-4A4C-9248-965C07B682DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluente.Arquitetura.Doc", "Fluent.Architecture.Core.Doc\Fluente.Arquitetura.Doc.csproj", "{D64F1786-68BF-47D9-8AA8-8758E75386A4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Automatic", "Automatic", "{A8119674-A9A5-4E65-83B0-4A925629878C}"
 	ProjectSection(SolutionItems) = preProject
@@ -37,14 +33,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Automatic", "Automatic", "{
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.Redis", "Fluent.Architecture.Redis\Fluent.Architecture.Redis.csproj", "{AF0642ED-8D64-40A5-871D-5BB737E2CC77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluente.Arquitetura.Redis", "Fluent.Architecture.Redis\Fluente.Arquitetura.Redis.csproj", "{AF0642ED-8D64-40A5-871D-5BB737E2CC77}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.Base", "Fluent.Architecture.Base\Fluent.Architecture.Base.csproj", "{FC15FC84-8AC5-4104-826F-B1D7FC4106FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluente.Arquitetura.Base", "Fluent.Architecture.Base\Fluente.Arquitetura.Base.csproj", "{FC15FC84-8AC5-4104-826F-B1D7FC4106FA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2560EFF2-132D-447B-A548-CDF6B50DBA3B}"
 	ProjectSection(SolutionItems) = preProject
 		Fluent.Architecture.sln.vsspell = Fluent.Architecture.sln.vsspell
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 Núcleos", "01 Núcleos", "{0EBABE71-7A0B-4253-BC8A-51E338F9EAA6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 BD e Doc", "02 BD e Doc", "{F1AE78C0-4894-4D1C-9A02-AB71E94306F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,7 +105,18 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{BFABD6C5-8AFD-4D50-9127-6CAA35CF23A4} = {0EBABE71-7A0B-4253-BC8A-51E338F9EAA6}
 		{AB51F7C9-E955-404F-B808-9D6C211950A6} = {3CDE6F00-CAA7-48F5-9E60-1D1A6A81667C}
+		{5354F543-E7F6-46E3-99DC-7F56D4573ACF} = {F1AE78C0-4894-4D1C-9A02-AB71E94306F7}
+		{7908F454-A8C8-42A8-8949-C1B33E2B56EF} = {F1AE78C0-4894-4D1C-9A02-AB71E94306F7}
+		{B79539C3-9A24-437C-A8B0-578C2FF80763} = {F1AE78C0-4894-4D1C-9A02-AB71E94306F7}
+		{2F970D78-25E7-4374-848D-5FE159B23983} = {F1AE78C0-4894-4D1C-9A02-AB71E94306F7}
+		{E0BABC2B-C759-4F1E-9109-BC52F9A9E7DF} = {F1AE78C0-4894-4D1C-9A02-AB71E94306F7}
+		{39C0FE33-A0C6-4276-8C04-61314F5770FC} = {F1AE78C0-4894-4D1C-9A02-AB71E94306F7}
+		{83544903-F9F7-4DB3-A444-3D191BBB4D10} = {F1AE78C0-4894-4D1C-9A02-AB71E94306F7}
+		{D64F1786-68BF-47D9-8AA8-8758E75386A4} = {F1AE78C0-4894-4D1C-9A02-AB71E94306F7}
+		{AF0642ED-8D64-40A5-871D-5BB737E2CC77} = {F1AE78C0-4894-4D1C-9A02-AB71E94306F7}
+		{FC15FC84-8AC5-4104-826F-B1D7FC4106FA} = {0EBABE71-7A0B-4253-BC8A-51E338F9EAA6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {123E34D5-DA60-4929-9110-E760ECAC5050}

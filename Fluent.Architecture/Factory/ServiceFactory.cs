@@ -1,22 +1,22 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Core.Interfaces;
-using Fluent.Architecture.Exceptions;
-using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Services;
-using Fluent.Architecture.Core.Models;
+using Fluente.Arquitetura.Controllers;
+using Fluente.Arquitetura.Nucleo.Interfaces;
+using Fluente.Arquitetura.Exceptions;
+using Fluente.Arquitetura.Extensoes;
+using Fluente.Arquitetura.Services;
+using Fluente.Arquitetura.Nucleo.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Fluent.Architecture.Factory
+namespace Fluente.Arquitetura.Factory
 {
     /// <summary>
     /// Classe interna.
@@ -26,7 +26,7 @@ namespace Fluent.Architecture.Factory
     {
         /// <summary>
         /// Cria um serviço que terá controle de transação.
-        /// Essa operação deve ser exclusiva do FluentController.
+        /// Essa operação deve ser exclusiva do FluenteController.
         /// </summary>
         /// <typeparam name="TS">
         /// O tipo de serviço a ser criado.
@@ -77,7 +77,7 @@ namespace Fluent.Architecture.Factory
                 throw new IncorrectDevelopmentException("Report the justification");
             }
 
-            return Create(typeof(TS), httpContext).FluentCast<TS>();
+            return Create(typeof(TS), httpContext).FluenteCast<TS>();
         }
 
         public static TransactionalService Create(Type serviceType, object httpContext, string justification)
@@ -87,12 +87,12 @@ namespace Fluent.Architecture.Factory
                 throw new IncorrectDevelopmentException("Report the justification");
             }
 
-            if (serviceType.IsFluentEntity())
+            if (serviceType.IsFluenteEntity())
             {
-                serviceType = typeof(FluentService<>).MakeGenericType(serviceType);
+                serviceType = typeof(FluenteService<>).MakeGenericType(serviceType);
             }
 
-            return Create(serviceType, httpContext).FluentCast<TransactionalService>();
+            return Create(serviceType, httpContext).FluenteCast<TransactionalService>();
         }
 
         //private static void InternalCreateValidation(TransactionalService service)
@@ -104,7 +104,7 @@ namespace Fluent.Architecture.Factory
         //}
 
         /// <summary>
-        /// Cria um serviço em tempo de execução por meio de um processo de lazy-loading, à partir de um serviço original criado pelo <see cref="FluentController{T}"/>.
+        /// Cria um serviço em tempo de execução por meio de um processo de lazy-loading, à partir de um serviço original criado pelo <see cref="FluenteController{T}"/>.
         /// </summary>
         /// <param name="serviceType">
         /// O tipo de serviço a ser criado.
@@ -138,7 +138,7 @@ namespace Fluent.Architecture.Factory
                 var entityType = args.First();
                 if (!Setup.Services.TryGetValue(entityType, out serviceType))
                 {
-                    var type = (Setup.Config.Config.GenericServiceType) ?? typeof(FluentService<>);
+                    var type = (Setup.Config.Config.GenericServiceType) ?? typeof(FluenteService<>);
                     serviceType = type.MakeGenericType(entityType);
                 }
             }
@@ -154,7 +154,7 @@ namespace Fluent.Architecture.Factory
             var serviceType = GetSpecializedService(service.GetType());
 
             var type = Setup.Config.Config.UserSessionRequestType ?? typeof(UserSessionRequest);
-            var userSession = Activator.CreateInstance(type).FluentCast<UserSessionRequest>();
+            var userSession = Activator.CreateInstance(type).FluenteCast<UserSessionRequest>();
             userSession.TransactionObjects = transactionObjects;
             userSession.SessionRequestId = sessionId;
             userSession.Services = new Dictionary<Type, BaseService>();

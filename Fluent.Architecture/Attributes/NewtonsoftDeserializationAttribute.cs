@@ -1,7 +1,7 @@
 ﻿
 using System;
 
-namespace Fluent.Architecture.Attributes
+namespace Fluente.Arquitetura.Attributes
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     public class NewtonsoftDeserializationAttribute : Attribute

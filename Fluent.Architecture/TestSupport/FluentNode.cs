@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Fluent.Architecture.Core.TestSupport
+namespace Fluente.Arquitetura.Nucleo.TestSupport
 {
-    public class FluentNode
+    public class FluenteNode
     {
         public Type EntityType { get; set; }
         public string EntityTypeName => EntityType.Name;
-        public List<FluentNode> ReferencePointers { get; set; } = new List<FluentNode>();
+        public List<FluenteNode> ReferencePointers { get; set; } = new List<FluenteNode>();
         public bool IsPrimitive { get; set; }
         public object Instance { get; set; }
     }

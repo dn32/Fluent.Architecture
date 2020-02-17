@@ -1,10 +1,10 @@
-﻿using Fluent.Architecture.Exceptions;
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Factory;
-using Fluent.Architecture.Services;
+﻿using Fluente.Arquitetura.Exceptions;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Factory;
+using Fluente.Arquitetura.Services;
 using System;
 
-namespace Fluent.Architecture.Extensions
+namespace Fluente.Arquitetura.Extensoes
 {
     public static class ServiceExtension
     {
@@ -12,7 +12,7 @@ namespace Fluent.Architecture.Extensions
         {
             if (serviceType == null) { throw new ArgumentNullException(nameof(serviceType)); }
             if (SessionRequest == null) { throw new ArgumentNullException(nameof(SessionRequest)); }
-            if (serviceType.Name == "FluentDynamicProxy") { serviceType = serviceType.BaseType; }
+            if (serviceType.Name == "FluenteDynamicProxy") { serviceType = serviceType.BaseType; }
             if (serviceType == null) { throw new ArgumentNullException(nameof(serviceType)); }
 
             if (!serviceType.IsSubclassOf(typeof(TransactionalService)))
@@ -33,12 +33,12 @@ namespace Fluent.Architecture.Extensions
 
         public static TransactionalService GetServiceInstanceByEntity(this Type entityType, UserSessionRequest SessionRequest)
         {
-            if (entityType?.IsSubclassOf(typeof(FluentEntity)) != true)
+            if (entityType?.IsSubclassOf(typeof(FluenteEntity)) != true)
             {
-                throw new IncorrectDevelopmentException($"The service instance attempt using the {nameof(GetServiceInstanceByEntity)} method failed because the passed type is not a {nameof(FluentEntity)}");
+                throw new IncorrectDevelopmentException($"The service instance attempt using the {nameof(GetServiceInstanceByEntity)} method failed because the passed type is not a {nameof(FluenteEntity)}");
             }
 
-            var type = (Setup.Config.Config.GenericServiceType) ?? typeof(FluentService<>);
+            var type = (Setup.Config.Config.GenericServiceType) ?? typeof(FluenteService<>);
             var serviceType = type.MakeGenericType(entityType).GetSpecializedService();
             return serviceType.GetServiceInstanceByServiceType(SessionRequest);
         }

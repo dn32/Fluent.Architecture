@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 
-namespace Fluent.Architecture.Attributes
+namespace Fluente.Arquitetura.Attributes
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public class FluentAllowAnonymousAttribute : ActionFilterAttribute
+    public class FluenteAllowAnonymousAttribute : ActionFilterAttribute
     {
     }
 }

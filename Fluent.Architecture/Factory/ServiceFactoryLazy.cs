@@ -1,16 +1,16 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluent.Architecture.Factory.Proxy;
-using Fluent.Architecture.Services;
+using Fluente.Arquitetura.Factory.Proxy;
+using Fluente.Arquitetura.Services;
 using System;
 
-namespace Fluent.Architecture.Factory
+namespace Fluente.Arquitetura.Factory
 {
     /// <summary>
     /// Método interno.

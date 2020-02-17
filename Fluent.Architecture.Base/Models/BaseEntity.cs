@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-using Fluent.Architecture.Extensions;
+using Fluente.Arquitetura.Extensoes;
 using Newtonsoft.Json;
 
-namespace Fluent.Architecture.Core.Models
+namespace Fluente.Arquitetura.Nucleo.Models
 {
     //Todo - 001 Testar
     public abstract class BaseEntity

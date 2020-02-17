@@ -1,6 +1,6 @@
-﻿namespace Fluent.Architecture.Core.Doc.Interfaces
+﻿namespace Fluente.Arquitetura.Nucleo.Doc.Interfaces
 {
-    public interface IFluentGlobalization 
+    public interface IFluenteGlobalization 
     {
         string Get(string key);
     }

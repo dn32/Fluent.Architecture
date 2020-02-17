@@ -1,16 +1,16 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Core.Util;
-using Fluent.Architecture.Factory.Proxy;
-using Fluent.Architecture.Services;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Nucleo.Util;
+using Fluente.Arquitetura.Factory.Proxy;
+using Fluente.Arquitetura.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Reflection.Emit;
 
-namespace Fluent.Architecture.Extensions
+namespace Fluente.Arquitetura.Extensoes
 {
     public static class DynamicSpecExtension
     {
@@ -41,23 +41,23 @@ namespace Fluent.Architecture.Extensions
             return Request.GetParameters("propertyToOrder");
         }
 
-        public static IQueryable<object> FluentDynamicSelectProjectTo<T>(this IQueryable<T> query, TransactionalService service) where T : BaseEntity
+        public static IQueryable<object> FluenteDynamicSelectProjectTo<T>(this IQueryable<T> query, TransactionalService service) where T : BaseEntity
         {
             var Request = service.LocalHttpContext.Request;
             var fields = Request.GetPropertiesToShow();
             if (fields == null || fields.Length == 0) { return query; }
-            return query.FluentDynamicSelectProjectTo(fields, out _);
+            return query.FluenteDynamicSelectProjectTo(fields, out _);
         }
 
-        public static IQueryable<T> FluentDynamicProjectTo<T>(this IQueryable<T> query, TransactionalService service, string[] fields = null) where T : BaseEntity
+        public static IQueryable<T> FluenteDynamicProjectTo<T>(this IQueryable<T> query, TransactionalService service, string[] fields = null) where T : BaseEntity
         {
             var Request = service.LocalHttpContext.Request;
             if (fields == null || fields.Length == 0) { fields = Request.GetPropertiesToShow(); }
             if (fields == null || fields.Length == 0) { return query; }
-            return query.FluentDynamicProjectTo(fields);
+            return query.FluenteDynamicProjectTo(fields);
         }
 
-        public static IOrderedQueryable<T> FluentDynamicProjectToOrder<T>(this IQueryable<T> query, TransactionalService service, string[] fields = null) where T : BaseEntity
+        public static IOrderedQueryable<T> FluenteDynamicProjectToOrder<T>(this IQueryable<T> query, TransactionalService service, string[] fields = null) where T : BaseEntity
         {
             var Request = service.LocalHttpContext.Request;
             if (fields == null || fields.Length == 0) { fields = Request.GetPropertiesToShow(); }
@@ -69,7 +69,7 @@ namespace Fluent.Architecture.Extensions
             return query.OrderBy(orderString);
         }
 
-        private static IOrderedQueryable<object> FluentDynamicProjectToSelectOrder(this IQueryable<object> query, TransactionalService service)
+        private static IOrderedQueryable<object> FluenteDynamicProjectToSelectOrder(this IQueryable<object> query, TransactionalService service)
         {
             var Request = service.LocalHttpContext.Request;
             var show = Request.GetPropertiesToShow();
@@ -81,17 +81,17 @@ namespace Fluent.Architecture.Extensions
             return query.OrderBy(orderString);
         }
 
-        private static IQueryable<T> FluentDynamicProjectTo<T>(this IQueryable<T> query, string[] Fields)
+        private static IQueryable<T> FluenteDynamicProjectTo<T>(this IQueryable<T> query, string[] Fields)
         {
-            var ret = FluentDynamicSelectProjectTo(query, Fields, out MapperConfiguration config);
+            var ret = FluenteDynamicSelectProjectTo(query, Fields, out MapperConfiguration config);
             return ret.ProjectTo<T>(config);
         }
 
-        private static IQueryable<object> FluentDynamicSelectProjectTo<T>(this IQueryable<T> query, string[] Fields, out MapperConfiguration config)
+        private static IQueryable<object> FluenteDynamicSelectProjectTo<T>(this IQueryable<T> query, string[] Fields, out MapperConfiguration config)
         {
-            var descriptions = new FluentClassDescription(typeof(T), Fields);
+            var descriptions = new FluenteClassDescription(typeof(T), Fields);
             var rash = RandomUtil.NextRandomString(6);
-            var assemblyName = $"FluentAssembly_{rash}";
+            var assemblyName = $"FluenteAssembly_{rash}";
             var type = descriptions.CreateTypeComposition(assemblyName);
             var types = new List<Tuple<Type, Type>>();
 
@@ -109,27 +109,27 @@ namespace Fluent.Architecture.Extensions
             return ret as IQueryable<object>;
         }
 
-        internal static void GetAllTypeForDescription(this FluentClassDescription description, List<Tuple<Type, Type>> list)
+        internal static void GetAllTypeForDescription(this FluenteClassDescription description, List<Tuple<Type, Type>> list)
         {
             foreach (var property in description.Properties)
             {
-                if (property.FluentClassDescription != null)
+                if (property.FluenteClassDescription != null)
                 {
                     list.Add(new Tuple<Type, Type>(property.Type, property.DynamicProperty));
-                    GetAllTypeForDescription(property.FluentClassDescription, list);
+                    GetAllTypeForDescription(property.FluenteClassDescription, list);
                 }
             }
         }
 
-        internal static Type CreateTypeComposition(this FluentClassDescription description, string assemblyName)
+        internal static Type CreateTypeComposition(this FluenteClassDescription description, string assemblyName)
         {
             var principaTypeBuilder = CreateTypeBuilder(assemblyName);
 
             foreach (var property in description.Properties)
             {
-                if (property.FluentClassDescription != null)
+                if (property.FluenteClassDescription != null)
                 {
-                    property.DynamicProperty = CreateTypeComposition(property.FluentClassDescription, assemblyName);
+                    property.DynamicProperty = CreateTypeComposition(property.FluenteClassDescription, assemblyName);
                     principaTypeBuilder.CreateProperty(property.Name, property.DynamicProperty);
                 }
                 else
@@ -143,7 +143,7 @@ namespace Fluent.Architecture.Extensions
 
         internal static TypeBuilder CreateTypeBuilder(string assemblyName)
         {
-            var moduleName = "FluentCustomEntityForMap";
+            var moduleName = "FluenteCustomEntityForMap";
             var typeBuilder = BuilderClassUtil.CreateClass(typeof(object), assemblyName, moduleName);
             typeBuilder.CreateConstructor();
             return typeBuilder;

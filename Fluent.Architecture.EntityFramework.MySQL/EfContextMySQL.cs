@@ -1,13 +1,13 @@
 ﻿// ReSharper disable CommentTypo
 using Microsoft.EntityFrameworkCore;
 
-namespace Fluent.Architecture.EntityFramework.MySQL
+namespace Fluente.Arquitetura.EntityFramework.MySQL
 {
     /// <inheritdoc />
     /// <summary>
     /// Contexto do EF no net Core
     /// </summary>
-    [DbType(FluentDbType.MYSQL)]
+    [DbType(FluenteDbType.MYSQL)]
     public class EfContextMySQL : EfContext
     {
         public EfContextMySQL(string connectionString) : base(connectionString)

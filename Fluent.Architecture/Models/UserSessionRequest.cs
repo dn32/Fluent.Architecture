@@ -1,20 +1,20 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluent.Architecture.Core.Interfaces;
-using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Services;
-using Fluent.Architecture.Validation;
+using Fluente.Arquitetura.Nucleo.Interfaces;
+using Fluente.Arquitetura.Extensoes;
+using Fluente.Arquitetura.Services;
+using Fluente.Arquitetura.Validation;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 
-namespace Fluent.Architecture.Core.Models
+namespace Fluente.Arquitetura.Nucleo.Models
 {
     /// <summary>
     /// Entidade organizadora da injeção de dependência e do contexto da requisição do usuário.
@@ -24,14 +24,14 @@ namespace Fluent.Architecture.Core.Models
         internal Dictionary<Type, BaseService> Services { get; set; }
         internal ITransactionObjects TransactionObjects { get; set; }
         internal Guid SessionRequestId { get; set; }
-        public ContextFluentValidationException ContextFluentValidationException { get; set; }
-        public FluentPagination Pagination { get; set; }
+        public ContextFluenteValidationException ContextFluenteValidationException { get; set; }
+        public FluentePagination Pagination { get; set; }
 
         internal object HttpContext;
 
         public UserSessionRequest()
         {
-            this.ContextFluentValidationException = new ContextFluentValidationException();
+            this.ContextFluenteValidationException = new ContextFluenteValidationException();
         }
 
         /// <summary>

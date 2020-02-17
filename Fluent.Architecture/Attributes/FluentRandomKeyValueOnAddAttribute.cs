@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace Fluent.Architecture.Core.Attributes
+namespace Fluente.Arquitetura.Nucleo.Atributos
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class FluentRandomKeyValueOnAddAttribute : Attribute
+    public class FluenteRandomKeyValueOnAddAttribute : Attribute
     {
         public int Max { get; set; }
 
-        public FluentRandomKeyValueOnAddAttribute(int max = 0)
+        public FluenteRandomKeyValueOnAddAttribute(int max = 0)
         {
             Max = max;
         }

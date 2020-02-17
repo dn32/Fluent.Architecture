@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Fluent.Architecture.Core.Models;
+using Fluente.Arquitetura.Nucleo.Models;
 using System;
 
-namespace Fluent.Architecture.Controllers
+namespace Fluente.Arquitetura.Controllers
 {
     [Route("/api/[controller]/[action]")]
     [ApiController]
-    public class FluentAPIReadOnlyController<T> : FluentAPIController<T> where T : FluentEntity, new()
+    public class FluenteAPIReadOnlyController<T> : FluenteAPIController<T> where T : FluenteEntity, new()
     {
         [NonAction]
         public override Task<DefaultResult<T>> Add([Description("The entity you want to add"), FromBody] T Entity) => throw new InvalidOperationException();

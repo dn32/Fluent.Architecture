@@ -1,12 +1,12 @@
-﻿using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Specifications;
-using Fluent.Architecture.Core.Models;
+﻿using Fluente.Arquitetura.Extensoes;
+using Fluente.Arquitetura.Specifications;
+using Fluente.Arquitetura.Nucleo.Models;
 using System;
 using System.Linq;
 
-namespace Fluent.Architecture.EntityFramework.Oracle.Specifications
+namespace Fluente.Arquitetura.EntityFramework.Oracle.Specifications
 {
-    public class TermByProximitySpec<TE> : FluentSpecification<TE> where TE : FluentEntity
+    public class TermByProximitySpec<TE> : FluenteSpecification<TE> where TE : FluenteEntity
     {
         private string Term { get; set; }
 

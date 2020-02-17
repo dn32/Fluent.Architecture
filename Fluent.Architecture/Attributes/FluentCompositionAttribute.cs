@@ -1,13 +1,13 @@
-﻿using Fluent.Architecture.Core.Enumerator;
-using Fluent.Architecture.Core.Models;
+﻿using Fluente.Arquitetura.Nucleo.Enumerator;
+using Fluente.Arquitetura.Nucleo.Models;
 using System;
 
-namespace Fluent.Architecture.Core.Attributes
+namespace Fluente.Arquitetura.Nucleo.Atributos
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class FluentCompositionAttribute : FluentReferenceAttribute
+    public class FluenteCompositionAttribute : FluenteReferenceAttribute
     {
-        public FluentJsonSchema Form { get; set; }
+        public FluenteJsonSchema Form { get; set; }
         public EnumOnSaveReference OnSave { get; set; } = EnumOnSaveReference.ADD_AND_UPDATE;
     }
 }

@@ -1,25 +1,25 @@
-﻿@using Fluent.Architecture.Core.Models
-@using Fluent.Architecture.Extensions
-@using Fluent.Architecture.Core.Doc.Controllers
-@using Fluent.Architecture.Core.Extensions
-@using Fluent.Architecture
-@using Fluent.Architecture.Core.Attributes
+﻿@using Fluente.Arquitetura.Nucleo.Models
+@using Fluente.Arquitetura.Extensoes
+@using Fluente.Arquitetura.Nucleo.Doc.Controllers
+@using Fluente.Arquitetura.Nucleo.Extensoes
+@using Fluente.Arquitetura
 @using System.Reflection;
-@using Fluent.Architecture.Core.Enumerator
+@using Fluente.Arquitetura.Nucleo.Enumerator
+@using Fluente.Arquitetura.Nucleo.Atributos
 
-@using static Fluent.Architecture.FluentDocExtension
+@using static Fluente.Arquitetura.FluenteDocExtension
 
-@model FluentJsonSchema
+@model FluenteJsonSchema
 
 @{
-    ViewData["Title"] = Model.FluentJsonForm.name;
-    var actions = ViewBag.actions as List<FluentActionSchema> ?? throw new InvalidOperationException("actions is not  List<FluentActionSchema>");
+    ViewData["Title"] = Model.FluenteJsonForm.name;
+    var actions = ViewBag.actions as List<FluenteActionSchema> ?? throw new InvalidOperationException("actions is not  List<FluenteActionSchema>");
 
     string GetTypeName(Type type, string name)
     {
-        if (type.GetListTypeNonNull().IsFluentEntity())
+        if (type.GetListTypeNonNull().IsFluenteEntity())
         {
-            return $"<a href=\"/FluentDoc/Model?name={type.GetListTypeNonNull().FullName}\">{type.GetFriendlyName(false)}</a>";
+            return $"<a href=\"/FluenteDoc/Model?name={type.GetListTypeNonNull().FullName}\">{type.GetFriendlyName(false)}</a>";
         }
         else
         {
@@ -33,7 +33,7 @@
     }
 </script>
 <div class="one-service-container">
-    <h4 class="general-title">@Model.FluentJsonForm?.name (@actions.Count) </h4>
+    <h4 class="general-title">@Model.FluenteJsonForm?.name (@actions.Count) </h4>
 
     @{
         string Is(bool operation, string text)
@@ -50,7 +50,7 @@
                 //var paramString = string.Join(", ", parameters);
                 var actionName = action?.MethodName ?? "";
 
-                <div class="action" onclick="navegate('/FluentDoc/Action?service=@Model.FluentJsonForm.Type.GetListTypeNonNull().Name&actionName=@actionName')">
+                <div class="action" onclick="navegate('/FluenteDoc/Action?service=@Model.FluenteJsonForm.Type.GetListTypeNonNull().Name&actionName=@actionName')">
                     <span class="method @action.Method.ToLower()">@action.Method</span>
                     <span class="name">@action.Name.G()</span>
                     <span class="description">@action.Description</span>
@@ -74,7 +74,7 @@
         </div>
 
         <div class="properties-container">
-            <span class="title">@Model.FluentJsonForm?.name @(("Properties").G())</span>
+            <span class="title">@Model.FluenteJsonForm?.name @(("Properties").G())</span>
             <table class="properties">
                 <thead>
                     <tr>
@@ -86,8 +86,8 @@
                 </thead>
                 @foreach (var property in Model.Properties)
                 {
-                    if (property.form == Fluent.Architecture.Core.Enumerator.EnumForm.NONE) { continue; }
-                    if (property.Property.GetCustomAttribute<FluentDocAttribute>()?.Display == Fluent.Architecture.Core.Enumerator.EnumFluentDisplay.Hidden) { continue; }
+                    if (property.form == Fluente.Arquitetura.Nucleo.Enumerator.EnumForm.NONE) { continue; }
+                    if (property.Property.GetCustomAttribute<FluenteDocAttribute>()?.Display == Fluente.Arquitetura.Nucleo.Enumerator.EnumFluenteDisplay.Hidden) { continue; }
 
                     var range = (property.min == property.max ? property.min.ToString() : property.min + ", " + property.max);
                     range = range == "0" ? "" : $" ({range})";
@@ -97,12 +97,12 @@
                         <td class="description">@property.name</td>
                         <td class="type">@Html.Raw(GetTypeName(property.Type, property.Type.Name))@range</td>
                         <td>
-                            @Html.Raw(Is(property.IsEnum, "<span><img src='/FluentDoc/img/ok.png'/> " + "enum".G() + "</span>"))
-                            @Html.Raw(Is(property.IsKey || property.IsFluentUniqueKeyKey, "<span><img src='/FluentDoc/img/ok.png'/> " + "key".G() + "</span>"))
-                            @Html.Raw(Is(property.IsList, "<span><img src='/FluentDoc/img/ok.png'/> " + "list".G() + "</span>"))
-                            @Html.Raw(Is(property.IsNullable, "<span><img src='/FluentDoc/img/ok.png'/> " + "nullable".G() + "</span>"))
-                            @Html.Raw(Is(property.required, "<span><img src='/FluentDoc/img/ok.png'/> " + "required".G() + "</span>"))
-                            @Html.Raw(Is(property.IsFk, "<span><img src='/FluentDoc/img/ok.png'/>  " + "fk".G() + " <a href=\"/FluentDoc/Service?name=" + property.FkDestinal?.Type?.Name + "\">" + property.FkDestinal?.name + "</a></span>"))
+                            @Html.Raw(Is(property.IsEnum, "<span><img src='/FluenteDoc/img/ok.png'/> " + "enum".G() + "</span>"))
+                            @Html.Raw(Is(property.IsKey || property.IsFluenteUniqueKeyKey, "<span><img src='/FluenteDoc/img/ok.png'/> " + "key".G() + "</span>"))
+                            @Html.Raw(Is(property.IsList, "<span><img src='/FluenteDoc/img/ok.png'/> " + "list".G() + "</span>"))
+                            @Html.Raw(Is(property.IsNullable, "<span><img src='/FluenteDoc/img/ok.png'/> " + "nullable".G() + "</span>"))
+                            @Html.Raw(Is(property.required, "<span><img src='/FluenteDoc/img/ok.png'/> " + "required".G() + "</span>"))
+                            @Html.Raw(Is(property.IsFk, "<span><img src='/FluenteDoc/img/ok.png'/>  " + "fk".G() + " <a href=\"/FluenteDoc/Service?name=" + property.FkDestinal?.Type?.Name + "\">" + property.FkDestinal?.name + "</a></span>"))
                         </td>
                     </tr>
                 }
@@ -111,9 +111,9 @@
                 <span>@("Example value".G())</span>
 
                 @{
-                    var exampleValue = Model.FluentJsonForm?.Type?.GetExampleValue() ?? "";
+                    var exampleValue = Model.FluenteJsonForm?.Type?.GetExampleValue() ?? "";
 
-                    var json = exampleValue.ToFluentJson(Newtonsoft.Json.Formatting.Indented);
+                    var json = exampleValue.ToFluenteJson(Newtonsoft.Json.Formatting.Indented);
 
                     <pre class="example-value">@json</pre>
                 }

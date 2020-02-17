@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 
-namespace Fluent.Architecture.Core.Models
+namespace Fluente.Arquitetura.Nucleo.Models
 {
-    public class FluentEventEntity
+    public class FluenteEventEntity
     {
 #pragma warning disable CA2227 // Collection properties should be read only
-        public List<FluentEventEntityProperty> Properties { get; set; }
+        public List<FluenteEventEntityProperty> Properties { get; set; }
 #pragma warning restore CA2227 // Collection properties should be read only
         public object CurrentEntity { get; set; }
         public Type CurrentEntityType { get; set; }

@@ -1,21 +1,21 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System;
 
-namespace Fluent.Architecture.Interfaces
+namespace Fluente.Arquitetura.Interfaces
 {
-    public interface IFluentSpecificationOut : ISpec
+    public interface IFluenteSpecificationOut : ISpec
     {
-        Type FluentEntityType { get; }
-        Type FluentEntityOutType { get; }
+        Type FluenteEntityType { get; }
+        Type FluenteEntityOutType { get; }
     }
 
-    public interface IFluentSpecification<TO> : IFluentSpecificationOut
+    public interface IFluenteSpecification<TO> : IFluenteSpecificationOut
     {
     }
 }

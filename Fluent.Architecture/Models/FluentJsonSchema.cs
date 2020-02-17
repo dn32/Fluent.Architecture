@@ -1,11 +1,11 @@
-﻿using Fluent.Architecture.Core.Attributes;
+﻿using Fluente.Arquitetura.Nucleo.Atributos;
 using System.Collections.Generic;
 
-namespace Fluent.Architecture.Core.Models
+namespace Fluente.Arquitetura.Nucleo.Models
 {
-    public class FluentJsonSchema
+    public class FluenteJsonSchema
     {
-        public FluentJsonFormAttribute FluentJsonForm { get; set; }
-        public List<FluentJsonPropertyAttribute> Properties { get; set; }
+        public FluenteJsonFormAttribute FluenteJsonForm { get; set; }
+        public List<FluenteJsonPropertyAttribute> Properties { get; set; }
     }
 }

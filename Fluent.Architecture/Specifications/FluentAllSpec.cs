@@ -1,16 +1,16 @@
-﻿using Fluent.Architecture.Core.Extensions;
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Specifications;
+﻿using Fluente.Arquitetura.Nucleo.Extensoes;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Extensoes;
+using Fluente.Arquitetura.Specifications;
 using System.Linq;
 
-namespace Fluent.Architecture.Core.Specifications
+namespace Fluente.Arquitetura.Nucleo.Specifications
 {
-    public class FluentAllSpec<T> : FluentSpecification<T> where T : FluentEntity
+    public class FluenteAllSpec<T> : FluenteSpecification<T> where T : FluenteEntity
     {
         public bool IsList { get; set; } = true;
 
-        public FluentAllSpec<T> SetParameter(bool isList)
+        public FluenteAllSpec<T> SetParameter(bool isList)
         {
             IsList = isList;
             return this;
@@ -20,13 +20,13 @@ namespace Fluent.Architecture.Core.Specifications
         {
             return query
                     .GetInclusions(IsList)
-                    .FluentDynamicProjectTo(Service);
+                    .FluenteDynamicProjectTo(Service);
 
         }
 
         public override IOrderedQueryable<T> Order(IQueryable<T> query)
         {
-            return query.FluentDynamicProjectToOrder(Service);
+            return query.FluenteDynamicProjectToOrder(Service);
         }
     }
 }

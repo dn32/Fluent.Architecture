@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Controllers;
 
-namespace Fluent.Architecture.Test.Mock.Novos
+namespace Fluente.Arquitetura.Test.Mock.Novos
 {
     public static class MockControllerActionDescriptorFactory
     {

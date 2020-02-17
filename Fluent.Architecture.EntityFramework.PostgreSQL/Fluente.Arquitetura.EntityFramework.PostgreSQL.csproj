@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.2;netcoreapp3.1</TargetFrameworks>
+    <LangVersion>8</LangVersion>
+    <SignAssembly>true</SignAssembly>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
+    <Nullable>warnings</Nullable>
+    <AssemblyOriginatorKeyFile>Fluente.Arquitetura.EntityFramework.PostgreSQL.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.2' ">
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version=" 3.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fluent.Architecture.Base\Fluente.Arquitetura.Base.csproj" />
+    <ProjectReference Include="..\Fluent.Architecture.EntityFramework\Fluente.Arquitetura.EntityFramework.csproj" />
+  </ItemGroup>
+
+
+</Project>

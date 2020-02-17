@@ -1,12 +1,12 @@
-﻿using Fluent.Architecture.Core.Extensions;
+﻿using Fluente.Arquitetura.Nucleo.Extensoes;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
 
-namespace Fluent.Architecture.Core.Attributes
+namespace Fluente.Arquitetura.Nucleo.Atributos
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class FluentReferenceAttribute : Attribute
+    public class FluenteReferenceAttribute : Attribute
     {
         public string[] LocalKeys { get; set; }
 
@@ -40,7 +40,7 @@ namespace Fluent.Architecture.Core.Attributes
 
         public void SetType(string type) => Type = type;
 
-        public void SetName(string propertyName) => PropertyName = propertyName.ToFluentJsonStringNormalized();
+        public void SetName(string propertyName) => PropertyName = propertyName.ToFluenteJsonStringNormalized();
 
         public string Type { get; private set; }
 

@@ -1,12 +1,12 @@
 ﻿// ReSharper disable CommentTypo
 
-namespace Fluent.Architecture.EntityFramework.SqlServer
+namespace Fluente.Arquitetura.EntityFramework.SqlServer
 {
     /// <inheritdoc />
     /// <summary>
     /// Contexto do EF no net Core
     /// </summary>
-    [DbType(FluentDbType.SQL_SERVER)]
+    [DbType(FluenteDbType.SQL_SERVER)]
     public class EfContextSQLServer : EfContext
     {
         public EfContextSQLServer(string connectionString) : base(connectionString)

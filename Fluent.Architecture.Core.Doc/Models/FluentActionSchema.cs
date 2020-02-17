@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Fluent.Architecture.Core.Doc.Controllers
+namespace Fluente.Arquitetura.Nucleo.Doc.Controllers
 {
-    public class FluentActionSchema
+    public class FluenteActionSchema
     {
         public Type EntityType { get; set; }
         public Type ControllerType { get; set; }

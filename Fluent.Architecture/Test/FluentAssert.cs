@@ -1,16 +1,16 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Fluent.Architecture.Extensions;
+using Fluente.Arquitetura.Extensoes;
 using System.ComponentModel.DataAnnotations;
 
-namespace Fluent.Architecture.Test
+namespace Fluente.Arquitetura.Test
 {
-    public static class FluentAssert
+    public static class FluenteAssert
     {
         public static void Equal(object obj1, object obj2)
         {
@@ -22,7 +22,7 @@ namespace Fluent.Architecture.Test
 
         public static void IsNotNullOrEmpty(object entity)
         {
-            if (entity.IsFluentNull())
+            if (entity.IsFluenteNull())
             {
                 throw new ValidationException("The text is empty, null or space");
             }

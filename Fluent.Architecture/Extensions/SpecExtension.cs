@@ -1,9 +1,9 @@
-﻿using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Exceptions;
-using Fluent.Architecture.Interfaces;
+﻿using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Exceptions;
+using Fluente.Arquitetura.Interfaces;
 using System.Collections.Generic;
 
-namespace Fluent.Architecture.Extensions
+namespace Fluente.Arquitetura.Extensoes
 {
     public static class SpecExtension
     {
@@ -12,7 +12,7 @@ namespace Fluent.Architecture.Extensions
             return (bool)spec.Execute(nameof(Exists));
         }
 
-        public static object List(this ISpec spec, FluentPagination pagination = null)
+        public static object List(this ISpec spec, FluentePagination pagination = null)
         {
             return spec.Execute(nameof(List), new object[] { pagination });
         }
@@ -38,21 +38,21 @@ namespace Fluent.Architecture.Extensions
                 throw new IncorrectDevelopmentException($"The past spec does not have a valid service. See at the time the spec is created if a service has been passed in the spec creator.");
             }
 
-            if (spec is IFluentSpecificationOut spec2)
+            if (spec is IFluenteSpecificationOut spec2)
             {
-                var service = spec2.FluentEntityType.GetServiceInstanceByEntity(spec2.Service.SessionRequest);
+                var service = spec2.FluenteEntityType.GetServiceInstanceByEntity(spec2.Service.SessionRequest);
                 var method = service.GetType().GetMethod($"{methodName}Select");
                 if (method == null)
                 {
                     throw new IncorrectDevelopmentException($"Method not found: {methodName}Select");
                 }
 
-                return method.MakeGenericMethod(spec2.FluentEntityOutType).Invoke(service, parameters);
+                return method.MakeGenericMethod(spec2.FluenteEntityOutType).Invoke(service, parameters);
             }
 
-            if (spec is IFluentSpecification spec3)
+            if (spec is IFluenteSpecification spec3)
             {
-                var service = spec3.FluentEntityType.GetServiceInstanceByEntity(spec3.Service.SessionRequest);
+                var service = spec3.FluenteEntityType.GetServiceInstanceByEntity(spec3.Service.SessionRequest);
                 var method = service.GetType().GetMethodWithoutAmbiguity(methodName, parameters);
                 if (method == null)
                 {
@@ -70,12 +70,12 @@ namespace Fluent.Architecture.Extensions
         //    return service.Add(entity);
         //}
 
-        //public static bool Exists(this TransactionalService service, IFluentSpecification spec)
+        //public static bool Exists(this TransactionalService service, IFluenteSpecification spec)
         //{
         //    return spec.Exists();
         //}
 
-        //public static bool Exists<TO>(this TransactionalService service, IFluentSpecification<TO> spec)
+        //public static bool Exists<TO>(this TransactionalService service, IFluenteSpecification<TO> spec)
         //{
         //    return spec.Exists();
         //}
@@ -85,7 +85,7 @@ namespace Fluent.Architecture.Extensions
         //    return service.AddRange(entities);
         //}
 
-        //public static int Count<TO>(this TransactionalService service, IFluentSpecification<TO> spec)
+        //public static int Count<TO>(this TransactionalService service, IFluenteSpecification<TO> spec)
         //{
         //    return service.Count(spec);
         //}
@@ -95,7 +95,7 @@ namespace Fluent.Architecture.Extensions
         ////    return service.Count(spec);
         ////}
 
-        //public static int Count(this TransactionalService service, IFluentSpecification spec)
+        //public static int Count(this TransactionalService service, IFluenteSpecification spec)
         //{
         //    return spec.Count();
         //}
@@ -106,12 +106,12 @@ namespace Fluent.Architecture.Extensions
         //    return service.Find(entity);
         //}
 
-        //public static TO FirstOrDefault<TO>(this TransactionalService service, IFluentSpecification<TO> spec)
+        //public static TO FirstOrDefault<TO>(this TransactionalService service, IFluenteSpecification<TO> spec)
         //{
         //    return service.FirstOrDefault(entity);
         //}
 
-        //public static T FirstOrDefault<T>(this TransactionalService service, IFluentSpecification spec) where T : BaseEntity
+        //public static T FirstOrDefault<T>(this TransactionalService service, IFluenteSpecification spec) where T : BaseEntity
         //{
         //    return service.FirstOrDefault(entity);
         //}
@@ -121,12 +121,12 @@ namespace Fluent.Architecture.Extensions
         //    return service.FirstOrDefault(entity);
         //}
 
-        //public static List<TO> List<TO>(this TransactionalService service, IFluentSpecification<TO> spec, FluentPagination pagination = null)
+        //public static List<TO> List<TO>(this TransactionalService service, IFluenteSpecification<TO> spec, FluentePagination pagination = null)
         //{
         //    return service.List(spec, pagination);
         //}
 
-        //public static List<T> List<T>(this TransactionalService service, IFluentSpecification spec, FluentPagination pagination = null) where T : BaseEntity
+        //public static List<T> List<T>(this TransactionalService service, IFluenteSpecification spec, FluentePagination pagination = null) where T : BaseEntity
         //{
         //    return service.List(spec, pagination);
         //}
@@ -136,7 +136,7 @@ namespace Fluent.Architecture.Extensions
         //    return service.Remove(entity);
         //}
 
-        //public static void RemoveRange(this TransactionalService service, IFluentSpecification spec)
+        //public static void RemoveRange(this TransactionalService service, IFluenteSpecification spec)
         //{
         //    service.RemoveRange(spec);
         //}
@@ -153,14 +153,14 @@ namespace Fluent.Architecture.Extensions
 
         #region PRIVATES
 
-        //internal static FluentSpecification<TE> GetSpec<TE>(this IFluentSpecification spec) where TE : BaseEntity
+        //internal static FluenteSpecification<TE> GetSpec<TE>(this IFluenteSpecification spec) where TE : BaseEntity
         //{
-        //    return spec as FluentSpecification<TE>;
+        //    return spec as FluenteSpecification<TE>;
         //}
 
-        //private static FluentService<TE> GetService<TE>(UserSessionRequest sessionRequest) where TE : BaseEntity
+        //private static FluenteService<TE> GetService<TE>(UserSessionRequest sessionRequest) where TE : BaseEntity
         //{
-        //    return typeof(TE).GetServiceInstanceByEntity(sessionRequest) as FluentService<TE>;
+        //    return typeof(TE).GetServiceInstanceByEntity(sessionRequest) as FluenteService<TE>;
         //}
 
         #endregion

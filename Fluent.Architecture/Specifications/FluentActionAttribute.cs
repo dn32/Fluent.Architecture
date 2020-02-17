@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Fluent.Architecture.Core.Specifications
+namespace Fluente.Arquitetura.Nucleo.Specifications
 {
-    public class FluentActionAttribute: Attribute
+    public class FluenteActionAttribute: Attribute
     {
         public bool Pagination { get; set; }
         public bool DynamicSpec { get; set; }

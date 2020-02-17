@@ -1,27 +1,27 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
 
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Factory;
-using Fluent.Architecture.Services;
-using Fluent.Architecture.Specifications;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Factory;
+using Fluente.Arquitetura.Services;
+using Fluente.Arquitetura.Specifications;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
-namespace Fluent.Architecture.Controllers
+namespace Fluente.Arquitetura.Controllers
 {
     /// <inheritdoc />
     /// <summary>
     /// Controlador genérico padrão recomendado para herança por todos os controladores que tiverem entidade.
     /// </summary>
     /// <typeparam name="T">O tipo da entidade do controller.</typeparam>
-    public abstract partial class FluentController<T> : FluentServiceController<FluentService<T>> where T : BaseEntity
+    public abstract partial class FluenteController<T> : FluenteServiceController<FluenteService<T>> where T : BaseEntity
     {
         protected T2 CreateSpec<T2>() where T2 : BaseSpecification
         {

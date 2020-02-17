@@ -1,21 +1,21 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluent.Architecture.Core.Factory;
-using Fluent.Architecture.Core.Interfaces;
-using Fluent.Architecture.Exceptions;
-using Fluent.Architecture.Services;
-using Fluent.Architecture.Core.Models;
+using Fluente.Arquitetura.Nucleo.Factory;
+using Fluente.Arquitetura.Nucleo.Interfaces;
+using Fluente.Arquitetura.Exceptions;
+using Fluente.Arquitetura.Services;
+using Fluente.Arquitetura.Nucleo.Models;
 using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Fluent.Architecture.EntityFramework
+namespace Fluente.Arquitetura.EntityFramework
 {
     /// <summary>
     /// Classe interna. Nunca a deixe pública, pois o acesso a um repositório à partir de um serviço terceiro não deve ser permitido.
@@ -38,25 +38,25 @@ namespace Fluent.Architecture.EntityFramework
         /// <returns>
         /// O repositório criado.
         /// </returns>
-        public IFluentRepository<T> Create<T>(ITransactionObjects transactionObjects, FluentService<T> service) where T : BaseEntity
+        public IFluenteRepository<T> Create<T>(ITransactionObjects transactionObjects, FluenteService<T> service) where T : BaseEntity
         {
-            if (Setup.Config?.Config?.Connections == null) { throw new IncorrectDevelopmentException($"Architecture was not initialized properly"); }
+            if (Setup.Config?.Config?.Connections == null) { throw new IncorrectDevelopmentException($"Arquitetura was not initialized properly"); }
 
             var dbType = GetTheEntityDBType(typeof(T));
             if (dbType == null)
             {
                 if (Setup.Config.Config.Connections.Count == 1)
                 {
-                    dbType = Setup.Config.Config.Connections.Single().DbContextType.GetCustomAttribute<DbTypeAttribute>() ?? throw new IncorrectDevelopmentException($"The entity {typeof(T).Name} needs a database type specification. Example: [DbType (FluentDbType.ORACLE)]"); ;
+                    dbType = Setup.Config.Config.Connections.Single().DbContextType.GetCustomAttribute<DbTypeAttribute>() ?? throw new IncorrectDevelopmentException($"The entity {typeof(T).Name} needs a database type specification. Example: [DbType (FluenteDbType.ORACLE)]"); ;
                 }
             }
 
             if (dbType == null)
             {
-                throw new IncorrectDevelopmentException($"The entity {typeof(T).Name} needs a database type specification. Example: [DbType (FluentDbType.ORACLE)]"); ;
+                throw new IncorrectDevelopmentException($"The entity {typeof(T).Name} needs a database type specification. Example: [DbType (FluenteDbType.ORACLE)]"); ;
             }
 
-            var localType = Setup.Config?.Config?.GenericRepositoryType?.MakeGenericType(typeof(T)) ?? typeof(FluentEFRepository<T>);
+            var localType = Setup.Config?.Config?.GenericRepositoryType?.MakeGenericType(typeof(T)) ?? typeof(FluenteEFRepository<T>);
 
             if (Setup.Repositories.TryGetValue(typeof(T), out var repositoryType))
             {
@@ -85,7 +85,7 @@ namespace Fluent.Architecture.EntityFramework
                 }
                 else
                 {
-                    if (Setup.Config?.Config?.Connections == null) { throw new IncorrectDevelopmentException($"Architecture was not initialized properly"); }
+                    if (Setup.Config?.Config?.Connections == null) { throw new IncorrectDevelopmentException($"Arquitetura was not initialized properly"); }
                     var conn = Setup.Config.Config.Connections.Where(x =>
                                     x.DbContextType.GetCustomAttribute<DbTypeAttribute>()?.DbType == dbType.DbType &&
                                     x.Identifier.Equals(dbType.Identifier, StringComparison.InvariantCultureIgnoreCase));
@@ -112,9 +112,9 @@ namespace Fluent.Architecture.EntityFramework
             return repository;
         }
 
-        internal IFluentRepository<T> Create<T>(Type repositoryType) where T : BaseEntity
+        internal IFluenteRepository<T> Create<T>(Type repositoryType) where T : BaseEntity
         {
-            return Activator.CreateInstance(repositoryType) as IFluentRepository<T>;
+            return Activator.CreateInstance(repositoryType) as IFluenteRepository<T>;
         }
 
         //Todo - validar no boot se todas as entidades tem tipo de BD,ou se só tem um tipo de bd instanciado na aplicação

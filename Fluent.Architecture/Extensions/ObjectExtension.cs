@@ -1,13 +1,13 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluent.Architecture.Core.Attributes;
-using Fluent.Architecture.Core.Models;
+using Fluente.Arquitetura.Nucleo.Atributos;
+using Fluente.Arquitetura.Nucleo.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
@@ -18,7 +18,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Fluent.Architecture.Extensions
+namespace Fluente.Arquitetura.Extensoes
 {
     /// <summary>
     /// Extensão de objetos.
@@ -31,7 +31,7 @@ namespace Fluent.Architecture.Extensions
             return value != null;
         }
 
-        public static T FluentClone<T>(this object obj1)
+        public static T FluenteClone<T>(this object obj1)
         {
             if (!typeof(T).IsSerializable)
             {
@@ -73,7 +73,7 @@ namespace Fluent.Architecture.Extensions
             {
                 if (property != null)
                 {
-                    return $"'{property.PropertyType.GetFluentDefaultValue()?.ToString()?.Replace("'", "´")}'";
+                    return $"'{property.PropertyType.GetFluenteDefaultValue()?.ToString()?.Replace("'", "´")}'";
                 }
 
                 return null;
@@ -98,7 +98,7 @@ namespace Fluent.Architecture.Extensions
 
             if (value.GetType().IsNullableEnum())
             {
-                if (value.GetType().GetCustomAttributeAny<FluentUseEnumValueToDBAttribute>())
+                if (value.GetType().GetCustomAttributeAny<FluenteUseEnumValueToDBAttribute>())
                 {
                     return (int)value;
                 }
@@ -118,7 +118,7 @@ namespace Fluent.Architecture.Extensions
         /// <returns>
         /// Se o objeto é nulo ou vazio.
         /// </returns>
-        public static bool IsFluentNull(this object value)
+        public static bool IsFluenteNull(this object value)
         {
             if (value == null)
             {
@@ -147,7 +147,7 @@ namespace Fluent.Architecture.Extensions
                 return (int)value == 0;
             }
 
-            return value == value.GetType().GetFluentDefaultValue();
+            return value == value.GetType().GetFluenteDefaultValue();
         }
 
         /// <summary>

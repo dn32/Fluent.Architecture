@@ -1,13 +1,13 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Fluent.Architecture.Services;
+using Fluente.Arquitetura.Services;
 
-namespace Fluent.Architecture.Validation
+namespace Fluente.Arquitetura.Validation
 {
     public abstract class BaseValidation
     {

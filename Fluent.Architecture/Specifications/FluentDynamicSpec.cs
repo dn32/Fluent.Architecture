@@ -1,18 +1,18 @@
-﻿using Fluent.Architecture.Core.Extensions;
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Specifications;
+﻿using Fluente.Arquitetura.Nucleo.Extensoes;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Extensoes;
+using Fluente.Arquitetura.Specifications;
 using System.Linq;
 
-namespace Fluent.Architecture.Core.Specifications
+namespace Fluente.Arquitetura.Nucleo.Specifications
 {
-    public class FluentDynamicSpec<T> : FluentSpecification<T> where T : FluentEntity
+    public class FluenteDynamicSpec<T> : FluenteSpecification<T> where T : FluenteEntity
     {
         public string[] Fields { get; set; }
 
         public bool IsList { get; set; }
 
-        public FluentDynamicSpec<T> SetParameters(string[] fields, bool isList)
+        public FluenteDynamicSpec<T> SetParameters(string[] fields, bool isList)
         {
             Fields = fields;
             IsList = isList;
@@ -22,12 +22,12 @@ namespace Fluent.Architecture.Core.Specifications
         public override IQueryable<T> Where(IQueryable<T> query)
         {
             query = query.GetInclusions(IsList);
-            return query.FluentDynamicProjectTo(Service, Fields);
+            return query.FluenteDynamicProjectTo(Service, Fields);
         }
 
         public override IOrderedQueryable<T> Order(IQueryable<T> query)
         {
-            return query.FluentDynamicProjectToOrder(Service);
+            return query.FluenteDynamicProjectToOrder(Service);
         }
     }
 }

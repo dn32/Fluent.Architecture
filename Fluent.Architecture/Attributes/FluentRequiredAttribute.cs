@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Fluent.Architecture.Core.Attributes
+namespace Fluente.Arquitetura.Nucleo.Atributos
 {
-    public class FluentRequiredAttribute : Attribute
+    public class FluenteRequiredAttribute : Attribute
     {
     }
 }

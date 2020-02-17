@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.2;netcoreapp3.1</TargetFrameworks>
+    <LangVersion>8</LangVersion>
+    <SignAssembly>true</SignAssembly>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
+    <Nullable>warnings</Nullable>
+    <AssemblyOriginatorKeyFile>Fluente.Arquitetura.EntityFramework.Oracle.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.2' ">
+    <RuntimeFrameworkVersion>2.2.8</RuntimeFrameworkVersion>
+  </PropertyGroup>
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.2' ">
+    <PackageReference Include="Oracle.EntityFrameworkCore" Version="2.19.60" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.2.6" />
+  </ItemGroup>
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+    <!--<PackageReference Include="Oracle.EntityFrameworkCore" Version="2.19.60" />-->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Fluent.Architecture.EntityFramework\Fluente.Arquitetura.EntityFramework.csproj" />
+    <ProjectReference Include="..\Fluent.Architecture\Fluente.Arquitetura.Nucleo.csproj" />
+  </ItemGroup>
+
+</Project>

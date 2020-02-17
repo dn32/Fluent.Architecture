@@ -2,9 +2,9 @@
 using System;
 using System.ComponentModel;
 
-namespace Fluent.Architecture.Core.Attributes
+namespace Fluente.Arquitetura.Nucleo.Atributos
 {
-    public class FluentJsoSchemaAttribute : Attribute
+    public class FluenteJsoSchemaAttribute : Attribute
     {
         [DisplayName("Name")]
         [JsonProperty("Name")]

@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -9,14 +9,14 @@
 using Newtonsoft.Json;
 using System.Reflection;
 
-namespace Fluent.Architecture.Exceptions.ValidationException
+namespace Fluente.Arquitetura.Exceptions.ValidationException
 {
-    public class FluentGenericAttributeValidateException : FluentUiFieldValidationException
+    public class FluenteGenericAttributeValidateException : FluenteUiFieldValidationException
     {
         [JsonProperty("globalization_key")]
-        public override string GlobalizationKey => "FluentGenericAttributeValidateException";
+        public override string GlobalizationKey => "FluenteGenericAttributeValidateException";
 
-        public FluentGenericAttributeValidateException(PropertyInfo property, bool globalizeValues, string message, string compositionProperty, string compositionFieldName) :
+        public FluenteGenericAttributeValidateException(PropertyInfo property, bool globalizeValues, string message, string compositionProperty, string compositionFieldName) :
             base(property, globalizeValues, message, compositionProperty, compositionFieldName)
         {
         }

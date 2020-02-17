@@ -1,8 +1,8 @@
-﻿namespace Fluent.Architecture.Core.Models
+﻿namespace Fluente.Arquitetura.Nucleo.Models
 {
-    public class FluentJsonSchemaHtml
+    public class FluenteJsonSchemaHtml
     {
-        public FluentJsonSchema Form { get; set; }
+        public FluenteJsonSchema Form { get; set; }
         public string Html { get; set; }
     }
 }

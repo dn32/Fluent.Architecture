@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Fluent.Architecture.Core.Models
+namespace Fluente.Arquitetura.Nucleo.Models
 {
-    internal class FluentPropertyDescription
+    internal class FluentePropertyDescription
     {
         public string Name { get; set; }
 
@@ -10,6 +10,6 @@ namespace Fluent.Architecture.Core.Models
 
         public Type DynamicProperty { get; set; }
 
-        public FluentClassDescription FluentClassDescription { get; set; }
+        public FluenteClassDescription FluenteClassDescription { get; set; }
     }
 }

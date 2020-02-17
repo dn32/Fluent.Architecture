@@ -1,13 +1,13 @@
 ﻿//// -----------------------------------------------------------------------
-//// <copyright company="Fluent System">
-////     Copyright © Fluent System. All rights reserved.
+//// <copyright company="Fluente System">
+////     Copyright © Fluente System. All rights reserved.
 ////     TODOS OS DIREITOS RESERVADOS.
 //// </copyright>
 //// -----------------------------------------------------------------------
 
 //using System.Runtime.InteropServices;
 
-//namespace Fluent.Architecture.Test
+//namespace Fluente.Arquitetura.Test
 //{
 //    [ComVisible(true)]
 //    public static class Setup

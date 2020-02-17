@@ -1,13 +1,13 @@
-﻿namespace Fluent.Architecture.Core.Models
+﻿namespace Fluente.Arquitetura.Nucleo.Models
 {
-    [Attributes.FluentDoc]
+    [Atributos.FluenteDoc]
     public class DefaultPaginationResult<T> : DefaultResult<T>
     {
-        public FluentPagination Pagination { get; set; }
+        public FluentePagination Pagination { get; set; }
 
         public DefaultPaginationResult() : base() { }
 
-        public DefaultPaginationResult(T data, FluentPagination pagination) : base(data)
+        public DefaultPaginationResult(T data, FluentePagination pagination) : base(data)
         {
             Pagination = pagination;
         }

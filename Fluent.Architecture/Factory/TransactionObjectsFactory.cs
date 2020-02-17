@@ -1,8 +1,8 @@
-﻿using Fluent.Architecture.Core.Interfaces;
-using Fluent.Architecture.Core.Models;
+﻿using Fluente.Arquitetura.Nucleo.Interfaces;
+using Fluente.Arquitetura.Nucleo.Models;
 using System;
 
-namespace Fluent.Architecture.Core.Factory
+namespace Fluente.Arquitetura.Nucleo.Factory
 {
     public static class TransactionObjectsFactory
     {

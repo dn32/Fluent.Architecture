@@ -1,24 +1,24 @@
-﻿using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Core.Specifications;
-using Fluent.Architecture.Specifications;
+﻿using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Nucleo.Specifications;
+using Fluente.Arquitetura.Specifications;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 
 #if NETCOREAPP3_1
-using Fluent.Architecture.Extensions;
+using Fluente.Arquitetura.Extensoes;
 #else
 #endif
 
-namespace Fluent.Architecture.EntityFramework.Specifications
+namespace Fluente.Arquitetura.EntityFramework.Specifications
 {
-    public class FluentSqlSpec<TE> : FluentSpecification<TE> where TE : FluentEntity
+    public class FluenteSqlSpec<TE> : FluenteSpecification<TE> where TE : FluenteEntity
     {
         private string Sql { get; set; }
 
         private object[] Parameters { get; set; }
 
-        public FluentSqlSpec<TE> SetParameter(string sql, params object[] parameters)
+        public FluenteSqlSpec<TE> SetParameter(string sql, params object[] parameters)
         {
             Sql = sql;
             Parameters = parameters;
@@ -30,7 +30,7 @@ namespace Fluent.Architecture.EntityFramework.Specifications
             IgnoreOrder = true;
 
 #if NETCOREAPP3_1
-            var dbSet = query.FluentCast<DbSet<TE>>();
+            var dbSet = query.FluenteCast<DbSet<TE>>();
             return dbSet.FromSqlRaw(Sql, Parameters);
 #else
             return query.FromSql(Sql, Parameters);

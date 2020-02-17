@@ -1,7 +1,7 @@
-﻿using Fluent.Architecture.Core.Enumerator;
+﻿using Fluente.Arquitetura.Nucleo.Enumerator;
 using System.ComponentModel;
 
-namespace Fluent.Architecture.EntityFramework.Oracle
+namespace Fluente.Arquitetura.EntityFramework.Oracle
 {
     public class FiltersAndTerm
     {

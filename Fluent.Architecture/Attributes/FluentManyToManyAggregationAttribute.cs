@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace Fluent.Architecture.Core.Attributes
+namespace Fluente.Arquitetura.Nucleo.Atributos
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class FluentManyToManyAggregationAttribute : FluentAggregationAttribute
+    public class FluenteManyToManyAggregationAttribute : FluenteAggregationAttribute
     {
         public bool IsManyToMany { get; } = true;
     }

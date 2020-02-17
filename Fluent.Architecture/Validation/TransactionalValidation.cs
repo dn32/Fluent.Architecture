@@ -1,17 +1,17 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Fluent.Architecture.Exceptions.ValidationException;
-using Fluent.Architecture.Services;
+using Fluente.Arquitetura.Exceptions.ValidationException;
+using Fluente.Arquitetura.Services;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Fluent.Architecture.Validation
+namespace Fluente.Arquitetura.Validation
 {
     public abstract class TransactionalValidation : BaseValidation
     {
@@ -44,20 +44,20 @@ namespace Fluent.Architecture.Validation
         /// <param name="ex">
         /// A inconsitência.
         /// </param>
-        public void AddInconsistency(FluentValidationException ex)
+        public void AddInconsistency(FluenteValidationException ex)
         {
-            this.Service.SessionRequest.ContextFluentValidationException.AddInconsistency(ex);
+            this.Service.SessionRequest.ContextFluenteValidationException.AddInconsistency(ex);
         }
 
         public void ClearInconsistencies()
         {
-            this.Service.SessionRequest.ContextFluentValidationException.Inconsistencies.Clear();
+            this.Service.SessionRequest.ContextFluenteValidationException.Inconsistencies.Clear();
         }
 
         public void RunTheContextValidation()
         {
             if (PauseRunTheContextValidation) return;
-            this.Service.SessionRequest.ContextFluentValidationException.Validate();
+            this.Service.SessionRequest.ContextFluenteValidationException.Validate();
         }
 
         public bool PauseRunTheContextValidation { get; set; }
@@ -66,12 +66,12 @@ namespace Fluent.Architecture.Validation
         {
             if (PauseRunTheContextValidation) return;
 
-            anotherServices.SelectMany(x => x.SessionRequest.ContextFluentValidationException.Inconsistencies).ToList().ForEach(ex =>
+            anotherServices.SelectMany(x => x.SessionRequest.ContextFluenteValidationException.Inconsistencies).ToList().ForEach(ex =>
             {
-                Service.SessionRequest.ContextFluentValidationException.AddInconsistency(ex);
+                Service.SessionRequest.ContextFluenteValidationException.AddInconsistency(ex);
             });
 
-            this.Service.SessionRequest.ContextFluentValidationException.Validate();
+            this.Service.SessionRequest.ContextFluenteValidationException.Validate();
         }
 
         public void ValueMustBeInformed(object value, string message = "")
@@ -82,7 +82,7 @@ namespace Fluent.Architecture.Validation
             }
 
             message = string.IsNullOrWhiteSpace(message) ? "Value can not be null" : message;
-            AddInconsistency(new NullValueFluentValidationException(message));
+            AddInconsistency(new NullValueFluenteValidationException(message));
             RunTheContextValidation();
         }
     }

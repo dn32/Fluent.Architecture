@@ -1,19 +1,19 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
 
-using Fluent.Architecture.Exceptions.ValidationException;
+using Fluente.Arquitetura.Exceptions.ValidationException;
 using System;
 
-namespace Fluent.Architecture.Exceptions
+namespace Fluente.Arquitetura.Exceptions
 {
     [Serializable]
-    public class MethodNotFoundException : FluentValidationException
+    public class MethodNotFoundException : FluenteValidationException
     {
         public MethodNotFoundException(string message) : base(message)
         {

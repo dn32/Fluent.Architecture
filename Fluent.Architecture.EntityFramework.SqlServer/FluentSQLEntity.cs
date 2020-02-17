@@ -1,9 +1,9 @@
-﻿using Fluent.Architecture.Core.Models;
+﻿using Fluente.Arquitetura.Nucleo.Models;
 
-namespace Fluent.Architecture.EntityFramework.SqlServer
+namespace Fluente.Arquitetura.EntityFramework.SqlServer
 {
-    [DbType(FluentDbType.SQL_SERVER)]
-    public abstract class FluentSQLEntity : FluentEntity
+    [DbType(FluenteDbType.SQL_SERVER)]
+    public abstract class FluenteSQLEntity : FluenteEntity
     {
     }
 }

@@ -1,20 +1,20 @@
 // -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluent.Architecture.Core.Interfaces;
-using Fluent.Architecture.Factory;
-using Fluent.Architecture.Validation;
+using Fluente.Arquitetura.Nucleo.Interfaces;
+using Fluente.Arquitetura.Factory;
+using Fluente.Arquitetura.Validation;
 using Microsoft.AspNetCore.Http;
-using Fluent.Architecture.Core.Models;
+using Fluente.Arquitetura.Nucleo.Models;
 using System;
 using System.Security.Claims;
 
-namespace Fluent.Architecture.Services
+namespace Fluente.Arquitetura.Services
 {
     /// <summary>
     /// Serviço base de todos os serviços do sistema.

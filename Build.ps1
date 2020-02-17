@@ -1,4 +1,4 @@
-$dirBase = "D:\Projetos\dn32\Fluent.Architecture\"
+$dirBase = "D:\Projetos\dn32\Fluente.Arquitetura\"
 
 function CheckResult {
     param( $result, $sucess )
@@ -16,39 +16,39 @@ function CheckResult {
 }
 
 echo "Clean"
-dotnet clean "$dirBase\Fluent.Architecture.sln"
+dotnet clean "$dirBase\Fluente.Arquitetura.sln"
 
 echo "Build 2.2"
-$result = dotnet build "$dirBase\Fluent.Architecture.sln" --configuration Release /p:CopyOutputSymbolsToPublishDirectory=false --framework netcoreapp2.2
+$result = dotnet build "$dirBase\Fluente.Arquitetura.sln" --configuration Release /p:CopyOutputSymbolsToPublishDirectory=false --framework netcoreapp2.2
 CheckResult $result "Build 2.2 Sucess!"
 
 echo "Build 3.0"
-$result = dotnet build "$dirBase\Fluent.Architecture.sln" --configuration Release /p:CopyOutputSymbolsToPublishDirectory=false --framework netcoreapp3.1
+$result = dotnet build "$dirBase\Fluente.Arquitetura.sln" --configuration Release /p:CopyOutputSymbolsToPublishDirectory=false --framework netcoreapp3.1
 CheckResult $result "Build 3.1 Sucess!"
 
 echo "Cript"
 
 $dirsPack = 
-'Fluent.Architecture',
-'Fluent.Architecture.Base',
-'Fluent.Architecture.Core.Doc', 
-'Fluent.Architecture.EntityFramework',
-'Fluent.Architecture.EntityFramework.MemoryDatabase',
-'Fluent.Architecture.EntityFramework.MySQL',
-'Fluent.Architecture.EntityFramework.Oracle',
-'Fluent.Architecture.EntityFramework.PostgreSQL',
-'Fluent.Architecture.EntityFramework.SqLite',
-'Fluent.Architecture.EntityFramework.SqlServer',
-'Fluent.Architecture.Redis',
-'Fluent.Architecture.Test'
+'Fluente.Arquitetura',
+'Fluente.Arquitetura.Base',
+'Fluente.Arquitetura.Nucleo.Doc', 
+'Fluente.Arquitetura.EntityFramework',
+'Fluente.Arquitetura.EntityFramework.MemoryDatabase',
+'Fluente.Arquitetura.EntityFramework.MySQL',
+'Fluente.Arquitetura.EntityFramework.Oracle',
+'Fluente.Arquitetura.EntityFramework.PostgreSQL',
+'Fluente.Arquitetura.EntityFramework.SqLite',
+'Fluente.Arquitetura.EntityFramework.SqlServer',
+'Fluente.Arquitetura.Redis',
+'Fluente.Arquitetura.Test'
 
 $dirs = 
-'Fluent.Architecture\bin\Release\netcoreapp2.2\','Fluent.Architecture\bin\Release\netcoreapp3.1\', 
-'Fluent.Architecture.Core.Doc\bin\Release\netcoreapp2.2\','Fluent.Architecture.Core.Doc\bin\Release\netcoreapp3.1\'
+'Fluente.Arquitetura\bin\Release\netcoreapp2.2\','Fluente.Arquitetura\bin\Release\netcoreapp3.1\', 
+'Fluente.Arquitetura.Nucleo.Doc\bin\Release\netcoreapp2.2\','Fluente.Arquitetura.Nucleo.Doc\bin\Release\netcoreapp3.1\'
 
 $files = 
-'Fluent.Architecture.Core.dll','Fluent.Architecture.Core.dll',
-'Fluent.Architecture.Core.Doc.dll', 'Fluent.Architecture.Core.Doc.dll'
+'Fluente.Arquitetura.Nucleo.dll','Fluente.Arquitetura.Nucleo.dll',
+'Fluente.Arquitetura.Nucleo.Doc.dll', 'Fluente.Arquitetura.Nucleo.Doc.dll'
 
 For ($i=0; $i -lt $files.Length; $i++) 
 {

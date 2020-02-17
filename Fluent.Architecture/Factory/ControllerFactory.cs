@@ -1,8 +1,8 @@
-﻿using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Core.Attributes;
-using Fluent.Architecture.Exceptions;
-using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Factory.Proxy;
+﻿using Fluente.Arquitetura.Controllers;
+using Fluente.Arquitetura.Nucleo.Atributos;
+using Fluente.Arquitetura.Exceptions;
+using Fluente.Arquitetura.Extensoes;
+using Fluente.Arquitetura.Factory.Proxy;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using System;
@@ -10,23 +10,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Fluent.Architecture.Core.Factory
+namespace Fluente.Arquitetura.Nucleo.Factory
 {
     public class ControllerFactory : IApplicationFeatureProvider<ControllerFeature>
     {
         public void PopulateFeature(IEnumerable<ApplicationPart> parts, ControllerFeature feature)
         {
-            var baseController = (Setup.Config.Config.GenericControllerType) ?? typeof(FluentAPIController<>);
-            var entities = Setup.GetFluentApiEntity();
+            var baseController = (Setup.Config.Config.GenericControllerType) ?? typeof(FluenteAPIController<>);
+            var entities = Setup.GetFluenteApiEntity();
 
             foreach (var entity in entities)
             {
-                if (entity.GetCustomAttribute<FluentAPIControllerAttribute>(true)?.AutomaticGeneration == false) { continue; }
+                if (entity.GetCustomAttribute<FluenteAPIControllerAttribute>(true)?.AutomaticGeneration == false) { continue; }
                 if (Setup.Controllers.ContainsKey(entity)) { continue; }
 
-                if (entity.GetCustomAttribute<FluentJsonFormAttribute>(true)?.IsReadOnly == true)
+                if (entity.GetCustomAttribute<FluenteJsonFormAttribute>(true)?.IsReadOnly == true)
                 {
-                    baseController = typeof(FluentAPIReadOnlyController<>);
+                    baseController = typeof(FluenteAPIReadOnlyController<>);
                 }
 
                 var typeName = entity.Name + "Controller";
@@ -36,7 +36,7 @@ namespace Fluent.Architecture.Core.Factory
                 }
 
                 var parentClass = baseController.MakeGenericType(entity);
-                var moduleName = $"FluentDynamicModule{entity.Name}";
+                var moduleName = $"FluenteDynamicModule{entity.Name}";
 
                 var dynamicClass = BuilderClassUtil.CreateClass(parentClass, typeName, moduleName);
                 BuilderClassUtil.CreateConstructor(dynamicClass);

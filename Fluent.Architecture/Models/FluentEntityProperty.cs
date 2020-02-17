@@ -1,7 +1,7 @@
 ﻿
-namespace Fluent.Architecture.Core.Models
+namespace Fluente.Arquitetura.Nucleo.Models
 {
-    public class FluentEventEntityProperty
+    public class FluenteEventEntityProperty
     {
         public string PropertyName { get; set; }
         public object OriginalValue { get; set; }

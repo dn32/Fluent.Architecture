@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -8,7 +8,7 @@
 // ReSharper disable CommentTypo
 using System;
 
-namespace Fluent.Architecture.Attributes
+namespace Fluente.Arquitetura.Attributes
 {
     /// <inheritdoc />
     /// <summary>

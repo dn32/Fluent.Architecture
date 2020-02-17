@@ -1,9 +1,9 @@
-﻿using Fluent.Architecture.Exceptions;
-using Fluent.Architecture.Services;
-using Fluent.Architecture.Specifications;
+﻿using Fluente.Arquitetura.Exceptions;
+using Fluente.Arquitetura.Services;
+using Fluente.Arquitetura.Specifications;
 using System;
 
-namespace Fluent.Architecture.Factory
+namespace Fluente.Arquitetura.Factory
 {
     public static class SpecFactory
     {

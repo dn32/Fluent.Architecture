@@ -1,9 +1,9 @@
-﻿using Fluent.Architecture.Core.Models;
+﻿using Fluente.Arquitetura.Nucleo.Models;
 
-namespace Fluent.Architecture.EntityFramework.PostgreSQL
+namespace Fluente.Arquitetura.EntityFramework.PostgreSQL
 {
-    [DbType(FluentDbType.POSTGREE_SQL)]
-    public abstract class FluentPostgreEntity : FluentEntity
+    [DbType(FluenteDbType.POSTGREE_SQL)]
+    public abstract class FluentePostgreEntity : FluenteEntity
     {
     }
 }

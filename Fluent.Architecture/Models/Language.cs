@@ -1,16 +1,16 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Fluent.Architecture.Core.Models
+namespace Fluente.Arquitetura.Nucleo.Models
 {
     [ExcludeFromCodeCoverage]
-    public static class FluentLanguage
+    public static class FluenteLanguage
     {
 #pragma warning disable CA1707
         public static string DefaultLanguage => EN_US;

@@ -1,15 +1,15 @@
-﻿using Fluent.Architecture.Core.Enumerator;
-using Fluent.Architecture.Core.Specifications;
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Extensions;
+﻿using Fluente.Arquitetura.Nucleo.Enumerator;
+using Fluente.Arquitetura.Nucleo.Specifications;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Extensoes;
 using System;
 using System.Linq;
-using Fluent.Architecture.Specifications;
-using Fluent.Architecture.Core.Extensions;
+using Fluente.Arquitetura.Specifications;
+using Fluente.Arquitetura.Nucleo.Extensoes;
 
-namespace Fluent.Architecture.EntityFramework.Oracle.Specifications
+namespace Fluente.Arquitetura.EntityFramework.Oracle.Specifications
 {
-    public class TermByFilterAndProximitySpec<T> : FluentSpecification<T> where T : FluentEntity
+    public class TermByFilterAndProximitySpec<T> : FluenteSpecification<T> where T : FluenteEntity
     {
         private string Term { get; set; }
 
@@ -53,7 +53,7 @@ namespace Fluent.Architecture.EntityFramework.Oracle.Specifications
                 query = query.WhereProximityText(Term, TableName, Columns, Tolerance);
             }
 
-            return query.FluentDynamicProjectTo(Service);
+            return query.FluenteDynamicProjectTo(Service);
         }
 
         public override IOrderedQueryable<T> Order(IQueryable<T> query) => throw new NotImplementedException();

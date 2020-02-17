@@ -1,9 +1,9 @@
-using Fluent.Architecture.Core.Models;
+using Fluente.Arquitetura.Nucleo.Models;
 
-namespace Fluent.Architecture.EntityFramework.Oracle
+namespace Fluente.Arquitetura.EntityFramework.Oracle
 {
-    [DbType(FluentDbType.ORACLE)]
-    public abstract class FluentOracleEntity : FluentEntity
+    [DbType(FluenteDbType.ORACLE)]
+    public abstract class FluenteOracleEntity : FluenteEntity
     {
     }
 }

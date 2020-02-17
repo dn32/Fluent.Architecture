@@ -1,22 +1,22 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluent.Architecture.Controllers;
-using Fluent.Architecture.Core.Attributes;
-using Fluent.Architecture.Core.Interfaces;
-using Fluent.Architecture.Core.Services;
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Exceptions;
-using Fluent.Architecture.Filters;
-using Fluent.Architecture.Services;
-using Fluent.Architecture.Specifications;
-using Fluent.Architecture.Util;
-using Fluent.Architecture.Validation;
+using Fluente.Arquitetura.Controllers;
+using Fluente.Arquitetura.Nucleo.Atributos;
+using Fluente.Arquitetura.Nucleo.Interfaces;
+using Fluente.Arquitetura.Nucleo.Services;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Exceptions;
+using Fluente.Arquitetura.Filters;
+using Fluente.Arquitetura.Services;
+using Fluente.Arquitetura.Specifications;
+using Fluente.Arquitetura.Util;
+using Fluente.Arquitetura.Validation;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -24,9 +24,9 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo(@"Fluent.Architecture.EntityFramework, PublicKey=002400000480000094000000060200000024000052534131000400000100010001e5fbcd7e6f1d70524fc7b787a6ba4d8f332e822c5506e1831f4e59ab41e930c56bbf8cc29fa91f1270f4e873c036335c5aa4ccfc76ab13bfa7372de9d4e17de6c2d188fae9e6842d7d90d51e123836fd9f5d6be5580a32d1a12e59489519c6b93cdcf7ecd782042db1f31190350fbf937bbd6a5ae61d648773b46b9a706ccf")]
-[assembly: InternalsVisibleTo(@"Fluent.Architecture.Core.Doc, PublicKey=0024000004800000940000000602000000240000525341310004000001000100c93c87dbe1ac93b8c4abd6ec1fc7c05cac238937a96ebcc8295fcff6063cdcac293901259cbbc0ff266073fccd1d641946b997052434ac5ff80c6cd593d99104900d43319e4b68088ce8ca31efaeb0f506c03485ac83df15385b0831a6ef1f4e19fe3383d5bf559f416d24ce06725d09df78ef2e3b7ddd5398dd0e223c6b7af4")]
-namespace Fluent.Architecture
+[assembly: InternalsVisibleTo(@"Fluente.Arquitetura.EntityFramework, PublicKey=00240000048000009400000006020000002400005253413100040000010001000da51e0f449f6ee7879b256b497e9f64eda760b5fac3d47a4ba8a54664303024f451098b69154691fad078fe77ee79ac2b6a9770fd7a6555a4c49a2a58e82f411939e1eb44ac4a1327acdd13f2c8ec7698644d019f04197838434be8cb53877f1d22acab90ae7735acc363fdb393a11fa34afe780d1c5fb26f37a8fd6e4d9b9f")]
+[assembly: InternalsVisibleTo(@"Fluente.Arquitetura.Doc, PublicKey=00240000048000009400000006020000002400005253413100040000010001008963bf4072062c4090dd8b8b1b3335b78ac84c4e55c7903a918af1d62ecf0e2ab5504ca1fa722b67f5968cdbbf2f1436cc9303018d57511caefbae6cf903f681d721a1122bcdc4f35fa4aafade1e9900468a69aba391d3e9c2eb3087bd37727bbcc30f704666c62beccdca492d8e5467088b696c39306fa582637041a8c40dc4")]
+namespace Fluente.Arquitetura
 {
     public static class Setup
     {
@@ -59,7 +59,7 @@ namespace Fluent.Architecture
 
         #region PUBLIC METHODS
 
-        public static List<Type> GetFluentApiEntity()
+        public static List<Type> GetFluenteApiEntity()
         {
             return Setup.Model.Values.ToList().Where(x => !x.IsAbstract && x.IsPublic).ToList();
         }
@@ -104,10 +104,10 @@ namespace Fluent.Architecture
             return configClass;
         }
 
-        public static Config UseJwt<Service>(this Config configClass, FluentJwtInfo jwtInfo) where Service : FluentAuthenticationService
+        public static Config UseJwt<Service>(this Config configClass, FluenteJwtInfo jwtInfo) where Service : FluenteAuthenticationService
         {
             configClass.JwtInfo = jwtInfo;
-            configClass.JwtInfo.FluentAuthenticationServiceType = typeof(Service);
+            configClass.JwtInfo.FluenteAuthenticationServiceType = typeof(Service);
             return configClass;
         }
 
@@ -217,10 +217,10 @@ namespace Fluent.Architecture
             Model = new Dictionary<Type, Type>();
             Controllers = new Dictionary<Type, Type>();
             UserSessionList = new Dictionary<Guid, UserSessionRequest>();
-            Services.Add(typeof(FluentEntity), typeof(FluentService<FluentEntity>));
-            Repositories.Add(typeof(FluentEntity), typeof(IFluentRepository<FluentEntity>));
-            Validations.Add(typeof(FluentEntity), typeof(FluentValidation<FluentEntity>));
-            Controllers.Add(typeof(FluentEntity), typeof(FluentController<FluentEntity>));
+            Services.Add(typeof(FluenteEntity), typeof(FluenteService<FluenteEntity>));
+            Repositories.Add(typeof(FluenteEntity), typeof(IFluenteRepository<FluenteEntity>));
+            Validations.Add(typeof(FluenteEntity), typeof(FluenteValidation<FluenteEntity>));
+            Controllers.Add(typeof(FluenteEntity), typeof(FluenteController<FluenteEntity>));
         }
 
         private static void LoadAssemblies()
@@ -245,23 +245,23 @@ namespace Fluent.Architecture
             ValidateSpecifications(types.Where(x => x.IsSubclassOf(typeof(BaseSpecification))).ToList());
             ValidateController(types.Where(x => x.IsSubclassOf(typeof(BaseController))).ToList());
 
-            types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentService<BaseEntity>)))
+            types.Select(x => GlobalUtil.GetFluenteEntityType(x, typeof(FluenteService<BaseEntity>)))
                 .Where(x => x.Item1 != null).ToList()
                 .ForEach(AddService);
 
-            types.Select(x => GlobalUtil.GetFluentEntityTypeByInterface(x, typeof(IFluentRepository<BaseEntity>)))
+            types.Select(x => GlobalUtil.GetFluenteEntityTypeByInterface(x, typeof(IFluenteRepository<BaseEntity>)))
                .Where(x => x?.Item1 != null).ToList()
                .ForEach(AddRepository);
 
-            types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentValidation<BaseEntity>)))
+            types.Select(x => GlobalUtil.GetFluenteEntityType(x, typeof(FluenteValidation<BaseEntity>)))
                .Where(x => x.Item1 != null).ToList()
                .ForEach(AddValidation);
 
-            types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(BaseEntity)))
+            types.Select(x => GlobalUtil.GetFluenteEntityType(x, typeof(BaseEntity)))
                 .Where(x => x.Item1 != null && x.Item2 != typeof(BaseEntity)).ToList()
                 .ForEach(AddModel);
 
-            types.Select(x => GlobalUtil.GetFluentEntityType(x, typeof(FluentController<BaseEntity>)))
+            types.Select(x => GlobalUtil.GetFluenteEntityType(x, typeof(FluenteController<BaseEntity>)))
                .Where(x => x.Item1 != null).ToList()
                .ForEach(AddController);
 
@@ -464,7 +464,7 @@ namespace Fluent.Architecture
                 foreach (var method in methods)
                 {
                     var name = $"{type.Name}.{method.Name}";
-                    if (method.IsPublic && method.ReturnType.Name == typeof(IEnumerable<FluentEntity>).Name || method.ReturnType.Name == typeof(IQueryable<FluentEntity>).Name)
+                    if (method.IsPublic && method.ReturnType.Name == typeof(IEnumerable<FluenteEntity>).Name || method.ReturnType.Name == typeof(IQueryable<FluenteEntity>).Name)
                     {
                         throw new IncorrectDevelopmentException($"The use of non-materialized returns in repositories is not allowed. Change the return type and execute the ToList before the return in the {name}.");
                     }

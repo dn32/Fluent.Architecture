@@ -1,13 +1,13 @@
-﻿using Fluent.Architecture.Extensions;
+﻿using Fluente.Arquitetura.Extensoes;
 using Microsoft.EntityFrameworkCore;
-using Fluent.Architecture.Core.Models;
+using Fluente.Arquitetura.Nucleo.Models;
 using System.Linq;
 
-namespace Fluent.Architecture.EntityFramework.Oracle.Specifications
+namespace Fluente.Arquitetura.EntityFramework.Oracle.Specifications
 {
     public static class QueryExtension
     {
-        public static IQueryable<T> WhereProximityText<T>(this IQueryable<T> query, string term, string table, string column, int tolerance) where T : FluentEntity
+        public static IQueryable<T> WhereProximityText<T>(this IQueryable<T> query, string term, string table, string column, int tolerance) where T : FluenteEntity
         {
             if (string.IsNullOrWhiteSpace(term)) { return query.OrderBy(x => x); }
 
@@ -18,7 +18,7 @@ order by UTL_MATCH.jaro_winkler_similarity(lower({column}), lower({{0}})) DESC
 ";
 
 #if NETCOREAPP3_1
-            var dbSet = query.FluentCast<DbSet<T>>();
+            var dbSet = query.FluenteCast<DbSet<T>>();
             return dbSet.FromSqlRaw(sql, term);
 #else
 #pragma warning disable EF1000 // Possible SQL injection vulnerability.
@@ -27,7 +27,7 @@ order by UTL_MATCH.jaro_winkler_similarity(lower({column}), lower({{0}})) DESC
 #endif
         }
 
-        public static IQueryable<T> WhereProximityText<T>(this IQueryable<T> query, string term, string table, string[] columns, int tolerance) where T : FluentEntity
+        public static IQueryable<T> WhereProximityText<T>(this IQueryable<T> query, string term, string table, string[] columns, int tolerance) where T : FluenteEntity
         {
             if (string.IsNullOrWhiteSpace(term)) { return query.OrderBy(x => x); }
 
@@ -40,7 +40,7 @@ WHERE {column} IS NOT NULL AND UTL_MATCH.JARO_WINKLER_SIMILARITY(LOWER({column})
             var sql = $@"SELECT * FROM ({union}) ORDER BY PRECISAO__ DESC";
 
 #if NETCOREAPP3_1
-            var dbSet = query.FluentCast<DbSet<T>>();
+            var dbSet = query.FluenteCast<DbSet<T>>();
             return dbSet.FromSqlRaw(sql, term);
 #else
 #pragma warning disable EF1000 // Possible SQL injection vulnerability.

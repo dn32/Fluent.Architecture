@@ -1,8 +1,8 @@
 ﻿// ReSharper disable CommentTypo
-using Fluent.Architecture.Attributes;
-using Fluent.Architecture.Core.Attributes;
-using Fluent.Architecture.Exceptions;
-using Fluent.Architecture.Extensions;
+using Fluente.Arquitetura.Attributes;
+using Fluente.Arquitetura.Nucleo.Atributos;
+using Fluente.Arquitetura.Exceptions;
+using Fluente.Arquitetura.Extensoes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -13,16 +13,16 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Linq.Expressions;
-using Fluent.Architecture.Core.Models;
+using Fluente.Arquitetura.Nucleo.Models;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
-using Fluent.Architecture.Core.Enumerator;
+using Fluente.Arquitetura.Nucleo.Enumerator;
 using Microsoft.Extensions.Logging.Debug;
 
-namespace Fluent.Architecture.EntityFramework
+namespace Fluente.Arquitetura.EntityFramework
 {
     /// <inheritdoc />
     /// <summary>
@@ -30,7 +30,7 @@ namespace Fluent.Architecture.EntityFramework
     /// </summary>
     public abstract class EfContext : DbContext
     {
-        internal protected delegate void EntityChangeEventHandler(ICollection<FluentEventEntity> fluentEventEntity);
+        internal protected delegate void EntityChangeEventHandler(ICollection<FluenteEventEntity> fluentEventEntity);
         internal protected event EntityChangeEventHandler EntityChangingEventEvent;
         internal protected event EntityChangeEventHandler EntityChangedEventEvent;
 
@@ -61,7 +61,7 @@ namespace Fluent.Architecture.EntityFramework
                     continue;
                 }
 
-                if (type.IsSubclassOf(typeof(FluentEntity)))
+                if (type.IsSubclassOf(typeof(FluenteEntity)))
                 {
                     var keys = type.GetProperties().Where(x => x.GetCustomAttribute<KeyAttribute>() != null).Select(x => x.Name).ToArray();
                     if (keys.Length == 0)
@@ -103,7 +103,7 @@ namespace Fluent.Architecture.EntityFramework
                             }
                             else
                             {
-                                if (!property.PropertyType.GetListTypeNonNull().GetCustomAttributeAny<FluentUseEnumValueToDBAttribute>())
+                                if (!property.PropertyType.GetListTypeNonNull().GetCustomAttributeAny<FluenteUseEnumValueToDBAttribute>())
                                 {
                                     entity.Property(property.Name).HasConversion<string>();// Converte os enumeradores para salvar o valor string no BD
                                 }
@@ -120,11 +120,11 @@ namespace Fluent.Architecture.EntityFramework
 
         protected void ConvertNulableEnum<TEnum>(EntityTypeBuilder entity, PropertyInfo property) where TEnum : Enum
         {
-            if (typeof(TEnum).GetCustomAttribute<FluentEnumValueForSetNullAttribute>() is FluentEnumValueForSetNullAttribute fluentEnumValueForSetNullAttribute)
+            if (typeof(TEnum).GetCustomAttribute<FluenteEnumValueForSetNullAttribute>() is FluenteEnumValueForSetNullAttribute fluentEnumValueForSetNullAttribute)
             {
                 ValueConverter converter = null;
 
-                if (property.PropertyType.GetListTypeNonNull().GetCustomAttributeAny<FluentUseEnumValueToDBAttribute>())
+                if (property.PropertyType.GetListTypeNonNull().GetCustomAttributeAny<FluenteUseEnumValueToDBAttribute>())
                 {
                     converter = new ValueConverter<TEnum, int?>(v => v.GetHashCode() == fluentEnumValueForSetNullAttribute.Value ? null : (int?)v.GetHashCode(), v => (TEnum)Enum.ToObject(typeof(TEnum), v ?? 0));
                 }
@@ -137,7 +137,7 @@ namespace Fluent.Architecture.EntityFramework
             }
             else
             {
-                if (!property.PropertyType.GetListTypeNonNull().GetCustomAttributeAny<FluentUseEnumValueToDBAttribute>())
+                if (!property.PropertyType.GetListTypeNonNull().GetCustomAttributeAny<FluenteUseEnumValueToDBAttribute>())
                 {
                     entity.Property(property.Name).HasConversion<string>();// Converte os enumeradores para salvar o valor string no BD
                 }
@@ -191,14 +191,14 @@ namespace Fluent.Architecture.EntityFramework
 
         internal protected UserSessionRequest UserSessionRequest { get; internal set; }
 
-        private void AfterSave(List<FluentEventEntity> eventChangeList)
+        private void AfterSave(List<FluenteEventEntity> eventChangeList)
         {
             if (EntityChangedEventEvent == null) { return; }
             eventChangeList.ForEach(x => SetEventChangeCurrentValue(x));
             EntityChangedEventEvent.Invoke(eventChangeList);
         }
 
-        private List<FluentEventEntity> BeforeSave()
+        private List<FluenteEventEntity> BeforeSave()
         {
             var changedEntities = ChangeTracker.Entries().Where(e => e.State == EntityState.Added || e.State == EntityState.Deleted || e.State == EntityState.Modified).ToList();
             var eventChangeList = changedEntities.Select(GetEventChange).Where(x => x != null).ToList();
@@ -206,7 +206,7 @@ namespace Fluent.Architecture.EntityFramework
             return eventChangeList;
         }
 
-        private void SetEventChangeCurrentValue(FluentEventEntity fluentEventEntity)
+        private void SetEventChangeCurrentValue(FluenteEventEntity fluentEventEntity)
         {
             var currentValuesGetValue = fluentEventEntity.ChangedEntity.CurrentValues.GetType().GetMethod("GetValue", new[] { typeof(IProperty) });
             var properties = fluentEventEntity.ChangedEntity.CurrentValues.Properties.ToList();
@@ -218,14 +218,14 @@ namespace Fluent.Architecture.EntityFramework
             });
         }
 
-        private FluentEventEntity GetEventChange(EntityEntry entityChanged)
+        private FluenteEventEntity GetEventChange(EntityEntry entityChanged)
         {
             var currentValuesGetValue = entityChanged.CurrentValues.GetType().GetMethod("GetValue", new[] { typeof(IProperty) });
             var originalValuesGetValue = entityChanged.OriginalValues.GetType().GetMethod("GetValue", new[] { typeof(IProperty) });
 
             var properties = entityChanged.OriginalValues.Properties.Select(x =>
             {
-                return new FluentEventEntityProperty
+                return new FluenteEventEntityProperty
                 {
                     CurrentValue = currentValuesGetValue?.MakeGenericMethod(x.ClrType).Invoke(entityChanged.CurrentValues, new[] { x }),
                     OriginalValue = originalValuesGetValue?.MakeGenericMethod(x.ClrType).Invoke(entityChanged.OriginalValues, new[] { x }),
@@ -235,12 +235,12 @@ namespace Fluent.Architecture.EntityFramework
 
             var currentEntityType = entityChanged.Entity.GetType();
 
-            if (currentEntityType.GetCustomAttribute<FluentLoggingAttribute>()?.Display == EnumFluentDisplay.Hidden)
+            if (currentEntityType.GetCustomAttribute<FluenteLoggingAttribute>()?.Display == EnumFluenteDisplay.Hidden)
             {
                 return null;
             }
 
-            return new FluentEventEntity
+            return new FluenteEventEntity
             {
                 Properties = properties,
                 CurrentEntity = entityChanged.Entity,

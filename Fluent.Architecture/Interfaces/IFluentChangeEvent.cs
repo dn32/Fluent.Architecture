@@ -1,10 +1,10 @@
-﻿//using Fluent.Architecture.Model;
+﻿//using Fluente.Arquitetura.Model;
 //using System;
 //using System.Linq.Expressions;
 
-//namespace Fluent.Architecture.Interfaces
+//namespace Fluente.Arquitetura.Interfaces
 //{
-//    public interface IFluentChangeEvent<T> : IBaseEvent where T : FluentEntity
+//    public interface IFluenteChangeEvent<T> : IBaseEvent where T : FluenteEntity
 //    {
 //        string EventName();
 

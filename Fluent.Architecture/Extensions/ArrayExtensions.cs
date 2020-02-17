@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Fluent.Architecture.Core.Extensions
+namespace Fluente.Arquitetura.Nucleo.Extensoes
 {
     public static class ArrayExtensions
     {

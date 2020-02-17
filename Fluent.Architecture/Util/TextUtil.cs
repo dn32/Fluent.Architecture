@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Fluent.Architecture.Util
+namespace Fluente.Arquitetura.Util
 {
     public static class TextUtil
     {

@@ -1,13 +1,13 @@
 // ReSharper disable CommentTypo
 using Microsoft.EntityFrameworkCore;
 
-namespace Fluent.Architecture.EntityFramework.Oracle
+namespace Fluente.Arquitetura.EntityFramework.Oracle
 {
     /// <inheritdoc />
     /// <summary>
     /// Contexto do EF no net Core
     /// </summary>
-    [DbType(FluentDbType.ORACLE)]
+    [DbType(FluenteDbType.ORACLE)]
     public class EfContextOracle : EfContext
     {
 

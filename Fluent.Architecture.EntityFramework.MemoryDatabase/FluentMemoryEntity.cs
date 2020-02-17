@@ -1,9 +1,9 @@
-﻿using Fluent.Architecture.Core.Models;
+﻿using Fluente.Arquitetura.Nucleo.Models;
 
-namespace Fluent.Architecture.EntityFramework.MemoryDatabase
+namespace Fluente.Arquitetura.EntityFramework.MemoryDatabase
 {
-    [DbType(FluentDbType.MEMORY)]
-    public abstract class FluentMySQLEntity : FluentEntity
+    [DbType(FluenteDbType.MEMORY)]
+    public abstract class FluenteMySQLEntity : FluenteEntity
     {
     }
 }

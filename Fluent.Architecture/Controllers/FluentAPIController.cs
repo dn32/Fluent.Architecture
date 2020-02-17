@@ -1,30 +1,30 @@
-﻿using Fluent.Architecture.Core.Enumerator;
-using Fluent.Architecture.Core.Extensions;
-using Fluent.Architecture.Core.Specifications;
-using Fluent.Architecture.Extensions;
+﻿using Fluente.Arquitetura.Nucleo.Enumerator;
+using Fluente.Arquitetura.Nucleo.Extensoes;
+using Fluente.Arquitetura.Nucleo.Specifications;
+using Fluente.Arquitetura.Extensoes;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Fluent.Architecture.Core.Models;
+using Fluente.Arquitetura.Nucleo.Models;
 using System.Collections.Generic;
 using System;
 using System.IO;
-using Fluent.Architecture.Core.Util;
+using Fluente.Arquitetura.Nucleo.Util;
 
-namespace Fluent.Architecture.Controllers
+namespace Fluente.Arquitetura.Controllers
 {
     [Route("/api/[controller]/[action]")]
     [ApiController]
-    public class FluentAPIController<T> : FluentController<T> where T : FluentEntity, new() // Nunca defina como abstract, pois o controle de log espera essa classe como concreta
+    public class FluenteAPIController<T> : FluenteController<T> where T : FluenteEntity, new() // Nunca defina como abstract, pois o controle de log espera essa classe como concreta
     {
         #region MANY
 
         [HttpGet]
         [Description("Get a paged list of all items")]
-        [FluentAction(Pagination = true, DynamicSpec = true)]
+        [FluenteAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<DefaultPaginationResult<List<T>>> List()
         {
-            var spec = CreateSpec<FluentAllSpec<T>>().SetParameter(isList: true);
+            var spec = CreateSpec<FluenteAllSpec<T>>().SetParameter(isList: true);
             var list = Service.ListAsync(spec);
             return await ResultAsync<List<T>>(await list, LastRequestPagination);
         }
@@ -32,7 +32,7 @@ namespace Fluent.Architecture.Controllers
         [HttpGet]
         [Route("/api/[controller]/ListByFilter")]
         [Description("Get a paginated list of items based on filters")]
-        [FluentAction(Pagination = true, DynamicSpec = true)]
+        [FluenteAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<DefaultPaginationResult<List<T>>> ListByFilterGet([FromQuery, Description("The filters to apply to the query")] Filter[] Filters)
         {
             return await InternalListByFilterAsync(Filters);
@@ -41,7 +41,7 @@ namespace Fluent.Architecture.Controllers
         [HttpPost]
         [Route("/api/[controller]/ListByFilter")]
         [Description("Get a paginated list of items based on filters")]
-        [FluentAction(Pagination = true, DynamicSpec = true)]
+        [FluenteAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<DefaultPaginationResult<List<T>>> ListByFilterPostAsync([FromBody, Description("The filters to apply to the query")] Filter[] Filters)
         {
             return await InternalListByFilterAsync(Filters);
@@ -49,13 +49,13 @@ namespace Fluent.Architecture.Controllers
 
         protected async Task<DefaultPaginationResult<List<T>>> InternalListByFilterAsync([FromBody, Description("The filters to apply to the query")] Filter[] Filters)
         {
-            var spec = CreateSpec<FluentFilterSpec<T>>().SetParameter(Filters, isList: true);
+            var spec = CreateSpec<FluenteFilterSpec<T>>().SetParameter(Filters, isList: true);
             return await ResultAsync<List<T>>(await Service.ListAsync(spec), LastRequestPagination);
         }
 
         [HttpGet]
         [Description("Get a paginated list of items based on a term")]
-        [FluentAction(Pagination = true, DynamicSpec = true)]
+        [FluenteAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<DefaultPaginationTermResult<List<T>>> ListByTerm([Description("The term to use as a comparator")] string Term)
         {
             var spec = CreateSpec<TermSpec<T>>().SetParameter(Term, isList: true);
@@ -86,7 +86,7 @@ namespace Fluent.Architecture.Controllers
         [HttpGet]
         [Route("/api/[controller]/FindByFilter")]
         [Description("Get an item based on its filters")]
-        [FluentAction(DynamicSpec = true)]
+        [FluenteAction(DynamicSpec = true)]
         public virtual async Task<DefaultResult<T>> FindByFilterGet([FromQuery, Description("The filters to apply to the query")] Filter[] Filters)
         {
             return await InternalFindByFilterAsync(Filters);
@@ -95,7 +95,7 @@ namespace Fluent.Architecture.Controllers
         [HttpPost]
         [Route("/api/[controller]/FindByFilter")]
         [Description("Get an item based on filters")]
-        [FluentAction(DynamicSpec = true)]
+        [FluenteAction(DynamicSpec = true)]
         public virtual async Task<DefaultResult<T>> FindByFilterPost([FromBody, Description("The filters to apply to the query")] Filter[] Filters)
         {
             return await InternalFindByFilterAsync(Filters);
@@ -103,14 +103,14 @@ namespace Fluent.Architecture.Controllers
 
         private async Task<DefaultResult<T>> InternalFindByFilterAsync([FromBody] Filter[] Filters)
         {
-            var spec = CreateSpec<FluentFilterSpec<T>>().SetParameter(Filters, isList: false);
+            var spec = CreateSpec<FluenteFilterSpec<T>>().SetParameter(Filters, isList: false);
             var item = await Service.SingleOrDefaultAsync(spec);
             return await ResultAsync<T>(item);
         }
 
         [HttpGet]
         [Description("Get an item based on a term")]
-        [FluentAction(DynamicSpec = true)]
+        [FluenteAction(DynamicSpec = true)]
         public virtual async Task<DefaultResult<T>> FindByTerm([Description("The term to use as a comparator")] string Term)
         {
             var spec = CreateSpec<TermSpec<T>>().SetParameter(Term, isList: false);
@@ -140,7 +140,7 @@ namespace Fluent.Architecture.Controllers
         [Description("Get the number of items based on filters")]
         public virtual async Task<DefaultResult<int>> CountByFilter([FromBody, Description("The filters to apply to the query")] Filter[] Filters)
         {
-            var spec = CreateSpec<FluentFilterSpec<T>>().SetParameter(Filters, isList: true);
+            var spec = CreateSpec<FluenteFilterSpec<T>>().SetParameter(Filters, isList: true);
             return await ResultAsync<int>(await Service.CountAsync(spec));
         }
 
@@ -164,7 +164,7 @@ namespace Fluent.Architecture.Controllers
         [Description("Get item type schema")]
         public virtual string JsonForm([Description("If you want to generate a tablet layout")] bool Tablet = false)
         {
-            return typeof(T).GetFluentJsonSchema(Tablet).ToFluentJson();
+            return typeof(T).GetFluenteJsonSchema(Tablet).ToFluenteJson();
         }
 
         [HttpGet]

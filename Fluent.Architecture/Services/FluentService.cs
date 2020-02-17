@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -8,15 +8,15 @@
 // ReSharper disable CommentTypo
 
 using ClosedXML.Excel;
-using Fluent.Architecture.Core.Interfaces;
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Core.Util;
-using Fluent.Architecture.Exceptions;
-using Fluent.Architecture.Exceptions.ValidationException;
-using Fluent.Architecture.Extensions;
-using Fluent.Architecture.Factory;
-using Fluent.Architecture.Interfaces;
-using Fluent.Architecture.Validation;
+using Fluente.Arquitetura.Nucleo.Interfaces;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Nucleo.Util;
+using Fluente.Arquitetura.Exceptions;
+using Fluente.Arquitetura.Exceptions.ValidationException;
+using Fluente.Arquitetura.Extensoes;
+using Fluente.Arquitetura.Factory;
+using Fluente.Arquitetura.Interfaces;
+using Fluente.Arquitetura.Validation;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -25,7 +25,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Fluent.Architecture.Services
+namespace Fluente.Arquitetura.Services
 {
     ///<inheritdoc/>
     /// <summary>
@@ -34,23 +34,23 @@ namespace Fluent.Architecture.Services
     /// <typeparam name="T">
     /// A entidade relacionada ao serviço.
     /// </typeparam>
-    public class FluentService<T> : TransactionalService where T : BaseEntity
+    public class FluenteService<T> : TransactionalService where T : BaseEntity
     {
         ///// <summary>
         ///// O repositório do serviço.
         ///// </summary>
-        protected internal new IFluentRepository<T> Repository
+        protected internal new IFluenteRepository<T> Repository
         {
-            get => base.Repository as IFluentRepository<T>;
+            get => base.Repository as IFluenteRepository<T>;
             set => base.Repository = value;
         }
 
         /// <summary>
         /// A validação do serviço.
         /// </summary>
-        protected internal new FluentValidation<T> Validation
+        protected internal new FluenteValidation<T> Validation
         {
-            get => base.Validation as FluentValidation<T>;
+            get => base.Validation as FluenteValidation<T>;
             set => base.Validation = value;
         }
 
@@ -136,7 +136,7 @@ namespace Fluent.Architecture.Services
         /// <returns>
         /// A lista paginada de resultados.
         /// </returns>    
-        public virtual async Task<List<TO>> ListSelectAsync<TO>(IFluentSpecification<TO> spec, FluentPagination pagination = null)
+        public virtual async Task<List<TO>> ListSelectAsync<TO>(IFluenteSpecification<TO> spec, FluentePagination pagination = null)
         {
             var list = await Repository.ListSelectAsync(spec, pagination);
             list.ForEach(x => Repository.Detach(x));
@@ -156,7 +156,7 @@ namespace Fluent.Architecture.Services
         /// <returns>
         /// A lista paginada de resultados.
         /// </returns>
-        public virtual async Task<List<T>> ListAsync(IFluentSpecification spec, FluentPagination pagination = null)
+        public virtual async Task<List<T>> ListAsync(IFluenteSpecification spec, FluentePagination pagination = null)
         {
             var list = await Repository.ListAsync(spec, pagination);
             list.ForEach(x => Repository.Detach(x));
@@ -176,7 +176,7 @@ namespace Fluent.Architecture.Services
         /// <returns>
         /// O item referente à consulta ou nulo.
         /// </returns>
-        public virtual async Task<TO> FirstOrDefaultSelectAsync<TO>(IFluentSpecification<TO> spec)
+        public virtual async Task<TO> FirstOrDefaultSelectAsync<TO>(IFluenteSpecification<TO> spec)
         {
             var entity = await Repository.FirstOrDefaultSelectAsync(spec);
             entity = Repository.Detach(entity);
@@ -194,7 +194,7 @@ namespace Fluent.Architecture.Services
         /// O item referente à consulta ou nulo.
         /// </returns>
 
-        public virtual async Task<T> FirstOrDefaultAsync(IFluentSpecification spec)
+        public virtual async Task<T> FirstOrDefaultAsync(IFluenteSpecification spec)
         {
             var entity = await Repository.FirstOrDefaultAsync(spec);
             entity = Repository.Detach(entity);
@@ -202,7 +202,7 @@ namespace Fluent.Architecture.Services
             return entity;
         }
 
-        public virtual async Task<T> SingleOrDefaultAsync(IFluentSpecification spec)
+        public virtual async Task<T> SingleOrDefaultAsync(IFluenteSpecification spec)
         {
             var entity = await Repository.SingleOrDefaultAsync(spec);
             entity = Repository.Detach(entity);
@@ -211,7 +211,7 @@ namespace Fluent.Architecture.Services
         }
 
         /// IsAsNoTracking
-        public virtual async Task<TO> SingleOrDefaultSelectAsync<TO>(IFluentSpecification<TO> spec)
+        public virtual async Task<TO> SingleOrDefaultSelectAsync<TO>(IFluenteSpecification<TO> spec)
         {
             var entity = await Repository.SingleOrDefaultSelectAsync(spec);
             entity = Repository.Detach(entity);
@@ -231,7 +231,7 @@ namespace Fluent.Architecture.Services
         /// <returns>
         /// A quantidade de itens.
         /// </returns>
-        public virtual async Task<int> CountSelectAsync<TO>(IFluentSpecification<TO> spec) => await Repository.CountSelectAsync(spec);
+        public virtual async Task<int> CountSelectAsync<TO>(IFluenteSpecification<TO> spec) => await Repository.CountSelectAsync(spec);
 
         /// <summary>
         /// Retorna a quantidade de itens existentes que satisfaçam a uma especificação
@@ -242,13 +242,13 @@ namespace Fluent.Architecture.Services
         /// <returns>
         /// A quantidade de itens.
         /// </returns>
-        public virtual async Task<int> CountAsync(IFluentSpecification spec) => await Repository.CountAsync(spec);
+        public virtual async Task<int> CountAsync(IFluenteSpecification spec) => await Repository.CountAsync(spec);
 
         // Todo2 documentar
         public virtual async Task<int> CountAsync() => await Repository.CountAsync();
 
         // Todo2 documentar
-        public virtual void RemoveRange(IFluentSpecification spec) => Repository.RemoveRange(spec);
+        public virtual void RemoveRange(IFluenteSpecification spec) => Repository.RemoveRange(spec);
 
         public virtual async Task TruncateAsync(string ERASE_ALL_DATA)
         {
@@ -311,7 +311,7 @@ namespace Fluent.Architecture.Services
             TransformToPersist(entity, null);
 
             var anotherServices = await Validation.AddOrUpdateAsync(entity);
-            var exists = SessionRequest.ContextFluentValidationException.Inconsistencies.RemoveAll(x => x.ExceptionType == nameof(EntityExistsFluentValidationException)) > 0;
+            var exists = SessionRequest.ContextFluenteValidationException.Inconsistencies.RemoveAll(x => x.ExceptionType == nameof(EntityExistsFluenteValidationException)) > 0;
 
             Validation.RunTheContextValidation(anotherServices);
 
@@ -404,7 +404,7 @@ namespace Fluent.Architecture.Services
                 return;
             }
 
-            throw new IncorrectDevelopmentException($"You can not initialize the {nameof(FluentService<T>)}");
+            throw new IncorrectDevelopmentException($"You can not initialize the {nameof(FluenteService<T>)}");
         }
 
 

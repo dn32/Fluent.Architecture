@@ -1,5 +1,5 @@
-﻿@using Fluent.Architecture.Core.Doc.Controllers
-@using static Fluent.Architecture.FluentDocExtension
+﻿@using Fluente.Arquitetura.Nucleo.Doc.Controllers
+@using static Fluente.Arquitetura.FluenteDocExtension
 
 @model List<EntityModelAndName>
 
@@ -15,7 +15,7 @@
         foreach (var entity in Model)
         {
             <div class="service">
-                <span class="title"><a href="/FluentDoc/Model?name=@entity.FullName">@entity.Name</a></span>
+                <span class="title"><a href="/FluenteDoc/Model?name=@entity.FullName">@entity.Name</a></span>
                 <span class="description">@entity.FriendlyName</span>
             </div>
         }

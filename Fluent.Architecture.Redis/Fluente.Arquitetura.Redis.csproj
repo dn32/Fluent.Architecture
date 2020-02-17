@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.2;netcoreapp3.1</TargetFrameworks>
+    <LangVersion>8</LangVersion>
+    <SignAssembly>true</SignAssembly>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
+    <Nullable>warnings</Nullable>
+    <AssemblyOriginatorKeyFile>Fluente.Arquitetura.Redis.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StackExchange.Redis" Version="2.0.601" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fluent.Architecture.EntityFramework\Fluente.Arquitetura.EntityFramework.csproj" />
+    <ProjectReference Include="..\Fluent.Architecture\Fluente.Arquitetura.Nucleo.csproj" />
+  </ItemGroup>
+
+</Project>

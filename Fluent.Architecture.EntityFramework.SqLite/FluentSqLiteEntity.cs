@@ -1,9 +1,9 @@
-﻿using Fluent.Architecture.Core.Models;
+﻿using Fluente.Arquitetura.Nucleo.Models;
 
-namespace Fluent.Architecture.EntityFramework.SqLite
+namespace Fluente.Arquitetura.EntityFramework.SqLite
 {
-    [DbType(FluentDbType.SQLITE)]
-    public abstract class FluentSqLiteEntity : FluentEntity
+    [DbType(FluenteDbType.SQLITE)]
+    public abstract class FluenteSqLiteEntity : FluenteEntity
     {
     }
 }

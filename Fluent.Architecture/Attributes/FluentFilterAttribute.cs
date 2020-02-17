@@ -1,12 +1,12 @@
-﻿using Fluent.Architecture.Core.Enumerator;
+﻿using Fluente.Arquitetura.Nucleo.Enumerator;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
 
-namespace Fluent.Architecture.Core.Attributes
+namespace Fluente.Arquitetura.Nucleo.Atributos
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class FluentFilterAttribute : Attribute
+    public class FluenteFilterAttribute : Attribute
     {
         public EnumFilterType FilterType { get; set; } = EnumFilterType.EQUAL;
 

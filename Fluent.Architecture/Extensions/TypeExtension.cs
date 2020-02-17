@@ -1,16 +1,16 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluent.Architecture.Core.Attributes;
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Core.Enumerator;
-using Fluent.Architecture.Core.Extensions;
-using Fluent.Architecture.Services;
+using Fluente.Arquitetura.Nucleo.Atributos;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Nucleo.Enumerator;
+using Fluente.Arquitetura.Nucleo.Extensoes;
+using Fluente.Arquitetura.Services;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -22,11 +22,11 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
-using Fluent.Architecture.Attributes;
+using Fluente.Arquitetura.Attributes;
 using System.Threading.Tasks;
-using Fluent.Architecture.Core.Util;
+using Fluente.Arquitetura.Nucleo.Util;
 
-namespace Fluent.Architecture.Extensions
+namespace Fluente.Arquitetura.Extensoes
 {
     /// <summary>
     /// Extensão de Type.
@@ -41,14 +41,14 @@ namespace Fluent.Architecture.Extensions
         /// </summary>
         /// <param name="type">O tipo a ser avaliado.</param>
         /// <returns>O valor padrão do tipo.</returns>
-        public static object GetFluentDefaultValue(this Type type)
+        public static object GetFluenteDefaultValue(this Type type)
         {
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
             type = type.GetNonNullableType();
             return type.IsValueType ? TypeDefaults.GetOrAdd(type, Activator.CreateInstance) : null;
         }
 
-        public static bool FluentEquals(this object value1, object value2)
+        public static bool FluenteEquals(this object value1, object value2)
         {
             if (value1 == null && value2 == null) { return true; }
             return value1?.ToString() == value2?.ToString();
@@ -57,7 +57,7 @@ namespace Fluent.Architecture.Extensions
         //Todo2 doc
         public static TX GetDefaultValue<TX>()
         {
-            return (TX)typeof(TX).GetFluentDefaultValue();
+            return (TX)typeof(TX).GetFluenteDefaultValue();
         }
 
         public static bool IsKey(this MemberInfo info)
@@ -123,14 +123,14 @@ namespace Fluent.Architecture.Extensions
             if (type == typeof(DateTime)) { return DateTime.Now; }
             if (type == typeof(string) && type == typeof(String)) { return RandomUtil.NextRandomString(6); }
 
-            return type.GetFluentDefaultValue();
+            return type.GetFluenteDefaultValue();
         }
 
         public static string GetExampleValueString(this Type type)
         {
             var obj = type.GetExampleValue();
             if (type.IsPrimitiveOrPrimitiveNulable()) { return obj.ToString(); }
-            return obj.ToFluentJson(Formatting.Indented);
+            return obj.ToFluenteJson(Formatting.Indented);
         }
 
         public static object GetExampleValue(this Type type)
@@ -155,7 +155,7 @@ namespace Fluent.Architecture.Extensions
             catch (MissingMethodException)
             {
 
-                return type.GetFluentDefaultValue();
+                return type.GetFluenteDefaultValue();
             }
 
             foreach (var property in type.GetProperties())
@@ -292,14 +292,14 @@ namespace Fluent.Architecture.Extensions
             //return type.Name.StartsWith("List`");
         }
 
-        public static bool IsFluentEntity(this Type type)
+        public static bool IsFluenteEntity(this Type type)
         {
-            return type.GetNonNullableType().Is(typeof(FluentEntity));
+            return type.GetNonNullableType().Is(typeof(FluenteEntity));
         }
 
-        public static bool IsFluentEntity(this object obj)
+        public static bool IsFluenteEntity(this object obj)
         {
-            return obj?.GetType().GetNonNullableType().Is(typeof(FluentEntity)) ?? false;
+            return obj?.GetType().GetNonNullableType().Is(typeof(FluenteEntity)) ?? false;
         }
         public static Type GetTaskType(this Type type)
         {
@@ -339,17 +339,17 @@ namespace Fluent.Architecture.Extensions
             }
         }
 
-        private static FluentJsonFormAttribute GetFluentJsonFormAttributeByType(this Type type)
+        private static FluenteJsonFormAttribute GetFluenteJsonFormAttributeByType(this Type type)
         {
-            var form = type.GetCustomAttribute<FluentJsonFormAttribute>(true);
+            var form = type.GetCustomAttribute<FluenteJsonFormAttribute>(true);
             if (form == null)
             {
-                form = new FluentJsonFormAttribute
+                form = new FluenteJsonFormAttribute
                 {
                     desc = type.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? type.Name,
                     group = "",
-                    name = type.Name.ToFluentJsonStringNormalized(),
-                    propName = type.Name.ToFluentJsonStringNormalized(),
+                    name = type.Name.ToFluenteJsonStringNormalized(),
+                    propName = type.Name.ToFluenteJsonStringNormalized(),
                     Type = type
                 };
             }
@@ -357,29 +357,29 @@ namespace Fluent.Architecture.Extensions
             return form;
         }
 
-        private static FluentJsonPropertyAttribute GetFluentJsonPropertyAttributeByProperty(PropertyInfo property)
+        private static FluenteJsonPropertyAttribute GetFluenteJsonPropertyAttributeByProperty(PropertyInfo property)
         {
-            var attr = property.GetCustomAttribute<FluentJsonPropertyAttribute>(true);
+            var attr = property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true);
             if (attr == null)
             {
-                attr = new FluentJsonPropertyAttribute
+                attr = new FluenteJsonPropertyAttribute
                 {
                     desc = property.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? property.Name,
                     group = "",
                     name = property.Name,
-                    propName = property.Name.ToFluentJsonStringNormalized(),
+                    propName = property.Name.ToFluenteJsonStringNormalized(),
                     Type = property.PropertyType,
                     Property = property,
                     Enums = null,
                     FkDestinal = null,
-                    FluentAggregation = null,
-                    FluentComposition = null,
+                    FluenteAggregation = null,
+                    FluenteComposition = null,
                     form = EnumForm.TEXTBOX,
                     grid = property.Name,
                     IsEnum = property.PropertyType.IsNullableEnum(),
                     IsFk = false,
                     IsKey = false,
-                    IsFluentUniqueKeyKey = false,
+                    IsFluenteUniqueKeyKey = false,
                     IsList = property.PropertyType.IsList(),
                     IsNullable = property.PropertyType.IsOfNullableType(),
                     min = property.GetCustomAttribute<MinLengthAttribute>(true)?.Length ?? 0,
@@ -387,11 +387,11 @@ namespace Fluent.Architecture.Extensions
                 };
             }
 
-            attr.ConditionalFluentUIOperations = property.GetCustomAttributes<ConditionalFluentUIOperationAttribute>();
-            attr.FluentAggregation = property.GetCustomAttribute<FluentManyToManyAggregationAttribute>(true) ?? property.GetCustomAttribute<FluentAggregationAttribute>(true);
-            attr.FluentComposition = property.GetCustomAttribute<FluentCompositionAttribute>(true);
+            attr.ConditionalFluenteUIOperations = property.GetCustomAttributes<ConditionalFluenteUIOperationAttribute>();
+            attr.FluenteAggregation = property.GetCustomAttribute<FluenteManyToManyAggregationAttribute>(true) ?? property.GetCustomAttribute<FluenteAggregationAttribute>(true);
+            attr.FluenteComposition = property.GetCustomAttribute<FluenteCompositionAttribute>(true);
             attr.IsKey = property.GetCustomAttributeAny<KeyAttribute>();
-            attr.IsFluentUniqueKeyKey = property.GetCustomAttributeAny<FluentUniqueKeyAttribute>();
+            attr.IsFluenteUniqueKeyKey = property.GetCustomAttributeAny<FluenteUniqueKeyAttribute>();
             attr.IsList = property.PropertyType.IsList();
             attr.required = attr.required || property.GetCustomAttributeAny<RequiredAttribute>(true);
             attr.IsNullable = (property.PropertyType.IsOfNullableType() && !attr.required);
@@ -400,7 +400,7 @@ namespace Fluent.Architecture.Extensions
 
             if (attr.max == 0 && property.PropertyType.IsNumeric())
             {
-                attr.max = property.PropertyType.GetMaxValueOfNumber().FluentCast<double>();
+                attr.max = property.PropertyType.GetMaxValueOfNumber().FluenteCast<double>();
             }
 
             if (property.GetCustomAttributeAny<JsonIgnoreAttribute>())
@@ -411,36 +411,36 @@ namespace Fluent.Architecture.Extensions
             return attr;
         }
 
-        public static FluentJsonSchema GetFluentJsonSchema(this Type type, bool tablet)
+        public static FluenteJsonSchema GetFluenteJsonSchema(this Type type, bool tablet)
         {
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
 
             type = type.GetListTypeNonNull();
-            var form = GetFluentJsonFormAttributeByType(type);
+            var form = GetFluenteJsonFormAttributeByType(type);
 
-            form.propName = type.Name.ToFluentJsonStringNormalized();
+            form.propName = type.Name.ToFluenteJsonStringNormalized();
             form.Type = type.GetNonNullableType();
 
-            var root = new FluentJsonSchema
+            var root = new FluenteJsonSchema
             {
-                FluentJsonForm = form,
-                Properties = new List<FluentJsonPropertyAttribute>()
+                FluenteJsonForm = form,
+                Properties = new List<FluenteJsonPropertyAttribute>()
             };
 
             type.GetProperties().ToList().ForEach(property =>
             {
                 if(property == null) { return; }
 
-                var attr = GetFluentJsonPropertyAttributeByProperty(property);
+                var attr = GetFluenteJsonPropertyAttributeByProperty(property);
                 attr.Property = property;
                 if (attr.form == EnumForm.NONE)
                 {
                     return;
                 }
 
-                if (attr.FluentAggregation != null)
+                if (attr.FluenteAggregation != null)
                 {
-                    if (attr.FluentAggregation.GetType()?.Is(typeof(FluentManyToManyAggregationAttribute)) == true)
+                    if (attr.FluenteAggregation.GetType()?.Is(typeof(FluenteManyToManyAggregationAttribute)) == true)
                     {
 
                     }
@@ -450,27 +450,27 @@ namespace Fluent.Architecture.Extensions
                         // return; //Todo - Ignorando agregação em lista enquanto não é implementada
                     }
 
-                    attr.FluentAggregation.SetType(property.PropertyType.GetListTypeNonNull().Name);
-                    attr.FluentAggregation.SetName(property.Name);
-                    attr.FluentAggregation.FluentFilter = property.GetCustomAttribute<FluentFilterAttribute>();
-                    if (attr.FluentAggregation.FluentFilter != null)
+                    attr.FluenteAggregation.SetType(property.PropertyType.GetListTypeNonNull().Name);
+                    attr.FluenteAggregation.SetName(property.Name);
+                    attr.FluenteAggregation.FluenteFilter = property.GetCustomAttribute<FluenteFilterAttribute>();
+                    if (attr.FluenteAggregation.FluenteFilter != null)
                     {
-                        attr.FluentAggregation.FluentFilter.PropertyName = property.Name.ToFluentJsonStringNormalized();
-                        if (attr.FluentAggregation.FluentFilter.FieldsToClear != null)
+                        attr.FluenteAggregation.FluenteFilter.PropertyName = property.Name.ToFluenteJsonStringNormalized();
+                        if (attr.FluenteAggregation.FluenteFilter.FieldsToClear != null)
                         {
-                            attr.FluentAggregation.FluentFilter.FieldsToClear = attr.FluentAggregation.FluentFilter.FieldsToClear.Select(x => x.ToFluentJsonStringNormalized()).ToArray();
+                            attr.FluenteAggregation.FluenteFilter.FieldsToClear = attr.FluenteAggregation.FluenteFilter.FieldsToClear.Select(x => x.ToFluenteJsonStringNormalized()).ToArray();
                         }
                     }
                 }
 
-                if (attr.FluentComposition != null)
+                if (attr.FluenteComposition != null)
                 {
-                    attr.FluentComposition.SetType(property.PropertyType.GetListTypeNonNull().Name);
-                    attr.FluentComposition.SetName(property.Name);
-                    attr.FluentComposition.Form = GetFluentJsonSchema(property.PropertyType, tablet);
+                    attr.FluenteComposition.SetType(property.PropertyType.GetListTypeNonNull().Name);
+                    attr.FluenteComposition.SetName(property.Name);
+                    attr.FluenteComposition.Form = GetFluenteJsonSchema(property.PropertyType, tablet);
                 }
 
-                if (property.GetCustomAttributeAny<RequiredAttribute>() || property.GetCustomAttributeAny<FluentRequiredAttribute>())
+                if (property.GetCustomAttributeAny<RequiredAttribute>() || property.GetCustomAttributeAny<FluenteRequiredAttribute>())
                 {
                     attr.required = true;
                 }
@@ -489,7 +489,7 @@ namespace Fluent.Architecture.Extensions
                 }
 
                 attr.PropNameCaseSensitive = property.Name;
-                attr.propName = property.Name.ToFluentJsonStringNormalized();
+                attr.propName = property.Name.ToFluenteJsonStringNormalized();
                 root.Properties.Add(attr);
             });
 
@@ -539,7 +539,7 @@ namespace Fluent.Architecture.Extensions
             }
 
             {
-                var props = new List<FluentJsonPropertyAttribute>();
+                var props = new List<FluenteJsonPropertyAttribute>();
                 var row = 1;
 
                 properties.ForEach(property =>
@@ -565,7 +565,7 @@ namespace Fluent.Architecture.Extensions
             return root;
         }
 
-        private static void AdjustColumns(List<FluentJsonPropertyAttribute> props)
+        private static void AdjustColumns(List<FluenteJsonPropertyAttribute> props)
         {
             var sum = props.Sum(y => y.lGrid);
             var count = props.Count();
@@ -579,16 +579,16 @@ namespace Fluent.Architecture.Extensions
             }
         }
 
-        private static void MappForengKey(FluentJsonSchema schema)
+        private static void MappForengKey(FluenteJsonSchema schema)
         {
             schema.Properties.ForEach(property =>
             {
-                if (property.FluentAggregation == null) { return; }
-                property.FluentAggregation.LocalKeys.ToList().ForEach(key =>
+                if (property.FluenteAggregation == null) { return; }
+                property.FluenteAggregation.LocalKeys.ToList().ForEach(key =>
                 {
                     var fkProperty = schema.Properties.Single(x => x.PropNameCaseSensitive.Equals(key));
                     fkProperty.IsFk = true;
-                    fkProperty.FkDestinal = property.Type.GetCustomAttribute<FluentJsonFormAttribute>();
+                    fkProperty.FkDestinal = property.Type.GetCustomAttribute<FluenteJsonFormAttribute>();
                     if (fkProperty.FkDestinal != null) { fkProperty.FkDestinal.Type = property.Type; }
                 });
             });
@@ -643,14 +643,14 @@ namespace Fluent.Architecture.Extensions
         public static object[] GetConstructorParameters(this Type classType)
         {
             var parameters = classType?.GetConstructors()?.First()?.GetParameters();
-            return parameters?.Select(x => x?.ParameterType?.GetFluentDefaultValue())?.ToArray();
+            return parameters?.Select(x => x?.ParameterType?.GetFluenteDefaultValue())?.ToArray();
         }
 
         /// <summary>
-        /// Obtem o nome amigável de um tipo. Exemplo: FluentSelectSpecification FluentEntity
+        /// Obtem o nome amigável de um tipo. Exemplo: FluenteSelectSpecification FluenteEntity
         /// </summary>
         /// <param name="type">O tipo a ser tratado.</param>
-        /// <param name="useGenericT">Se deve indicar os tipos genéricos como T. Exemplo com true: FluentSelectSpecification T, T. Exemplo com false: FluentSelectSpecification FluentEntity, TO </param>
+        /// <param name="useGenericT">Se deve indicar os tipos genéricos como T. Exemplo com true: FluenteSelectSpecification T, T. Exemplo com false: FluenteSelectSpecification FluenteEntity, TO </param>
         /// <returns>O nome amigável do tipo.</returns>
         public static string GetFriendlyName(this Type type, bool useGenericT = true, bool fullName = false, string complement = "")
         {
@@ -683,7 +683,7 @@ namespace Fluent.Architecture.Extensions
             if (serviceType is null) { throw new ArgumentNullException(nameof(serviceType)); }
             if (serviceType.BaseType is null) { throw new ArgumentNullException(nameof(serviceType.BaseType)); }
 
-            if (serviceType.Name == "FluentDynamicProxy")
+            if (serviceType.Name == "FluenteDynamicProxy")
             {
                 serviceType = serviceType.BaseType;
             }
@@ -695,7 +695,7 @@ namespace Fluent.Architecture.Extensions
                 var entityType = args.First();
                 if (!Setup.Services.TryGetValue(entityType, out serviceType))
                 {
-                    var type = (Setup.Config.Config.GenericServiceType) ?? typeof(FluentService<>);
+                    var type = (Setup.Config.Config.GenericServiceType) ?? typeof(FluenteService<>);
                     serviceType = type.MakeGenericType(entityType);
                 }
             }

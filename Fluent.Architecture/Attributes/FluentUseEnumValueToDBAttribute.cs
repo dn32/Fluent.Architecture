@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace Fluent.Architecture.Core.Attributes
+namespace Fluente.Arquitetura.Nucleo.Atributos
 {
     [AttributeUsage(AttributeTargets.Enum)]
-    public class FluentUseEnumValueToDBAttribute : Attribute
+    public class FluenteUseEnumValueToDBAttribute : Attribute
     {
     }
 }

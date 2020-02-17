@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Fluent.Architecture.Core.Doc.Controllers
+namespace Fluente.Arquitetura.Nucleo.Doc.Controllers
 {
     public class DocParameter
     {
@@ -25,7 +25,7 @@ namespace Fluent.Architecture.Core.Doc.Controllers
         {
             Name = name;
             Type = type;
-            Link = FluentDocController.GetModelLink(Type);
+            Link = FluenteDocController.GetModelLink(Type);
             Source = source;
             Description = description;
             Example = example;

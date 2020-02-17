@@ -2,13 +2,13 @@
 
 using Microsoft.EntityFrameworkCore;
 
-namespace Fluent.Architecture.EntityFramework.PostgreSQL
+namespace Fluente.Arquitetura.EntityFramework.PostgreSQL
 {
     /// <inheritdoc />
     /// <summary>
     /// Contexto do EF no net Core
     /// </summary>
-    [DbType(FluentDbType.POSTGREE_SQL)]
+    [DbType(FluenteDbType.POSTGREE_SQL)]
     public class EfContextPostgreSQL : EfContext
     {
         public EfContextPostgreSQL(string connectionString) : base(connectionString)

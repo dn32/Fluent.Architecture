@@ -1,11 +1,11 @@
 ﻿//using System;
 //using System.Linq.Expressions;
 
-namespace Fluent.Architecture.Core.Models
+namespace Fluente.Arquitetura.Nucleo.Models
 {
-    //namespace Fluent.Architecture.Model
+    //namespace Fluente.Arquitetura.Model
     //{
-    //    public class FluentEvent<T> : BaseEvent where T : BaseEntity
+    //    public class FluenteEvent<T> : BaseEvent where T : BaseEntity
     //    {
     //        internal Expression<Func<T, T, bool>> EventCondition { get; set; }
 

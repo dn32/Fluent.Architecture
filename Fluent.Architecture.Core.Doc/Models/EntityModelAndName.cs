@@ -1,4 +1,4 @@
-﻿namespace Fluent.Architecture.Core.Doc.Controllers
+﻿namespace Fluente.Arquitetura.Nucleo.Doc.Controllers
 {
     public class EntityModelAndName
     {

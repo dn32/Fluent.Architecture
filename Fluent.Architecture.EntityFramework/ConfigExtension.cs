@@ -14,7 +14,7 @@ using Remotion.Linq.Parsing.ExpressionVisitors;
 
 #endif
 
-namespace Fluent.Architecture.EntityFramework
+namespace Fluente.Arquitetura.EntityFramework
 {
     public static class ConfigExtension
     {

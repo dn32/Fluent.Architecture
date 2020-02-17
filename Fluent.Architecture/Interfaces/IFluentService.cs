@@ -1,12 +1,12 @@
-﻿//using Fluent.Architecture.Interfaces;
-//using Fluent.Architecture.Model;
+﻿//using Fluente.Arquitetura.Interfaces;
+//using Fluente.Arquitetura.Model;
 //using System.Collections.Generic;
 
-//namespace FluentInterfaces
+//namespace FluenteInterfaces
 //{
-//    public interface IFluentService
+//    public interface IFluenteService
 //    {
-//        List<TO> ListSelect<TO>(IFluentSpecification<TO> spec, FluentPagination pagination = null);
+//        List<TO> ListSelect<TO>(IFluenteSpecification<TO> spec, FluentePagination pagination = null);
 
 //        /// <summary>
 //        /// Executa uma solicitação baseada em uma especificação e retorna uma lista paginada de resultados.
@@ -20,7 +20,7 @@
 //        /// <returns>
 //        /// A lista paginada de resultados.
 //        /// </returns>
-//        //List<T> List(IFluentSpecification spec, FluentPagination pagination = null);
+//        //List<T> List(IFluenteSpecification spec, FluentePagination pagination = null);
 
 //        /// <summary>
 //        /// Executa uma solicitação baseada em uma especificação e retorna um resultado ou nulo quando a consulta não é satisfeita.
@@ -34,7 +34,7 @@
 //        /// <returns>
 //        /// O item referente à consulta ou nulo.
 //        /// </returns>
-//        TO FirstOrDefaultSelect<TO>(IFluentSpecification<TO> spec);
+//        TO FirstOrDefaultSelect<TO>(IFluenteSpecification<TO> spec);
 
 //        /// <summary>
 //        /// Executa uma solicitação baseada em uma especificação e retorna um resultado ou nulo quando a consulta não é satisfeita.
@@ -45,7 +45,7 @@
 //        /// <returns>
 //        /// O item referente à consulta ou nulo.
 //        /// </returns>
-//        //T FirstOrDefault(IFluentSpecification spec);
+//        //T FirstOrDefault(IFluenteSpecification spec);
 
 //        //Todo2 Doc
 //        //T FirstOrDefault();
@@ -62,7 +62,7 @@
 //        /// <returns>
 //        /// A quantidade de itens.
 //        /// </returns>
-//        int CountSelect<TO>(IFluentSpecification<TO> spec);
+//        int CountSelect<TO>(IFluenteSpecification<TO> spec);
 
 //        /// <summary>
 //        /// Retorna a quantidade de itens existentes que satisfaçam a uma especificação
@@ -73,13 +73,13 @@
 //        /// <returns>
 //        /// A quantidade de itens.
 //        /// </returns>
-//        int Count(IFluentSpecification spec);
+//        int Count(IFluenteSpecification spec);
 
 //        // Todo2 documentar
 //        int Count();
 
 //        // Todo2 documentar
-//        void RemoveRange(IFluentSpecification spec);
+//        void RemoveRange(IFluenteSpecification spec);
 
 //        /// <summary>
 //        /// Avalia se um item existe no banco de dados, baseado em uma especificação.

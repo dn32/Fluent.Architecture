@@ -1,4 +1,4 @@
-﻿namespace Fluent.Architecture.Core.Interfaces
+﻿namespace Fluente.Arquitetura.Nucleo.Interfaces
 {
     public interface ITransactionlRepository : IBaseRepository
     {

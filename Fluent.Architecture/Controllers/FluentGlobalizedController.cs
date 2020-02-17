@@ -1,17 +1,17 @@
 ﻿//// -----------------------------------------------------------------------
-//// <copyright company="Fluent System">
-////     Copyright © Fluent System. All rights reserved.
+//// <copyright company="Fluente System">
+////     Copyright © Fluente System. All rights reserved.
 ////     TODOS OS DIREITOS RESERVADOS.
 //// </copyright>
 //// -----------------------------------------------------------------------
 
-//using Fluent.Architecture.Model;
-//using Fluent.Architecture.Services;
+//using Fluente.Arquitetura.Model;
+//using Fluente.Arquitetura.Services;
 
-//namespace Fluent.Architecture.Controllers
+//namespace Fluente.Arquitetura.Controllers
 //{
-//    public abstract class FluentGlobalizedController<T> : FluentController<T> where T : FluentGlobalizedEntity
+//    public abstract class FluenteGlobalizedController<T> : FluenteController<T> where T : FluenteGlobalizedEntity
 //    {
-//        public new FluentGlobalizedService<T> Service => base.Service as FluentGlobalizedService<T>;
+//        public new FluenteGlobalizedService<T> Service => base.Service as FluenteGlobalizedService<T>;
 //    }
 //}

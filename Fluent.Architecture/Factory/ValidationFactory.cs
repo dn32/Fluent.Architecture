@@ -1,17 +1,17 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Util;
-using Fluent.Architecture.Validation;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Util;
+using Fluente.Arquitetura.Validation;
 using System;
 
-namespace Fluent.Architecture.Factory
+namespace Fluente.Arquitetura.Factory
 {
     /// <summary>
     /// Método interno.
@@ -28,16 +28,16 @@ namespace Fluent.Architecture.Factory
         /// <returns>
         /// A validação criada.
         /// </returns>
-        internal static FluentValidation<T> Create<T>() where T : BaseEntity
+        internal static FluenteValidation<T> Create<T>() where T : BaseEntity
         {
-            var localType = Setup.Config?.Config?.GenericValidationType?.MakeGenericType(typeof(T)) ?? typeof(FluentValidation<T>);
-            return Create(localType) as FluentValidation<T>;
+            var localType = Setup.Config?.Config?.GenericValidationType?.MakeGenericType(typeof(T)) ?? typeof(FluenteValidation<T>);
+            return Create(localType) as FluenteValidation<T>;
         }
 
         internal static TransactionalValidation Create(Type validationType)
         {
             var localType = validationType;
-            var entityType = validationType.GetFluentEntityType();
+            var entityType = validationType.GetFluenteEntityType();
 
             if (entityType != null)
             {

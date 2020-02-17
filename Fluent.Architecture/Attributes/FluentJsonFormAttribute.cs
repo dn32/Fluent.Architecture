@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace Fluent.Architecture.Core.Attributes
+namespace Fluente.Arquitetura.Nucleo.Atributos
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class FluentJsonFormAttribute : FluentJsoSchemaAttribute
+    public class FluenteJsonFormAttribute : FluenteJsoSchemaAttribute
     {
         [JsonIgnore]
         public Type Type { get; set; }

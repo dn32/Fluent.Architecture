@@ -1,16 +1,16 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
+// <copyright company="Fluente System">
+//     Copyright © Fluente System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluent.Architecture.Core.Extensions;
-using Fluent.Architecture.Core.Inconsistences;
-using Fluent.Architecture.Core.Models;
-using Fluent.Architecture.Exceptions.ValidationException;
-using Fluent.Architecture.Validation;
+using Fluente.Arquitetura.Nucleo.Extensoes;
+using Fluente.Arquitetura.Nucleo.Inconsistences;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Exceptions.ValidationException;
+using Fluente.Arquitetura.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -19,9 +19,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
-namespace Fluent.Architecture.Filters
+namespace Fluente.Arquitetura.Filters
 {
-    public class FluentExceptionHandlerAttribute : ExceptionFilterAttribute
+    public class FluenteExceptionHandlerAttribute : ExceptionFilterAttribute
     {
         public override void OnException(ExceptionContext filterContext)
         {
@@ -45,38 +45,38 @@ namespace Fluent.Architecture.Filters
                 filterContext.Exception = exception2.InnerException;
             }
 
-            if (filterContext.Exception is ContextFluentValidationException exception)
+            if (filterContext.Exception is ContextFluenteValidationException exception)
             {
                 var inconsistencies = exception.Inconsistencies.Select(inconsistence =>
                 {
-                    if (inconsistence is FluentUiFieldValidationException field)
+                    if (inconsistence is FluenteUiFieldValidationException field)
                     {
-                        return new FluentUiFieldInconsistence
+                        return new FluenteUiFieldInconsistence
                         {
                             Field = field.Field,
                             Message = field.Message,
                             GlobalizationKey = field.GlobalizationKey,
                             PropertyName = field.PropertyName,
-                            FluentException = inconsistence
+                            FluenteException = inconsistence
                         };
                     }
-                    else if (inconsistence is FluentPropertyValidationException prop)
+                    else if (inconsistence is FluentePropertyValidationException prop)
                     {
-                        return new FluentPropertyInconsistence
+                        return new FluentePropertyInconsistence
                         {
                             Message = prop.Message,
                             GlobalizationKey = prop.GlobalizationKey,
                             PropertyName = prop.PropertyName,
-                            FluentException = inconsistence
+                            FluenteException = inconsistence
                         };
                     }
                     else
                     {
-                        return new FluentInconsistence
+                        return new FluenteInconsistence
                         {
                             Message = inconsistence.Message,
                             GlobalizationKey = inconsistence.GlobalizationKey,
-                            FluentException = inconsistence
+                            FluenteException = inconsistence
                         };
                     }
                 })
@@ -95,7 +95,7 @@ namespace Fluent.Architecture.Filters
                 ContentResult content = new ContentResult
                 {
                     ContentType = "application/json",
-                    Content = result.ToFluentJson()
+                    Content = result.ToFluenteJson()
                 };
 
                 filterContext.Result = content;
@@ -119,7 +119,7 @@ namespace Fluent.Architecture.Filters
                 ContentResult content = new ContentResult
                 {
                     ContentType = "application/json",
-                    Content = result.ToFluentJson()
+                    Content = result.ToFluenteJson()
                 };
 
                 filterContext.Result = content;
@@ -127,7 +127,7 @@ namespace Fluent.Architecture.Filters
             }
         }
 
-        public virtual void GetGlobalization(FluentInconsistence inconsistence)
+        public virtual void GetGlobalization(FluenteInconsistence inconsistence)
         {
         }
     }
