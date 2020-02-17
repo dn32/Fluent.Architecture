@@ -8,14 +8,14 @@ namespace Fluent.Architecture.Core.Attributes
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true, Inherited = true)]
     public class ConditionalFluentUIOperationAttribute : Attribute
     {
-        public string ObservedProperty { get; set; }
+        public string ObservedProperty { get; private set; }
 
-        public string TriggerValue { get; set; }
+        public string TriggerValue { get; private set; }
 
         [JsonIgnore]
         public object Value { get => value; set { this.value = value.ToString() ?? null; } }
 
-        public string value { get; private set; }
+        private string value { get; set; }
 
         public EnumFluentUITriggetEvent TriggetEvent { get; set; } = EnumFluentUITriggetEvent.CHANGE;
 
@@ -31,13 +31,13 @@ namespace Fluent.Architecture.Core.Attributes
         public ConditionalFluentUIOperationAttribute(string observedProperty, object triggerValue)
         {
             ObservedProperty = observedProperty;
-            TriggerValue = triggerValue == null ? null : triggerValue.ToFluentJson();
+            TriggerValue = triggerValue?.ToFluentJson();
         }
 
         public ConditionalFluentUIOperationAttribute(string observedProperty, object triggerValue, EnumFluentUIOperation operation)
         {
             ObservedProperty = observedProperty;
-            TriggerValue = triggerValue == null ? null : triggerValue.ToFluentJson();
+            TriggerValue = triggerValue?.ToFluentJson();
             Operation = operation;
         }
 

@@ -1,14 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright company="Fluent System">
-//     Copyright © Fluent System. All rights reserved.
-//     TODOS OS DIREITOS RESERVADOS.
-// </copyright>
-// -----------------------------------------------------------------------
-
-// ReSharper disable CommentTypo
-
-using Fluent.Architecture.Core.Attributes;
-using Fluent.Architecture.Core.Extensions;
+﻿using Fluent.Architecture.Core.Attributes;
 
 namespace Fluent.Architecture.Core.Models
 {

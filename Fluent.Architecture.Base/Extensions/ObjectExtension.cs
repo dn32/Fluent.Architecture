@@ -1,48 +1,36 @@
-﻿using Fluent.Architecture.Extensions;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace Fluent.Architecture.Core.Extensions
 {
+    //Todo - 001 Testar
     public static class ObjectExtension
     {
+        public static bool TypeIsTask(this Type type) => type == typeof(Task);
+
+        public static bool TypeIsTaskT(this Type type) => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Task<>);
+
         public static object FluentResultOrValue(this object data)
         {
             if (data == null) { return default; }
 
             var type = data.GetType();
-            if (type == typeof(Task))
+
+            if (type.TypeIsTask())
             {
-                data.GetType().GetMethod(nameof(Task.Wait))?.Invoke(data, null);
+                InvokeTask(data);
                 return null;
             }
-
-            if (type.IsGenericType && data.GetType().GetGenericTypeDefinition() == typeof(Task<>))
+            else if (type.TypeIsTaskT())
             {
-                return data.GetType().GetProperty("Result")?.GetValue(data);
+                return InvokeTaskT(data);
             }
 
             return data;
         }
 
-        //public static T FluentResultOrValue<T>(this object data)
-        //{
-        //    if (data == null) { return default; }
+        private static void InvokeTask(object data) => data.GetType().GetMethod(nameof(Task.Wait))?.Invoke(data, null);
 
-        //    var type = data.GetType();
-        //    if (type == typeof(Task))
-        //    {
-        //        data.GetType().GetMethod(nameof(Task.Wait))?.Invoke(data, null);
-        //        return default;
-        //    }
-
-        //    if (type.IsGenericType && data.GetType().GetGenericTypeDefinition() == typeof(Task<>))
-        //    {
-        //        var result = data.GetType().GetProperty("Result");
-        //        if(result == null) { return default; }
-        //        return result.GetValue(data).FluentCast<T>() ?? default;
-        //    }
-
-        //    return data.FluentCast<T>();
-        //}
+        private static object InvokeTaskT(object data) => data.GetType().GetProperty("Result")?.GetValue(data);
     }
 }
