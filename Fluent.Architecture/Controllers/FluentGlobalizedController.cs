@@ -1,6 +1,6 @@
 ﻿//// -----------------------------------------------------------------------
-//// <copyright company="Fluente System">
-////     Copyright © Fluente System. All rights reserved.
+//// <copyright company="Dn System">
+////     Copyright © Dn System. All rights reserved.
 ////     TODOS OS DIREITOS RESERVADOS.
 //// </copyright>
 //// -----------------------------------------------------------------------
@@ -10,8 +10,8 @@
 
 //namespace dn32.infra.Controllers
 //{
-//    public abstract class FluenteGlobalizedController<T> : FluenteController<T> where T : FluenteGlobalizedEntity
+//    public abstract class DnGlobalizedController<T> : DnController<T> where T : DnGlobalizedEntity
 //    {
-//        public new FluenteGlobalizedService<T> Service => base.Service as FluenteGlobalizedService<T>;
+//        public new DnGlobalizedService<T> Service => base.Service as DnGlobalizedService<T>;
 //    }
 //}

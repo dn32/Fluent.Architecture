@@ -17,10 +17,10 @@ namespace dn32.infra.Controllers
     /// Controlador base para controladores que não possuem entidade. Nesse caso, deve-se informar o serviço a ser usado pelo controlador.
     /// O serviço é inicializado a cada ActionExecuting.
     /// </summary>
-    /// <typeparam name="TS">O serviço a ser usado pelo controlador.</typeparam>
-    public abstract class FluenteServiceController<TS> : BaseController where TS : TransactionalService, new()
+    /// <typeparam Nome="TS">O serviço a ser usado pelo controlador.</typeparam>
+    public abstract class DnServiceController<TS> : BaseController where TS : TransactionalService, new()
     {
-        public virtual FluentePaginacao LastRequestPagination => Service.SessionRequest.Pagination;
+        public virtual DnPaginacao LastRequestPagination => Service.SessionRequest.Pagination;
 
         protected internal TS Service { get; set; }
 
@@ -34,7 +34,7 @@ namespace dn32.infra.Controllers
 
         internal protected bool TransactionIsStarted { get; set; }
 
-        protected FluenteServiceController()
+        protected DnServiceController()
         {
             Service = null;
         }
@@ -43,7 +43,7 @@ namespace dn32.infra.Controllers
         protected async Task<ResultadoPadraoComTermo<T>> ResultAsync<T>(T data, string term)
         {
             await CloseTransactionAsync();
-            //data = (T)data.FluenteResultOrValue();
+            //data = (T)data.DnResultOrValue();
             return new ResultadoPadraoComTermo<T>(data, term);
         }
 
@@ -51,19 +51,19 @@ namespace dn32.infra.Controllers
         protected async Task<ResultadoPadrao<T>> ResultAsync<T>(T data)
         {
             await CloseTransactionAsync();
-            //data = (T)data.FluenteResultOrValue();
+            //data = (T)data.DnResultOrValue();
             return new ResultadoPadrao<T>(data);
         }
 
         [NonAction]
-        protected async Task<ResultadoPadraoPaginado<T>> ResultAsync<T>(T data, FluentePaginacao pagination)
+        protected async Task<ResultadoPadraoPaginado<T>> ResultAsync<T>(T data, DnPaginacao pagination)
         {
             await CloseTransactionAsync();
             return new ResultadoPadraoPaginado<T>(data, pagination);
         }
 
         [NonAction]
-        protected async Task<ResultadoPadraoPaginadoComTermo<T>> ResultAsync<T>(T data, FluentePaginacao pagination, string term)
+        protected async Task<ResultadoPadraoPaginadoComTermo<T>> ResultAsync<T>(T data, DnPaginacao pagination, string term)
         {
             await CloseTransactionAsync();
             return new ResultadoPadraoPaginadoComTermo<T>(data, pagination, term);
@@ -95,7 +95,7 @@ namespace dn32.infra.Controllers
         {
             if (TransactionIsStarted)
             {
-                if (Service.SessionRequest.ContextFluenteValidationException.IsValid)
+                if (Service.SessionRequest.ContextDnValidationException.IsValid)
                 {
                     if (Service.TransactionObjects != null)
                     {

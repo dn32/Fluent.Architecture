@@ -6,7 +6,7 @@ namespace dn32.infra.Nucleo.Models
     //{
     //    public abstract class BaseEvent
     //    {
-    //        public FluenteEventEntity ObjectEvent { get; set; }
+    //        public DnEventEntity ObjectEvent { get; set; }
 
     //        public EnumEventType EventType { get; set; }
 

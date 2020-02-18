@@ -1,4 +1,4 @@
-﻿using dn32.infra.Nucleo.Atributos;
+﻿using dn32.infra.nucleo.atributos;
 using dn32.infra.Nucleo.Models;
 using Newtonsoft.Json;
 using System;
@@ -21,7 +21,7 @@ namespace dn32.infra.Extensoes
             return value != null;
         }
 
-        public static T FluenteClone<T>(this object obj1)
+        public static T DnClone<T>(this object obj1)
         {
             if (!typeof(T).IsSerializable)
             {
@@ -46,10 +46,10 @@ namespace dn32.infra.Extensoes
         /// <summary>
         /// Verifica se dois objetos são iguais comparando os valores e não a referência.
         /// </summary>
-        /// <param name="obj1">
+        /// <param Nome="obj1">
         /// Primeiro objeto a ser comparado.
         /// </param>
-        /// <param name="obj2">
+        /// <param Nome="obj2">
         /// Segundo objeto a ser comparado.
         /// </param>
         public static bool CompareObjects(this object obj1, object obj2)
@@ -63,7 +63,7 @@ namespace dn32.infra.Extensoes
             {
                 if (property != null)
                 {
-                    return $"'{property.PropertyType.GetFluenteDefaultValue()?.ToString()?.Replace("'", "´")}'";
+                    return $"'{property.PropertyType.GetDnDefaultValue()?.ToString()?.Replace("'", "´")}'";
                 }
 
                 return null;
@@ -88,7 +88,7 @@ namespace dn32.infra.Extensoes
 
             if (value.GetType().IsNullableEnum())
             {
-                if (value.GetType().IsDefined(typeof(FluenteUseEnumValueToDBAttribute)))
+                if (value.GetType().IsDefined(typeof(DnUsarStringParaEnumeradoresNoBdAtributo)))
                 {
                     return (int)value;
                 }
@@ -102,13 +102,13 @@ namespace dn32.infra.Extensoes
         /// <summary>
         /// Verifica se um objeto é nulo ou vazio
         /// </summary>
-        /// <param name="value">
+        /// <param Nome="value">
         /// Objeto a ser verificado.
         /// </param>
         /// <returns>
         /// Se o objeto é nulo ou vazio.
         /// </returns>
-        public static bool IsFluenteNull(this object value)
+        public static bool IsDnNull(this object value)
         {
             if (value == null)
             {
@@ -137,13 +137,13 @@ namespace dn32.infra.Extensoes
                 return (int)value == 0;
             }
 
-            return value == value.GetType().GetFluenteDefaultValue();
+            return value == value.GetType().GetDnDefaultValue();
         }
 
         /// <summary>
         /// Obtem todos os dados de um objeto, incluindo de campos e propriedades privadas.
         /// </summary>
-        /// <param name="objectToCheck">Objeto a ser avaliado.</param>
+        /// <param Nome="objectToCheck">Objeto a ser avaliado.</param>
         /// <returns>
         /// Json com todos os dados do onjeto.
         /// </returns>
@@ -157,8 +157,8 @@ namespace dn32.infra.Extensoes
         /// <summary>
         /// Obtem todos o nome e valor de todos os campos de um objeto.
         /// </summary>
-        /// <param name="obj">Objeto a ser avaliado.</param>
-        /// <param name="propertyData">
+        /// <param Nome="obj">Objeto a ser avaliado.</param>
+        /// <param Nome="propertyData">
         /// Lista de valores.
         /// </param>
         /// <returns>A lista com nome e valor de todos os campos do objeto.</returns>

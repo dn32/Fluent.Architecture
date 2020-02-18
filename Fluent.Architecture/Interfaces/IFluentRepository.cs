@@ -7,17 +7,17 @@ using dn32.infra.dados;
 
 namespace dn32.infra.Nucleo.Interfaces
 {
-    public interface IFluenteRepository<TE> : ITransactionlRepository where TE : EntidadeBase
+    public interface IDnRepository<TE> : ITransactionlRepository where TE : EntidadeBase
     {
         #region PROPERTIES
 
-        FluenteService<TE> Service { get; set; }
+        DnService<TE> Service { get; set; }
         ITransactionObjects TransactionObjects { get; set; }
         Type TransactionObjectsType { get; }
 
         #endregion
 
-        void RemoveRange(IFluenteSpecification spec);
+        void RemoveRange(IDnSpecification spec);
 
         TX Detach<TX>(TX entity);
         Task RemoveRangeAsync(params TE[] entities);
@@ -27,20 +27,20 @@ namespace dn32.infra.Nucleo.Interfaces
         Task<TE> RemoveAsync(TE entity);
         Task<bool> ExistsSelectAsync<TO>(ISpec spec);
         Task<bool> ExistsAsync(ISpec spec);
-        Task<List<TE>> ListAsync(IFluenteSpecification spec, FluentePaginacao pagination = null);
-        Task<List<TO>> ListSelectAsync<TO>(IFluenteSpecification<TO> spec, FluentePaginacao pagination = null);
-        Task<TO> FirstOrDefaultSelectAsync<TO>(IFluenteSpecification<TO> spec);
-        Task<TE> FirstOrDefaultAsync(IFluenteSpecification spec);
-        Task<TE> SingleOrDefaultAsync(IFluenteSpecification spec);
-        Task<TO> SingleOrDefaultSelectAsync<TO>(IFluenteSpecification<TO> spec);
+        Task<List<TE>> ListAsync(IDnSpecification spec, DnPaginacao pagination = null);
+        Task<List<TO>> ListSelectAsync<TO>(IDnSpecification<TO> spec, DnPaginacao pagination = null);
+        Task<TO> FirstOrDefaultSelectAsync<TO>(IDnSpecification<TO> spec);
+        Task<TE> FirstOrDefaultAsync(IDnSpecification spec);
+        Task<TE> SingleOrDefaultAsync(IDnSpecification spec);
+        Task<TO> SingleOrDefaultSelectAsync<TO>(IDnSpecification<TO> spec);
         Task<bool> ExistsAsync(TE entity, bool includeExcludedLogically = false);
         Task<TE> FindAsync(TE entity);
         Task<TE> AddAsync(TE entity);
         Task AddRangeAsync(TE[] entities);
         Task<bool> ExistsOnlyOneAsync(TE entity, bool includeExcludedLogically);
-        Task<int> CountSelectAsync<TO>(IFluenteSpecification<TO> spec);
+        Task<int> CountSelectAsync<TO>(IDnSpecification<TO> spec);
         Task<int> CountAsync(TE entity, bool includeExcludedLogically);
-        Task<int> CountAsync(IFluenteSpecification spec);
+        Task<int> CountAsync(IDnSpecification spec);
         Task<int> CountAsync();
     }
 }

@@ -1,5 +1,5 @@
 ﻿using dn32.infra.Extensoes;
-using dn32.infra.Nucleo.Atributos;
+using dn32.infra.nucleo.atributos;
 using dn32.infra.Nucleo.Extensoes;
 using dn32.infra.Specifications;
 using System;
@@ -10,7 +10,7 @@ using dn32.infra.dados;
 
 namespace dn32.infra.Nucleo.Specifications
 {
-    public class TermSpec<T> : FluenteSpecification<T> where T : FluenteEntidade
+    public class TermSpec<T> : DnSpecification<T> where T : DnEntidade
     {
         private string Term { get; set; }
 
@@ -30,13 +30,13 @@ namespace dn32.infra.Nucleo.Specifications
             return query
                     .Where(expression)
                     .GetInclusions(IsList)
-                    .FluenteDynamicProjectTo(Service);
+                    .DnDynamicProjectTo(Service);
 
         }
 
         public override IOrderedQueryable<T> Order(IQueryable<T> query)
         {
-            return query.FluenteDynamicProjectToOrder(Service);
+            return query.DnDynamicProjectToOrder(Service);
         }
 
         private Expression<Func<T, bool>> TermToExpression(string term)
@@ -45,7 +45,7 @@ namespace dn32.infra.Nucleo.Specifications
 
             if (!string.IsNullOrEmpty(term))
             {
-                var properties = typeof(T).GetProperties().Where(x => x.GetCustomAttribute<SearchableAttribute>() != null).ToArray();
+                var properties = typeof(T).GetProperties().Where(x => x.GetCustomAttribute<DnBuscavelAtributo>() != null).ToArray();
                 foreach (var property in properties)
                 {
                     var expression = ExpressionUtil.IsNull<T>(property.Name).Not();

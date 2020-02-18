@@ -2,8 +2,8 @@
 
 namespace dn32.infra.EntityFramework.PostgreSQL
 {
-    [DbType(FluenteDbType.POSTGREE_SQL)]
-    public abstract class FluentePostgreEntity : FluenteEntidade
+    [DbType(DnDbType.POSTGREE_SQL)]
+    public abstract class DnPostgreEntity : DnEntidade
     {
     }
 }

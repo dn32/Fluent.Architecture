@@ -1,9 +1,9 @@
 ﻿// ReSharper disable CommentTypo
-using dn32.infra.Attributes;
+using dn32.infra.atributos;
 using dn32.infra.Exceptions;
 using dn32.infra.Extensoes;
 using dn32.infra.Interfaces;
-using dn32.infra.Nucleo.Atributos;
+using dn32.infra.nucleo.atributos;
 using dn32.infra.Nucleo.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -32,7 +32,7 @@ namespace dn32.infra.EntityFramework
     /// </summary>
     public abstract class EfContext : DbContext
     {
-        internal protected delegate void EntityChangeEventHandler(ICollection<FluenteEventEntity> fluentEventEntity);
+        internal protected delegate void EntityChangeEventHandler(ICollection<DnEventEntity> fluentEventEntity);
         internal protected event EntityChangeEventHandler EntityChangingEventEvent;
         internal protected event EntityChangeEventHandler EntityChangedEventEvent;
 
@@ -50,7 +50,7 @@ namespace dn32.infra.EntityFramework
         /// Todas as entidades de banco de dados são adicionados automaticamente.
         /// Use <see cref="NotDbEntityAttribute"/> se não desejar que uma entidade seja adicionada.
         /// </summary>
-        /// <param name="modelBuilder">
+        /// <param Nome="modelBuilder">
         /// O model builder do EF.
         /// </param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -63,7 +63,7 @@ namespace dn32.infra.EntityFramework
                     continue;
                 }
 
-                if (type.IsSubclassOf(typeof(FluenteEntidade)))
+                if (type.IsSubclassOf(typeof(DnEntidade)))
                 {
                     var keys = type.GetProperties().Where(x => x.GetCustomAttribute<KeyAttribute>() != null).Select(x => x.Name).ToArray();
                     if (keys.Length == 0)
@@ -105,7 +105,7 @@ namespace dn32.infra.EntityFramework
                             }
                             else
                             {
-                                if (!property.PropertyType.GetListTypeNonNull().IsDefined(typeof(FluenteUseEnumValueToDBAttribute)))
+                                if (!property.PropertyType.GetListTypeNonNull().IsDefined(typeof(DnUsarStringParaEnumeradoresNoBdAtributo)))
                                 {
                                     entity.Property(property.Name).HasConversion<string>();// Converte os enumeradores para salvar o valor string no BD
                                 }
@@ -122,24 +122,24 @@ namespace dn32.infra.EntityFramework
 
         protected void ConvertNulableEnum<TEnum>(EntityTypeBuilder entity, PropertyInfo property) where TEnum : Enum
         {
-            if (typeof(TEnum).GetCustomAttribute<FluenteEnumValueForSetNullAttribute>() is FluenteEnumValueForSetNullAttribute fluentEnumValueForSetNullAttribute)
+            if (typeof(TEnum).GetCustomAttribute<DnValorNuloParaEnumeradorAtributo>() is DnValorNuloParaEnumeradorAtributo fluentEnumValueForSetNullAttribute)
             {
                 ValueConverter converter = null;
 
-                if (property.PropertyType.GetListTypeNonNull().IsDefined(typeof(FluenteUseEnumValueToDBAttribute)))
+                if (property.PropertyType.GetListTypeNonNull().IsDefined(typeof(DnUsarStringParaEnumeradoresNoBdAtributo)))
                 {
-                    converter = new ValueConverter<TEnum, int?>(v => v.GetHashCode() == fluentEnumValueForSetNullAttribute.Value ? null : (int?)v.GetHashCode(), v => (TEnum)Enum.ToObject(typeof(TEnum), v ?? 0));
+                    converter = new ValueConverter<TEnum, int?>(v => v.GetHashCode() == fluentEnumValueForSetNullAttribute.Valor ? null : (int?)v.GetHashCode(), v => (TEnum)Enum.ToObject(typeof(TEnum), v ?? 0));
                 }
                 else
                 {
-                    converter = new ValueConverter<TEnum, string>(v => v.GetHashCode() == fluentEnumValueForSetNullAttribute.Value ? null : v.ToString(), v => (TEnum)Enum.Parse(typeof(TEnum), v));
+                    converter = new ValueConverter<TEnum, string>(v => v.GetHashCode() == fluentEnumValueForSetNullAttribute.Valor ? null : v.ToString(), v => (TEnum)Enum.Parse(typeof(TEnum), v));
                 }
 
                 entity.Property(property.Name).HasConversion(converter);
             }
             else
             {
-                if (!property.PropertyType.GetListTypeNonNull().IsDefined(typeof(FluenteUseEnumValueToDBAttribute)))
+                if (!property.PropertyType.GetListTypeNonNull().IsDefined(typeof(DnUsarStringParaEnumeradoresNoBdAtributo)))
                 {
                     entity.Property(property.Name).HasConversion<string>();// Converte os enumeradores para salvar o valor string no BD
                 }
@@ -192,14 +192,14 @@ namespace dn32.infra.EntityFramework
 
         internal protected UserSessionRequest UserSessionRequest { get; internal set; }
 
-        private void AfterSave(List<FluenteEventEntity> eventChangeList)
+        private void AfterSave(List<DnEventEntity> eventChangeList)
         {
             if (EntityChangedEventEvent == null) { return; }
             eventChangeList.ForEach(x => SetEventChangeCurrentValue(x));
             EntityChangedEventEvent.Invoke(eventChangeList);
         }
 
-        private List<FluenteEventEntity> BeforeSave()
+        private List<DnEventEntity> BeforeSave()
         {
             var changedEntities = ChangeTracker.Entries().Where(e => e.State == EntityState.Added || e.State == EntityState.Deleted || e.State == EntityState.Modified).ToList();
             var eventChangeList = changedEntities.Select(GetEventChange).Where(x => x != null).ToList();
@@ -207,7 +207,7 @@ namespace dn32.infra.EntityFramework
             return eventChangeList;
         }
 
-        private void SetEventChangeCurrentValue(FluenteEventEntity fluentEventEntity)
+        private void SetEventChangeCurrentValue(DnEventEntity fluentEventEntity)
         {
             var currentValuesGetValue = fluentEventEntity.ChangedEntity.CurrentValues.GetType().GetMethod("GetValue", new[] { typeof(IProperty) });
             var properties = fluentEventEntity.ChangedEntity.CurrentValues.Properties.ToList();
@@ -219,14 +219,14 @@ namespace dn32.infra.EntityFramework
             });
         }
 
-        private FluenteEventEntity GetEventChange(EntityEntry entityChanged)
+        private DnEventEntity GetEventChange(EntityEntry entityChanged)
         {
             var currentValuesGetValue = entityChanged.CurrentValues.GetType().GetMethod("GetValue", new[] { typeof(IProperty) });
             var originalValuesGetValue = entityChanged.OriginalValues.GetType().GetMethod("GetValue", new[] { typeof(IProperty) });
 
             var properties = entityChanged.OriginalValues.Properties.Select(x =>
             {
-                return new FluenteEventEntityProperty
+                return new DnEventEntityProperty
                 {
                     CurrentValue = currentValuesGetValue?.MakeGenericMethod(x.ClrType).Invoke(entityChanged.CurrentValues, new[] { x }),
                     OriginalValue = originalValuesGetValue?.MakeGenericMethod(x.ClrType).Invoke(entityChanged.OriginalValues, new[] { x }),
@@ -236,12 +236,12 @@ namespace dn32.infra.EntityFramework
 
             var currentEntityType = entityChanged.Entity.GetType();
 
-            if (currentEntityType.GetCustomAttribute<FluenteLoggingAttribute>()?.Display == EnumMostrar.Ocultar)
+            if (currentEntityType.GetCustomAttribute<DnLogAtributo>()?.Apresentar == EnumApresentar.Ocultar)
             {
                 return null;
             }
 
-            return new FluenteEventEntity
+            return new DnEventEntity
             {
                 Properties = properties,
                 CurrentEntity = entityChanged.Entity,

@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -10,9 +10,9 @@ using Newtonsoft.Json;
 
 namespace dn32.infra.Exceptions.ValidationException
 {
-    public class EntityNotFoundFluenteValidationException : FluenteValidationException
+    public class EntityNotFoundDnValidationException : DnValidationException
     {
-        public EntityNotFoundFluenteValidationException(string entityKeys)
+        public EntityNotFoundDnValidationException(string entityKeys)
             : base($"No entity with this key(s) was found in the database: {entityKeys}", false, entityKeys)
         {
         }

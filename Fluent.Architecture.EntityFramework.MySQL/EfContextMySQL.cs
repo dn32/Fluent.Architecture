@@ -7,7 +7,7 @@ namespace dn32.infra.EntityFramework.MySQL
     /// <summary>
     /// Contexto do EF no net Core
     /// </summary>
-    [DbType(FluenteDbType.MYSQL)]
+    [DbType(DnDbType.MYSQL)]
     public class EfContextMySQL : EfContext
     {
         public EfContextMySQL(string connectionString) : base(connectionString)

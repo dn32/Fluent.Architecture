@@ -51,7 +51,7 @@ namespace dn32.infra
 
         #region PUBLIC METHODS
 
-        public static List<Type> GetFluenteApiEntity()
+        public static List<Type> GetDnApiEntity()
         {
             return Setup.Model.Values.ToList().Where(x => !x.IsAbstract && x.IsPublic).ToList();
         }
@@ -96,10 +96,10 @@ namespace dn32.infra
             return configClass;
         }
 
-        public static Config UseJwt<Service>(this Config configClass, FluenteJwtInfo jwtInfo) where Service : FluenteAuthenticationService
+        public static Config UseJwt<Service>(this Config configClass, DnJwtInfo jwtInfo) where Service : DnAuthenticationService
         {
             configClass.JwtInfo = jwtInfo;
-            configClass.JwtInfo.FluenteAuthenticationServiceType = typeof(Service);
+            configClass.JwtInfo.DnAuthenticationServiceType = typeof(Service);
             return configClass;
         }
 
@@ -209,10 +209,10 @@ namespace dn32.infra
             Model = new Dictionary<Type, Type>();
             Controllers = new Dictionary<Type, Type>();
             UserSessionList = new Dictionary<Guid, UserSessionRequest>();
-            Services.Add(typeof(FluenteEntidade), typeof(FluenteService<FluenteEntidade>));
-            Repositories.Add(typeof(FluenteEntidade), typeof(IFluenteRepository<FluenteEntidade>));
-            Validations.Add(typeof(FluenteEntidade), typeof(FluenteValidation<FluenteEntidade>));
-            Controllers.Add(typeof(FluenteEntidade), typeof(FluenteController<FluenteEntidade>));
+            Services.Add(typeof(DnEntidade), typeof(DnService<DnEntidade>));
+            Repositories.Add(typeof(DnEntidade), typeof(IDnRepository<DnEntidade>));
+            Validations.Add(typeof(DnEntidade), typeof(DnValidation<DnEntidade>));
+            Controllers.Add(typeof(DnEntidade), typeof(DnController<DnEntidade>));
         }
 
         private static void LoadAssemblies()
@@ -237,23 +237,23 @@ namespace dn32.infra
             ValidateSpecifications(types.Where(x => x.IsSubclassOf(typeof(BaseSpecification))).ToList());
             ValidateController(types.Where(x => x.IsSubclassOf(typeof(BaseController))).ToList());
 
-            types.Select(x => GlobalUtil.GetFluenteEntityType(x, typeof(FluenteService<EntidadeBase>)))
+            types.Select(x => GlobalUtil.GetDnEntityType(x, typeof(DnService<EntidadeBase>)))
                 .Where(x => x.Item1 != null).ToList()
                 .ForEach(AddService);
 
-            types.Select(x => GlobalUtil.GetFluenteEntityTypeByInterface(x, typeof(IFluenteRepository<EntidadeBase>)))
+            types.Select(x => GlobalUtil.GetDnEntityTypeByInterface(x, typeof(IDnRepository<EntidadeBase>)))
                .Where(x => x?.Item1 != null).ToList()
                .ForEach(AddRepository);
 
-            types.Select(x => GlobalUtil.GetFluenteEntityType(x, typeof(FluenteValidation<EntidadeBase>)))
+            types.Select(x => GlobalUtil.GetDnEntityType(x, typeof(DnValidation<EntidadeBase>)))
                .Where(x => x.Item1 != null).ToList()
                .ForEach(AddValidation);
 
-            types.Select(x => GlobalUtil.GetFluenteEntityType(x, typeof(EntidadeBase)))
+            types.Select(x => GlobalUtil.GetDnEntityType(x, typeof(EntidadeBase)))
                 .Where(x => x.Item1 != null && x.Item2 != typeof(EntidadeBase)).ToList()
                 .ForEach(AddModel);
 
-            types.Select(x => GlobalUtil.GetFluenteEntityType(x, typeof(FluenteController<EntidadeBase>)))
+            types.Select(x => GlobalUtil.GetDnEntityType(x, typeof(DnController<EntidadeBase>)))
                .Where(x => x.Item1 != null).ToList()
                .ForEach(AddController);
 
@@ -402,7 +402,7 @@ namespace dn32.infra
         {
             if (Model.ContainsKey(service.Item2))
             {
-                throw new IncorrectDevelopmentException($"There are two entity classes with the same name {service.Item2.Name}. This is not allowed.");
+                throw new IncorrectDevelopmentException($"There are two entity classes with the same Nome {service.Item2.Name}. This is not allowed.");
             }
 
             Model.Add(service.Item2, service.Item2);
@@ -412,7 +412,7 @@ namespace dn32.infra
         {
             if (Services.ContainsKey(service.Item1))
             {
-                throw new IncorrectDevelopmentException($"There are two service classes with the same name {service.Item1} -  {service.Item2}. This is not allowed.");
+                throw new IncorrectDevelopmentException($"There are two service classes with the same Nome {service.Item1} -  {service.Item2}. This is not allowed.");
             }
 
             Services.Add(service.Item1, service.Item2);
@@ -422,7 +422,7 @@ namespace dn32.infra
         {
             if (Validations.ContainsKey(validation.Item1))
             {
-                throw new IncorrectDevelopmentException($"There are two validation classes with the same name {validation.Item1} - {validation.Item2}. This is not allowed.");
+                throw new IncorrectDevelopmentException($"There are two validation classes with the same Nome {validation.Item1} - {validation.Item2}. This is not allowed.");
             }
 
             Validations.Add(validation.Item1, validation.Item2);
@@ -432,7 +432,7 @@ namespace dn32.infra
         {
             if (Controllers.ContainsKey(controller.Item1))
             {
-                throw new IncorrectDevelopmentException($"There are two controller classes with the same name {controller.Item1} - {controller.Item2}. This is not allowed.");
+                throw new IncorrectDevelopmentException($"There are two controller classes with the same Nome {controller.Item1} - {controller.Item2}. This is not allowed.");
             }
 
             Controllers.Add(controller.Item1, controller.Item2);
@@ -442,7 +442,7 @@ namespace dn32.infra
         {
             if (Repositories.ContainsKey(repository.Item1))
             {
-                throw new IncorrectDevelopmentException($"There are two entity repository with the same name {repository.Item1} - {repository.Item2}. This is not allowed.");
+                throw new IncorrectDevelopmentException($"There are two entity repository with the same Nome {repository.Item1} - {repository.Item2}. This is not allowed.");
             }
 
             Repositories.Add(repository.Item1, repository.Item2);
@@ -456,7 +456,7 @@ namespace dn32.infra
                 foreach (var method in methods)
                 {
                     var name = $"{type.Name}.{method.Name}";
-                    if (method.IsPublic && method.ReturnType.Name == typeof(IEnumerable<FluenteEntidade>).Name || method.ReturnType.Name == typeof(IQueryable<FluenteEntidade>).Name)
+                    if (method.IsPublic && method.ReturnType.Name == typeof(IEnumerable<DnEntidade>).Name || method.ReturnType.Name == typeof(IQueryable<DnEntidade>).Name)
                     {
                         throw new IncorrectDevelopmentException($"The use of non-materialized returns in repositories is not allowed. Change the return type and execute the ToList before the return in the {name}.");
                     }

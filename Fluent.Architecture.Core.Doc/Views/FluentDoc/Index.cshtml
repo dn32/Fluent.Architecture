@@ -1,5 +1,5 @@
 ﻿@using dn32.infra.Nucleo.Doc.Controllers
-@using static dn32.infra.FluenteDocExtension
+@using static dn32.infra.DnDocExtension
 
 @model List<EntityModelAndName>
 
@@ -20,8 +20,8 @@
         foreach (var entity in Model)
         {
             <div class="service">
-                <span class="title"><a href="/FluenteDoc/Service?name=@entity.Name">@entity.FriendlyName</a></span>
-                <span class="description">@entity.Description</span>
+                <span class="title"><a href="/DnDoc/Service?Nome=@entity.Name">@entity.FriendlyName</a></span>
+                <span class="Descricaoription">@entity.Description</span>
             </div>
         }
     }

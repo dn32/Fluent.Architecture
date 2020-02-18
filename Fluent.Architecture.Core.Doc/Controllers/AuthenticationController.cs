@@ -14,7 +14,7 @@ namespace dn32.infra.Nucleo.Doc.Controllers
     public class AuthenticationController : Controller
     {
         [HttpGet]
-        [Route("FluenteDoc/Authentication")]
+        [Route("DnDoc/Authentication")]
         public IActionResult Index()
         {
             if (Setup.Config.Config.JwtInfo == null)
@@ -22,22 +22,22 @@ namespace dn32.infra.Nucleo.Doc.Controllers
                 throw new InvalidOperationException("Use UseJwt at Arquitetura startup to set authentication parameters");
             }
 
-            return View("/Views/FluenteDoc/Authentication.cshtml");
+            return View("/Views/DnDoc/Authentication.cshtml");
         }
 
         [HttpGet]
-        [Route("FluenteDoc/Token")]
+        [Route("DnDoc/Token")]
         public IActionResult Token()
         {
             var token = Request.Cookies["Authorization"];
             if (string.IsNullOrWhiteSpace(token)) { return RedirectToAction(nameof(Index)); }
             ViewBag.Token = token;
-            return View("/Views/FluenteDoc/Token.cshtml");
+            return View("/Views/DnDoc/Token.cshtml");
         }
 
         [HttpPost]
         [HttpGet]
-        [Route("FluenteDoc/Logout")]
+        [Route("DnDoc/Logout")]
         public IActionResult Logout()
         {
             Response.Cookies.Delete("Authorization");
@@ -45,7 +45,7 @@ namespace dn32.infra.Nucleo.Doc.Controllers
         }
 
         [HttpPost]
-        [Route("FluenteDoc/Authentication")]
+        [Route("DnDoc/Authentication")]
         public async Task<IActionResult> LoginAsync(string email, string psw)
         {
             if (Setup.Config.Config.JwtInfo == null)
@@ -53,13 +53,13 @@ namespace dn32.infra.Nucleo.Doc.Controllers
                 throw new InvalidOperationException("Use UseJwt at Arquitetura startup to set authentication parameters");
             }
 
-            var authenticationUser = new FluenteAuthenticationUser
+            var authenticationUser = new DnAuthenticationUser
             {
                 Email = email,
                 Password = psw
             };
 
-            var service = ServiceFactory.Create(Setup.Config.Config.JwtInfo.FluenteAuthenticationServiceType, HttpContext, "DocAuthenticationServiceType for FluenteDoc").FluenteCast<FluenteAuthenticationService>();
+            var service = ServiceFactory.Create(Setup.Config.Config.JwtInfo.DnAuthenticationServiceType, HttpContext, "DocAuthenticationServiceType for DnDoc").DnCast<DnAuthenticationService>();
             var token = await service.LoginAsync(authenticationUser);
             if (string.IsNullOrWhiteSpace(token))
             {

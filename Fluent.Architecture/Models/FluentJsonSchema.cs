@@ -1,11 +1,11 @@
-﻿using dn32.infra.Nucleo.Atributos;
+﻿using dn32.infra.nucleo.atributos;
 using System.Collections.Generic;
 
 namespace dn32.infra.Nucleo.Models
 {
-    public class FluenteJsonSchema
+    public class DnJsonSchema
     {
-        public FluenteJsonFormAttribute FluenteJsonForm { get; set; }
-        public List<FluenteJsonPropertyAttribute> Properties { get; set; }
+        public DnFormularioJsonAtributo Formulario { get; set; }
+        public List<DnPropriedadeJsonAtributo> Propriedades { get; set; }
     }
 }

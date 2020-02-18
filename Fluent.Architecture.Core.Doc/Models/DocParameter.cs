@@ -25,7 +25,7 @@ namespace dn32.infra.Nucleo.Doc.Controllers
         {
             Name = name;
             Type = type;
-            Link = FluenteDocController.GetModelLink(Type);
+            Link = DnDocController.GetModelLink(Type);
             Source = source;
             Description = description;
             Example = example;

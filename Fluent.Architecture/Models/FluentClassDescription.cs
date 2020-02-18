@@ -5,11 +5,11 @@ using System.Linq.Dynamic.Core;
 
 namespace dn32.infra.Nucleo.Models
 {
-    internal class FluenteClassDescription
+    internal class DnClassDescription
     {
-        public FluenteClassDescription(Type principalType, string[] fields)
+        public DnClassDescription(Type principalType, string[] fields)
         {
-            Properties = new List<FluentePropertyDescription>();
+            Properties = new List<DnPropertyDescription>();
 
             var compositions = fields.OrderBy(x => x).Where(x => x.Contains(".")).ToList();
             var anotherProperties = fields.OrderBy(x => x).Where(x => !x.Contains(".")).ToList();
@@ -26,39 +26,39 @@ namespace dn32.infra.Nucleo.Models
             }
         }
 
-        private static void AddCompositionProperty(List<FluentePropertyDescription> Properties, Type principalType, string property)
+        private static void AddCompositionProperty(List<DnPropertyDescription> Properties, Type principalType, string property)
         {
             var index = property.IndexOf(".");
             var className = property.Substring(0, index);
             var propertyName = property.Substring(index + 1);
-            var propertyInfo = principalType.GetProperty(className) ?? throw new InvalidOperationException($"Entity {principalType.Name} does not have property {className}");
+            var propertyInfo = principalType.GetProperty(className) ?? throw new InvalidOperationException($"Entidade {principalType.Name} does not have property {className}");
             var complexPropertyFound = Properties.SingleOrDefault(x => x.Name == className);
 
             if (complexPropertyFound == null)
             {
-                var complexProperty = new FluentePropertyDescription { Name = className, Type = propertyInfo.PropertyType, FluenteClassDescription = new FluenteClassDescription(propertyInfo.PropertyType, new[] { propertyName }) };
+                var complexProperty = new DnPropertyDescription { Name = className, Type = propertyInfo.PropertyType, DnClassDescription = new DnClassDescription(propertyInfo.PropertyType, new[] { propertyName }) };
                 Properties.Add(complexProperty);
             }
             else
             {
                 if (propertyName.Contains("."))
                 {
-                    AddCompositionProperty(complexPropertyFound.FluenteClassDescription.Properties, propertyInfo.PropertyType, propertyName);
+                    AddCompositionProperty(complexPropertyFound.DnClassDescription.Properties, propertyInfo.PropertyType, propertyName);
                 }
                 else
                 {
                     var simpleProperty = GetSimpleProperty(propertyInfo.PropertyType, propertyName);
-                    complexPropertyFound.FluenteClassDescription.Properties.Add(simpleProperty);
+                    complexPropertyFound.DnClassDescription.Properties.Add(simpleProperty);
                 }
             }
         }
 
-        private static FluentePropertyDescription GetSimpleProperty(Type principalType, string property)
+        private static DnPropertyDescription GetSimpleProperty(Type principalType, string property)
         {
-            var propertyInfo = principalType.GetProperties().FirstOrDefault(x => x.Name.Equals(property, StringComparison.InvariantCultureIgnoreCase)) ?? throw new InvalidOperationException($"Entity {principalType.Name} does not have property {property}");
-            return new FluentePropertyDescription { Name = property, Type = propertyInfo.PropertyType };
+            var propertyInfo = principalType.GetProperties().FirstOrDefault(x => x.Name.Equals(property, StringComparison.InvariantCultureIgnoreCase)) ?? throw new InvalidOperationException($"Entidade {principalType.Name} does not have property {property}");
+            return new DnPropertyDescription { Name = property, Type = propertyInfo.PropertyType };
         }
 
-        public List<FluentePropertyDescription> Properties { get; set; }
+        public List<DnPropertyDescription> Properties { get; set; }
     }
 }

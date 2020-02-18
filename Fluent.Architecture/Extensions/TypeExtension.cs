@@ -1,5 +1,5 @@
-﻿using dn32.infra.Attributes;
-using dn32.infra.Nucleo.Atributos;
+﻿using dn32.infra.atributos;
+using dn32.infra.nucleo.atributos;
 using dn32.infra.Nucleo.Extensoes;
 using dn32.infra.Nucleo.Models;
 using dn32.infra.Nucleo.Util;
@@ -16,7 +16,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using dn32.infra.atributos;
 using dn32.infra.dados;
 using dn32.infra.enumeradores;
 using dn32.infra.extensoes;
@@ -24,7 +23,7 @@ using dn32.infra.extensoes;
 namespace dn32.infra.Extensoes
 {
     /// <summary>
-    /// Extensão de Type.
+    /// Extensão de Tipo.
     /// </summary>
     public static class TypeExtension
     {
@@ -34,16 +33,16 @@ namespace dn32.infra.Extensoes
         /// Obtem o valor padrão de um tipo.
         /// Muito útil para preencher construtores de classes por reflexão.
         /// </summary>
-        /// <param name="type">O tipo a ser avaliado.</param>
+        /// <param Nome="type">O tipo a ser avaliado.</param>
         /// <returns>O valor padrão do tipo.</returns>
-        public static object GetFluenteDefaultValue(this Type type)
+        public static object GetDnDefaultValue(this Type type)
         {
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
             type = type.GetNonNullableType();
             return type.IsValueType ? TypeDefaults.GetOrAdd(type, Activator.CreateInstance) : null;
         }
 
-        public static bool FluenteEquals(this object value1, object value2)
+        public static bool DnEquals(this object value1, object value2)
         {
             if (value1 == null && value2 == null) { return true; }
             return value1?.ToString() == value2?.ToString();
@@ -52,7 +51,7 @@ namespace dn32.infra.Extensoes
         //Todo2 doc
         public static TX GetDefaultValue<TX>()
         {
-            return (TX)typeof(TX).GetFluenteDefaultValue();
+            return (TX)typeof(TX).GetDnDefaultValue();
         }
 
         public static bool IsKey(this MemberInfo info)
@@ -60,7 +59,7 @@ namespace dn32.infra.Extensoes
             return info.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || info.IsDefined(typeof(KeyAttribute), true);
         }
 
-        //public static bool GetCustomAttributeAny<T>(this Type type, bool inherit = false) where T : Attribute
+        //public static bool GetCustomAttributeAny<T>(this Tipo type, bool inherit = false) where T : Attribute
         //{
         //    return type.GetCustomAttribute<T>(inherit) != null;
         //}
@@ -118,14 +117,14 @@ namespace dn32.infra.Extensoes
             if (type == typeof(DateTime)) { return DateTime.Now; }
             if (type == typeof(string) && type == typeof(String)) { return RandomUtil.NextRandomString(6); }
 
-            return type.GetFluenteDefaultValue();
+            return type.GetDnDefaultValue();
         }
 
         public static string GetExampleValueString(this Type type)
         {
             var obj = type.GetExampleValue();
             if (type.IsPrimitiveOrPrimitiveNulable()) { return obj.ToString(); }
-            return obj.SerializarParaFluenteJson(Formatting.Indented);
+            return obj.SerializarParaDnJson(Formatting.Indented);
         }
 
         public static object GetExampleValue(this Type type)
@@ -150,7 +149,7 @@ namespace dn32.infra.Extensoes
             catch (MissingMethodException)
             {
 
-                return type.GetFluenteDefaultValue();
+                return type.GetDnDefaultValue();
             }
 
             foreach (var property in type.GetProperties())
@@ -287,14 +286,14 @@ namespace dn32.infra.Extensoes
             //return type.Name.StartsWith("List`");
         }
 
-        public static bool IsFluenteEntity(this Type type)
+        public static bool IsDnEntity(this Type type)
         {
-            return type.GetNonNullableType().Is(typeof(FluenteEntidade));
+            return type.GetNonNullableType().Is(typeof(DnEntidade));
         }
 
-        public static bool IsFluenteEntity(this object obj)
+        public static bool IsDnEntity(this object obj)
         {
-            return obj?.GetType().GetNonNullableType().Is(typeof(FluenteEntidade)) ?? false;
+            return obj?.GetType().GetNonNullableType().Is(typeof(DnEntidade)) ?? false;
         }
         public static Type GetTaskType(this Type type)
         {
@@ -334,108 +333,108 @@ namespace dn32.infra.Extensoes
             }
         }
 
-        private static FluenteJsonFormAttribute GetFluenteJsonFormAttributeByType(this Type type)
+        private static DnFormularioJsonAtributo GetDnJsonFormAttributeByType(this Type type)
         {
-            var form = type.GetCustomAttribute<FluenteJsonFormAttribute>(true);
+            var form = type.GetCustomAttribute<DnFormularioJsonAtributo>(true);
             if (form == null)
             {
-                form = new FluenteJsonFormAttribute
+                form = new DnFormularioJsonAtributo
                 {
-                    desc = type.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? type.Name,
-                    group = "",
-                    name = type.Name.ToFluenteJsonStringNormalized(),
-                    propName = type.Name.ToFluenteJsonStringNormalized(),
-                    Type = type
+                    Descricao = type.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? type.Name,
+                    Grupo = "",
+                    Nome = type.Name.ToDnJsonStringNormalized(),
+                    NomeDaPropriedade = type.Name.ToDnJsonStringNormalized(),
+                    Tipo = type
                 };
             }
 
             return form;
         }
 
-        private static FluenteJsonPropertyAttribute GetFluenteJsonPropertyAttributeByProperty(PropertyInfo property)
+        private static DnPropriedadeJsonAtributo GetDnJsonPropertyAttributeByProperty(PropertyInfo property)
         {
-            var attr = property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true);
+            var attr = property.GetCustomAttribute<DnPropriedadeJsonAtributo>(true);
             if (attr == null)
             {
-                attr = new FluenteJsonPropertyAttribute
+                attr = new DnPropriedadeJsonAtributo
                 {
-                    desc = property.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? property.Name,
-                    group = "",
-                    name = property.Name,
-                    propName = property.Name.ToFluenteJsonStringNormalized(),
-                    Type = property.PropertyType,
-                    Property = property,
-                    Enums = null,
-                    FkDestinal = null,
-                    FluenteAggregation = null,
-                    FluenteComposition = null,
-                    form = EnumTipoDeComponenteDeFormularioDeTela.Texto,
-                    grid = property.Name,
-                    IsEnum = property.PropertyType.IsNullableEnum(),
-                    IsFk = false,
-                    IsKey = false,
-                    IsFluenteUniqueKeyKey = false,
-                    IsList = property.PropertyType.IsList(),
-                    IsNullable = property.PropertyType.IsOfNullableType(),
-                    min = property.GetCustomAttribute<MinLengthAttribute>(true)?.Length ?? 0,
-                    max = property.GetCustomAttribute<MaxLengthAttribute>(true)?.Length ?? 0
+                    Descricao = property.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? property.Name,
+                    Grupo = "",
+                    Nome = property.Name,
+                    NomeDaPropriedade = property.Name.ToDnJsonStringNormalized(),
+                    Tipo = property.PropertyType,
+                    Propriedade = property,
+                    Enumeradores = null,
+                    DestinoDeChaveExterna = null,
+                    Agregacao = null,
+                    Composicao = null,
+                    Formulario = EnumTipoDeComponenteDeFormularioDeTela.Texto,
+                    Grid = property.Name,
+                    EhEnumerador = property.PropertyType.IsNullableEnum(),
+                    EhChaveExterna = false,
+                    EhChave = false,
+                    EhDnChaveUnica = false,
+                    EhLista = property.PropertyType.IsList(),
+                    PermiteNulo = property.PropertyType.IsOfNullableType(),
+                    Minimo = property.GetCustomAttribute<MinLengthAttribute>(true)?.Length ?? 0,
+                    Maximo = property.GetCustomAttribute<MaxLengthAttribute>(true)?.Length ?? 0
                 };
             }
 
-            attr.ConditionalFluenteUIOperations = property.GetCustomAttributes<FluenteOperacaoDeCondicionalDeTelaAtributo>();
-            attr.FluenteAggregation = property.GetCustomAttribute<FluenteManyToManyAggregationAttribute>(true) ?? property.GetCustomAttribute<FluenteAggregationAttribute>(true);
-            attr.FluenteComposition = property.GetCustomAttribute<FluenteCompositionAttribute>(true);
-            attr.IsKey = property.IsDefined(typeof(KeyAttribute));
-            attr.IsFluenteUniqueKeyKey = property.IsDefined(typeof(FluenteUniqueKeyAttribute));
-            attr.IsList = property.PropertyType.IsList();
-            attr.required = attr.required || property.IsDefined(typeof(RequiredAttribute), true);
-            attr.IsNullable = (property.PropertyType.IsOfNullableType() && !attr.required);
-            attr.Type = property.PropertyType.GetNonNullableType();
-            attr.Property = property;
+            attr.OperacaoDeCondicional = property.GetCustomAttributes<DnOperacaoDeCondicionalDeTelaAtributo>();
+            attr.Agregacao = property.GetCustomAttribute<DnAgregacaoDeMuitosParaMuitosAtributo>(true) ?? property.GetCustomAttribute<DnAgregacaoAtributo>(true);
+            attr.Composicao = property.GetCustomAttribute<DnComposicaoAtributo>(true);
+            attr.EhChave = property.IsDefined(typeof(KeyAttribute));
+            attr.EhDnChaveUnica = property.IsDefined(typeof(DnChaveUnicaAtributo));
+            attr.EhLista = property.PropertyType.IsList();
+            attr.EhRequerido = attr.EhRequerido || property.IsDefined(typeof(RequiredAttribute), true);
+            attr.PermiteNulo = (property.PropertyType.IsOfNullableType() && !attr.EhRequerido);
+            attr.Tipo = property.PropertyType.GetNonNullableType();
+            attr.Propriedade = property;
 
-            if (attr.max == 0 && property.PropertyType.IsNumeric())
+            if (attr.Maximo == 0 && property.PropertyType.IsNumeric())
             {
-                attr.max = property.PropertyType.GetMaxValueOfNumber().FluenteCast<double>();
+                attr.Maximo = property.PropertyType.GetMaxValueOfNumber().DnCast<double>();
             }
 
             if (property.IsDefined(typeof(JsonIgnoreAttribute)))
             {
-                attr.form = EnumTipoDeComponenteDeFormularioDeTela.Nenhum;
+                attr.Formulario = EnumTipoDeComponenteDeFormularioDeTela.Nenhum;
             }
 
             return attr;
         }
 
-        public static FluenteJsonSchema GetFluenteJsonSchema(this Type type, bool tablet)
+        public static DnJsonSchema GetDnJsonSchema(this Type type, bool tablet)
         {
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
 
             type = type.GetListTypeNonNull();
-            var form = GetFluenteJsonFormAttributeByType(type);
+            var form = GetDnJsonFormAttributeByType(type);
 
-            form.propName = type.Name.ToFluenteJsonStringNormalized();
-            form.Type = type.GetNonNullableType();
+            form.NomeDaPropriedade = type.Name.ToDnJsonStringNormalized();
+            form.Tipo = type.GetNonNullableType();
 
-            var root = new FluenteJsonSchema
+            var root = new DnJsonSchema
             {
-                FluenteJsonForm = form,
-                Properties = new List<FluenteJsonPropertyAttribute>()
+                Formulario = form,
+                Propriedades = new List<DnPropriedadeJsonAtributo>()
             };
 
             type.GetProperties().ToList().ForEach(property =>
             {
                 if (property == null) { return; }
 
-                var attr = GetFluenteJsonPropertyAttributeByProperty(property);
-                attr.Property = property;
-                if (attr.form == EnumTipoDeComponenteDeFormularioDeTela.Nenhum)
+                var attr = GetDnJsonPropertyAttributeByProperty(property);
+                attr.Propriedade = property;
+                if (attr.Formulario == EnumTipoDeComponenteDeFormularioDeTela.Nenhum)
                 {
                     return;
                 }
 
-                if (attr.FluenteAggregation != null)
+                if (attr.Agregacao != null)
                 {
-                    if (attr.FluenteAggregation.GetType()?.Is(typeof(FluenteManyToManyAggregationAttribute)) == true)
+                    if (attr.Agregacao.GetType()?.Is(typeof(DnAgregacaoDeMuitosParaMuitosAtributo)) == true)
                     {
 
                     }
@@ -445,101 +444,101 @@ namespace dn32.infra.Extensoes
                         // return; //Todo - Ignorando agregação em lista enquanto não é implementada
                     }
 
-                    attr.FluenteAggregation.SetType(property.PropertyType.GetListTypeNonNull().Name);
-                    attr.FluenteAggregation.SetName(property.Name);
-                    attr.FluenteAggregation.FluenteFilter = property.GetCustomAttribute<FluenteFilterAttribute>();
-                    if (attr.FluenteAggregation.FluenteFilter != null)
+                    attr.Agregacao.DefinirTipo(property.PropertyType.GetListTypeNonNull().Name);
+                    attr.Agregacao.DefinirNome(property.Name);
+                    attr.Agregacao.Filtro = property.GetCustomAttribute<DnFiltroAtributo>();
+                    if (attr.Agregacao.Filtro != null)
                     {
-                        attr.FluenteAggregation.FluenteFilter.PropertyName = property.Name.ToFluenteJsonStringNormalized();
-                        if (attr.FluenteAggregation.FluenteFilter.FieldsToClear != null)
+                        attr.Agregacao.Filtro.NomeDaPropriedade = property.Name.ToDnJsonStringNormalized();
+                        if (attr.Agregacao.Filtro.CamposParaLimpar != null)
                         {
-                            attr.FluenteAggregation.FluenteFilter.FieldsToClear = attr.FluenteAggregation.FluenteFilter.FieldsToClear.Select(x => x.ToFluenteJsonStringNormalized()).ToArray();
+                            attr.Agregacao.Filtro.CamposParaLimpar = attr.Agregacao.Filtro.CamposParaLimpar.Select(x => x.ToDnJsonStringNormalized()).ToArray();
                         }
                     }
                 }
 
-                if (attr.FluenteComposition != null)
+                if (attr.Composicao != null)
                 {
-                    attr.FluenteComposition.SetType(property.PropertyType.GetListTypeNonNull().Name);
-                    attr.FluenteComposition.SetName(property.Name);
-                    attr.FluenteComposition.Form = GetFluenteJsonSchema(property.PropertyType, tablet);
+                    attr.Composicao.DefinirTipo(property.PropertyType.GetListTypeNonNull().Name);
+                    attr.Composicao.DefinirNome(property.Name);
+                    attr.Composicao.Formulario = GetDnJsonSchema(property.PropertyType, tablet);
                 }
 
-                if (property.IsDefined(typeof(RequiredAttribute)) || property.IsDefined(typeof(FluenteRequiredAttribute)))
+                if (property.IsDefined(typeof(RequiredAttribute)) || property.IsDefined(typeof(DnRequeridoAtributo)))
                 {
-                    attr.required = true;
+                    attr.EhRequerido = true;
                 }
 
                 if (property.PropertyType.IsNullableEnum())
                 {
-                    attr.IsEnum = true;
-                    attr.Enums = new List<KeyValuePair<string, string>>();
+                    attr.EhEnumerador = true;
+                    attr.Enumeradores = new List<KeyValuePair<string, string>>();
 
                     foreach (var field in property.PropertyType.GetEnumFields())
                     {
                         if (field.Name.Equals("value__", StringComparison.InvariantCultureIgnoreCase)) { continue; }
                         var value = field.GetCustomAttribute<EnumMemberAttribute>()?.Value ?? field.Name;
-                        attr.Enums.Add(new KeyValuePair<string, string>(field.Name, value));
+                        attr.Enumeradores.Add(new KeyValuePair<string, string>(field.Name, value));
                     }
                 }
 
-                attr.PropNameCaseSensitive = property.Name;
-                attr.propName = property.Name.ToFluenteJsonStringNormalized();
-                root.Properties.Add(attr);
+                attr.NomeDaPropriedadeCaseSensitive = property.Name;
+                attr.NomeDaPropriedade = property.Name.ToDnJsonStringNormalized();
+                root.Propriedades.Add(attr);
             });
 
-            root.Properties = root.Properties
-                                .GroupBy(x => x.group)
+            root.Propriedades = root.Propriedades
+                                .GroupBy(x => x.Grupo)
                                 .SelectMany(x => x)
                                 .ToList();
 
-            root.Properties.Where(x => x.form == EnumTipoDeComponenteDeFormularioDeTela.Hidden).ToList().ForEach(property =>
+            root.Propriedades.Where(x => x.Formulario == EnumTipoDeComponenteDeFormularioDeTela.Hidden).ToList().ForEach(property =>
             {
-                property.lGrid = 0;
-                property.Row = 0;
+                property.LayoutDeGrid = 0;
+                property.Linha = 0;
             });
 
-            var properties = root.Properties.Where(x => x.form != EnumTipoDeComponenteDeFormularioDeTela.Hidden).ToList();
+            var properties = root.Propriedades.Where(x => x.Formulario != EnumTipoDeComponenteDeFormularioDeTela.Hidden).ToList();
             properties.ForEach(property =>
             {
                 if (tablet)
                 {
-                    property.lGrid *= 2;
+                    property.LayoutDeGrid *= 2;
                 }
 
-                if (property.lGrid == 0 || property.lGrid > 12) { property.lGrid = 12; }
-                property.Row = 0;
+                if (property.LayoutDeGrid == 0 || property.LayoutDeGrid > 12) { property.LayoutDeGrid = 12; }
+                property.Linha = 0;
             });
 
             {
                 var grid = 0;
                 var row = 1;
-                var lastGroup = properties.FirstOrDefault()?.group ?? "";
+                var lastGroup = properties.FirstOrDefault()?.Grupo ?? "";
                 properties.ForEach(x =>
                 {
-                    if (lastGroup != x.group) { grid = 0; row++; lastGroup = x.group; }
+                    if (lastGroup != x.Grupo) { grid = 0; row++; lastGroup = x.Grupo; }
 
-                    if (grid + x.lGrid > 12)
+                    if (grid + x.LayoutDeGrid > 12)
                     {
                         row++;
-                        grid = x.lGrid;
+                        grid = x.LayoutDeGrid;
                     }
                     else
                     {
-                        grid += x.lGrid;
+                        grid += x.LayoutDeGrid;
                     }
 
-                    x.Row = row;
+                    x.Linha = row;
                 });
             }
 
             {
-                var props = new List<FluenteJsonPropertyAttribute>();
+                var props = new List<DnPropriedadeJsonAtributo>();
                 var row = 1;
 
                 properties.ForEach(property =>
                 {
-                    if (row != property.Row)
+                    if (row != property.Linha)
                     {
                         AdjustColumns(props);
                         props.Clear();
@@ -560,39 +559,39 @@ namespace dn32.infra.Extensoes
             return root;
         }
 
-        private static void AdjustColumns(List<FluenteJsonPropertyAttribute> props)
+        private static void AdjustColumns(List<DnPropriedadeJsonAtributo> props)
         {
-            var sum = props.Sum(y => y.lGrid);
+            var sum = props.Sum(y => y.LayoutDeGrid);
             var count = props.Count();
             int i = 0;
 
             while (sum < 12)
             {
-                props[i].lGrid++;
-                sum = props.Sum(y => y.lGrid);
+                props[i].LayoutDeGrid++;
+                sum = props.Sum(y => y.LayoutDeGrid);
                 if (i + 1 == count) { i = 0; } else { i++; }
             }
         }
 
-        private static void MappForengKey(FluenteJsonSchema schema)
+        private static void MappForengKey(DnJsonSchema schema)
         {
-            schema.Properties.ForEach(property =>
+            schema.Propriedades.ForEach(property =>
             {
-                if (property.FluenteAggregation == null) { return; }
-                property.FluenteAggregation.LocalKeys.ToList().ForEach(key =>
+                if (property.Agregacao == null) { return; }
+                property.Agregacao.ChavesLocais.ToList().ForEach(key =>
                 {
-                    var fkProperty = schema.Properties.Single(x => x.PropNameCaseSensitive.Equals(key));
-                    fkProperty.IsFk = true;
-                    fkProperty.FkDestinal = property.Type.GetCustomAttribute<FluenteJsonFormAttribute>();
-                    if (fkProperty.FkDestinal != null) { fkProperty.FkDestinal.Type = property.Type; }
+                    var fkProperty = schema.Propriedades.Single(x => x.NomeDaPropriedadeCaseSensitive.Equals(key));
+                    fkProperty.EhChaveExterna = true;
+                    fkProperty.DestinoDeChaveExterna = property.Tipo.GetCustomAttribute<DnFormularioJsonAtributo>();
+                    if (fkProperty.DestinoDeChaveExterna != null) { fkProperty.DestinoDeChaveExterna.Tipo = property.Tipo; }
                 });
             });
         }
 
 #nullable disable
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+#pragma warning disable CS8632 // The annotation for nullable Referencia types should only be used in code within a '#nullable' annotations context.
         public static bool IsNullableEnum(this Type? t)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+#pragma warning restore CS8632 // The annotation for nullable Referencia types should only be used in code within a '#nullable' annotations context.
         {
             if (t?.IsEnum == true) { return true; }
             var u = Nullable.GetUnderlyingType(t);
@@ -638,14 +637,14 @@ namespace dn32.infra.Extensoes
         public static object[] GetConstructorParameters(this Type classType)
         {
             var parameters = classType?.GetConstructors()?.First()?.GetParameters();
-            return parameters?.Select(x => x?.ParameterType?.GetFluenteDefaultValue())?.ToArray();
+            return parameters?.Select(x => x?.ParameterType?.GetDnDefaultValue())?.ToArray();
         }
 
         /// <summary>
-        /// Obtem o nome amigável de um tipo. Exemplo: FluenteSelectSpecification FluenteEntity
+        /// Obtem o nome amigável de um tipo. Exemplo: DnSelectSpecification DnEntity
         /// </summary>
-        /// <param name="type">O tipo a ser tratado.</param>
-        /// <param name="useGenericT">Se deve indicar os tipos genéricos como T. Exemplo com true: FluenteSelectSpecification T, T. Exemplo com false: FluenteSelectSpecification FluenteEntity, TO </param>
+        /// <param Nome="type">O tipo a ser tratado.</param>
+        /// <param Nome="useGenericT">Se deve indicar os tipos genéricos como T. Exemplo com true: DnSelectSpecification T, T. Exemplo com false: DnSelectSpecification DnEntity, TO </param>
         /// <returns>O nome amigável do tipo.</returns>
         public static string GetFriendlyName(this Type type, bool useGenericT = true, bool fullName = false, string complement = "")
         {
@@ -678,7 +677,7 @@ namespace dn32.infra.Extensoes
             if (serviceType is null) { throw new ArgumentNullException(nameof(serviceType)); }
             if (serviceType.BaseType is null) { throw new ArgumentNullException(nameof(serviceType.BaseType)); }
 
-            if (serviceType.Name == "FluenteDynamicProxy")
+            if (serviceType.Name == "DnDynamicProxy")
             {
                 serviceType = serviceType.BaseType;
             }
@@ -690,7 +689,7 @@ namespace dn32.infra.Extensoes
                 var entityType = args.First();
                 if (!Setup.Services.TryGetValue(entityType, out serviceType))
                 {
-                    var type = (Setup.Config.Config.GenericServiceType) ?? typeof(FluenteService<>);
+                    var type = (Setup.Config.Config.GenericServiceType) ?? typeof(DnService<>);
                     serviceType = type.MakeGenericType(entityType);
                 }
             }

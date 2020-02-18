@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -18,18 +18,18 @@ namespace dn32.infra.Nucleo.Models
 
         public bool ValidationError { get; set; }
 
-        public List<FluenteInconsistence> Inconsistencies { get; set; }
+        public List<DnInconsistence> Inconsistencies { get; set; }
     }
 
     //public class ValidationExceptionReturn : ValidationReturn
     //{
-    //    public ValidationExceptionReturn(ContextFluenteValidationException validationException)
+    //    public ValidationExceptionReturn(ContextDnValidationException validationException)
     //    {
     //        ValidationException = validationException;
     //    }
 
     //    [JsonProperty("inconsistencies")]
-    //    public List<FluenteValidationException> Inconsistencies => ValidationException?.Inconsistencies;
+    //    public List<DnValidationException> Inconsistencies => ValidationException?.Inconsistencies;
 
     //    [JsonProperty("validation_error")]
     //    public new bool ValidationError => ValidationException?.ValidationError ?? true;
@@ -54,6 +54,6 @@ namespace dn32.infra.Nucleo.Models
     //    public new string Message => ValidationException?.Message ?? string.Empty;
 
     //    [JsonIgnore]
-    //    public ContextFluenteValidationException ValidationException { get; set; }
+    //    public ContextDnValidationException ValidationException { get; set; }
     //}
 }

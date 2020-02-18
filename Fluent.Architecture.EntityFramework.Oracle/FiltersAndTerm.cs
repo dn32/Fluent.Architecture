@@ -8,13 +8,13 @@ namespace dn32.infra.EntityFramework.Oracle
         [Description("Query Filters")]
         public Filtro[] Filters { get; set; }
 
-        [Description("The properties whose value will be compared")]
+        [Description("The properties whose valor will be compared")]
         public string[] Properties { get; set; }
 
-        [Description("The term to compare with the property value")]
+        [Description("The term to compare with the property valor")]
         public string Term { get; set; }
 
-        [Description("The tolerance of comparing term and property value")]
+        [Description("The tolerance of comparing term and property valor")]
         public int Tolerance { get; set; }
     }
 }

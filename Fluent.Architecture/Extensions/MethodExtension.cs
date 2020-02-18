@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -21,8 +21,8 @@ namespace dn32.infra.Extensoes
         /// <summary>
         /// Obtém o nome amigável de um método. Exemplo Add(User user)
         /// </summary>
-        /// <param name="method">Método a ser tratado.</param>
-        /// <param name="showParameterName">Se deseja mostrar o nome dos parâmetros. Exemplo com true: Add(User user). Exemplo com false: Add(User)</param>
+        /// <param Nome="method">Método a ser tratado.</param>
+        /// <param Nome="showParameterName">Se deseja mostrar o nome dos parâmetros. Exemplo com true: Add(User user). Exemplo com false: Add(User)</param>
         /// <returns>O nome amigável do método.</returns>
         public static string GetFriendlyName(this MethodBase method, bool showParameterName = false)
         {
@@ -70,7 +70,7 @@ namespace dn32.infra.Extensoes
         }
 
         // Todo2 doc
-        public static object FluenteInvoke(this MethodInfo method, object entity, object[] parameters)//, params Type[] generics)
+        public static object DnInvoke(this MethodInfo method, object entity, object[] parameters)//, params Tipo[] generics)
         {
             //method = generics == null ? method : method.MakeGenericMethod(generics);
             if (parameters == null) { parameters = Array.Empty<object>(); }

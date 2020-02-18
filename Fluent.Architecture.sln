@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dn32.infra.Nucleo", "Fluent.Architecture\dn32.infra.Nucleo.csproj", "{BFABD6C5-8AFD-4D50-9127-6CAA35CF23A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dn32.infra.nucleo", "Fluent.Architecture\dn32.infra.nucleo.csproj", "{BFABD6C5-8AFD-4D50-9127-6CAA35CF23A4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dn32.infra.Teste", "Fluent.Architecture.Test\dn32.infra.Teste.csproj", "{AB51F7C9-E955-404F-B808-9D6C211950A6}"
 EndProject
@@ -41,6 +41,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 Núcleos", "01 Núcleos", "{0EBABE71-7A0B-4253-BC8A-51E338F9EAA6}"
+	ProjectSection(SolutionItems) = preProject
+		Fluent.Architecture\atributosX\DnPropriedadeJsonAtributo.cs = Fluent.Architecture\atributosX\DnPropriedadeJsonAtributo.cs
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 BD e Doc", "02 BD e Doc", "{F1AE78C0-4894-4D1C-9A02-AB71E94306F7}"
 EndProject
@@ -51,6 +54,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dn32.infra", "..\dn32.infra\dn32.infra\dn32.infra.csproj", "{D5C1BF43-FCB2-44FB-A84D-E80697471011}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dn32.infra.teste", "..\dn32.infra\Testes\dn32.infra.teste\dn32.infra.teste.csproj", "{2D5A2BBE-D03B-4670-B270-41E53A9A4C72}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dn32.infra.nucleo.teste", "..\dn32.infra\Testes\dn32.infra.nucleo.teste\dn32.infra.nucleo.teste.csproj", "{B31781E0-D465-4162-AAF4-9DE56069C6BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -114,6 +119,10 @@ Global
 		{2D5A2BBE-D03B-4670-B270-41E53A9A4C72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D5A2BBE-D03B-4670-B270-41E53A9A4C72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D5A2BBE-D03B-4670-B270-41E53A9A4C72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B31781E0-D465-4162-AAF4-9DE56069C6BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B31781E0-D465-4162-AAF4-9DE56069C6BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B31781E0-D465-4162-AAF4-9DE56069C6BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B31781E0-D465-4162-AAF4-9DE56069C6BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -133,6 +142,7 @@ Global
 		{79038E58-09B7-423A-9A72-88BA99881C49} = {3CDE6F00-CAA7-48F5-9E60-1D1A6A81667C}
 		{D5C1BF43-FCB2-44FB-A84D-E80697471011} = {4158C429-5F1F-4FC6-B3E0-23FB8679F639}
 		{2D5A2BBE-D03B-4670-B270-41E53A9A4C72} = {4158C429-5F1F-4FC6-B3E0-23FB8679F639}
+		{B31781E0-D465-4162-AAF4-9DE56069C6BE} = {4158C429-5F1F-4FC6-B3E0-23FB8679F639}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {123E34D5-DA60-4929-9110-E760ECAC5050}

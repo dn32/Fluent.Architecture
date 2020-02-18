@@ -7,7 +7,7 @@ using dn32.infra.dados;
 
 namespace dn32.infra.EntityFramework.Oracle.Specifications
 {
-    public class TermByFilterAndProximitySpec<T> : FluenteSpecification<T> where T : FluenteEntidade
+    public class TermByFilterAndProximitySpec<T> : DnSpecification<T> where T : DnEntidade
     {
         private string Term { get; set; }
 
@@ -30,7 +30,7 @@ namespace dn32.infra.EntityFramework.Oracle.Specifications
 
             if (properties?.Length > 0 && !string.IsNullOrWhiteSpace(Term))
             {
-                Columns = properties.Select(property => typeof(T).GetProperties().FirstOrDefault(x => x.Name.Equals(property, StringComparison.InvariantCultureIgnoreCase))?.GetColumnName() ?? throw new Exception($"Property not found '{typeof(T).Name}.{property}'")).ToArray();
+                Columns = properties.Select(property => typeof(T).GetProperties().FirstOrDefault(x => x.Name.Equals(property, StringComparison.InvariantCultureIgnoreCase))?.GetColumnName() ?? throw new Exception($"Propriedade not found '{typeof(T).Name}.{property}'")).ToArray();
             }
 
             Tolerance = tolerance == 0 ? 80 : tolerance;
@@ -51,7 +51,7 @@ namespace dn32.infra.EntityFramework.Oracle.Specifications
                 query = query.WhereProximityText(Term, TableName, Columns, Tolerance);
             }
 
-            return query.FluenteDynamicProjectTo(Service);
+            return query.DnDynamicProjectTo(Service);
         }
 
         public override IOrderedQueryable<T> Order(IQueryable<T> query) => throw new NotImplementedException();

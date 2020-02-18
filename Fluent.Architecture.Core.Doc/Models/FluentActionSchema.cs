@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace dn32.infra.Nucleo.Doc.Controllers
 {
-    public class FluenteActionSchema
+    public class DnActionSchema
     {
         public Type EntityType { get; set; }
         public Type ControllerType { get; set; }

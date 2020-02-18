@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -10,12 +10,12 @@ using Newtonsoft.Json;
 
 namespace dn32.infra.Exceptions.ValidationException
 {
-    public class EntityExistsFluenteValidationException : FluenteValidationException
+    public class EntityExistsDnValidationException : DnValidationException
     {
         [JsonProperty("globalization_key")]
-        public override string GlobalizationKey => "EntityExistsFluenteValidationException";
+        public override string GlobalizationKey => "EntityExistsDnValidationException";
 
-        public EntityExistsFluenteValidationException(string entityKeys) : base($"An entity with any of these keys already exists in the database: {entityKeys}", false, entityKeys)
+        public EntityExistsDnValidationException(string entityKeys) : base($"An entity with any of these keys already exists in the database: {entityKeys}", false, entityKeys)
         {
         }
     }

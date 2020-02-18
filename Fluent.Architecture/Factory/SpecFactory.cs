@@ -10,8 +10,8 @@ namespace dn32.infra.Factory
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="T">Tipo de serviço.</typeparam>
-        /// <param name="service"></param>
+        /// <typeparam Nome="T">Tipo de serviço.</typeparam>
+        /// <param Nome="service"></param>
         /// <returns></returns>
         public static T Create<T>(TransactionalService service) where T : BaseSpecification
         {

@@ -2,7 +2,7 @@
 
 namespace dn32.infra.Nucleo.Models
 {
-    internal class FluentePropertyDescription
+    internal class DnPropertyDescription
     {
         public string Name { get; set; }
 
@@ -10,6 +10,6 @@ namespace dn32.infra.Nucleo.Models
 
         public Type DynamicProperty { get; set; }
 
-        public FluenteClassDescription FluenteClassDescription { get; set; }
+        public DnClassDescription DnClassDescription { get; set; }
     }
 }

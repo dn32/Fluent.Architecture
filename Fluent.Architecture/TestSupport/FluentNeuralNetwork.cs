@@ -1,5 +1,5 @@
 ﻿using dn32.infra.Extensoes;
-using dn32.infra.Nucleo.Atributos;
+using dn32.infra.nucleo.atributos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +7,13 @@ using System.Reflection;
 
 namespace dn32.infra.Nucleo.TestSupport
 {
-    public class FluenteNeuralNetwork
+    public class DnNeuralNetwork
     {
-        public List<FluenteNode> SortedAggregations { get; } = new List<FluenteNode>();
+        public List<DnNode> SortedAggregations { get; } = new List<DnNode>();
 
-        public Dictionary<Type, FluenteNode> DictionaryOfAggregations { get; } = new Dictionary<Type, FluenteNode>();
+        public Dictionary<Type, DnNode> DictionaryOfAggregations { get; } = new Dictionary<Type, DnNode>();
 
-        public List<FluenteNode> ExplainToTheTree(List<Type> types, bool setValues)
+        public List<DnNode> ExplainToTheTree(List<Type> types, bool setValues)
         {
             types.ForEach(x => ExplainToTheTree(x));
 
@@ -28,7 +28,7 @@ namespace dn32.infra.Nucleo.TestSupport
             return SortedAggregations;
         }
 
-        private void Setvalue(FluenteNode node)
+        private void Setvalue(DnNode node)
         {
             foreach (var internalNode in node.ReferencePointers)
             {
@@ -68,7 +68,7 @@ namespace dn32.infra.Nucleo.TestSupport
                                     property = p,
                                     isList = p.PropertyType.Name == "List`1",
                                     type = p.PropertyType.Name == "List`1" ? p.PropertyType.GenericTypeArguments[0] : p.PropertyType,
-                                    attr = p.GetCustomAttribute<FluenteAggregationAttribute>(true)
+                                    attr = p.GetCustomAttribute<DnAgregacaoAtributo>(true)
                                 })
                             .Where(x => x.attr != null)
                             .ToList();
@@ -79,8 +79,8 @@ namespace dn32.infra.Nucleo.TestSupport
                 var aggregation = SortedAggregations.Single(x => x.EntityType == item.type);
                 object value = aggregation.Instance;
 
-                var externalKeys = item.attr.ExternalKeys;
-                var localKeys = item.attr.LocalKeys;
+                var externalKeys = item.attr.ChavesExternas;
+                var localKeys = item.attr.ChavesLocais;
 
                 for (int i = 0; i < externalKeys.Length; i++)
                 {
@@ -114,15 +114,15 @@ namespace dn32.infra.Nucleo.TestSupport
             }
         }
 
-        private void ExplainToTheTree(Type type, FluenteNode parent = null)
+        private void ExplainToTheTree(Type type, DnNode parent = null)
         {
             var node = GetTreeNode(type);
             if (node == null)
             {
-                node = new FluenteNode { EntityType = type };
+                node = new DnNode { EntityType = type };
                 DictionaryOfAggregations.Add(type, node);
 
-                var properties = node.EntityType.GetProperties().Where(x => x.GetCustomAttribute<FluenteAggregationAttribute>(true) != null).ToList();
+                var properties = node.EntityType.GetProperties().Where(x => x.GetCustomAttribute<DnAgregacaoAtributo>(true) != null).ToList();
                 var types = properties.Select(x => x.PropertyType).ToList();
                 if (types.Count == 0)
                 {
@@ -143,15 +143,15 @@ namespace dn32.infra.Nucleo.TestSupport
             }
         }
 
-        private void AddAggregation(FluenteNode node)
+        private void AddAggregation(DnNode node)
         {
             Console.WriteLine($"{node.EntityType.Name} Mapped");
             SortedAggregations.Add(node);
         }
 
-        private FluenteNode GetTreeNode(Type entityType)
+        private DnNode GetTreeNode(Type entityType)
         {
-            DictionaryOfAggregations.TryGetValue(entityType, out FluenteNode value);
+            DictionaryOfAggregations.TryGetValue(entityType, out DnNode value);
             return value;
         }
     }

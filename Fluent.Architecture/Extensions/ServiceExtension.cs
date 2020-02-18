@@ -13,7 +13,7 @@ namespace dn32.infra.Extensoes
         {
             if (serviceType == null) { throw new ArgumentNullException(nameof(serviceType)); }
             if (SessionRequest == null) { throw new ArgumentNullException(nameof(SessionRequest)); }
-            if (serviceType.Name == "FluenteDynamicProxy") { serviceType = serviceType.BaseType; }
+            if (serviceType.Name == "DnDynamicProxy") { serviceType = serviceType.BaseType; }
             if (serviceType == null) { throw new ArgumentNullException(nameof(serviceType)); }
 
             if (!serviceType.IsSubclassOf(typeof(TransactionalService)))
@@ -34,12 +34,12 @@ namespace dn32.infra.Extensoes
 
         public static TransactionalService GetServiceInstanceByEntity(this Type entityType, UserSessionRequest SessionRequest)
         {
-            if (entityType?.IsSubclassOf(typeof(FluenteEntidade)) != true)
+            if (entityType?.IsSubclassOf(typeof(DnEntidade)) != true)
             {
-                throw new IncorrectDevelopmentException($"The service instance attempt using the {nameof(GetServiceInstanceByEntity)} method failed because the passed type is not a {nameof(FluenteEntidade)}");
+                throw new IncorrectDevelopmentException($"The service instance attempt using the {nameof(GetServiceInstanceByEntity)} method failed because the passed type is not a {nameof(DnEntidade)}");
             }
 
-            var type = (Setup.Config.Config.GenericServiceType) ?? typeof(FluenteService<>);
+            var type = (Setup.Config.Config.GenericServiceType) ?? typeof(DnService<>);
             var serviceType = type.MakeGenericType(entityType).GetSpecializedService();
             return serviceType.GetServiceInstanceByServiceType(SessionRequest);
         }

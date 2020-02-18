@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -13,7 +13,7 @@ using System;
 namespace dn32.infra.Exceptions
 {
     [Serializable]
-    public class MethodNotFoundException : FluenteValidationException
+    public class MethodNotFoundException : DnValidationException
     {
         public MethodNotFoundException(string message) : base(message)
         {

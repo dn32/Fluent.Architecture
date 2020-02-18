@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -14,7 +14,7 @@ using System.Threading;
 namespace dn32.infra.Exceptions.ValidationException
 {
     /// <inheritdoc />
-    public class FluenteValidationException
+    public class DnValidationException
     {
         private readonly string globalizationKey;
 
@@ -41,7 +41,7 @@ namespace dn32.infra.Exceptions.ValidationException
         [JsonProperty("exception_type")]
         public string ExceptionType => GetType().Name;
 
-        public FluenteValidationException(string message, string globalizationKeyParam, bool globalizeValues = false, params string[] values)
+        public DnValidationException(string message, string globalizationKeyParam, bool globalizeValues = false, params string[] values)
         {
             globalizationKey = globalizationKeyParam;
             Message = message;
@@ -50,7 +50,7 @@ namespace dn32.infra.Exceptions.ValidationException
             //Inicialize(message);
         }
 
-        public FluenteValidationException(string message, bool globalizeValues = false, params string[] values)
+        public DnValidationException(string message, bool globalizeValues = false, params string[] values)
         {
             Message = message;
             Values = values;

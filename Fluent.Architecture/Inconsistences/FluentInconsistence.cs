@@ -4,20 +4,20 @@ using Newtonsoft.Json;
 
 namespace dn32.infra.Nucleo.Inconsistences
 {
-    public class FluenteInconsistence
+    public class DnInconsistence
     {
         public string Message { get; set; }
         public string GlobalizationKey { get; set; }
         [JsonIgnore]
-        public FluenteValidationException FluenteException { get; set; }
+        public DnValidationException DnException { get; set; }
     }
 
-    public class FluentePropertyInconsistence : FluenteInconsistence
+    public class DnPropertyInconsistence : DnInconsistence
     {
         public string PropertyName { get; set; }
     }
 
-    public class FluenteUiFieldInconsistence : FluentePropertyInconsistence
+    public class DnUiFieldInconsistence : DnPropertyInconsistence
     {
         public string Field { get; set; }
     }

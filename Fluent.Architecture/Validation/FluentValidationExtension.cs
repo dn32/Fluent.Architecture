@@ -1,6 +1,6 @@
 ﻿using dn32.infra.Extensoes;
 using dn32.infra.Factory;
-using dn32.infra.Nucleo.Atributos;
+using dn32.infra.nucleo.atributos;
 using dn32.infra.Services;
 using System;
 using System.Collections;
@@ -13,27 +13,27 @@ using dn32.infra.extensoes;
 
 namespace dn32.infra.Validation
 {
-    internal static class FluenteValidationExtension
+    internal static class DnValidationExtension
     {
-        internal static async Task<List<TransactionalService>> ExecuteEntityAndCompositions<T>(this FluenteValidation<T> validation, object entity, MethodInfo method) where T : EntidadeBase
+        internal static async Task<List<TransactionalService>> ExecuteEntityAndCompositions<T>(this DnValidation<T> validation, object entity, MethodInfo method) where T : EntidadeBase
         {
             if (validation is null) { throw new ArgumentNullException("validation"); }
             if (method is null) { throw new ArgumentNullException("method"); }
 
             var tasks = new List<Task>();
-            var t1 = method.MakeGenericMethod(typeof(T)).Invoke(null, new object[] { validation, entity, null, null }).FluenteCast<Task>();
+            var t1 = method.MakeGenericMethod(typeof(T)).Invoke(null, new object[] { validation, entity, null, null }).DnCast<Task>();
             if (t1 != null) { tasks.Add(t1); }
 
             List<TransactionalService> anotherServices = new List<TransactionalService>();
 
             if (entity != null)
             {
-                var properties = entity.GetType().GetProperties().ToList().Where(x => x.IsDefined(typeof(FluenteCompositionAttribute))).ToList();
+                var properties = entity.GetType().GetProperties().ToList().Where(x => x.IsDefined(typeof(DnComposicaoAtributo))).ToList();
                 foreach (var property in properties)
                 {
                     var entityCompositionValue = property.GetValue(entity);
                     var entityType = property.PropertyType.GetListTypeNonNull();
-                    if (!entityType.IsFluenteEntity()) { continue; }
+                    if (!entityType.IsDnEntity()) { continue; }
 
                     var service = ServiceFactory.Create(entityType, validation.SessionRequest.LocalHttpContext, "For multiple validation");
                     anotherServices.Add(service);
@@ -51,7 +51,7 @@ namespace dn32.infra.Validation
                             var compositionPropertyName = $"{property.GetJsonPropertyName()}[{i}]";
                             var compositionFieldName = $"{property.GetUiPropertyName()}[{i}]";
 
-                            var t2 = method.MakeGenericMethod(entityType).Invoke(null, new object[] { service.Validation, item, compositionPropertyName, compositionFieldName }).FluenteCast<Task>();
+                            var t2 = method.MakeGenericMethod(entityType).Invoke(null, new object[] { service.Validation, item, compositionPropertyName, compositionFieldName }).DnCast<Task>();
                             if (t2 != null) { tasks.Add(t2); }
                             i++;
                         }
@@ -61,7 +61,7 @@ namespace dn32.infra.Validation
                         var compositionPropertyName = property.GetJsonPropertyName();
                         var compositionFieldName = property.GetUiPropertyName();
 
-                        var t2 = method.MakeGenericMethod(entityType).Invoke(null, new object[] { service.Validation, entityCompositionValue, compositionPropertyName, compositionFieldName }).FluenteCast<Task>();
+                        var t2 = method.MakeGenericMethod(entityType).Invoke(null, new object[] { service.Validation, entityCompositionValue, compositionPropertyName, compositionFieldName }).DnCast<Task>();
                         if (t2 != null) { tasks.Add(t2); }
                     }
                 }

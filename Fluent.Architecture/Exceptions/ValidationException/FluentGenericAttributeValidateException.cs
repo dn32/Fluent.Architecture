@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -11,12 +11,12 @@ using System.Reflection;
 
 namespace dn32.infra.Exceptions.ValidationException
 {
-    public class FluenteGenericAttributeValidateException : FluenteUiFieldValidationException
+    public class DnGenericAttributeValidateException : DnUiFieldValidationException
     {
         [JsonProperty("globalization_key")]
-        public override string GlobalizationKey => "FluenteGenericAttributeValidateException";
+        public override string GlobalizationKey => "DnGenericAttributeValidateException";
 
-        public FluenteGenericAttributeValidateException(PropertyInfo property, bool globalizeValues, string message, string compositionProperty, string compositionFieldName) :
+        public DnGenericAttributeValidateException(PropertyInfo property, bool globalizeValues, string message, string compositionProperty, string compositionFieldName) :
             base(property, globalizeValues, message, compositionProperty, compositionFieldName)
         {
         }

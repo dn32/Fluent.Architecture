@@ -1,6 +1,6 @@
 ﻿using ClosedXML.Excel;
 using dn32.infra.Extensoes;
-using dn32.infra.Nucleo.Atributos;
+using dn32.infra.nucleo.atributos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +12,9 @@ namespace dn32.infra.Nucleo.Util
     {
         public static XLWorkbook ImportationTemplateXLSX<T>(int addExample)
         {
-            var schema = typeof(T).GetFluenteJsonSchema(false);
-            var table = schema.FluenteJsonForm.propName;
-            var properties = schema.Properties.Where(x => x.FluenteComposition == null && x.FluenteAggregation == null).ToList();
+            var schema = typeof(T).GetDnJsonSchema(false);
+            var table = schema.Formulario.NomeDaPropriedade;
+            var properties = schema.Propriedades.Where(x => x.Composicao == null && x.Agregacao == null).ToList();
 
             var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add(table);
@@ -25,7 +25,7 @@ namespace dn32.infra.Nucleo.Util
             {
                 var property = properties[i];
                 var headerCell = worksheet.Column(i + 1).Cell(1);
-                headerCell.Value = property.propName;
+                headerCell.Value = property.NomeDaPropriedade;
 
                 Example<T>(addExample, worksheet, propertiesExample, i, property);
                 Style(property, headerCell);
@@ -46,9 +46,9 @@ namespace dn32.infra.Nucleo.Util
                 var worksheet = worksheets.FirstOrDefault(x => x.Name.Equals(typeof(T).Name, StringComparison.InvariantCultureIgnoreCase));
                 if (worksheet == null) throw new InvalidOperationException($"worksheet {typeof(T).Name} not found");
 
-                var schema = typeof(T).GetFluenteJsonSchema(false);
-                var table = schema.FluenteJsonForm.propName;
-                var properties = schema.Properties.Where(x => x.FluenteComposition == null && x.FluenteAggregation == null).ToList();
+                var schema = typeof(T).GetDnJsonSchema(false);
+                var table = schema.Formulario.NomeDaPropriedade;
+                var properties = schema.Propriedades.Where(x => x.Composicao == null && x.Agregacao == null).ToList();
 
                 var propertiesExample = typeof(T).GetProperties();
                 int i;
@@ -65,7 +65,7 @@ namespace dn32.infra.Nucleo.Util
                         var property = properties[i];
                         var example = typeof(T).GetExampleValue();
                         var exampleCell = worksheet.Column(i + 1).Cell(2 + item);
-                        var exampleProperty = propertiesExample.FirstOrDefault(x => x.Name == property.PropNameCaseSensitive);
+                        var exampleProperty = propertiesExample.FirstOrDefault(x => x.Name == property.NomeDaPropriedadeCaseSensitive);
                         var valor = exampleCell.Value.ToString();
                         exampleProperty.SetValue(entidade, valor);
                         if (string.IsNullOrWhiteSpace(valor)) quantNull++;
@@ -120,7 +120,7 @@ namespace dn32.infra.Nucleo.Util
                         var celNum = linha * columns.Count + i;
                         var cell = cells[celNum];
                         var valor = cell.Value;
-                        property.SetValue(entidade, cell.Value?.ToString() ?? property.PropertyType.GetFluenteDefaultValue());
+                        property.SetValue(entidade, cell.Value?.ToString() ?? property.PropertyType.GetDnDefaultValue());
                     }
                 }
             }
@@ -128,18 +128,18 @@ namespace dn32.infra.Nucleo.Util
             return null;
         }
 
-        private static void Example<T>(int addExample, IXLWorksheet worksheet, PropertyInfo[] propertiesExample, int i, FluenteJsonPropertyAttribute property)
+        private static void Example<T>(int addExample, IXLWorksheet worksheet, PropertyInfo[] propertiesExample, int i, DnPropriedadeJsonAtributo property)
         {
             for (var x = 0; x < addExample; x++)
             {
                 var example = typeof(T).GetExampleValue();
                 var exampleCell = worksheet.Column(i + 1).Cell(2 + x);
-                var exampleProperty = propertiesExample.FirstOrDefault(x => x.Name == property.PropNameCaseSensitive);
+                var exampleProperty = propertiesExample.FirstOrDefault(x => x.Name == property.NomeDaPropriedadeCaseSensitive);
                 exampleCell.Value = exampleProperty?.GetValue(example) ?? "";
             }
         }
 
-        private static void Style(FluenteJsonPropertyAttribute property, IXLCell headerCell)
+        private static void Style(DnPropriedadeJsonAtributo property, IXLCell headerCell)
         {
             headerCell.Style.Font.FontSize = 11;
             headerCell.Style.Protection.Locked = true;
@@ -156,19 +156,19 @@ namespace dn32.infra.Nucleo.Util
             headerCell.Style.Border.LeftBorderColor = XLColor.FromArgb(0x777777);
             headerCell.Style.Border.RightBorderColor = XLColor.FromArgb(0x777777);
 
-            if (property.required)
+            if (property.EhRequerido)
                 headerCell.Style.Font.Bold = true;
         }
 
-        private static void Comment(FluenteJsonPropertyAttribute property, IXLCell headerCell)
+        private static void Comment(DnPropriedadeJsonAtributo property, IXLCell headerCell)
         {
-            var isKeyComment = property.IsKey || property.IsFluenteUniqueKeyKey ? $"\nIs Key" : "";
-            var isPkComment = property.IsFk ? $"\nIs Fk" : "";
-            var isRequiredComment = property.required ? $"\nIs required" : "";
-            var isListComment = property.IsList ? $"\nIs list" : "";
-            var isEnumComment = property.IsEnum ? $"\nIs enum" : "";
-            var enumValues = property.IsEnum ? "\nValues: " + string.Join(", ", property.Enums.Select(x => $"{x.Key} = {x.Value}")) : "";
-            var comment = property.min == 0 && property.max == 0 ? "" : $"{property.name}\nMin: {property.min}, Max: {property.max}{isKeyComment}{isPkComment}{isRequiredComment}{isListComment}{isEnumComment}{enumValues}";
+            var isKeyComment = property.EhChave || property.EhDnChaveUnica ? $"\nIs Key" : "";
+            var isPkComment = property.EhChaveExterna ? $"\nIs Fk" : "";
+            var isRequiredComment = property.EhRequerido ? $"\nIs EhRequerido" : "";
+            var isListComment = property.EhLista ? $"\nIs list" : "";
+            var isEnumComment = property.EhEnumerador ? $"\nIs enum" : "";
+            var enumValues = property.EhEnumerador ? "\nValues: " + string.Join(", ", property.Enumeradores.Select(x => $"{x.Key} = {x.Value}")) : "";
+            var comment = property.Minimo == 0 && property.Maximo == 0 ? "" : $"{property.Nome}\nMin: {property.Minimo}, TamanhoMaximo: {property.Maximo}{isKeyComment}{isPkComment}{isRequiredComment}{isListComment}{isEnumComment}{enumValues}";
             headerCell.Comment.AddText(comment);
         }
     }

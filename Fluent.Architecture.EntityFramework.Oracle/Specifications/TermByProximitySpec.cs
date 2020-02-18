@@ -6,7 +6,7 @@ using dn32.infra.dados;
 
 namespace dn32.infra.EntityFramework.Oracle.Specifications
 {
-    public class TermByProximitySpec<TE> : FluenteSpecification<TE> where TE : FluenteEntidade
+    public class TermByProximitySpec<TE> : DnSpecification<TE> where TE : DnEntidade
     {
         private string Term { get; set; }
 
@@ -19,7 +19,7 @@ namespace dn32.infra.EntityFramework.Oracle.Specifications
         public TermByProximitySpec<TE> AddParameter(string[] properties, string term, int tolerance)
         {
             TableName = typeof(TE).GetTableName();
-            Columns = properties.Select(property => typeof(TE).GetProperties().FirstOrDefault(x => x.Name.Equals(property, StringComparison.InvariantCultureIgnoreCase))?.GetColumnName() ?? throw new Exception($"Property not found {typeof(TE).Name}.{property}")).ToArray();
+            Columns = properties.Select(property => typeof(TE).GetProperties().FirstOrDefault(x => x.Name.Equals(property, StringComparison.InvariantCultureIgnoreCase))?.GetColumnName() ?? throw new Exception($"Propriedade not found {typeof(TE).Name}.{property}")).ToArray();
             Term = term;
             Tolerance = tolerance == 0 ? 80 : tolerance;
             return this;

@@ -1,16 +1,16 @@
 ﻿@using dn32.infra.Extensoes
 @using dn32.infra.Nucleo.Doc.Controllers
 @using dn32.infra
-@using static dn32.infra.FluenteDocExtension
-@model FluenteActionSchema
+@using static dn32.infra.DnDocExtension
+@model DnActionSchema
 @{
     ViewData["Title"] = Model.Name;
 
     string GetTypeName(Type type, string name)
     {
-        if (type.GetListTypeNonNull().IsFluenteEntity())
+        if (type.GetListTypeNonNull().IsDnEntity())
         {
-            return $"<a href=\"/FluenteDoc/Model?name={type.GetListTypeNonNull().FullName}\">{type.GetFriendlyName(false)}</a>";
+            return $"<a href=\"/DnDoc/Model?Nome={type.GetListTypeNonNull().FullName}\">{type.GetFriendlyName(false)}</a>";
         }
         else
         {
@@ -30,7 +30,7 @@
                 <div class="action action-description">
                     <span class="method @action.Method.ToLower()">@action.Method</span>
                     <span class="name">@action.Name.G()</span>
-                    <span class="description">@action.Description</span>
+                    <span class="Descricaoription">@action.Description</span>
                     @if (@action.Method == "GET")
                     {
                         <span class="route"><a href="@(action.ApiBaseUrl + action.Route)">@action.Route</a></span>
@@ -47,7 +47,7 @@
                                 <thead>
                                     <tr>
                                         <th>@(("Name").G())</th>
-                                        <th>@(("Type").G())</th>
+                                        <th>@(("Tipo").G())</th>
                                         <th>@(("Source").G())</th>
                                         <th>@(("Description").G())</th>
                                         <th>@(("Example").G())</th>
@@ -66,17 +66,17 @@
                                             <td class="type"><a href="@parameter.Link">@Html.Raw(parameter.Type.GetFriendlyName())</a></td>
                                         }
                                         <td class="source">@parameter.Source.ToString().G()</td>
-                                        <td class="description">@parameter.Description.G()</td>
+                                        <td class="Descricaoription">@parameter.Description.G()</td>
                                         <td class="example"><pre class="example-value" style="margin:0 0 0 0;background: #ffc10712; border-color:#ffc10712;">@Html.Raw(parameter.Example)</pre></td>
                                     </tr>
                                 }
                             </table>
-                            <div class="example-value-container">
+                            <div class="example-valor-container">
                                 <span>@("Request Example".G())</span>
                                 <pre class="example-value">@Model.Example</pre>
                             </div>
 
-                            <div class="example-value-container">
+                            <div class="example-valor-container">
                                 <span>@("Return type".G())</span>
                                 <pre class="example-value">@(Model.ReturnType)</pre>
                             </div>

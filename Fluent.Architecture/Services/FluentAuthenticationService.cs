@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace dn32.infra.Nucleo.Services
 {
-    public abstract class FluenteAuthenticationService : TransactionalService
+    public abstract class DnAuthenticationService : TransactionalService
     {
-        public abstract Task<(bool sucess, List<Claim> claims)> AuthenticateAsync(FluenteAuthenticationUser user);
+        public abstract Task<(bool sucess, List<Claim> claims)> AuthenticateAsync(DnAuthenticationUser user);
 
-        public virtual void Register(FluenteAuthenticationUser user) { }
+        public virtual void Register(DnAuthenticationUser user) { }
 
-        public virtual async Task<string> LoginAsync(FluenteAuthenticationUser user)
+        public virtual async Task<string> LoginAsync(DnAuthenticationUser user)
         {
             if (user is null) { throw new ArgumentNullException(nameof(user)); }
             if (string.IsNullOrWhiteSpace(user.Email)) { throw new ArgumentNullException(nameof(user.Email)); }

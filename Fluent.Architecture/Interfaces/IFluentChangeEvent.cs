@@ -4,7 +4,7 @@
 
 //namespace dn32.infra.Interfaces
 //{
-//    public interface IFluenteChangeEvent<T> : IBaseEvent where T : FluenteEntity
+//    public interface IDnChangeEvent<T> : IBaseEvent where T : DnEntity
 //    {
 //        string EventName();
 

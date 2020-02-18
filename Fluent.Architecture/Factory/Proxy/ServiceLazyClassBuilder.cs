@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -21,7 +21,7 @@ namespace dn32.infra.Factory.Proxy
     internal class ServiceLazyClassBuilder
     {
         private const string ModuleName = "ServiceModule";
-        private const string AssemblyName = "FluenteDynamicProxy";
+        private const string AssemblyName = "DnDynamicProxy";
 
         internal static object CreateObject(Type parent, Guid sessionId)
         {

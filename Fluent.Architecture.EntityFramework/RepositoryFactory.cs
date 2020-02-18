@@ -15,7 +15,7 @@ namespace dn32.infra.EntityFramework
     /// Classe interna. Nunca a deixe pública, pois o acesso a um repositório à partir de um serviço terceiro não deve ser permitido.
     /// A fábrica de repositórios.
     /// </summary>
-    /// <typeparam name="T">
+    /// <typeparam Nome="T">
     ///  O tipo da entidade do repositório a ser criado.
     /// </typeparam>
     internal class RepositoryFactory : IRepositoryFactory
@@ -23,16 +23,16 @@ namespace dn32.infra.EntityFramework
         /// <summary>
         /// Cria um novo repositório.
         /// </summary>
-        /// <param name="transactionObjects">
+        /// <param Nome="transactionObjects">
         /// Os objetos de controle de transação do repositório.
         /// </param>
-        /// <param name="service">
+        /// <param Nome="service">
         /// O serviço qual o repositório representa.
         /// </param>
         /// <returns>
         /// O repositório criado.
         /// </returns>
-        public IFluenteRepository<T> Create<T>(ITransactionObjects transactionObjects, FluenteService<T> service) where T : EntidadeBase
+        public IDnRepository<T> Create<T>(ITransactionObjects transactionObjects, DnService<T> service) where T : EntidadeBase
         {
             if (Setup.Config?.Config?.Connections == null) { throw new IncorrectDevelopmentException($"Arquitetura was not initialized properly"); }
 
@@ -41,16 +41,16 @@ namespace dn32.infra.EntityFramework
             {
                 if (Setup.Config.Config.Connections.Count == 1)
                 {
-                    dbType = Setup.Config.Config.Connections.Single().DbContextType.GetCustomAttribute<DbTypeAttribute>() ?? throw new IncorrectDevelopmentException($"The entity {typeof(T).Name} needs a database type specification. Example: [DbType (FluenteDbType.ORACLE)]"); ;
+                    dbType = Setup.Config.Config.Connections.Single().DbContextType.GetCustomAttribute<DbTypeAttribute>() ?? throw new IncorrectDevelopmentException($"The entity {typeof(T).Name} needs a database type specification. Example: [DbType (DnDbType.ORACLE)]"); ;
                 }
             }
 
             if (dbType == null)
             {
-                throw new IncorrectDevelopmentException($"The entity {typeof(T).Name} needs a database type specification. Example: [DbType (FluenteDbType.ORACLE)]"); ;
+                throw new IncorrectDevelopmentException($"The entity {typeof(T).Name} needs a database type specification. Example: [DbType (DnDbType.ORACLE)]"); ;
             }
 
-            var localType = Setup.Config?.Config?.GenericRepositoryType?.MakeGenericType(typeof(T)) ?? typeof(FluenteEFRepository<T>);
+            var localType = Setup.Config?.Config?.GenericRepositoryType?.MakeGenericType(typeof(T)) ?? typeof(DnEFRepository<T>);
 
             if (Setup.Repositories.TryGetValue(typeof(T), out var repositoryType))
             {
@@ -106,9 +106,9 @@ namespace dn32.infra.EntityFramework
             return repository;
         }
 
-        internal IFluenteRepository<T> Create<T>(Type repositoryType) where T : EntidadeBase
+        internal IDnRepository<T> Create<T>(Type repositoryType) where T : EntidadeBase
         {
-            return Activator.CreateInstance(repositoryType) as IFluenteRepository<T>;
+            return Activator.CreateInstance(repositoryType) as IDnRepository<T>;
         }
 
         //Todo - validar no boot se todas as entidades tem tipo de BD,ou se só tem um tipo de bd instanciado na aplicação

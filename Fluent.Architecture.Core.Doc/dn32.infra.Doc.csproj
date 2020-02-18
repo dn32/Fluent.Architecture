@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="FluenteDoc\**\*.*" />
+    <EmbeddedResource Include="DnDoc\**\*.*" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.2' ">
@@ -35,8 +35,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Fluent.Architecture\dn32.infra.nucleo.csproj" />
     <ProjectReference Include="D:\Projetos\dn32\dn32.infra\dn32.infra\dn32.infra.csproj" />
-    <ProjectReference Include="..\Fluent.Architecture\dn32.infra.Nucleo.csproj" />
   </ItemGroup>
 
 

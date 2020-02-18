@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -10,13 +10,13 @@ using Newtonsoft.Json;
 
 namespace dn32.infra.Exceptions.ValidationException
 {
-    public class FilteredPropertyNotFound : FluenteValidationException
+    public class FilteredPropertyNotFound : DnValidationException
     {
         [JsonProperty("globalization_key")]
         public override string GlobalizationKey => "FilteredPropertyNotFound";
 
         public FilteredPropertyNotFound(string entityName, string propertyName)
-            : base($"Entity {entityName} does not have a property with name {propertyName}")
+            : base($"Entidade {entityName} does not have a property with Nome {propertyName}")
         {
         }
     }

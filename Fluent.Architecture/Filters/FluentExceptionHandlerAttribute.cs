@@ -13,7 +13,7 @@ using dn32.infra.extensoes;
 
 namespace dn32.infra.Filters
 {
-    public class FluenteExceptionHandlerAttribute : ExceptionFilterAttribute
+    public class DnExceptionHandlerAttribute : ExceptionFilterAttribute
     {
         public override void OnException(ExceptionContext filterContext)
         {
@@ -37,38 +37,38 @@ namespace dn32.infra.Filters
                 filterContext.Exception = exception2.InnerException;
             }
 
-            if (filterContext.Exception is ContextFluenteValidationException exception)
+            if (filterContext.Exception is ContextDnValidationException exception)
             {
                 var inconsistencies = exception.Inconsistencies.Select(inconsistence =>
                 {
-                    if (inconsistence is FluenteUiFieldValidationException field)
+                    if (inconsistence is DnUiFieldValidationException field)
                     {
-                        return new FluenteUiFieldInconsistence
+                        return new DnUiFieldInconsistence
                         {
                             Field = field.Field,
                             Message = field.Message,
                             GlobalizationKey = field.GlobalizationKey,
                             PropertyName = field.PropertyName,
-                            FluenteException = inconsistence
+                            DnException = inconsistence
                         };
                     }
-                    else if (inconsistence is FluentePropertyValidationException prop)
+                    else if (inconsistence is DnPropertyValidationException prop)
                     {
-                        return new FluentePropertyInconsistence
+                        return new DnPropertyInconsistence
                         {
                             Message = prop.Message,
                             GlobalizationKey = prop.GlobalizationKey,
                             PropertyName = prop.PropertyName,
-                            FluenteException = inconsistence
+                            DnException = inconsistence
                         };
                     }
                     else
                     {
-                        return new FluenteInconsistence
+                        return new DnInconsistence
                         {
                             Message = inconsistence.Message,
                             GlobalizationKey = inconsistence.GlobalizationKey,
-                            FluenteException = inconsistence
+                            DnException = inconsistence
                         };
                     }
                 })
@@ -87,7 +87,7 @@ namespace dn32.infra.Filters
                 ContentResult content = new ContentResult
                 {
                     ContentType = "application/json",
-                    Content = result.SerializarParaFluenteJson()
+                    Content = result.SerializarParaDnJson()
                 };
 
                 filterContext.Result = content;
@@ -111,7 +111,7 @@ namespace dn32.infra.Filters
                 ContentResult content = new ContentResult
                 {
                     ContentType = "application/json",
-                    Content = result.SerializarParaFluenteJson()
+                    Content = result.SerializarParaDnJson()
                 };
 
                 filterContext.Result = content;
@@ -119,7 +119,7 @@ namespace dn32.infra.Filters
             }
         }
 
-        public virtual void GetGlobalization(FluenteInconsistence inconsistence)
+        public virtual void GetGlobalization(DnInconsistence inconsistence)
         {
         }
     }

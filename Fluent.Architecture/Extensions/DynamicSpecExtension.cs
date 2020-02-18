@@ -42,23 +42,23 @@ namespace dn32.infra.Extensoes
             return Request.GetParameters("propertyToOrder");
         }
 
-        public static IQueryable<object> FluenteDynamicSelectProjectTo<T>(this IQueryable<T> query, TransactionalService service) where T : EntidadeBase
+        public static IQueryable<object> DnDynamicSelectProjectTo<T>(this IQueryable<T> query, TransactionalService service) where T : EntidadeBase
         {
             var Request = service.LocalHttpContext.Request;
             var fields = Request.GetPropertiesToShow();
             if (fields == null || fields.Length == 0) { return query; }
-            return query.FluenteDynamicSelectProjectTo(fields, out _);
+            return query.DnDynamicSelectProjectTo(fields, out _);
         }
 
-        public static IQueryable<T> FluenteDynamicProjectTo<T>(this IQueryable<T> query, TransactionalService service, string[] fields = null) where T : EntidadeBase
+        public static IQueryable<T> DnDynamicProjectTo<T>(this IQueryable<T> query, TransactionalService service, string[] fields = null) where T : EntidadeBase
         {
             var Request = service.LocalHttpContext.Request;
             if (fields == null || fields.Length == 0) { fields = Request.GetPropertiesToShow(); }
             if (fields == null || fields.Length == 0) { return query; }
-            return query.FluenteDynamicProjectTo(fields);
+            return query.DnDynamicProjectTo(fields);
         }
 
-        public static IOrderedQueryable<T> FluenteDynamicProjectToOrder<T>(this IQueryable<T> query, TransactionalService service, string[] fields = null) where T : EntidadeBase
+        public static IOrderedQueryable<T> DnDynamicProjectToOrder<T>(this IQueryable<T> query, TransactionalService service, string[] fields = null) where T : EntidadeBase
         {
             var Request = service.LocalHttpContext.Request;
             if (fields == null || fields.Length == 0) { fields = Request.GetPropertiesToShow(); }
@@ -70,7 +70,7 @@ namespace dn32.infra.Extensoes
             return query.OrderBy(orderString);
         }
 
-        private static IOrderedQueryable<object> FluenteDynamicProjectToSelectOrder(this IQueryable<object> query, TransactionalService service)
+        private static IOrderedQueryable<object> DnDynamicProjectToSelectOrder(this IQueryable<object> query, TransactionalService service)
         {
             var Request = service.LocalHttpContext.Request;
             var show = Request.GetPropertiesToShow();
@@ -82,17 +82,17 @@ namespace dn32.infra.Extensoes
             return query.OrderBy(orderString);
         }
 
-        private static IQueryable<T> FluenteDynamicProjectTo<T>(this IQueryable<T> query, string[] Fields)
+        private static IQueryable<T> DnDynamicProjectTo<T>(this IQueryable<T> query, string[] Fields)
         {
-            var ret = FluenteDynamicSelectProjectTo(query, Fields, out MapperConfiguration config);
+            var ret = DnDynamicSelectProjectTo(query, Fields, out MapperConfiguration config);
             return ret.ProjectTo<T>(config);
         }
 
-        private static IQueryable<object> FluenteDynamicSelectProjectTo<T>(this IQueryable<T> query, string[] Fields, out MapperConfiguration config)
+        private static IQueryable<object> DnDynamicSelectProjectTo<T>(this IQueryable<T> query, string[] Fields, out MapperConfiguration config)
         {
-            var descriptions = new FluenteClassDescription(typeof(T), Fields);
+            var descriptions = new DnClassDescription(typeof(T), Fields);
             var rash = RandomUtil.NextRandomString(6);
-            var assemblyName = $"FluenteAssembly_{rash}";
+            var assemblyName = $"DnAssembly_{rash}";
             var type = descriptions.CreateTypeComposition(assemblyName);
             var types = new List<Tuple<Type, Type>>();
 
@@ -110,27 +110,27 @@ namespace dn32.infra.Extensoes
             return ret as IQueryable<object>;
         }
 
-        internal static void GetAllTypeForDescription(this FluenteClassDescription description, List<Tuple<Type, Type>> list)
+        internal static void GetAllTypeForDescription(this DnClassDescription description, List<Tuple<Type, Type>> list)
         {
             foreach (var property in description.Properties)
             {
-                if (property.FluenteClassDescription != null)
+                if (property.DnClassDescription != null)
                 {
                     list.Add(new Tuple<Type, Type>(property.Type, property.DynamicProperty));
-                    GetAllTypeForDescription(property.FluenteClassDescription, list);
+                    GetAllTypeForDescription(property.DnClassDescription, list);
                 }
             }
         }
 
-        internal static Type CreateTypeComposition(this FluenteClassDescription description, string assemblyName)
+        internal static Type CreateTypeComposition(this DnClassDescription description, string assemblyName)
         {
             var principaTypeBuilder = CreateTypeBuilder(assemblyName);
 
             foreach (var property in description.Properties)
             {
-                if (property.FluenteClassDescription != null)
+                if (property.DnClassDescription != null)
                 {
-                    property.DynamicProperty = CreateTypeComposition(property.FluenteClassDescription, assemblyName);
+                    property.DynamicProperty = CreateTypeComposition(property.DnClassDescription, assemblyName);
                     principaTypeBuilder.CreateProperty(property.Name, property.DynamicProperty);
                 }
                 else
@@ -144,7 +144,7 @@ namespace dn32.infra.Extensoes
 
         internal static TypeBuilder CreateTypeBuilder(string assemblyName)
         {
-            var moduleName = "FluenteCustomEntityForMap";
+            var moduleName = "DnCustomEntityForMap";
             var typeBuilder = BuilderClassUtil.CreateClass(typeof(object), assemblyName, moduleName);
             typeBuilder.CreateConstructor();
             return typeBuilder;

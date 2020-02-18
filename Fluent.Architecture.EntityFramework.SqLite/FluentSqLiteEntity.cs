@@ -2,8 +2,8 @@
 
 namespace dn32.infra.EntityFramework.SqLite
 {
-    [DbType(FluenteDbType.SQLITE)]
-    public abstract class FluenteSqLiteEntity : FluenteEntidade
+    [DbType(DnDbType.SQLITE)]
+    public abstract class DnSqLiteEntity : DnEntidade
     {
     }
 }

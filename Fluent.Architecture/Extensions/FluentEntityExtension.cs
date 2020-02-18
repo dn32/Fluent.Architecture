@@ -1,6 +1,4 @@
-﻿using dn32.infra.Attributes;
-using dn32.infra.Exceptions;
-using dn32.infra.Nucleo.Atributos;
+﻿using dn32.infra.Exceptions;
 using dn32.infra.Nucleo.Extensoes;
 using dn32.infra.Nucleo.Models;
 using Newtonsoft.Json;
@@ -11,10 +9,11 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
+using dn32.infra.nucleo.atributos;
 
 namespace dn32.infra.Extensoes
 {
-    public static class FluenteEntityExtension
+    public static class DnEntityExtension
     {
         // Todo2 documentar
         public static string GetTypeName(this object entity)
@@ -60,7 +59,7 @@ namespace dn32.infra.Extensoes
             var name = property.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName;
             if (string.IsNullOrEmpty(name))
             {
-                name = property?.Name?.ToFluenteJsonStringNormalized();
+                name = property?.Name?.ToDnJsonStringNormalized();
             }
 
             return name;
@@ -68,10 +67,10 @@ namespace dn32.infra.Extensoes
 
         public static string GetUiPropertyName(this PropertyInfo property)
         {
-            return property.GetCustomAttribute<FluenteJsonPropertyAttribute>()?.name ??
+            return property.GetCustomAttribute<DnPropriedadeJsonAtributo>()?.Nome ??
                    property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ??
                    property.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName ??
-                   property?.Name.ToFluenteJsonStringNormalized();
+                   property?.Name.ToDnJsonStringNormalized();
         }
 
         public static PropertyInfo GetKeyProperty(this Type entityType)
@@ -95,19 +94,19 @@ namespace dn32.infra.Extensoes
             return entityType?.GetProperties()?.Where(x => x.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || x.GetCustomAttribute<KeyAttribute>(true) != null)?.ToList();
         }
 
-        public static List<PropertyInfo> GetFluenteUniqueKeyProperties(this Type entityType)
+        public static List<PropertyInfo> GetDnUniqueKeyProperties(this Type entityType)
         {
-            return entityType?.GetProperties()?.Where(x => x.IsDefined(typeof(FluenteUniqueKeyAttribute), true))?.ToList();
+            return entityType?.GetProperties()?.Where(x => x.IsDefined(typeof(DnChaveUnicaAtributo), true))?.ToList();
         }
 
-        public static List<PropertyInfo> GetKeyAndFluenteUniqueKeyProperties(this Type entityType)
+        public static List<PropertyInfo> GetKeyAndDnUniqueKeyProperties(this Type entityType)
         {
-            return entityType?.GetProperties()?.Where(x => x.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || x?.GetCustomAttribute<KeyAttribute>(true) != null || x?.GetCustomAttribute<FluenteUniqueKeyAttribute>(true) != null)?.ToList();
+            return entityType?.GetProperties()?.Where(x => x.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || x?.GetCustomAttribute<KeyAttribute>(true) != null || x?.GetCustomAttribute<DnChaveUnicaAtributo>(true) != null)?.ToList();
         }
 
-        public static List<KeyValue> GetKeyAndFluenteUniqueKeyValues(this object entity)
+        public static List<KeyValue> GetKeyAndDnUniqueKeyValues(this object entity)
         {
-            var properties = entity?.GetType()?.GetKeyAndFluenteUniqueKeyProperties();
+            var properties = entity?.GetType()?.GetKeyAndDnUniqueKeyProperties();
             return PropertiesToKeyValueList(entity, properties);
         }
 
@@ -125,8 +124,8 @@ namespace dn32.infra.Extensoes
         {
             if (property.PropertyType.IsNumeric())
             {
-                var min = property.GetCustomAttribute<FluenteJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
-                var max = property.GetCustomAttribute<FluenteJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
+                var min = property.GetCustomAttribute<DnPropriedadeJsonAtributo>()?.Minimo ?? property.GetCustomAttribute<RangeAttribute>()?.Minimum;
+                var max = property.GetCustomAttribute<DnPropriedadeJsonAtributo>()?.Maximo ?? property.GetCustomAttribute<RangeAttribute>()?.Maximum;
                 if (min == null || max == null) { return null; }
 
                 int minInt = min.ChangeType<int>();
@@ -137,8 +136,8 @@ namespace dn32.infra.Extensoes
 
             if (property.PropertyType == typeof(string) && property.PropertyType == typeof(String))
             {
-                var min = property.GetCustomAttribute<FluenteJsonPropertyAttribute>()?.min ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
-                var max = property.GetCustomAttribute<FluenteJsonPropertyAttribute>()?.max ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length;
+                var min = property.GetCustomAttribute<DnPropriedadeJsonAtributo>()?.Minimo ?? property.GetCustomAttribute<MinLengthAttribute>()?.Length;
+                var max = property.GetCustomAttribute<DnPropriedadeJsonAtributo>()?.Maximo ?? property.GetCustomAttribute<MaxLengthAttribute>()?.Length;
                 if (min == null || max == null) { return null; }
 
                 return (min.Value, max.Value);
@@ -148,18 +147,18 @@ namespace dn32.infra.Extensoes
         }
 
         // Todo2 documentar
-        public static List<KeyValue> GetFluenteUniqueKeyValues(this object entity)
+        public static List<KeyValue> GetDnUniqueKeyValues(this object entity)
         {
-            var properties = entity?.GetType()?.GetFluenteUniqueKeyProperties();
+            var properties = entity?.GetType()?.GetDnUniqueKeyProperties();
             return PropertiesToKeyValueList(entity, properties);
         }
 
         public static List<KeyValue> GetForeignKeyValues(this object entity, Type outType)
         {
-            static FluenteReferenceAttribute GetReference(PropertyInfo property)
+            static DnReferenciaAtributo GetReference(PropertyInfo property)
             {
-                return property.GetCustomAttribute<FluenteCompositionAttribute>(true) as FluenteReferenceAttribute
-                            ?? property.GetCustomAttribute<FluenteManyToManyAggregationAttribute>(true) ?? null;
+                return property.GetCustomAttribute<DnComposicaoAtributo>(true) as DnReferenciaAtributo
+                            ?? property.GetCustomAttribute<DnAgregacaoDeMuitosParaMuitosAtributo>(true) ?? null;
             }
 
             var returnList = new List<KeyValue>();
@@ -172,8 +171,8 @@ namespace dn32.infra.Extensoes
 
             foreach (var element in elements)
             {
-                var externalKeys = element.compositionAttr.ExternalKeys;
-                var localKeys = element.compositionAttr.LocalKeys;
+                var externalKeys = element.compositionAttr.ChavesExternas;
+                var localKeys = element.compositionAttr.ChavesLocais;
                 var destinalType = element.property.PropertyType.IsList() ? element.property.PropertyType.GenericTypeArguments[0] : element.property.PropertyType;
                 if (outType != destinalType) { continue; }
 
@@ -185,13 +184,13 @@ namespace dn32.infra.Extensoes
                     var destinalKeyProperty = destinalType.GetProperty(externalKey);
                     if (destinalKeyProperty == null)
                     {
-                        throw new IncorrectDevelopmentException($"Entity {entity.GetType().Name} has an incorrectly named foreign key because the reference property could not be found in entity {destinalType.Name}. The key in question has the name: '{externalKey}'.");
+                        throw new IncorrectDevelopmentException($"Entidade {entity.GetType().Name} has an incorrectly named foreign key because the Referencia property could not be found in entity {destinalType.Name}. The key in question has the Nome: '{externalKey}'.");
                     }
 
                     var localKeylProperty = localType.GetProperty(localKey);
                     if (localKeylProperty == null)
                     {
-                        throw new IncorrectDevelopmentException($"Entity {localType.Name} has an incorrectly named foreign key because the reference property could not be found in entity {localType.Name}. The key in question has the name: '{localKey}'.");
+                        throw new IncorrectDevelopmentException($"Entidade {localType.Name} has an incorrectly named foreign key because the Referencia property could not be found in entity {localType.Name}. The key in question has the Nome: '{localKey}'.");
                     }
 
                     var columnName = destinalKeyProperty.GetColumnName();

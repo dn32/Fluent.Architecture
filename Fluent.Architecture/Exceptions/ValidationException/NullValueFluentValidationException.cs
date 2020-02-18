@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -9,11 +9,11 @@ using Newtonsoft.Json;
 
 namespace dn32.infra.Exceptions.ValidationException
 {
-    public class NullValueFluenteValidationException : FluenteValidationException
+    public class NullValueDnValidationException : DnValidationException
     {
-        public NullValueFluenteValidationException(string message, string parameter = null) : base(message, false, parameter) { }
+        public NullValueDnValidationException(string message, string parameter = null) : base(message, false, parameter) { }
 
         [JsonProperty("globalization_key")]
-        public override string GlobalizationKey => "NullValueFluenteValidationException";
+        public override string GlobalizationKey => "NullValueDnValidationException";
     }
 }

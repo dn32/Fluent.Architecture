@@ -2,8 +2,8 @@
 
 namespace dn32.infra.EntityFramework.MySQL
 {
-    [DbType(FluenteDbType.MYSQL)]
-    public abstract class FluenteMySQLEntity : FluenteEntidade
+    [DbType(DnDbType.MYSQL)]
+    public abstract class DnMySQLEntity : DnEntidade
     {
     }
 }

@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -11,12 +11,12 @@ using dn32.infra.Exceptions.ValidationException;
 
 namespace dn32.infra.Validation
 {
-    internal interface IFluenteValidation
+    internal interface IDnValidation
     {
         bool NullParameterOk { get; set; }
         bool KeyValuesOk { get; set; }
         //TransactionalService Service { get; set; }
 
-        void AddInconsistency(FluenteValidationException ex);
+        void AddInconsistency(DnValidationException ex);
     }
 }

@@ -13,15 +13,15 @@ namespace dn32.infra.Specifications
     /// <summary>
     /// Especificação base para todas as especificações do sistema.
     /// </summary>
-    /// <typeparam name="TE">Tipo de entidade da especificação.</typeparam>
-    public abstract partial class FluenteSpecification<TE> : BaseSpecification, IFluenteSpecification where TE : EntidadeBase
+    /// <typeparam Nome="TE">Tipo de entidade da especificação.</typeparam>
+    public abstract partial class DnSpecification<TE> : BaseSpecification, IDnSpecification where TE : EntidadeBase
     {
-        public Type FluenteEntityType => typeof(TE);
+        public Type DnEntityType => typeof(TE);
 
         /// <summary>
         /// A especificação.
         /// </summary>
-        /// <param name="query">
+        /// <param Nome="query">
         /// A referência à tabela/documento vinda do repositório.
         /// </param>
         /// <returns>

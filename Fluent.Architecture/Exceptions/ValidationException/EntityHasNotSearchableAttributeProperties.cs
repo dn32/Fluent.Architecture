@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -10,13 +10,13 @@ using Newtonsoft.Json;
 
 namespace dn32.infra.Exceptions.ValidationException
 {
-    public class EntityHasNotSearchableAttributeProperties : FluenteValidationException
+    public class EntityHasNotSearchableAttributeProperties : DnValidationException
     {
         [JsonProperty("globalization_key")]
         public override string GlobalizationKey => "EntityHasNotSearchableAttributeProperties";
 
         public EntityHasNotSearchableAttributeProperties(string entityName)
-            : base($"Entity {entityName} has no properties decorated with SearchableAttribute")
+            : base($"Entidade {entityName} has no properties decorated with SearchableAttribute")
         {
         }
     }

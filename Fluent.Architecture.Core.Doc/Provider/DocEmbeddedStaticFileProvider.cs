@@ -11,7 +11,7 @@ namespace dn32.infra.Nucleo.Doc.Controllers
 
         public DocEmbeddedStaticFileProvider()
         {
-            EmbeddedFileProvider = new EmbeddedFileProvider(typeof(FluenteDocController).Assembly);
+            EmbeddedFileProvider = new EmbeddedFileProvider(typeof(DnDocController).Assembly);
         }
 
         public IDirectoryContents GetDirectoryContents(string subpath)
@@ -24,7 +24,7 @@ namespace dn32.infra.Nucleo.Doc.Controllers
             path = path.Replace("/", "\\");
             if (path.StartsWith("\\")) { path = path.Substring(1, path.Length - 1); };
 
-            if (!path.StartsWith("FluenteDoc"))
+            if (!path.StartsWith("DnDoc"))
             {
                 path = Path.Combine("wwwroot", path);
                 bool isLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);

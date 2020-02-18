@@ -7,23 +7,23 @@
 @using dn32.infra.atributos
 @using dn32.infra.enumeradores
 @using dn32.infra.extensoes
-@using dn32.infra.Nucleo.Atributos
+@using dn32.infra.nucleo.atributos
 
-@using static dn32.infra.FluenteDocExtension
+@using static dn32.infra.DnDocExtension
 @using static dn32.infra.Nucleo.Extensoes.JsonExtension
 @using dn32.infra.Interfaces;
 
-@model FluenteJsonSchema
+@model DnJsonSchema
 
 @{
-    ViewData["Title"] = Model.FluenteJsonForm.name;
-    var actions = ViewBag.actions as List<FluenteActionSchema> ?? throw new InvalidOperationException("actions is not  List<FluenteActionSchema>");
+    ViewData["Title"] = Model.Formulario.Nome;
+    var actions = ViewBag.actions as List<DnActionSchema> ?? throw new InvalidOperationException("actions is not  List<DnActionSchema>");
 
     string GetTypeName(Type type, string name)
     {
-        if (type.GetListTypeNonNull().IsFluenteEntity())
+        if (type.GetListTypeNonNull().IsDnEntity())
         {
-            return $"<a href=\"/FluenteDoc/Model?name={type.GetListTypeNonNull().FullName}\">{type.GetFriendlyName(false)}</a>";
+            return $"<a href=\"/DnDoc/Model?Nome={type.GetListTypeNonNull().FullName}\">{type.GetFriendlyName(false)}</a>";
         }
         else
         {
@@ -37,7 +37,7 @@
     }
 </script>
 <div class="one-service-container">
-    <h4 class="general-title">@Model.FluenteJsonForm?.name (@actions.Count) </h4>
+    <h4 class="general-title">@Model.Formulario?.Nome (@actions.Count) </h4>
 
     @{
         string Is(bool operation, string text)
@@ -50,14 +50,14 @@
             @foreach (var action in actions)
             {
                 if (action == null) { continue; }
-                //var parameters = action.Parameters?.Select(x => GetTypeName(x.Type, x.Name)).ToArray() ?? new string[] { };
+                //var parameters = action.Parameters?.Select(x => GetTypeName(x.Tipo, x.Name)).ToArray() ?? new string[] { };
                 //var paramString = string.Join(", ", parameters);
                 var actionName = action?.MethodName ?? "";
 
-                <div class="action" onclick="navegate('/FluenteDoc/Action?service=@Model.FluenteJsonForm.Type.GetListTypeNonNull().Name&actionName=@actionName')">
+                <div class="action" onclick="navegate('/DnDoc/Action?service=@Model.Formulario.Tipo.GetListTypeNonNull().Name&actionName=@actionName')">
                     <span class="method @action.Method.ToLower()">@action.Method</span>
                     <span class="name">@action.Name.G()</span>
-                    <span class="description">@action.Description</span>
+                    <span class="Descricaoription">@action.Description</span>
                     @if (@action.Method == "GET")
                     {
                         <span class="route"><a href="@(action.ApiBaseUrl + action.Route)">@action.Route</a></span>
@@ -78,46 +78,46 @@
         </div>
 
         <div class="properties-container">
-            <span class="title">@Model.FluenteJsonForm?.name @(("Properties").G())</span>
+            <span class="title">@Model.Formulario?.Nome @(("Propriedades").G())</span>
             <table class="properties">
                 <thead>
                     <tr>
-                        <th>@(("Property").G())</th>
+                        <th>@(("Propriedade").G())</th>
                         <th>@(("Name").G())</th>
-                        <th>@(("Type").G())</th>
+                        <th>@(("Tipo").G())</th>
                         <th>@(("Others").G())</th>
                     </tr>
                 </thead>
-                @foreach (var property in Model.Properties)
+                @foreach (var property in Model.Propriedades)
                 {
-                    if (property.form == EnumTipoDeComponenteDeFormularioDeTela.Nenhum) { continue; }
-                    if (property.Property.GetCustomAttribute<FluenteDocAtributo>()?.Apresentacao == EnumMostrar.Ocultar) { continue; }
+                    if (property.Formulario == EnumTipoDeComponenteDeFormularioDeTela.Nenhum) { continue; }
+                    if (property.Propriedade.GetCustomAttribute<DnDocAtributo>()?.Apresentacao == EnumApresentar.Ocultar) { continue; }
 
-                    var range = (property.min == property.max ? property.min.ToString() : property.min + ", " + property.max);
+                    var range = (property.Minimo == property.Maximo ? property.Minimo.ToString() : property.Minimo + ", " + property.Maximo);
                     range = range == "0" ? "" : $" ({range})";
 
                     <tr class="property">
-                        <td class="name">@property.propName</td>
-                        <td class="description">@property.name</td>
-                        <td class="type">@Html.Raw(GetTypeName(property.Type, property.Type.Name))@range</td>
+                        <td class="name">@property.NomeDaPropriedade</td>
+                        <td class="Descricaoription">@property.Nome</td>
+                        <td class="type">@Html.Raw(GetTypeName(property.Tipo, property.Tipo.Name))@range</td>
                         <td>
-                            @Html.Raw(Is(property.IsEnum, "<span><img src='/FluenteDoc/img/ok.png'/> " + "enum".G() + "</span>"))
-                            @Html.Raw(Is(property.IsKey || property.IsFluenteUniqueKeyKey, "<span><img src='/FluenteDoc/img/ok.png'/> " + "key".G() + "</span>"))
-                            @Html.Raw(Is(property.IsList, "<span><img src='/FluenteDoc/img/ok.png'/> " + "list".G() + "</span>"))
-                            @Html.Raw(Is(property.IsNullable, "<span><img src='/FluenteDoc/img/ok.png'/> " + "nullable".G() + "</span>"))
-                            @Html.Raw(Is(property.required, "<span><img src='/FluenteDoc/img/ok.png'/> " + "required".G() + "</span>"))
-                            @Html.Raw(Is(property.IsFk, "<span><img src='/FluenteDoc/img/ok.png'/>  " + "fk".G() + " <a href=\"/FluenteDoc/Service?name=" + property.FkDestinal?.Type?.Name + "\">" + property.FkDestinal?.name + "</a></span>"))
+                            @Html.Raw(Is(property.EhEnumerador, "<span><img src='/DnDoc/img/ok.png'/> " + "enum".G() + "</span>"))
+                            @Html.Raw(Is(property.EhChave || property.EhDnChaveUnica, "<span><img src='/DnDoc/img/ok.png'/> " + "key".G() + "</span>"))
+                            @Html.Raw(Is(property.EhLista, "<span><img src='/DnDoc/img/ok.png'/> " + "list".G() + "</span>"))
+                            @Html.Raw(Is(property.PermiteNulo, "<span><img src='/DnDoc/img/ok.png'/> " + "nullable".G() + "</span>"))
+                            @Html.Raw(Is(property.EhRequerido, "<span><img src='/DnDoc/img/ok.png'/> " + "EhRequerido".G() + "</span>"))
+                            @Html.Raw(Is(property.EhChaveExterna, "<span><img src='/DnDoc/img/ok.png'/>  " + "fk".G() + " <a href=\"/DnDoc/Service?Nome=" + property.DestinoDeChaveExterna?.Tipo?.Name + "\">" + property.DestinoDeChaveExterna?.Nome + "</a></span>"))
                         </td>
                     </tr>
                 }
             </table>
-            <div class="example-value-container">
-                <span>@("Example value".G())</span>
+            <div class="example-valor-container">
+                <span>@("Example valor".G())</span>
 
                 @{
-                    var exampleValue = Model.FluenteJsonForm?.Type?.GetExampleValue() ?? "";
+                    var exampleValue = Model.Formulario?.Tipo?.GetExampleValue() ?? "";
 
-                    var json = exampleValue.SerializarParaFluenteJson(Newtonsoft.Json.Formatting.Indented);
+                    var json = exampleValue.SerializarParaDnJson(Newtonsoft.Json.Formatting.Indented);
 
                     <pre class="example-value">@json</pre>
                 }

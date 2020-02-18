@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -12,7 +12,7 @@ using System.Reflection;
 
 namespace dn32.infra.Exceptions.ValidationException
 {
-    public class FluentePropertyValidationException : FluenteValidationException
+    public class DnPropertyValidationException : DnValidationException
     {
         [JsonProperty("property_name")]
         public string PropertyName { get; set; }
@@ -20,7 +20,7 @@ namespace dn32.infra.Exceptions.ValidationException
         [JsonIgnore]
         public PropertyInfo Property { get; set; }
 
-        public FluentePropertyValidationException(PropertyInfo property, bool globalizeValues, string message, string compositionProperty) : base(message, globalizeValues)
+        public DnPropertyValidationException(PropertyInfo property, bool globalizeValues, string message, string compositionProperty) : base(message, globalizeValues)
         {
             Property = property;
             if (string.IsNullOrWhiteSpace(compositionProperty))
@@ -36,6 +36,6 @@ namespace dn32.infra.Exceptions.ValidationException
         }
 
         [JsonProperty("globalization_key")]
-        public override string GlobalizationKey => "FluentePropertyValidationException";
+        public override string GlobalizationKey => "DnPropertyValidationException";
     }
 }

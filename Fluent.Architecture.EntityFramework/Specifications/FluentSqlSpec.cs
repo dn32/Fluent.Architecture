@@ -15,13 +15,13 @@ using dn32.infra.Extensoes;
 
 namespace dn32.infra.EntityFramework.Specifications
 {
-    public class FluenteSqlSpec<TE> : FluenteSpecification<TE> where TE : FluenteEntidade
+    public class DnSqlSpec<TE> : DnSpecification<TE> where TE : DnEntidade
     {
         private string Sql { get; set; }
 
         private object[] Parameters { get; set; }
 
-        public FluenteSqlSpec<TE> SetParameter(string sql, params object[] parameters)
+        public DnSqlSpec<TE> SetParameter(string sql, params object[] parameters)
         {
             Sql = sql;
             Parameters = parameters;
@@ -33,7 +33,7 @@ namespace dn32.infra.EntityFramework.Specifications
             IgnoreOrder = true;
 
 #if NETCOREAPP3_1
-            var dbSet = query.FluenteCast<DbSet<TE>>();
+            var dbSet = query.DnCast<DbSet<TE>>();
             return dbSet.FromSqlRaw(Sql, Parameters);
 #else
             return query.FromSql(Sql, Parameters);

@@ -7,7 +7,7 @@ namespace dn32.infra.EntityFramework.Oracle
     /// <summary>
     /// Contexto do EF no net Core
     /// </summary>
-    [DbType(FluenteDbType.ORACLE)]
+    [DbType(DnDbType.ORACLE)]
     public class EfContextOracle : EfContext
     {
 

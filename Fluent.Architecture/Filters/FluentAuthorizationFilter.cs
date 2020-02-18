@@ -12,7 +12,7 @@ using dn32.infra.extensoes;
 
 namespace dn32.infra.Filters
 {
-    public class FluenteAuthorizationFilter : IAuthorizationFilter
+    public class DnAuthorizationFilter : IAuthorizationFilter
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
@@ -29,13 +29,13 @@ namespace dn32.infra.Filters
 
             if (Setup.Config.Config.JwtInfo != null)
             {
-                JWTOnFluenteAuthorizationFilter(context);
+                JWTOnDnAuthorizationFilter(context);
             }
 
-            OnFluenteAuthorizationFilter(context);
+            OnDnAuthorizationFilter(context);
         }
 
-        protected virtual void JWTOnFluenteAuthorizationFilter(AuthorizationFilterContext context)
+        protected virtual void JWTOnDnAuthorizationFilter(AuthorizationFilterContext context)
         {
             var tokenRequest = context.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Replace("Bearer", "").Trim();
             tokenRequest = string.IsNullOrWhiteSpace(tokenRequest) ? context.HttpContext.Request.Query["Authorization"].ToString()?.Replace("Bearer", "")?.Trim() : tokenRequest;
@@ -43,7 +43,7 @@ namespace dn32.infra.Filters
 
             if (string.IsNullOrWhiteSpace(tokenRequest) || tokenRequest == "undefined" && tokenRequest == "null")
             {
-                Forbidden(context, "An authentication token is required");
+                Forbidden(context, "An authentication token is EhRequerido");
             }
             else
             {
@@ -60,7 +60,7 @@ namespace dn32.infra.Filters
             }
         }
 
-        protected virtual void OnFluenteAuthorizationFilter(AuthorizationFilterContext context)
+        protected virtual void OnDnAuthorizationFilter(AuthorizationFilterContext context)
         {
         }
 
@@ -69,7 +69,7 @@ namespace dn32.infra.Filters
             ContentResult content = new ContentResult
             {
                 ContentType = "application/json",
-                Content = message.SerializarParaFluenteJson()
+                Content = message.SerializarParaDnJson()
             };
 
             context.Result = content;

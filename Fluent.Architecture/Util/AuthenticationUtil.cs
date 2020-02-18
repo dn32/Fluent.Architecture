@@ -35,7 +35,7 @@ namespace dn32.infra.Util
         //        return false;
         //    }
 
-        //    username = identity?.FindFirst(ClaimTypes.Name)?.Value;
+        //    username = identity?.FindFirst(ClaimTypes.Name)?.Valor;
 
         //    if (string.IsNullOrEmpty(username))
         //    {

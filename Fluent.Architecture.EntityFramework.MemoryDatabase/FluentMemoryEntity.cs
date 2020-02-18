@@ -2,8 +2,8 @@
 
 namespace dn32.infra.EntityFramework.MemoryDatabase
 {
-    [DbType(FluenteDbType.MEMORY)]
-    public abstract class FluenteMySQLEntity : FluenteEntidade
+    [DbType(DnDbType.MEMORY)]
+    public abstract class DnMySQLEntity : DnEntidade
     {
     }
 }

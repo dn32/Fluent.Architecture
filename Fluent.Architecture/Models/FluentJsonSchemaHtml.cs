@@ -1,8 +1,8 @@
 ﻿namespace dn32.infra.Nucleo.Models
 {
-    public class FluenteJsonSchemaHtml
+    public class DnJsonSchemaHtml
     {
-        public FluenteJsonSchema Form { get; set; }
+        public DnJsonSchema Form { get; set; }
         public string Html { get; set; }
     }
 }

@@ -19,7 +19,7 @@ namespace dn32.infra.Specifications
         /// <summary>
         /// Obtem o referência de uma tabela do banco de dados.
         /// </summary>
-        /// <typeparam name="TX">
+        /// <typeparam Nome="TX">
         /// Tipo de entidade desejada.
         /// </typeparam>
         /// <returns>

@@ -19,7 +19,7 @@ namespace dn32.infra.EntityFramework
         /// <summary>
         ///  Cria um novo contexto para o entity framework.
         /// </summary>
-        /// <param name="connectionString">
+        /// <param Nome="connectionString">
         /// A string de conexão com o banco de dados.
         /// </param>
         /// <returns>
@@ -32,7 +32,7 @@ namespace dn32.infra.EntityFramework
 
 
             var dbContextType = connection.DbContextType;
-            var efContext = Activator.CreateInstance(dbContextType, new object[] { connectionString }).FluenteCast<EfContext>();
+            var efContext = Activator.CreateInstance(dbContextType, new object[] { connectionString }).DnCast<EfContext>();
             efContext.UserSessionRequest = userSessionRequest;
 
             CreateDB(createDatabaseIfNotExists, efContext);

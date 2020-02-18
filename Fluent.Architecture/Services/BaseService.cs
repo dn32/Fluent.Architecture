@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -22,7 +22,7 @@ namespace dn32.infra.Services
     public abstract class BaseService
     {
         //Temporariamente fora do escopo
-        //protected internal virtual Type RepositoryType => null;
+        //protected internal virtual Tipo RepositoryType => null;
 
         protected virtual Type ValidationType => null;
 
@@ -56,10 +56,10 @@ namespace dn32.infra.Services
         /// <summary>
         /// Obtem a injeção de dependência de propriedades Lazy-loading.
         /// </summary>
-        /// <typeparam name="TS">
+        /// <typeparam Nome="TS">
         /// Tipo de serviço.
         /// </typeparam>
-        /// <param name="sessionId">
+        /// <param Nome="sessionId">
         /// Identificador de sessão do usuário para a requisição atual.
         /// </param>
         /// <returns>
@@ -94,7 +94,7 @@ namespace dn32.infra.Services
         /// <summary>
         /// Permite definir a sessão do usuário para a requisição atual.
         /// </summary>
-        /// <param name="sessionRequest">
+        /// <param Nome="sessionRequest">
         /// A sessão do usuário.
         /// </param>
         protected internal virtual void SetUserSession(UserSessionRequest sessionRequest)

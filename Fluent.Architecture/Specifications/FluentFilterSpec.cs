@@ -6,13 +6,13 @@ using dn32.infra.dados;
 
 namespace dn32.infra.Nucleo.Specifications
 {
-    public class FluenteFilterSpec<T> : FluenteSpecification<T> where T : FluenteEntidade
+    public class DnFilterSpec<T> : DnSpecification<T> where T : DnEntidade
     {
         protected Filtro[] Filters { get; set; }
 
         public bool IsList { get; set; }
 
-        public FluenteFilterSpec<T> SetParameter(Filtro[] filters, bool isList)
+        public DnFilterSpec<T> SetParameter(Filtro[] filters, bool isList)
         {
             Filters = filters;
             IsList = isList;
@@ -26,12 +26,12 @@ namespace dn32.infra.Nucleo.Specifications
             return query
                  .Where(expression)
                  .GetInclusions(IsList)
-                 .FluenteDynamicProjectTo(Service);
+                 .DnDynamicProjectTo(Service);
         }
 
         public override IOrderedQueryable<T> Order(IQueryable<T> query)
         {
-            return query.FluenteDynamicProjectToOrder(Service);
+            return query.DnDynamicProjectToOrder(Service);
         }
     }
 }

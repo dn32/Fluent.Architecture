@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace dn32.infra.Test
 {
-    public static class FluenteAssert
+    public static class DnAssert
     {
         public static void Equal(object obj1, object obj2)
         {
@@ -22,7 +22,7 @@ namespace dn32.infra.Test
 
         public static void IsNotNullOrEmpty(object entity)
         {
-            if (entity.IsFluenteNull())
+            if (entity.IsDnNull())
             {
                 throw new ValidationException("The text is empty, null or space");
             }

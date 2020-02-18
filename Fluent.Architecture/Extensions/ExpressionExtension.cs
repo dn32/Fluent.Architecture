@@ -9,7 +9,7 @@ namespace dn32.infra.Extensoes
     {
         //public static PropertyInfo GetPropertyInfo<TSource, TProperty>(Expression<Func<TSource, TProperty>> propertyLambda)
         //{
-        //    Type type = typeof(TSource);
+        //    Tipo type = typeof(TSource);
 
         //    if (!(propertyLambda.Body is MemberExpression member))
         //    {
@@ -30,9 +30,9 @@ namespace dn32.infra.Extensoes
         //    return propInfo;
         //}
 
-        //public static List<Tuple<string, Type>> ValideExpression<T>(Expression<Func<T, object>> par, bool valide = true) where T : BaseEntity, new()
+        //public static List<Tuple<string, Tipo>> ValideExpression<T>(Expression<Func<T, object>> par, bool valide = true) where T : BaseEntity, new()
         //{
-        //    var listaDepropriedades = new List<Tuple<string, Type>>();
+        //    var listaDepropriedades = new List<Tuple<string, Tipo>>();
         //    var membros = ((NewExpression)par.Body).Members as IReadOnlyCollection<MemberInfo>;
         //    var typeOriginal = typeof(T);
 
@@ -69,13 +69,13 @@ namespace dn32.infra.Extensoes
         //            typeOriginal = propriedade.PropertyType;
         //        }
 
-        //        listaDepropriedades.Add(new Tuple<string, Type>(nomeConcatenadoDasPropriedades, typeInformado));
+        //        listaDepropriedades.Add(new Tuple<string, Tipo>(nomeConcatenadoDasPropriedades, typeInformado));
         //    }
 
         //    return listaDepropriedades;
         //}
 
-        //public static object ObtenhavaluePorPropriedade(string propriedadeInformada, object p, out Type typeDaPropriedade)
+        //public static object ObtenhavaluePorPropriedade(string propriedadeInformada, object p, out Tipo typeDaPropriedade)
         //{
         //    typeDaPropriedade = null;
         //    if (propriedadeInformada == null)
@@ -227,7 +227,7 @@ namespace dn32.infra.Extensoes
                 }
                 else
                 {
-                    throw new InvalidOperationException($"The value '{value}' for the filter is not boolean as the type is. Preferably when using EnumFilterType.FALSE or EnumFilterType.FALSE for boolean operations.");
+                    throw new InvalidOperationException($"The valor '{value}' for the filter is not boolean as the type is. Preferably when using EnumFilterType.FALSE or EnumFilterType.FALSE for boolean operations.");
                 }
             }
             if (type == typeof(string))
@@ -256,7 +256,7 @@ namespace dn32.infra.Extensoes
                 }
                 else
                 {
-                    throw new InvalidOperationException($"The value '{value}' for the filter is not valid enum for type {type.Name}");
+                    throw new InvalidOperationException($"The valor '{value}' for the filter is not valid enum for type {type.Name}");
                 }
             }
             else
@@ -320,7 +320,7 @@ namespace dn32.infra.Extensoes
                 }
                 else
                 {
-                    throw new InvalidOperationException($"The value '{value}' for the filter is not valid DateTime as the type is");
+                    throw new InvalidOperationException($"The valor '{value}' for the filter is not valid DateTime as the type is");
                 }
             }
             else if (type.IsNumeric())
@@ -331,12 +331,12 @@ namespace dn32.infra.Extensoes
                 }
                 catch (Exception)
                 {
-                    throw new InvalidOperationException($"The value '{value}' for the filter is not valid number as the type is");
+                    throw new InvalidOperationException($"The valor '{value}' for the filter is not valid number as the type is");
                 }
             }
             else
             {
-                throw new InvalidOperationException($"Type {type.Name} in property {propertyName} does not support filter type GREATER/SMALLER");
+                throw new InvalidOperationException($"Tipo {type.Name} in property {propertyName} does not support filter type GREATER/SMALLER");
             }
 
             if (greater)
@@ -381,23 +381,23 @@ namespace dn32.infra.Extensoes
             return Expression.Lambda<Func<T, bool>>(nullCheck, parameter);
         }
 
-        //public static Expression<Func<T, bool>> ToExpression<T>(string andOrOperator, string propName, string opr, object value, Expression<Func<T, bool>> expr = null)
+        //public static Expression<Func<T, bool>> ToExpression<T>(string andOrOperator, string NomeDaPropriedade, string opr, object valor, Expression<Func<T, bool>> expr = null)
         //{
         //    Expression<Func<T, bool>> func = null;
 
         //    ParameterExpression paramExpr = Expression.Parameter(typeof(T));
-        //    var arrProp = propName.Split('.').ToList();
+        //    var arrProp = NomeDaPropriedade.Split('.').ToList();
         //    Expression binExpr = null;
         //    string partName = null;
         //    arrProp.ForEach(x =>
         //    {
         //        Expression tempExpr = null;
         //        partName = string.IsNullOrWhiteSpace(partName) ? x : partName + "." + x;
-        //        if (partName == propName)
+        //        if (partName == NomeDaPropriedade)
         //        {
         //            var member = NestedExprProp(paramExpr, partName);
-        //            var type = member.Type.Name == "Nullable`1" ? Nullable.GetUnderlyingType(member.Type) : member.Type;
-        //            tempExpr = ApplyFilter(opr, member, Expression.Convert(Expression.Constant(value), member.Type));
+        //            var type = member.Tipo.Name == "Nullable`1" ? Nullable.GetUnderlyingType(member.Tipo) : member.Tipo;
+        //            tempExpr = ApplyFilter(opr, member, Expression.Convert(Expression.Constant(valor), member.Tipo));
         //        }
         //        else
         //            tempExpr = ApplyFilter("!=", NestedExprProp(paramExpr, partName), Expression.Constant(null));
@@ -415,11 +415,11 @@ namespace dn32.infra.Extensoes
         //    return func;
         //}
 
-        //private static MemberExpression NestedExprProp(Expression expr, string propName)
+        //private static MemberExpression NestedExprProp(Expression expr, string NomeDaPropriedade)
         //{
-        //    string[] arrProp = propName.Split('.');
+        //    string[] arrProp = NomeDaPropriedade.Split('.');
         //    int arrPropCount = arrProp.Length;
-        //    return (arrPropCount > 1) ? Expression.Property(NestedExprProp(expr, arrProp.Take(arrPropCount - 1).Aggregate((a, i) => a + "." + i)), arrProp[arrPropCount - 1]) : Expression.Property(expr, propName);
+        //    return (arrPropCount > 1) ? Expression.Propriedade(NestedExprProp(expr, arrProp.Take(arrPropCount - 1).Aggregate((a, i) => a + "." + i)), arrProp[arrPropCount - 1]) : Expression.Propriedade(expr, NomeDaPropriedade);
         //}
 
         //private static Expression ApplyFilter(string opr, Expression left, Expression right)
@@ -453,10 +453,10 @@ namespace dn32.infra.Extensoes
         //            InnerLambda = Expression.Or(left, right);
         //            break;
         //        case "LIKE":
-        //            InnerLambda = Expression.Call(left, typeof(string).GetMethod("Contains", new Type[] { typeof(string) }), right);
+        //            InnerLambda = Expression.Call(left, typeof(string).GetMethod("Contains", new Tipo[] { typeof(string) }), right);
         //            break;
         //        case "NOTLIKE":
-        //            InnerLambda = Expression.Not(Expression.Call(left, typeof(string).GetMethod("Contains", new Type[] { typeof(string) }), right));
+        //            InnerLambda = Expression.Not(Expression.Call(left, typeof(string).GetMethod("Contains", new Tipo[] { typeof(string) }), right));
         //            break;
         //    }
 

@@ -8,7 +8,7 @@ namespace dn32.infra.Controllers
 {
     [Route("/api/[controller]/[action]")]
     [ApiController]
-    public class FluenteAPIReadOnlyController<T> : FluenteAPIController<T> where T : FluenteEntidade, new()
+    public class DnAPIReadOnlyController<T> : DnAPIController<T> where T : DnEntidade, new()
     {
         [NonAction]
         public override Task<ResultadoPadrao<T>> Add([Description("The entity you want to add"), FromBody] T Entity) => throw new InvalidOperationException();

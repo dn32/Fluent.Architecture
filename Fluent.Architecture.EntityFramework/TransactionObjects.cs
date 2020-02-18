@@ -35,7 +35,7 @@ namespace dn32.infra.EntityFramework
         /// Initializes a new instance of the <see cref="TransactionObjects"/> class. 
         /// Inicializa objeto de transação.
         /// </summary>
-        /// <param name="dataBaseConnectionString">
+        /// <param Nome="dataBaseConnectionString">
         /// String de conexão com o banco de dados.
         /// </param>
         public TransactionObjects(Connection connection, UserSessionRequest userSessionRequest)
@@ -51,13 +51,13 @@ namespace dn32.infra.EntityFramework
 
         public IQueryable GetObjectInputDataInternal(Type type)
         {
-            return typeof(DbContext).GetMethod(nameof(DbContext.Set))?.MakeGenericMethod(type).Invoke(Session, null).FluenteCast<IQueryable>();
+            return typeof(DbContext).GetMethod(nameof(DbContext.Set))?.MakeGenericMethod(type).Invoke(Session, null).DnCast<IQueryable>();
         }
 
         /// <summary>
         /// Obtem o referência de uma tabela do banco de dados.
         /// </summary>
-        /// <typeparam name="TX">
+        /// <typeparam Nome="TX">
         /// Tipo de entidade desejada.
         /// </typeparam>
         /// <returns>

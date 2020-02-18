@@ -15,18 +15,18 @@ namespace dn32.infra.Util
     public static class GlobalUtil
     {
         /// <summary>
-        /// Obtem o tipo da entidade de um objeto baseado em um tipo esperado. Ex <see cref="FluenteService{T}"/>, <see cref="FluenteRepository{TE}"/>, etc. O retorno será o tipo de T.
+        /// Obtem o tipo da entidade de um objeto baseado em um tipo esperado. Ex <see cref="DnService{T}"/>, <see cref="DnRepository{TE}"/>, etc. O retorno será o tipo de T.
         /// </summary>
-        /// <param name="objectTypeToCheck">
+        /// <param Nome="objectTypeToCheck">
         /// Objeto a ser avaliado.
         /// </param>
-        /// <param name="expectedType">
-        /// Tipo esperado. Exemplo:  <see cref="FluenteService{T}"/>, <see cref="FluenteRepository{TE}"/>
+        /// <param Nome="expectedType">
+        /// Tipo esperado. Exemplo:  <see cref="DnService{T}"/>, <see cref="DnRepository{TE}"/>
         /// </param>
         /// <returns>
         /// O tipo.
         /// </returns>
-        internal static Tuple<Type, Type> GetFluenteEntityType(Type objectTypeToCheck, Type expectedType)
+        internal static Tuple<Type, Type> GetDnEntityType(Type objectTypeToCheck, Type expectedType)
         {
             return new Tuple<Type, Type>(GetBase(objectTypeToCheck.BaseType), objectTypeToCheck);
 
@@ -52,7 +52,7 @@ namespace dn32.infra.Util
             }
         }
 
-        internal static Tuple<Type, Type> GetFluenteEntityTypeByInterface(Type objectTypeToCheck, Type expectedType)
+        internal static Tuple<Type, Type> GetDnEntityTypeByInterface(Type objectTypeToCheck, Type expectedType)
         {
             var ints = objectTypeToCheck.GetInterfaces();
             var interface_ = ints.FirstOrDefault(x => x.Name == expectedType.Name);
@@ -65,25 +65,25 @@ namespace dn32.infra.Util
             return null;
         }
 
-        private static string[] FluenteEntityNames => new[]
+        private static string[] DnEntityNames => new[]
         {
-            typeof(FluenteController<FluenteEntidade>).Name,
-            typeof(FluenteService<FluenteEntidade>).Name,
-            typeof(IFluenteRepository<FluenteEntidade>).Name,
-            typeof(FluenteValidation<FluenteEntidade>).Name,
-            typeof(FluenteSpecification<FluenteEntidade>).Name
+            typeof(DnController<DnEntidade>).Name,
+            typeof(DnService<DnEntidade>).Name,
+            typeof(IDnRepository<DnEntidade>).Name,
+            typeof(DnValidation<DnEntidade>).Name,
+            typeof(DnSpecification<DnEntidade>).Name
         };
 
         /// <summary>
-        /// Obtem o tipo da entidade de um tipo. Ex <see cref="FluenteService{T}"/>. O tipo a ser encontrado é o tipo de T.
+        /// Obtem o tipo da entidade de um tipo. Ex <see cref="DnService{T}"/>. O tipo a ser encontrado é o tipo de T.
         /// </summary>
-        /// <param name="currentType">
+        /// <param Nome="currentType">
         /// Objeto a ser avaliado.
         /// </param>
         /// <returns>
         /// O tipo.
         /// </returns>
-        public static Type GetFluenteEntityType(this Type currentType)
+        public static Type GetDnEntityType(this Type currentType)
         {
             return GetBase(currentType);
 
@@ -94,7 +94,7 @@ namespace dn32.infra.Util
                     return null;
                 }
 
-                if (!FluenteEntityNames.Contains(type.Name))
+                if (!DnEntityNames.Contains(type.Name))
                 {
                     return GetBase(type.BaseType);
                 }

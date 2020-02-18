@@ -14,22 +14,22 @@ namespace dn32.infra.Factory
         /// <summary>
         /// Cria uma nova validação.
         /// </summary>
-        /// <typeparam name="T">
+        /// <typeparam Nome="T">
         /// Tipo da entidade referente à validação desejada.
         /// </typeparam>
         /// <returns>
         /// A validação criada.
         /// </returns>
-        internal static FluenteValidation<T> Create<T>() where T : EntidadeBase
+        internal static DnValidation<T> Create<T>() where T : EntidadeBase
         {
-            var localType = Setup.Config?.Config?.GenericValidationType?.MakeGenericType(typeof(T)) ?? typeof(FluenteValidation<T>);
-            return Create(localType) as FluenteValidation<T>;
+            var localType = Setup.Config?.Config?.GenericValidationType?.MakeGenericType(typeof(T)) ?? typeof(DnValidation<T>);
+            return Create(localType) as DnValidation<T>;
         }
 
         internal static TransactionalValidation Create(Type validationType)
         {
             var localType = validationType;
-            var entityType = validationType.GetFluenteEntityType();
+            var entityType = validationType.GetDnEntityType();
 
             if (entityType != null)
             {

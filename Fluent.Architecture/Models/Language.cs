@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace dn32.infra.Nucleo.Models
 {
     [ExcludeFromCodeCoverage]
-    public static class FluenteLanguage
+    public static class DnLanguage
     {
 #pragma warning disable CA1707
         public static string DefaultLanguage => EN_US;

@@ -1,4 +1,4 @@
-﻿@using static dn32.infra.FluenteDocExtension
+﻿@using static dn32.infra.DnDocExtension
 
 @{
     ViewData["Title"] = "Autentication".G();
@@ -6,7 +6,7 @@
 
 <div class="auth-container">
 
-    <form method="post" action="/FluenteDoc/Logout">
+    <form method="post" action="/DnDoc/Logout">
         <div class="form-group">
             <label for="user">@("Token".G())</label>
             <textarea class="form-control" name="token" style="height: 361px;">@ViewBag.Token</textarea>

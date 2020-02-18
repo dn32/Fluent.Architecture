@@ -8,7 +8,7 @@ namespace dn32.infra.EntityFramework.SqLite
     /// <summary>
     /// Contexto do EF no net Core
     /// </summary>
-    [DbType(FluenteDbType.SQLITE)]
+    [DbType(DnDbType.SQLITE)]
     public class EfContextSqLite : EfContext
     {
         public static LoggerFactory LoggerFactory;

@@ -1,6 +1,6 @@
 ﻿namespace dn32.infra.EntityFramework
 {
-    public enum FluenteDbType
+    public enum DnDbType
     {
         SQL_SERVER,
         ORACLE,

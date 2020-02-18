@@ -1,9 +1,12 @@
-﻿using dn32.infra.Exceptions;
+﻿using dn32.infra.dados;
+using dn32.infra.enumeradores;
+using dn32.infra.Exceptions;
+using dn32.infra.extensoes;
 using dn32.infra.Extensoes;
 using dn32.infra.Interfaces;
 using dn32.infra.Interfaces;
 using dn32.infra.Interfaces;
-using dn32.infra.Nucleo.Atributos;
+using dn32.infra.nucleo.atributos;
 using dn32.infra.Nucleo.Interfaces;
 using dn32.infra.Nucleo.Models;
 using dn32.infra.Nucleo.Util;
@@ -21,9 +24,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using dn32.infra.dados;
-using dn32.infra.enumeradores;
-using dn32.infra.extensoes;
 
 [assembly: InternalsVisibleTo(@"dn32.infra.EntityFramework.SqlServer, PublicKey=00240000048000009400000006020000002400005253413100040000010001002d98533364f3b3fbd11e7a3f14cd73d169e1daabd62ba2d1e5bc6a48a9bc709a503960db0e76c190e7a8dcefaed037e539682d6a891b242ddb91a3ab20fbfa0c04fb6304c8903857e1ed75399850fca4037dd2c810749e75770e5d455e950ccb9d06cf6fea5f30b00557a29408ce4c45021c412eca32616f47809bfe2cf404cc")]
 [assembly: InternalsVisibleTo(@"dn32.infra.EntityFramework.PostgreSQL, PublicKey=0024000004800000940000000602000000240000525341310004000001000100192d4ee01ba583399ab1d381c4301592f8520d29c628f3220e1550b2068e540e26886fa8d8b52618553f89fed1dccb18d5d3c07c548fca3c916a10823f411c23ef0e85bf0526ed94aa3cfbdf79a9595861348cfc369670f8ed9f7c4afd08de5f3cd87a0c7c6b1d8a0b94622c163a764813ba95d39dc44ea1baf7b663800a49bc")]
@@ -32,14 +32,14 @@ namespace dn32.infra.EntityFramework
 {
     /// <inheritdoc />
     /// <summary>
-    /// Repositório base com entidade do sistema baseado em Entity Framework.
+    /// Repositório base com entidade do sistema baseado em Entidade Framework.
     /// </summary>
-    /// <typeparam name="TE">
+    /// <typeparam Nome="TE">
     /// O tipo de entidade do repositório.
     /// </typeparam>
-    public partial class FluenteEFRepository<TE> : IFluenteRepository<TE> where TE : EntidadeBase
+    public partial class DnEFRepository<TE> : IDnRepository<TE> where TE : EntidadeBase
     {
-        public FluenteEFRepository()
+        public DnEFRepository()
         {
         }
 
@@ -69,11 +69,11 @@ namespace dn32.infra.EntityFramework
         /// <summary>
         /// O serviço qual esse repositório representa.
         /// </summary>
-        public FluenteService<TE> Service { get; set; }
+        public DnService<TE> Service { get; set; }
 
-        // FluenteService<TE> IFluenteRepository<TE>.Service { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        // DnService<TE> IDnRepository<TE>.Service { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
-        internal protected void RunTheContextValidation() => Service.SessionRequest.ContextFluenteValidationException.Validate();
+        internal protected void RunTheContextValidation() => Service.SessionRequest.ContextDnValidationException.Validate();
 
         #endregion
 
@@ -98,12 +98,12 @@ namespace dn32.infra.EntityFramework
         */
         protected async Task UpdateCompositionListAsync(TE entity, bool isUpdate)
         {
-            var compositionProperties = entity.GetType().GetProperties().Where(x => x.IsDefined(typeof(FluenteCompositionAttribute)));
+            var compositionProperties = entity.GetType().GetProperties().Where(x => x.IsDefined(typeof(DnComposicaoAtributo)));
             foreach (var compositionProperty in compositionProperties)
             {
-                var attr = compositionProperty.GetCustomAttribute<FluenteCompositionAttribute>();
-                if (attr?.OnSave == EnumTipoDeOperacaoParaComAsReferencias.Ignorar) { continue; }
-                if (attr?.OnSave == EnumTipoDeOperacaoParaComAsReferencias.Adicionar && isUpdate) { continue; }
+                var attr = compositionProperty.GetCustomAttribute<DnComposicaoAtributo>();
+                if (attr?.OperacaoAoSalvar == EnumTipoDeOperacaoParaComAsReferencias.Ignorar) { continue; }
+                if (attr?.OperacaoAoSalvar == EnumTipoDeOperacaoParaComAsReferencias.Adicionar && isUpdate) { continue; }
 
                 var compositionValue = compositionProperty.GetValue(entity);
 
@@ -111,12 +111,12 @@ namespace dn32.infra.EntityFramework
 
                 if (compositionPropertyType.IsList())
                 {
-                    var compositionListValue = compositionValue.FluenteCast<IList>();
+                    var compositionListValue = compositionValue.DnCast<IList>();
 
                     if (isUpdate)
                     {
                         var listType = compositionPropertyType.GenericTypeArguments[0];
-                        var allPersistedForThisEntity = ListAllByForeignKey(entity, listType).FluenteCast<IList>();
+                        var allPersistedForThisEntity = ListAllByForeignKey(entity, listType).DnCast<IList>();
 
                         var allPersistedForThisEntityForRemove = allPersistedForThisEntity;
                         if (compositionListValue != null)
@@ -160,7 +160,7 @@ namespace dn32.infra.EntityFramework
                 {
                     await CompleteEmptyKeysAsync(compositionValue);
 
-                    var list = ListAllByForeignKey(entity, compositionPropertyType).FluenteCast<IList>();
+                    var list = ListAllByForeignKey(entity, compositionPropertyType).DnCast<IList>();
                     var currentEntity = list.Count == 1 ? list[0] : null;
 
                     if (currentEntity == null)
@@ -209,17 +209,17 @@ namespace dn32.infra.EntityFramework
 
             localProperties.ToList().ForEach(LocalProperty =>
             {
-                var composition = LocalProperty.GetCustomAttribute<FluenteReferenceAttribute>(true);
+                var composition = LocalProperty.GetCustomAttribute<DnReferenciaAtributo>(true);
                 if (composition == null) { return; }
                 var externalProperties = LocalProperty.PropertyType.GetListTypeNonNull().GetProperties();
                 var externalValue = LocalProperty.GetValue(entity);
 
-                if (composition.ExternalKeys == null) throw new IncorrectDevelopmentException(entity.GetType().Name + "- When indicating an aggregation or composition attribute, it is necessary to inform the properties {ExternalKeys}");
+                if (composition.ChavesExternas == null) throw new IncorrectDevelopmentException(entity.GetType().Name + "- When indicating an aggregation or composition attribute, it is necessary to inform the properties {ChavesExternas}");
 
-                for (int i = 0; i < composition.ExternalKeys.Length; i++)
+                for (int i = 0; i < composition.ChavesExternas.Length; i++)
                 {
-                    var externalKey = composition.ExternalKeys[i];
-                    var localKey = composition.LocalKeys[i];
+                    var externalKey = composition.ChavesExternas[i];
+                    var localKey = composition.ChavesLocais[i];
                     var externalKeyProperty = externalProperties.Single(x => x.Name == externalKey);
                     var localKeyProperty = localProperties.Single(x => x.Name == localKey);
 
@@ -232,10 +232,10 @@ namespace dn32.infra.EntityFramework
                         externalKeyValue = externalValue == null ? null : externalKeyProperty.GetValue(externalValue);
                     }
 
-                    for (int i2 = 0; i < composition.ExternalKeys.Length; i++)
+                    for (int i2 = 0; i < composition.ChavesExternas.Length; i++)
                     {
-                        var ext = composition.ExternalKeys[i2];
-                        var loca = composition.LocalKeys[i2];
+                        var ext = composition.ChavesExternas[i2];
+                        var loca = composition.ChavesLocais[i2];
 
                         if (LocalProperty.PropertyType.IsList())
                         {
@@ -264,9 +264,9 @@ namespace dn32.infra.EntityFramework
                                     localKeyProperty.SetValue(entity, externalKeyValue);
                                 }
 
-                                if (composition is FluenteAggregationAttribute aggre && externalValue != null)
+                                if (composition is DnAgregacaoAtributo aggre && externalValue != null)
                                 {
-                                    if (Session.Entry(externalValue).State == EntityState.Added && aggre.AllowAdd)
+                                    if (Session.Entry(externalValue).State == EntityState.Added && aggre.PermitirAdicionar)
                                     {
                                         continue;
                                     }
@@ -283,18 +283,18 @@ namespace dn32.infra.EntityFramework
         private async Task CompleteEmptyKeysAsync(object compositionValue)
         {
             if (compositionValue == null) { return; }
-            var keyPoroperties = compositionValue.GetType().GetProperties().Where(x => x.IsDefined(typeof(FluenteRandomKeyValueOnAddAttribute))).ToList();
+            var keyPoroperties = compositionValue.GetType().GetProperties().Where(x => x.IsDefined(typeof(DnCriarValorRandomicoAoAdicionarEntidadeAtributo))).ToList();
             //Todo - Permitir esse atributo somente em tipos primitivos
             foreach (var property in keyPoroperties)
             {
                 var type = property.PropertyType;
                 var value = property.GetValue(compositionValue);
-                if (value.IsFluenteNull() || value.FluenteEquals(type.GetFluenteDefaultValue()))
+                if (value.IsDnNull() || value.DnEquals(type.GetDnDefaultValue()))
                 {
                     if (GetExistinEntityCode(compositionValue, property)) { return; }
-                    var attribute = property.GetCustomAttribute<FluenteRandomKeyValueOnAddAttribute>();
+                    var attribute = property.GetCustomAttribute<DnCriarValorRandomicoAoAdicionarEntidadeAtributo>();
                     if (attribute == null) { continue; }
-                    await GenerateNewEntityCodes(compositionValue, property, attribute.Max);
+                    await GenerateNewEntityCodes(compositionValue, property, attribute.TamanhoMaximo);
                 }
             }
         }
@@ -350,7 +350,7 @@ namespace dn32.infra.EntityFramework
 
         private IQueryable FromSqlByType(string sql, Type dbEntityType, params object[] parameters)
         {
-            return GetType().GetMethod(nameof(FromSqlSelect), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)?.MakeGenericMethod(dbEntityType).Invoke(this, new object[] { sql, parameters }).FluenteCast<IQueryable>();
+            return GetType().GetMethod(nameof(FromSqlSelect), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)?.MakeGenericMethod(dbEntityType).Invoke(this, new object[] { sql, parameters }).DnCast<IQueryable>();
         }
 
         internal protected IQueryable<TE> FromSql(string sql, params object[] parameters)
@@ -372,7 +372,7 @@ namespace dn32.infra.EntityFramework
         internal protected ICollection ListAllNotPaginate(string sql, Type dbEntityType)
         {
             var query = FromSqlByType(sql, dbEntityType);
-            return typeof(Enumerable).GetMethod(nameof(Enumerable.ToList))?.MakeGenericMethod(dbEntityType).Invoke(null, new object[] { query }).FluenteCast<ICollection>();
+            return typeof(Enumerable).GetMethod(nameof(Enumerable.ToList))?.MakeGenericMethod(dbEntityType).Invoke(null, new object[] { query }).DnCast<ICollection>();
         }
 
         #endregion
@@ -401,7 +401,7 @@ namespace dn32.infra.EntityFramework
         /// <summary>
         /// Atualiza um item do banco de dados baseado em seu identificador.
         /// </summary>
-        /// <param name="entity">
+        /// <param Nome="entity">
         /// Entidade a ser atualizada com o identificador preenchido.
         /// </param>
 
@@ -444,7 +444,7 @@ namespace dn32.infra.EntityFramework
             }
         }
 
-        public virtual void RemoveRange(IFluenteSpecification spec)
+        public virtual void RemoveRange(IDnSpecification spec)
         {
             var list = GetSpec(spec).ToIQueryable(Query).ToList();
             this.Input.RemoveRange(list);
@@ -460,33 +460,33 @@ namespace dn32.infra.EntityFramework
 
         #region INTERNAL
 
-        private FluenteSelectSpecification<TE, TO> GetSpecSelect<TO>(ISpec spec1)
+        private DnSelectSpecification<TE, TO> GetSpecSelect<TO>(ISpec spec1)
         {
-            if (spec1 is IFluenteSpecification<TO> spec)
+            if (spec1 is IDnSpecification<TO> spec)
             {
-                if (spec.FluenteEntityType != typeof(TE))
+                if (spec.DnEntityType != typeof(TE))
                 {
-                    var serviceName = $"{spec.FluenteEntityType.Name}Service";
-                    throw new IncorrectDevelopmentException($"The type of input reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.FluenteEntityType}.\r\nRequisition Type: {typeof(TE)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
+                    var serviceName = $"{spec.DnEntityType.Name}Service";
+                    throw new IncorrectDevelopmentException($"The type of input reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.DnEntityType}.\r\nRequisition Tipo: {typeof(TE)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
                 }
 
-                if (spec.FluenteEntityOutType != typeof(TO))
+                if (spec.DnEntityOutType != typeof(TO))
                 {
                     var serviceName = $"{typeof(TE).Name}Service";
-                    throw new IncorrectDevelopmentException($"The type of output reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.FluenteEntityType}.\r\nRequisition Type: {typeof(TO)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
+                    throw new IncorrectDevelopmentException($"The type of output reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.DnEntityType}.\r\nRequisition Tipo: {typeof(TO)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
                 }
 
-                return spec as FluenteSelectSpecification<TE, TO>;
+                return spec as DnSelectSpecification<TE, TO>;
             }
 
             throw new IncorrectDevelopmentException("The specification is of a different type than expected");
         }
 
-        protected FluenteSpecification<TE> GetSpec(ISpec spec1)
+        protected DnSpecification<TE> GetSpec(ISpec spec1)
         {
-            if (spec1 is FluenteSpecification<TE> spec)
+            if (spec1 is DnSpecification<TE> spec)
             {
-                return spec as FluenteSpecification<TE>;
+                return spec as DnSpecification<TE>;
             }
 
             throw new IncorrectDevelopmentException("The specification is of a different type than expected");
@@ -495,19 +495,19 @@ namespace dn32.infra.EntityFramework
         // private static string CreateSqlFromKeys(TE entity)
         // {
         // var tableName = entity.GetTableName();
-        // var keyValues = entity.GetKeyValues().Select(x => $"({x.Key} = {x.Value} and {x.Key} != 0)").ToArray();
+        // var keyValues = entity.GetKeyValues().Select(x => $"({x.Key} = {x.Valor} and {x.Key} != 0)").ToArray();
         // var sql = $"select * from {tableName} where ";
         // sql += string.Join(" and ", keyValues);
         // return sql;
         // }
 
-        private FluentePaginacao GetPagination()
+        private DnPaginacao GetPagination()
         {
             var currentPageInt = int.TryParse(GetParameter("CurrentPage"), out var currentPageInt_) ? currentPageInt_ : 0;
             var itemsPerPageInt = int.TryParse(GetParameter("ItemsPerPage"), out var itemsPerPageInt_) ? itemsPerPageInt_ : 20;
             var startAtZeroBool = !bool.TryParse(GetParameter("StartAtZero"), out var startAtZeroBool_) || startAtZeroBool_;
 
-            return FluentePaginacao.Criar(currentPageInt, startAtZeroBool, itemsPerPageInt);
+            return DnPaginacao.Criar(currentPageInt, startAtZeroBool, itemsPerPageInt);
         }
 
         private string GetParameter(string key)

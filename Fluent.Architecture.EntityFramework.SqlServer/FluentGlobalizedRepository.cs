@@ -1,6 +1,6 @@
 ﻿//// -----------------------------------------------------------------------
-//// <copyright company="Fluente System">
-////     Copyright © Fluente System. All rights reserved.
+//// <copyright company="Dn System">
+////     Copyright © Dn System. All rights reserved.
 ////     TODOS OS DIREITOS RESERVADOS.
 //// </copyright>
 //// -----------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //// ReSharper disable CommentTypo
 
 //#if NET461
-//using System.Data.Entity;
+//using System.Data.Entidade;
 
 //#else
 //using Microsoft.EntityFrameworkCore;
@@ -18,7 +18,7 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Reflection;
-//using dn32.infra.Attributes;
+//using dn32.infra.atributos;
 //using dn32.infra.Extensoes;
 //using dn32.infra.Interfaces;
 //using dn32.infra.Model;
@@ -28,18 +28,18 @@
 //{
 //    /// <inheritdoc />
 //    /// <summary>
-//    /// Repositório base com entidade do sistema baseado em Entity Framework.
+//    /// Repositório base com entidade do sistema baseado em Entidade Framework.
 //    /// </summary>
-//    /// <typeparam name="TE">
+//    /// <typeparam Nome="TE">
 //    /// O tipo de entidade do repositório.
 //    /// </typeparam>
-//    public class FluenteGlobalizedRepository<TE> : FluenteSQLRepository<TE> where TE : FluenteGlobalizedEntity
+//    public class DnGlobalizedRepository<TE> : DnSQLRepository<TE> where TE : DnGlobalizedEntity
 //    {
 //        // Tradução ok
 //        /// <summary>
 //        /// Adiciona um item ao banco de dados.
 //        /// </summary>
-//        /// <param name="entity">
+//        /// <param Nome="entity">
 //        /// Item a ser adicionado.
 //        /// </param>
 
@@ -47,7 +47,7 @@
 //        {
 //            if (string.IsNullOrWhiteSpace(entity.Language))
 //            {
-//                entity.Language = FluenteLanguage.DefaultLanguage;
+//                entity.Language = DnLanguage.DefaultLanguage;
 //            }
 
 //            entity.IsDefaultLanguage = true;
@@ -88,7 +88,7 @@
 //            var existentsTranslactions = FindTranslationsByLanguage(entity, entity.Language).ToList();
 //            if (existentsTranslactions.Any())
 //            {
-//                existentsTranslactions.ForEach(x => x.Value = translations.FirstOrDefault(y => y.Property == x.Property)?.Value);
+//                existentsTranslactions.ForEach(x => x.Valor = translations.FirstOrDefault(y => y.Propriedade == x.Propriedade)?.Valor);
 //            }
 //            else
 //            {
@@ -100,7 +100,7 @@
 
 //        // Tradução ok
 
-//        public virtual List<TE> List(IFluenteSpecification spec, FluentePagination pagination, string language)
+//        public virtual List<TE> List(IDnSpecification spec, DnPagination pagination, string language)
 //        {
 //            var list = base.List(spec, pagination);
 
@@ -122,7 +122,7 @@
 
 //        // Tradução ok
 
-//        public virtual TE FirstOrDefault(IFluenteSpecification spec, string language)
+//        public virtual TE FirstOrDefault(IDnSpecification spec, string language)
 //        {
 //            var persistedEntity = base.FirstOrDefault(spec);
 //            return UpdateTranslationForFoundEntity(persistedEntity, language);
@@ -167,7 +167,7 @@
 //            return FindAllTranslationsOfAnEntity(entity).Where(x => x.Language == language);
 //        }
 
-//        private void AddTranslation(FluenteGlobalizedEntity entity)
+//        private void AddTranslation(DnGlobalizedEntity entity)
 //        {
 //            var translations = ExtractTranslactionsOfEntity(entity);
 
@@ -177,17 +177,17 @@
 //            }
 //        }
 
-//        private static List<Translation> ExtractTranslactionsOfEntity(FluenteGlobalizedEntity entity)
+//        private static List<Translation> ExtractTranslactionsOfEntity(DnGlobalizedEntity entity)
 //        {
-//            var properties = typeof(TE).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => x.GetCustomAttribute<FluenteGlobalizationAttribute>() != null).ToList();
+//            var properties = typeof(TE).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => x.GetCustomAttribute<DnGlobalizationAttribute>() != null).ToList();
 //            var translations = properties.Select(x =>
 //                    new Translation
 //                    {
 //                        EntityType = entity.GetTypeName(),
 //                        EntityId = entity.GetKeyValue(),
 //                        Language = entity.Language,
-//                        Property = x.Name,
-//                        Value = x.GetValue(entity).ToString()
+//                        Propriedade = x.Name,
+//                        Valor = x.GetValue(entity).ToString()
 //                    })
 //                .ToList();
 
@@ -218,16 +218,16 @@
 //        {
 //            var entityType = entity.GetType();
 //            var translations = FindTranslationsByLanguage(entity, language).ToList();
-//            translations.ForEach(translation => entityType.GetProperty(translation.Property)?.SetValue(entity, translation.Value));
+//            translations.ForEach(translation => entityType.GetProperty(translation.Propriedade)?.SetValue(entity, translation.Valor));
 //            return translations.Any();
 //        }
 
 //        private void DoNotAllowChangeGlobalizedProperties(TE persistedEntity)
 //        {
-//            var properties = typeof(TE).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => x.GetCustomAttribute<FluenteGlobalizationAttribute>() != null).ToList();
+//            var properties = typeof(TE).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => x.GetCustomAttribute<DnGlobalizationAttribute>() != null).ToList();
 
-//            properties.ForEach(property => Session.Entry(persistedEntity).Property(property.Name).IsModified = false);
-//            Session.Entry(persistedEntity).Property(x => x.Language).IsModified = false;
+//            properties.ForEach(property => Session.Entry(persistedEntity).Propriedade(property.Name).IsModified = false);
+//            Session.Entry(persistedEntity).Propriedade(x => x.Language).IsModified = false;
 //        }
 
 //        #endregion

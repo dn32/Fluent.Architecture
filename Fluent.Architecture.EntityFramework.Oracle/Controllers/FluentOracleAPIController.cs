@@ -10,14 +10,14 @@ using dn32.infra.dados;
 
 namespace dn32.infra.EntityFramework.Oracle.Controllers
 {
-    public class FluenteOracleAPIController<T> : FluenteAPIController<T> where T : FluenteEntidade, new()
+    public class DnOracleAPIController<T> : DnAPIController<T> where T : DnEntidade, new()
     {
         [HttpGet]
-        [FluenteAction(Pagination = true, DynamicSpec = true)]
+        [DnAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<ResultadoPadraoPaginado<List<T>>> FindByProximity(
-            [Description("The properties whose value will be compared")] string[] properties,
+            [Description("The properties whose valor will be compared")] string[] properties,
             [Description("The term to use as a comparator")] string Term,
-            [Description("The required acceptance percentage. The higher the value, the more demanding")][Range(0,100)]
+            [Description("The EhRequerido acceptance percentage. The higher the valor, the more demanding")][Range(0,100)]
             int Tolerance
         )
         {
@@ -29,7 +29,7 @@ namespace dn32.infra.EntityFramework.Oracle.Controllers
         [HttpGet]
         [Route("/api/[controller]/ListByFilterAndProximity")]
         [Description("Get a paginated list of items based on filters and text proximity")]
-        [FluenteAction(Pagination = true, DynamicSpec = true)]
+        [DnAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<ResultadoPadraoPaginado<List<T>>> ListByFilterAndProximityGet([FromBody, Description("The query object")] FiltersAndTerm FiltersAndTerm)
         {
             return await InternalListByFilterAndProximityAsync(FiltersAndTerm);
@@ -38,7 +38,7 @@ namespace dn32.infra.EntityFramework.Oracle.Controllers
         [HttpPost]
         [Route("/api/[controller]/ListByFilterAndProximity")]
         [Description("Get a paginated list of items based on filters and text proximity")]
-        [FluenteAction(Pagination = true, DynamicSpec = true)]
+        [DnAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<ResultadoPadraoPaginado<List<T>>> ListByFilterAndProximityPost([FromBody, Description("The query object")] FiltersAndTerm FiltersAndTerm)
         {
             return await InternalListByFilterAndProximityAsync(FiltersAndTerm);

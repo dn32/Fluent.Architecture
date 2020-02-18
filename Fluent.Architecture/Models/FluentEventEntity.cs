@@ -6,10 +6,10 @@ using System.Collections.Generic;
 
 namespace dn32.infra.Nucleo.Models
 {
-    public class FluenteEventEntity
+    public class DnEventEntity
     {
 #pragma warning disable CA2227 // Collection properties should be read only
-        public List<FluenteEventEntityProperty> Properties { get; set; }
+        public List<DnEventEntityProperty> Properties { get; set; }
 #pragma warning restore CA2227 // Collection properties should be read only
         public object CurrentEntity { get; set; }
         public Type CurrentEntityType { get; set; }

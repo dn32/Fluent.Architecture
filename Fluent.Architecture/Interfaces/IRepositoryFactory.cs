@@ -4,6 +4,6 @@ namespace dn32.infra.Nucleo.Interfaces
 {
     internal interface IRepositoryFactory
     {
-        IFluenteRepository<T> Create<T>(ITransactionObjects transactionObjects, FluenteService<T> service) where T : EntidadeBase;
+        IDnRepository<T> Create<T>(ITransactionObjects transactionObjects, DnService<T> service) where T : EntidadeBase;
     }
 }

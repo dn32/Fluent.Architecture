@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -19,12 +19,12 @@ namespace dn32.infra.Validation
     /// Retorno de validação padrão do sistema.
     /// </summary>
     [Serializable]
-    public class ContextFluenteValidationException : Exception
+    public class ContextDnValidationException : Exception
     {
         public bool ValidationError => true;
 
         [JsonProperty("inconsistencies")]
-        public List<FluenteValidationException> Inconsistencies { get; }
+        public List<DnValidationException> Inconsistencies { get; }
 
         /// <summary>
         /// Se a validação retornou sucesso.
@@ -45,21 +45,21 @@ namespace dn32.infra.Validation
         /// <summary>
         /// Adiciona uma nova inconsistência ao contexto.
         /// </summary>
-        /// <param name="exception">
+        /// <param Nome="exception">
         /// A inconsistência que deseja adicionar.
         /// </param>
-        public void AddInconsistency(FluenteValidationException exception)
+        public void AddInconsistency(DnValidationException exception)
         {
             Inconsistencies.Add(exception);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ContextFluenteValidationException"/> class. 
+        /// Initializes a new instance of the <see cref="ContextDnValidationException"/> class. 
         /// Inicializa o contexto de validação.
         /// </summary>
-        public ContextFluenteValidationException() : base(string.Empty)
+        public ContextDnValidationException() : base(string.Empty)
         {
-            Inconsistencies = new List<FluenteValidationException>();
+            Inconsistencies = new List<DnValidationException>();
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace dn32.infra.Validation
             }
         }
 
-        protected ContextFluenteValidationException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
+        protected ContextDnValidationException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
         {
             throw new NotImplementedException();
         }

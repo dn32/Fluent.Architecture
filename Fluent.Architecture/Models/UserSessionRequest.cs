@@ -17,14 +17,14 @@ namespace dn32.infra.Nucleo.Models
         internal Dictionary<Type, BaseService> Services { get; set; }
         internal ITransactionObjects TransactionObjects { get; set; }
         internal Guid SessionRequestId { get; set; }
-        public ContextFluenteValidationException ContextFluenteValidationException { get; set; }
-        public FluentePaginacao Pagination { get; set; }
+        public ContextDnValidationException ContextDnValidationException { get; set; }
+        public DnPaginacao Pagination { get; set; }
 
         internal object HttpContext;
 
         public UserSessionRequest()
         {
-            this.ContextFluenteValidationException = new ContextFluenteValidationException();
+            this.ContextDnValidationException = new ContextDnValidationException();
         }
 
         /// <summary>

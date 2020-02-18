@@ -6,20 +6,20 @@ using dn32.infra.dados;
 
 namespace dn32.infra.Redis
 {
-    public class FluenteRedisService : TransactionalService
+    public class DnRedisService : TransactionalService
     {
-        private FluenteRedisRepository RedisRepository { get; set; }
+        private DnRedisRepository RedisRepository { get; set; }
 
-        public FluenteRedisService()
+        public DnRedisService()
         {
-            RedisRepository = new FluenteRedisRepository(Setup.Config.Config.RedisConnectionString);
+            RedisRepository = new DnRedisRepository(Setup.Config.Config.RedisConnectionString);
         }
 
         public async Task<T> GetValueAsync<T>(string key) => await RedisRepository.GetValueAsync<T>(key);
 
-        public async Task<T> GetFluenteEntityAsync<T>(FluenteEntidade entity) => await RedisRepository.GetValueAsync<T>(entity.GetHashCode().ToString());
+        public async Task<T> GetDnEntityAsync<T>(DnEntidade entity) => await RedisRepository.GetValueAsync<T>(entity.GetHashCode().ToString());
 
-        public async Task<bool> SetFluenteEntityAsync(FluenteEntidade entity, TimeSpan? timeOut = null) => await RedisRepository.SetValueAsync(entity.GetHashCode().ToString(), entity, timeOut);
+        public async Task<bool> SetDnEntityAsync(DnEntidade entity, TimeSpan? timeOut = null) => await RedisRepository.SetValueAsync(entity.GetHashCode().ToString(), entity, timeOut);
 
         public async Task<bool> SetValueAsync(string key, object value, TimeSpan? timeOut = null) => await RedisRepository.SetValueAsync(key, value, timeOut);
 

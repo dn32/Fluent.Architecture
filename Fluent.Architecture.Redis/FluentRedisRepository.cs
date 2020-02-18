@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 
 namespace dn32.infra.Redis
 {
-    internal class FluenteRedisRepository
+    internal class DnRedisRepository
     {
-        private FluenteRedisContext Context { get; set; }
+        private DnRedisContext Context { get; set; }
 
-        internal FluenteRedisRepository(string connectionString)
+        internal DnRedisRepository(string connectionString)
         {
-            Context = new FluenteRedisContext(connectionString);
+            Context = new DnRedisContext(connectionString);
         }
 
         internal async Task<T> GetValueAsync<T>(string key, bool renewTimeout = false)

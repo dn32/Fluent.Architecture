@@ -1,5 +1,5 @@
 ﻿using dn32.infra.Exceptions.ValidationException;
-using dn32.infra.Nucleo.Atributos;
+using dn32.infra.nucleo.atributos;
 using dn32.infra.Nucleo.Models;
 using dn32.infra.Services;
 using System;
@@ -14,17 +14,17 @@ namespace dn32.infra.Validation
     /// <summary>
     /// A classe de validação base de todas as validações com entidade do sistema.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class FluenteValidation<T> : TransactionalValidation, IFluenteValidation where T : EntidadeBase
+    /// <typeparam Nome="T"></typeparam>
+    public class DnValidation<T> : TransactionalValidation, IDnValidation where T : EntidadeBase
     {
         #region INTERNAL
 
         /// <summary>
         /// A validação do serviço.
         /// </summary>
-        protected internal new FluenteService<T> Service
+        protected internal new DnService<T> Service
         {
-            get => base.Service as FluenteService<T>;
+            get => base.Service as DnService<T>;
             set => base.Service = value;
         }
 
@@ -43,7 +43,7 @@ namespace dn32.infra.Validation
         // Composition
         public virtual async Task AddAsync(T entity)
         {
-            var method = typeof(FluenteValidation<T>).GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
+            var method = typeof(DnValidation<T>).GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
 
             var anotherServices = await (this).ExecuteEntityAndCompositions(entity, method);
             RunTheContextValidation(anotherServices);
@@ -52,14 +52,14 @@ namespace dn32.infra.Validation
         // Composition
         public virtual async Task<List<TransactionalService>> AddOrUpdateAsync(T entity)
         {
-            var method = typeof(FluenteValidation<T>).GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
+            var method = typeof(DnValidation<T>).GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
             return await (this).ExecuteEntityAndCompositions(entity, method);
         }
 
         // Composition
         public virtual async Task UpdateAsync(T entity)
         {
-            var method = typeof(FluenteValidation<T>).GetMethod(nameof(UpdateRangeAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
+            var method = typeof(DnValidation<T>).GetMethod(nameof(UpdateRangeAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
             var anotherServices = await (this).ExecuteEntityAndCompositions(entity, method);
 
             if (KeyValuesOk)
@@ -76,7 +76,7 @@ namespace dn32.infra.Validation
         {
             this.ParameterMustBeInformed(entities, nameof(entities));
             var anotherServices = new List<TransactionalService>();
-            var method = typeof(FluenteValidation<T>).GetMethod(nameof(UpdateRangeAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
+            var method = typeof(DnValidation<T>).GetMethod(nameof(UpdateRangeAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
 
             if (entities != null)
             {
@@ -104,7 +104,7 @@ namespace dn32.infra.Validation
             var anotherServices = new List<TransactionalService>();
             if (entities != null)
             {
-                var method = typeof(FluenteValidation<T>).GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
+                var method = typeof(DnValidation<T>).GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
 
                 foreach (var entity in entities)
                 {
@@ -180,10 +180,10 @@ namespace dn32.infra.Validation
         {
             if (string.IsNullOrEmpty(term))
             {
-                AddInconsistency(new NullParameterFluenteValidationException(nameof(term)));
+                AddInconsistency(new NullParameterDnValidationException(nameof(term)));
             }
 
-            if (!typeof(T).GetProperties().Any(x => x.GetCustomAttribute<SearchableAttribute>() != null))
+            if (!typeof(T).GetProperties().Any(x => x.GetCustomAttribute<DnBuscavelAtributo>() != null))
             {
                 AddInconsistency(new EntityHasNotSearchableAttributeProperties(typeof(T).Name));
             }
@@ -203,19 +203,19 @@ namespace dn32.infra.Validation
 
         #region INTERNAL
 
-        internal static void UpdateAsyncInternal<T2>(IFluenteValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : EntidadeBase
+        internal static void UpdateAsyncInternal<T2>(IDnValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : EntidadeBase
         {
             validation.ParameterMustBeInformed(entity, compositionProperty);
-            validation.FluenteValidateAttribute(entity, compositionProperty, compositionFieldName);
+            validation.DnValidateAttribute(entity, compositionProperty, compositionFieldName);
             validation.RequiredPropertyMustBeInformed(entity, compositionProperty, compositionFieldName);
             validation.MaxMinLenghtPropertyMustBeInformed(entity, compositionProperty, compositionFieldName);
             validation.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, compositionProperty, compositionFieldName);
         }
 
-        internal static async Task AdddAsyncInternal<T2>(IFluenteValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : EntidadeBase
+        internal static async Task AdddAsyncInternal<T2>(IDnValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : EntidadeBase
         {
             validation.ParameterMustBeInformed(entity, compositionProperty);
-            validation.FluenteValidateAttribute(entity, compositionProperty, compositionFieldName);
+            validation.DnValidateAttribute(entity, compositionProperty, compositionFieldName);
             validation.RequiredPropertyMustBeInformed(entity, compositionProperty, compositionFieldName);
             validation.MaxMinLenghtPropertyMustBeInformed(entity, compositionProperty, compositionFieldName);
             validation.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, compositionProperty, compositionFieldName);
@@ -226,10 +226,10 @@ namespace dn32.infra.Validation
             }
         }
 
-        internal static void UpdateRangeAsyncInternal<T2>(IFluenteValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : EntidadeBase
+        internal static void UpdateRangeAsyncInternal<T2>(IDnValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : EntidadeBase
         {
             validation.ParameterMustBeInformed(entity, compositionProperty);
-            validation.FluenteValidateAttribute(entity, compositionProperty, compositionFieldName);
+            validation.DnValidateAttribute(entity, compositionProperty, compositionFieldName);
             validation.RequiredPropertyMustBeInformed(entity, compositionProperty, compositionFieldName);
             validation.MaxMinLenghtPropertyMustBeInformed(entity, compositionProperty, compositionFieldName);
             validation.AllKeysShouldBeInformedWhenThereAreMoreThanOne(entity, compositionProperty, compositionFieldName, isUpdate: true);

@@ -4,7 +4,7 @@ namespace dn32.infra.Filters
 {
     public static class SigningConfigurations
     {
-        private static FluenteJwtInfo Info => Setup.Config.Config.JwtInfo;
+        private static DnJwtInfo Info => Setup.Config.Config.JwtInfo;
 
         internal static TokenValidationParameters GetTokenValidationParameters()
         {

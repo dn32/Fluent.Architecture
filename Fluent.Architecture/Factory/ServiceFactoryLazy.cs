@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -21,10 +21,10 @@ namespace dn32.infra.Factory
         /// <summary>
         /// Cria um serviço em tempo de execução por meio de um processo de lazy-loading.
         /// </summary>
-        /// <param name="serviceType">
+        /// <param Nome="serviceType">
         /// O tipo de serviço a ser criado.
         /// </param>
-        /// <param name="sessionId">
+        /// <param Nome="sessionId">
         /// O identificador de sessão do usuário durante a requisição ao controller.
         /// </param>
         /// <returns>

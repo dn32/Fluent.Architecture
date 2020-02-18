@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -26,7 +26,7 @@ namespace dn32.infra
         public Type GenericValidationType { get; internal set; }
         public Type GenericControllerType { get; internal set; }
         internal IRepositoryFactory RepositoryFactory { get; set; }
-        public FluenteJwtInfo JwtInfo { get; set; }
+        public DnJwtInfo JwtInfo { get; set; }
         public string RedisConnectionString { get; set; }
         public Type RedisService { get; set; }
     }

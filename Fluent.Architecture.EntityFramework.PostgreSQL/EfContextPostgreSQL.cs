@@ -8,7 +8,7 @@ namespace dn32.infra.EntityFramework.PostgreSQL
     /// <summary>
     /// Contexto do EF no net Core
     /// </summary>
-    [DbType(FluenteDbType.POSTGREE_SQL)]
+    [DbType(DnDbType.POSTGREE_SQL)]
     public class EfContextPostgreSQL : EfContext
     {
         public EfContextPostgreSQL(string connectionString) : base(connectionString)

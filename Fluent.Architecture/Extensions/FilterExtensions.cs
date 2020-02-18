@@ -28,7 +28,7 @@ namespace dn32.infra.Nucleo.Extensoes
                 var property = properties.FirstOrDefault(x => x.Name.Equals(filter.NomeDaPropriedade, StringComparison.InvariantCultureIgnoreCase));
                 if (property == null)
                 {
-                    throw new InvalidOperationException($"Entity '{typeof(T).GetFriendlyName()}' does not have a property with the name '{filter.NomeDaPropriedade}' requested in the filtered query.");
+                    throw new InvalidOperationException($"Entidade '{typeof(T).GetFriendlyName()}' does not have a property with the Nome '{filter.NomeDaPropriedade}' requested in the filtered query.");
                 }
 
                 Expression<Func<T, bool>> expression = x => true;

@@ -44,10 +44,10 @@ namespace dn32.infra.EntityFramework
             return $"select * from {tableName} where ({string.Join(" and ", fluentUniqueKeyValues)})";// O and está no lugar certo sim
         }
 
-        internal static string GetFluenteUniqueKeyFilterSql(object entity, out bool nonKeys)
+        internal static string GetDnUniqueKeyFilterSql(object entity, out bool nonKeys)
         {
             var tableName = entity.GetTableName();
-            var fluentUniqueKeyValues = entity.GetFluenteUniqueKeyValues().Select(GetStringOrNumberValue).ToArray();
+            var fluentUniqueKeyValues = entity.GetDnUniqueKeyValues().Select(GetStringOrNumberValue).ToArray();
             nonKeys = fluentUniqueKeyValues.Length == 0;
             return $"select * from {tableName} where ({string.Join(" and ", fluentUniqueKeyValues)})";// O and está no lugar certo sim
         }
@@ -60,11 +60,11 @@ namespace dn32.infra.EntityFramework
             return $"select * from {tableName} where ({string.Join(" and ", keyValues)})"; // O and está no lugar certo sim
         }
 
-        internal static string GetKeyAndFluenteUniqueKeyFilterSql(object entity)
+        internal static string GetKeyAndDnUniqueKeyFilterSql(object entity)
         {
             var tableName = entity.GetTableName();
             var keyValues = entity.GetKeyValues().Select(GetStringOrNumberValue).ToArray();
-            var fluentUniqueKeyValues = entity.GetFluenteUniqueKeyValues().Select(GetStringOrNumberValue).ToArray();
+            var fluentUniqueKeyValues = entity.GetDnUniqueKeyValues().Select(GetStringOrNumberValue).ToArray();
 
             var sql = $"({string.Join(" and ", keyValues)})";// O and está no lugar certo sim
 

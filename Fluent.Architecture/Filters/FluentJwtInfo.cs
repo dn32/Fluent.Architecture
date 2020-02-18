@@ -4,7 +4,7 @@ using System.Text;
 
 namespace dn32.infra.Filters
 {
-    public class FluenteJwtInfo
+    public class DnJwtInfo
     {
         public string Issuer { get; set; }
 
@@ -14,7 +14,7 @@ namespace dn32.infra.Filters
 
         public TimeSpan? Expires { get; set; }
 
-        public Type FluenteAuthenticationServiceType { get; set; }
+        public Type DnAuthenticationServiceType { get; set; }
 
         public bool ValidateIssuerSigningKey { get; set; } = true;
 

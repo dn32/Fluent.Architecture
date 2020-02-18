@@ -7,14 +7,14 @@ using dn32.infra.dados;
 
 namespace dn32.infra.Test
 {
-    public class FluenteTest<TModel> where TModel : FluenteEntidade, new()
+    public class DnTest<TModel> where TModel : DnEntidade, new()
     {
-        public virtual FluenteAPIController<TModel> GetNewController()
+        public virtual DnAPIController<TModel> GetNewController()
         {
-            return MockUtil.GetMockController<FluenteAPIController<TModel>>();
+            return MockUtil.GetMockController<DnAPIController<TModel>>();
         }
 
-        public virtual TController GetNewController<TController>() where TController : FluenteAPIController<TModel>
+        public virtual TController GetNewController<TController>() where TController : DnAPIController<TModel>
         {
             return MockUtil.GetMockController<TController>();
         }
@@ -22,96 +22,96 @@ namespace dn32.infra.Test
         public virtual bool Remove(TModel model)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluenteAPIController<TModel>, bool>(newController, (FluenteAPIController<TModel> controller) => controller.Remove(model).Result);
+            return TestUtil.Execute<DnAPIController<TModel>, bool>(newController, (DnAPIController<TModel> controller) => controller.Remove(model).Result);
         }
 
         public virtual TModel Add(TModel model)
         {
-            return Execute((FluenteAPIController<TModel> controller) => controller.Add(model).Result);
+            return Execute((DnAPIController<TModel> controller) => controller.Add(model).Result);
         }
 
         //public virtual string Schema()
         //{
         //    var newController = GetNewController();
-        //    return TestUtil.Execute(newController, (FluenteAPIController<TModel> controller) => controller.Schema()) as string;
+        //    return TestUtil.Execute(newController, (DnAPIController<TModel> controller) => controller.Schema()) as string;
         //}
 
         public virtual bool Update(TModel model)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluenteAPIController<TModel>, bool>(newController, (FluenteAPIController<TModel> controller) => controller.Update(model).Result);
+            return TestUtil.Execute<DnAPIController<TModel>, bool>(newController, (DnAPIController<TModel> controller) => controller.Update(model).Result);
         }
 
         public virtual TModel Add()
         {
-            return Execute((FluenteAPIController<TModel> controller) => controller.Add(GetNew()).Result);
+            return Execute((DnAPIController<TModel> controller) => controller.Add(GetNew()).Result);
         }
 
         public virtual bool Exists(TModel model)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluenteAPIController<TModel>, bool>(newController, (FluenteAPIController<TModel> controller) => controller.ExistsByEntityGet(model).Result);
+            return TestUtil.Execute<DnAPIController<TModel>, bool>(newController, (DnAPIController<TModel> controller) => controller.ExistsByEntityGet(model).Result);
         }
 
         public virtual TModel[] AddRange(TModel[] models)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluenteAPIController<TModel>, TModel[]>(newController, (FluenteAPIController<TModel> controller) => controller.AddRange(models).Result);
+            return TestUtil.Execute<DnAPIController<TModel>, TModel[]>(newController, (DnAPIController<TModel> controller) => controller.AddRange(models).Result);
         }
 
         public virtual TModel[] List()
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluenteAPIController<TModel>, TModel[]>(newController, (FluenteAPIController<TModel> controller) => controller.List().Result);
+            return TestUtil.Execute<DnAPIController<TModel>, TModel[]>(newController, (DnAPIController<TModel> controller) => controller.List().Result);
         }
 
         public virtual TModel[] List(Filtro[] filters)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluenteAPIController<TModel>, TModel[]>(newController, (FluenteAPIController<TModel> controller) => controller.ListByFilterGet(filters).Result);
+            return TestUtil.Execute<DnAPIController<TModel>, TModel[]>(newController, (DnAPIController<TModel> controller) => controller.ListByFilterGet(filters).Result);
         }
         public virtual int Count()
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluenteAPIController<TModel>, int>(newController, (FluenteAPIController<TModel> controller) => controller.Count().Result);
+            return TestUtil.Execute<DnAPIController<TModel>, int>(newController, (DnAPIController<TModel> controller) => controller.Count().Result);
         }
 
         public virtual int Count(Filtro[] filters)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluenteAPIController<TModel>, int>(newController, (FluenteAPIController<TModel> controller) => controller.CountByFilter(filters).Result);
+            return TestUtil.Execute<DnAPIController<TModel>, int>(newController, (DnAPIController<TModel> controller) => controller.CountByFilter(filters).Result);
         }
 
         public virtual bool UpdateRange(TModel[] models)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluenteAPIController<TModel>, bool>(newController, (FluenteAPIController<TModel> controller) => controller.UpdateRange(models).Result);
+            return TestUtil.Execute<DnAPIController<TModel>, bool>(newController, (DnAPIController<TModel> controller) => controller.UpdateRange(models).Result);
         }
 
         public virtual TModel Find(TModel model)
         {
-            return Execute((FluenteAPIController<TModel> controller) => controller.FindByEntityPost(model).Result);
+            return Execute((DnAPIController<TModel> controller) => controller.FindByEntityPost(model).Result);
         }
 
         public virtual bool RemoveRange(TModel[] models)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluenteAPIController<TModel>, bool>(newController, (FluenteAPIController<TModel> controller) => controller.RemoveRange(models).Result);
+            return TestUtil.Execute<DnAPIController<TModel>, bool>(newController, (DnAPIController<TModel> controller) => controller.RemoveRange(models).Result);
         }
 
         public virtual bool Truncate(string ERASE_ALL_DATA = "no")
         {
             var newController = GetNewController();
-            return TestUtil.Execute<FluenteAPIController<TModel>, bool>(newController, (FluenteAPIController<TModel> controller) => controller.Truncate(ERASE_ALL_DATA).Result);
+            return TestUtil.Execute<DnAPIController<TModel>, bool>(newController, (DnAPIController<TModel> controller) => controller.Truncate(ERASE_ALL_DATA).Result);
         }
 
         public virtual TModel GetNew()
         {
             throw new NotImplementedException();
-            //   return new FluenteAPIController<TModel>().ExampleData();
+            //   return new DnAPIController<TModel>().ExampleData();
         }
 
-        public virtual TModel Execute(Func<FluenteAPIController<TModel>, ResultadoPadrao<TModel>> actionMethod)
+        public virtual TModel Execute(Func<DnAPIController<TModel>, ResultadoPadrao<TModel>> actionMethod)
         {
             var newController = GetNewController();
             newController.OnActionExecuting(MockActionExecutingContextFactory.Create(newController));

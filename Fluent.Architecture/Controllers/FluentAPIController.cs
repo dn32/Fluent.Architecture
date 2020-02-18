@@ -16,16 +16,16 @@ namespace dn32.infra.Controllers
 {
     [Route("/api/[controller]/[action]")]
     [ApiController]
-    public class FluenteAPIController<T> : FluenteController<T> where T : FluenteEntidade, new() // Nunca defina como abstract, pois o controle de log espera essa classe como concreta
+    public class DnAPIController<T> : DnController<T> where T : DnEntidade, new() // Nunca defina como abstract, pois o controle de log espera essa classe como concreta
     {
         #region MANY
 
         [HttpGet]
         [Description("Get a paged list of all items")]
-        [FluenteAction(Pagination = true, DynamicSpec = true)]
+        [DnAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<ResultadoPadraoPaginado<List<T>>> List()
         {
-            var spec = CreateSpec<FluenteAllSpec<T>>().SetParameter(isList: true);
+            var spec = CreateSpec<DnAllSpec<T>>().SetParameter(isList: true);
             var list = Service.ListAsync(spec);
             return await ResultAsync<List<T>>(await list, LastRequestPagination);
         }
@@ -33,7 +33,7 @@ namespace dn32.infra.Controllers
         [HttpGet]
         [Route("/api/[controller]/ListByFilter")]
         [Description("Get a paginated list of items based on filters")]
-        [FluenteAction(Pagination = true, DynamicSpec = true)]
+        [DnAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<ResultadoPadraoPaginado<List<T>>> ListByFilterGet([FromQuery, Description("The filters to apply to the query")] Filtro[] Filters)
         {
             return await InternalListByFilterAsync(Filters);
@@ -42,7 +42,7 @@ namespace dn32.infra.Controllers
         [HttpPost]
         [Route("/api/[controller]/ListByFilter")]
         [Description("Get a paginated list of items based on filters")]
-        [FluenteAction(Pagination = true, DynamicSpec = true)]
+        [DnAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<ResultadoPadraoPaginado<List<T>>> ListByFilterPostAsync([FromBody, Description("The filters to apply to the query")] Filtro[] Filters)
         {
             return await InternalListByFilterAsync(Filters);
@@ -50,13 +50,13 @@ namespace dn32.infra.Controllers
 
         protected async Task<ResultadoPadraoPaginado<List<T>>> InternalListByFilterAsync([FromBody, Description("The filters to apply to the query")] Filtro[] Filters)
         {
-            var spec = CreateSpec<FluenteFilterSpec<T>>().SetParameter(Filters, isList: true);
+            var spec = CreateSpec<DnFilterSpec<T>>().SetParameter(Filters, isList: true);
             return await ResultAsync<List<T>>(await Service.ListAsync(spec), LastRequestPagination);
         }
 
         [HttpGet]
         [Description("Get a paginated list of items based on a term")]
-        [FluenteAction(Pagination = true, DynamicSpec = true)]
+        [DnAction(Pagination = true, DynamicSpec = true)]
         public virtual async Task<ResultadoPadraoPaginadoComTermo<List<T>>> ListByTerm([Description("The term to use as a comparator")] string Term)
         {
             var spec = CreateSpec<TermSpec<T>>().SetParameter(Term, isList: true);
@@ -87,7 +87,7 @@ namespace dn32.infra.Controllers
         [HttpGet]
         [Route("/api/[controller]/FindByFilter")]
         [Description("Get an item based on its filters")]
-        [FluenteAction(DynamicSpec = true)]
+        [DnAction(DynamicSpec = true)]
         public virtual async Task<ResultadoPadrao<T>> FindByFilterGet([FromQuery, Description("The filters to apply to the query")] Filtro[] Filters)
         {
             return await InternalFindByFilterAsync(Filters);
@@ -96,7 +96,7 @@ namespace dn32.infra.Controllers
         [HttpPost]
         [Route("/api/[controller]/FindByFilter")]
         [Description("Get an item based on filters")]
-        [FluenteAction(DynamicSpec = true)]
+        [DnAction(DynamicSpec = true)]
         public virtual async Task<ResultadoPadrao<T>> FindByFilterPost([FromBody, Description("The filters to apply to the query")] Filtro[] Filters)
         {
             return await InternalFindByFilterAsync(Filters);
@@ -104,14 +104,14 @@ namespace dn32.infra.Controllers
 
         private async Task<ResultadoPadrao<T>> InternalFindByFilterAsync([FromBody] Filtro[] Filters)
         {
-            var spec = CreateSpec<FluenteFilterSpec<T>>().SetParameter(Filters, isList: false);
+            var spec = CreateSpec<DnFilterSpec<T>>().SetParameter(Filters, isList: false);
             var item = await Service.SingleOrDefaultAsync(spec);
             return await ResultAsync<T>(item);
         }
 
         [HttpGet]
         [Description("Get an item based on a term")]
-        [FluenteAction(DynamicSpec = true)]
+        [DnAction(DynamicSpec = true)]
         public virtual async Task<ResultadoPadrao<T>> FindByTerm([Description("The term to use as a comparator")] string Term)
         {
             var spec = CreateSpec<TermSpec<T>>().SetParameter(Term, isList: false);
@@ -141,7 +141,7 @@ namespace dn32.infra.Controllers
         [Description("Get the number of items based on filters")]
         public virtual async Task<ResultadoPadrao<int>> CountByFilter([FromBody, Description("The filters to apply to the query")] Filtro[] Filters)
         {
-            var spec = CreateSpec<FluenteFilterSpec<T>>().SetParameter(Filters, isList: true);
+            var spec = CreateSpec<DnFilterSpec<T>>().SetParameter(Filters, isList: true);
             return await ResultAsync<int>(await Service.CountAsync(spec));
         }
 
@@ -165,7 +165,7 @@ namespace dn32.infra.Controllers
         [Description("Get item type schema")]
         public virtual string JsonForm([Description("If you want to generate a tablet layout")] bool Tablet = false)
         {
-            return typeof(T).GetFluenteJsonSchema(Tablet).SerializarParaFluenteJson();
+            return typeof(T).GetDnJsonSchema(Tablet).SerializarParaDnJson();
         }
 
         [HttpGet]

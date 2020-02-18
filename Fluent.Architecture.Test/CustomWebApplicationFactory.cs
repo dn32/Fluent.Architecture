@@ -1,6 +1,6 @@
 ﻿//// -----------------------------------------------------------------------
-//// <copyright company="Fluente System">
-////     Copyright © Fluente System. All rights reserved.
+//// <copyright company="Dn System">
+////     Copyright © Dn System. All rights reserved.
 ////     TODOS OS DIREITOS RESERVADOS.
 //// </copyright>
 //// -----------------------------------------------------------------------
@@ -54,7 +54,7 @@
 //                    services
 //                        .AddMvc()
 //                        .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver())
-//                        .AddFluenteArquitetura(jsonSerializerSettings)
+//                        .AddDnArquitetura(jsonSerializerSettings)
 //                        .UseEntityFramework()
 //                        .AddConnectionString(string.IsNullOrWhiteSpace(ConnectionString) ? $"Data Source=unit-tests-{Ticks}.db;" : ConnectionString, createDatabaseIfNotExists: true, typeof(EfContextSqLite))
 //                        .Build();
@@ -75,7 +75,7 @@
 //                    //// Build the service provider.
 //                    //var sp = services.BuildServiceProvider();
 
-//                    //// Create a scope to obtain a reference to the database
+//                    //// Create a scope to obtain a Referencia to the database
 //                    //// context (ApplicationDbContext).
 //                    //using (var scope = sp.CreateScope())
 //                    //{

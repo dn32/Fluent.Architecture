@@ -2,8 +2,8 @@
 
 namespace dn32.infra.EntityFramework.SqlServer
 {
-    [DbType(FluenteDbType.SQL_SERVER)]
-    public abstract class FluenteSQLEntity : FluenteEntidade
+    [DbType(DnDbType.SQL_SERVER)]
+    public abstract class DnSQLEntity : DnEntidade
     {
     }
 }

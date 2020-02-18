@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -26,10 +26,10 @@ namespace dn32.infra.Validation
         /// <summary>
         /// Inicializa a classe preenchendo suas dependências.
         /// </summary>
-        /// <param name="service">
+        /// <param Nome="service">
         /// O serviço que a validação representa.
         /// </param>
-        /// <param name="repository">
+        /// <param Nome="repository">
         /// O repositório que a validação representa.
         /// </param>
         protected internal virtual void Init(TransactionalService service)
@@ -40,23 +40,23 @@ namespace dn32.infra.Validation
         /// <summary>
         /// Adiciona uma nova inconsistência ao contexto da requisição.
         /// </summary>
-        /// <param name="ex">
+        /// <param Nome="ex">
         /// A inconsitência.
         /// </param>
-        public void AddInconsistency(FluenteValidationException ex)
+        public void AddInconsistency(DnValidationException ex)
         {
-            this.Service.SessionRequest.ContextFluenteValidationException.AddInconsistency(ex);
+            this.Service.SessionRequest.ContextDnValidationException.AddInconsistency(ex);
         }
 
         public void ClearInconsistencies()
         {
-            this.Service.SessionRequest.ContextFluenteValidationException.Inconsistencies.Clear();
+            this.Service.SessionRequest.ContextDnValidationException.Inconsistencies.Clear();
         }
 
         public void RunTheContextValidation()
         {
             if (PauseRunTheContextValidation) return;
-            this.Service.SessionRequest.ContextFluenteValidationException.Validate();
+            this.Service.SessionRequest.ContextDnValidationException.Validate();
         }
 
         public bool PauseRunTheContextValidation { get; set; }
@@ -65,12 +65,12 @@ namespace dn32.infra.Validation
         {
             if (PauseRunTheContextValidation) return;
 
-            anotherServices.SelectMany(x => x.SessionRequest.ContextFluenteValidationException.Inconsistencies).ToList().ForEach(ex =>
+            anotherServices.SelectMany(x => x.SessionRequest.ContextDnValidationException.Inconsistencies).ToList().ForEach(ex =>
             {
-                Service.SessionRequest.ContextFluenteValidationException.AddInconsistency(ex);
+                Service.SessionRequest.ContextDnValidationException.AddInconsistency(ex);
             });
 
-            this.Service.SessionRequest.ContextFluenteValidationException.Validate();
+            this.Service.SessionRequest.ContextDnValidationException.Validate();
         }
 
         public void ValueMustBeInformed(object value, string message = "")
@@ -80,8 +80,8 @@ namespace dn32.infra.Validation
                 return;
             }
 
-            message = string.IsNullOrWhiteSpace(message) ? "Value can not be null" : message;
-            AddInconsistency(new NullValueFluenteValidationException(message));
+            message = string.IsNullOrWhiteSpace(message) ? "Valor can not be null" : message;
+            AddInconsistency(new NullValueDnValidationException(message));
             RunTheContextValidation();
         }
     }

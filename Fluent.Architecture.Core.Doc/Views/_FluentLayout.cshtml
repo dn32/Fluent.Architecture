@@ -1,5 +1,5 @@
 ﻿@using dn32.infra
-@using static dn32.infra.FluenteDocExtension
+@using static dn32.infra.DnDocExtension
 @{
     var values = ViewContext.RouteData.Values;
     if (values == null) { throw new InvalidOperationException("ViewContext.RouteData.Values is null"); }
@@ -14,8 +14,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - @(("Available services").G())</title>
-    <link rel="stylesheet" href="/FluenteDoc/lib/bootstrap.min.css" />
-    <link rel="stylesheet" href="/FluenteDoc/css/site.css" />
+    <link rel="stylesheet" href="/DnDoc/lib/bootstrap.min.css" />
+    <link rel="stylesheet" href="/DnDoc/css/site.css" />
 </head>
 <body>
 
@@ -24,13 +24,13 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container principal-menu">
 
-                <a class="navbar-brand @(controller == "fluentdoc" && (action == "service" || action == "index") ? "active" : "")" asp-area="" asp-controller="FluenteDoc" asp-action="Index">@(("Services").G())</a> |
+                <a class="navbar-brand @(controller == "fluentdoc" && (action == "service" || action == "index") ? "active" : "")" asp-area="" asp-controller="DnDoc" asp-action="Index">@(("Services").G())</a> |
 
-                <a class="navbar-brand @(controller == "fluentdoc" && action == "entity" ? "active" : "")" asp-area="" asp-controller="FluenteDoc" asp-action="Entity">@(("Entity").G())</a> |
+                <a class="navbar-brand @(controller == "fluentdoc" && action == "entity" ? "active" : "")" asp-area="" asp-controller="DnDoc" asp-action="Entity">@(("Entidade").G())</a> |
 
-                <a class="navbar-brand @(controller == "fluentdoc" && (action == "model" || action == "modelnoentity") ? "active" : "")" asp-area="" asp-controller="FluenteDoc" asp-action="ModelNoEntity">@(("Model").G())</a> |
+                <a class="navbar-brand @(controller == "fluentdoc" && (action == "model" || action == "modelnoentity") ? "active" : "")" asp-area="" asp-controller="DnDoc" asp-action="ModelNoEntity">@(("Model").G())</a> |
 
-                <a class="navbar-brand @(controller == "authentication" ? "active" : "")" asp-area="" asp-controller="FluenteDoc" asp-action="Token">@(("Authentication").G())</a>
+                <a class="navbar-brand @(controller == "authentication" ? "active" : "")" asp-area="" asp-controller="DnDoc" asp-action="Token">@(("Authentication").G())</a>
 
             </div>
         </nav>
@@ -43,12 +43,12 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            <a href="https://github.com/dn32/Fluente.Infrastructure.Doc/wiki" target="_blank">Fluente Arquitetura Doc  &copy; - @(("Available services").G())</a>
+            <a href="https://github.com/dn32/Dn.Infrastructure.Doc/wiki" target="_blank">Dn Arquitetura Doc  &copy; - @(("Available services").G())</a>
         </div>
     </footer>
 
-    <script src="/FluenteDoc/lib/jquery-3.4.1.min.js"></script>
-    <script src="/FluenteDoc/lib/bootstrap.min.js"></script>
+    <script src="/DnDoc/lib/jquery-3.4.1.min.js"></script>
+    <script src="/DnDoc/lib/bootstrap.min.js"></script>
 
 </body>
 </html>

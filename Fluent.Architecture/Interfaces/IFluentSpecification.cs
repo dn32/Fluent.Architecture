@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -11,9 +11,9 @@ using System;
 
 namespace dn32.infra.Interfaces
 {
-    public interface IFluenteSpecification : ISpec
+    public interface IDnSpecification : ISpec
     {
-        Type FluenteEntityType { get; }
+        Type DnEntityType { get; }
     }
 
     public interface ISpec

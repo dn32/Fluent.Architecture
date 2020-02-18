@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
+// <copyright company="Dn System">
+//     Copyright © Dn System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -14,12 +14,12 @@ namespace dn32.infra.Test
     /// <summary>
     /// Extensão de testes automatizados.
     /// </summary>
-    public static class FluenteTest
+    public static class DnTest
     {
         /// <summary>
         /// Obtem uma data baseado em string como exemplo: 31/12/18.
         /// </summary>
-        /// <param name="ddMMyy">
+        /// <param Nome="ddMMyy">
         /// A string com a data desejada no formato ddMMyy. Exemplo: 31/12/18.
         /// </param>
         /// <returns>

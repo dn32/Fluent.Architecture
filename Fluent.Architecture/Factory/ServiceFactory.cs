@@ -19,12 +19,12 @@ namespace dn32.infra.Factory
     {
         /// <summary>
         /// Cria um serviço que terá controle de transação.
-        /// Essa operação deve ser exclusiva do FluenteController.
+        /// Essa operação deve ser exclusiva do DnController.
         /// </summary>
-        /// <typeparam name="TS">
+        /// <typeparam Nome="TS">
         /// O tipo de serviço a ser criado.
         /// </typeparam>
-        /// <param name="httpContext">
+        /// <param Nome="httpContext">
         /// O contexto do controller.
         /// </param>
         /// <returns>
@@ -53,13 +53,13 @@ namespace dn32.infra.Factory
         /// <summary>
         /// MUITO CUIDADO!!!! Esse método só deve ser utilizado se você estiver muito certo do que está fazendo.
         /// </summary>
-        /// <typeparam name="TS">
+        /// <typeparam Nome="TS">
         /// O tipo de serviço a ser criado.
         /// </typeparam>
-        /// <param name="httpContext">
+        /// <param Nome="httpContext">
         /// O contexto do controller.
         /// </param>
-        /// <param name="justification">
+        /// <param Nome="justification">
         /// Explique por que você está fazendo uso desse método.
         /// </param>
         /// <returns></returns>
@@ -70,7 +70,7 @@ namespace dn32.infra.Factory
                 throw new IncorrectDevelopmentException("Report the justification");
             }
 
-            return Create(typeof(TS), httpContext).FluenteCast<TS>();
+            return Create(typeof(TS), httpContext).DnCast<TS>();
         }
 
         public static TransactionalService Create(Type serviceType, object httpContext, string justification)
@@ -80,12 +80,12 @@ namespace dn32.infra.Factory
                 throw new IncorrectDevelopmentException("Report the justification");
             }
 
-            if (serviceType.IsFluenteEntity())
+            if (serviceType.IsDnEntity())
             {
-                serviceType = typeof(FluenteService<>).MakeGenericType(serviceType);
+                serviceType = typeof(DnService<>).MakeGenericType(serviceType);
             }
 
-            return Create(serviceType, httpContext).FluenteCast<TransactionalService>();
+            return Create(serviceType, httpContext).DnCast<TransactionalService>();
         }
 
         //private static void InternalCreateValidation(TransactionalService service)
@@ -97,12 +97,12 @@ namespace dn32.infra.Factory
         //}
 
         /// <summary>
-        /// Cria um serviço em tempo de execução por meio de um processo de lazy-loading, à partir de um serviço original criado pelo <see cref="FluenteController{T}"/>.
+        /// Cria um serviço em tempo de execução por meio de um processo de lazy-loading, à partir de um serviço original criado pelo <see cref="DnController{T}"/>.
         /// </summary>
-        /// <param name="serviceType">
+        /// <param Nome="serviceType">
         /// O tipo de serviço a ser criado.
         /// </param>
-        /// <param name="sessionId">
+        /// <param Nome="sessionId">
         /// O identificador de sessão do usuário durante a requisição ao controller.
         /// </param>
         /// <returns>
@@ -131,7 +131,7 @@ namespace dn32.infra.Factory
                 var entityType = args.First();
                 if (!Setup.Services.TryGetValue(entityType, out serviceType))
                 {
-                    var type = (Setup.Config.Config.GenericServiceType) ?? typeof(FluenteService<>);
+                    var type = (Setup.Config.Config.GenericServiceType) ?? typeof(DnService<>);
                     serviceType = type.MakeGenericType(entityType);
                 }
             }
@@ -147,7 +147,7 @@ namespace dn32.infra.Factory
             var serviceType = GetSpecializedService(service.GetType());
 
             var type = Setup.Config.Config.UserSessionRequestType ?? typeof(UserSessionRequest);
-            var userSession = Activator.CreateInstance(type).FluenteCast<UserSessionRequest>();
+            var userSession = Activator.CreateInstance(type).DnCast<UserSessionRequest>();
             userSession.TransactionObjects = transactionObjects;
             userSession.SessionRequestId = sessionId;
             userSession.Services = new Dictionary<Type, BaseService>();

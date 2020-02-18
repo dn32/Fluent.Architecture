@@ -20,26 +20,26 @@ namespace dn32.infra.Services
     /// <summary>
     /// Serviço base para serviços com relacionamento direto com uma entidade.
     /// </summary>
-    /// <typeparam name="T">
+    /// <typeparam Nome="T">
     /// A entidade relacionada ao serviço.
     /// </typeparam>
-    public class FluenteService<T> : TransactionalService where T : EntidadeBase
+    public class DnService<T> : TransactionalService where T : EntidadeBase
     {
         ///// <summary>
         ///// O repositório do serviço.
         ///// </summary>
-        protected internal new IFluenteRepository<T> Repository
+        protected internal new IDnRepository<T> Repository
         {
-            get => base.Repository as IFluenteRepository<T>;
+            get => base.Repository as IDnRepository<T>;
             set => base.Repository = value;
         }
 
         /// <summary>
         /// A validação do serviço.
         /// </summary>
-        protected internal new FluenteValidation<T> Validation
+        protected internal new DnValidation<T> Validation
         {
-            get => base.Validation as FluenteValidation<T>;
+            get => base.Validation as DnValidation<T>;
             set => base.Validation = value;
         }
 
@@ -113,19 +113,19 @@ namespace dn32.infra.Services
         /// <summary>
         /// Executa uma solicitação baseada em uma especificação e retorna uma lista paginada de resultados.
         /// </summary>
-        /// <typeparam name="TO">
+        /// <typeparam Nome="TO">
         /// O tipo de saida desejada. Deve ser o mesmo definido na saida da especificação.
         /// </typeparam>
-        /// <param name="spec">
+        /// <param Nome="spec">
         /// A especificação de requisição.
         /// </param>
-        /// <param name="pagination">
+        /// <param Nome="pagination">
         /// A paginação desejada.
         /// </param>
         /// <returns>
         /// A lista paginada de resultados.
         /// </returns>    
-        public virtual async Task<List<TO>> ListSelectAsync<TO>(IFluenteSpecification<TO> spec, FluentePaginacao pagination = null)
+        public virtual async Task<List<TO>> ListSelectAsync<TO>(IDnSpecification<TO> spec, DnPaginacao pagination = null)
         {
             var list = await Repository.ListSelectAsync(spec, pagination);
             list.ForEach(x => Repository.Detach(x));
@@ -136,16 +136,16 @@ namespace dn32.infra.Services
         /// <summary>
         /// Executa uma solicitação baseada em uma especificação e retorna uma lista paginada de resultados.
         /// </summary>
-        /// <param name="spec">
+        /// <param Nome="spec">
         /// A especificação de requisição.
         /// </param>
-        /// <param name="pagination">
+        /// <param Nome="pagination">
         /// A paginação desejada.
         /// </param>
         /// <returns>
         /// A lista paginada de resultados.
         /// </returns>
-        public virtual async Task<List<T>> ListAsync(IFluenteSpecification spec, FluentePaginacao pagination = null)
+        public virtual async Task<List<T>> ListAsync(IDnSpecification spec, DnPaginacao pagination = null)
         {
             var list = await Repository.ListAsync(spec, pagination);
             list.ForEach(x => Repository.Detach(x));
@@ -156,16 +156,16 @@ namespace dn32.infra.Services
         /// <summary>
         /// Executa uma solicitação baseada em uma especificação e retorna um resultado ou nulo quando a consulta não é satisfeita.
         /// </summary>
-        /// <typeparam name="TO">
+        /// <typeparam Nome="TO">
         /// O tipo de saida desejada. Deve ser o mesmo definido na saida da especificação.
         /// </typeparam>
-        /// <param name="spec">
+        /// <param Nome="spec">
         /// A especificação de requisição.
         /// </param>
         /// <returns>
         /// O item referente à consulta ou nulo.
         /// </returns>
-        public virtual async Task<TO> FirstOrDefaultSelectAsync<TO>(IFluenteSpecification<TO> spec)
+        public virtual async Task<TO> FirstOrDefaultSelectAsync<TO>(IDnSpecification<TO> spec)
         {
             var entity = await Repository.FirstOrDefaultSelectAsync(spec);
             entity = Repository.Detach(entity);
@@ -176,14 +176,14 @@ namespace dn32.infra.Services
         /// <summary>
         /// Executa uma solicitação baseada em uma especificação e retorna um resultado ou nulo quando a consulta não é satisfeita.
         /// </summary>
-        /// <param name="spec">
+        /// <param Nome="spec">
         /// A especificação de requisição.
         /// </param>
         /// <returns>
         /// O item referente à consulta ou nulo.
         /// </returns>
 
-        public virtual async Task<T> FirstOrDefaultAsync(IFluenteSpecification spec)
+        public virtual async Task<T> FirstOrDefaultAsync(IDnSpecification spec)
         {
             var entity = await Repository.FirstOrDefaultAsync(spec);
             entity = Repository.Detach(entity);
@@ -191,7 +191,7 @@ namespace dn32.infra.Services
             return entity;
         }
 
-        public virtual async Task<T> SingleOrDefaultAsync(IFluenteSpecification spec)
+        public virtual async Task<T> SingleOrDefaultAsync(IDnSpecification spec)
         {
             var entity = await Repository.SingleOrDefaultAsync(spec);
             entity = Repository.Detach(entity);
@@ -200,7 +200,7 @@ namespace dn32.infra.Services
         }
 
         /// IsAsNoTracking
-        public virtual async Task<TO> SingleOrDefaultSelectAsync<TO>(IFluenteSpecification<TO> spec)
+        public virtual async Task<TO> SingleOrDefaultSelectAsync<TO>(IDnSpecification<TO> spec)
         {
             var entity = await Repository.SingleOrDefaultSelectAsync(spec);
             entity = Repository.Detach(entity);
@@ -211,33 +211,33 @@ namespace dn32.infra.Services
         /// <summary>
         /// Retorna a quantidade de itens existentes que satisfaçam a uma especificação
         /// </summary>
-        /// <typeparam name="TO">
+        /// <typeparam Nome="TO">
         /// O tipo de saida desejada. Deve ser o mesmo definido na saida da especificação.
         /// </typeparam>
-        /// <param name="spec">
+        /// <param Nome="spec">
         /// A especificação de requisição.
         /// </param>
         /// <returns>
         /// A quantidade de itens.
         /// </returns>
-        public virtual async Task<int> CountSelectAsync<TO>(IFluenteSpecification<TO> spec) => await Repository.CountSelectAsync(spec);
+        public virtual async Task<int> CountSelectAsync<TO>(IDnSpecification<TO> spec) => await Repository.CountSelectAsync(spec);
 
         /// <summary>
         /// Retorna a quantidade de itens existentes que satisfaçam a uma especificação
         /// </summary>
-        /// <param name="spec">
+        /// <param Nome="spec">
         /// A especificação de requisição.
         /// </param>
         /// <returns>
         /// A quantidade de itens.
         /// </returns>
-        public virtual async Task<int> CountAsync(IFluenteSpecification spec) => await Repository.CountAsync(spec);
+        public virtual async Task<int> CountAsync(IDnSpecification spec) => await Repository.CountAsync(spec);
 
         // Todo2 documentar
         public virtual async Task<int> CountAsync() => await Repository.CountAsync();
 
         // Todo2 documentar
-        public virtual void RemoveRange(IFluenteSpecification spec) => Repository.RemoveRange(spec);
+        public virtual void RemoveRange(IDnSpecification spec) => Repository.RemoveRange(spec);
 
         public virtual async Task TruncateAsync(string ERASE_ALL_DATA)
         {
@@ -258,7 +258,7 @@ namespace dn32.infra.Services
         /// <summary>
         /// Adiciona vários itens de um mesmo tipo ao banco de dados.
         /// </summary>
-        /// <param name="entities">
+        /// <param Nome="entities">
         /// Itens a serem adicionados.
         /// </param>
 
@@ -273,7 +273,7 @@ namespace dn32.infra.Services
         /// IsAsNoTracking
         /// Adiciona um item ao banco de dados.
         /// </summary>
-        /// <param name="entity">
+        /// <param Nome="entity">
         /// Item a ser adicionado.
         /// </param>
 
@@ -300,7 +300,7 @@ namespace dn32.infra.Services
             TransformToPersist(entity, null);
 
             var anotherServices = await Validation.AddOrUpdateAsync(entity);
-            var exists = SessionRequest.ContextFluenteValidationException.Inconsistencies.RemoveAll(x => x.ExceptionType == nameof(EntityExistsFluenteValidationException)) > 0;
+            var exists = SessionRequest.ContextDnValidationException.Inconsistencies.RemoveAll(x => x.ExceptionType == nameof(EntityExistsDnValidationException)) > 0;
 
             Validation.RunTheContextValidation(anotherServices);
 
@@ -328,7 +328,7 @@ namespace dn32.infra.Services
         /// IsAsNoTracking
         /// Atualiza um item do banco de dados baseado em seu identificador.
         /// </summary>
-        /// <param name="entity">
+        /// <param Nome="entity">
         /// Entidade a ser atualizada com o identificador preenchido.
         /// </param>
 
@@ -343,7 +343,7 @@ namespace dn32.infra.Services
         /// <summary>
         /// Atualiza vários itens do banco de dados baseado em seus identificadores.
         /// </summary>
-        /// <param name="entity">
+        /// <param Nome="entity">
         /// Entidades a serem atualizadas com o identificador preenchido.
         /// </param>
 
@@ -360,7 +360,7 @@ namespace dn32.infra.Services
         /// IsAsNoTracking
         /// Remove um item do banco de dados baseado em seu identificador.
         /// </summary>
-        /// <param name="entity">
+        /// <param Nome="entity">
         /// Entidade a ser removida.
         /// </param>
         public virtual async Task<T> RemoveAsync(T entity)
@@ -393,7 +393,7 @@ namespace dn32.infra.Services
                 return;
             }
 
-            throw new IncorrectDevelopmentException($"You can not initialize the {nameof(FluenteService<T>)}");
+            throw new IncorrectDevelopmentException($"You can not initialize the {nameof(DnService<T>)}");
         }
 
 

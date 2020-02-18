@@ -1,7 +1,7 @@
 ﻿
 namespace dn32.infra.Nucleo.Models
 {
-    public class FluenteEventEntityProperty
+    public class DnEventEntityProperty
     {
         public string PropertyName { get; set; }
         public object OriginalValue { get; set; }
