@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Fluente.Arquitetura\Fluente.Arquitetura.Base\dn32.infra.csproj" />
+    <ProjectReference Include="D:\Projetos\dn32\dn32.infra\dn32.infra\dn32.infra.csproj" />
     <ProjectReference Include="..\Fluent.Architecture.EntityFramework.SqLite\Fluente.Arquitetura.EntityFramework.SqLite.csproj" />
     <ProjectReference Include="..\Fluent.Architecture.EntityFramework\Fluente.Arquitetura.EntityFramework.csproj" />
     <ProjectReference Include="..\Fluent.Architecture\Fluente.Arquitetura.Nucleo.csproj" />
