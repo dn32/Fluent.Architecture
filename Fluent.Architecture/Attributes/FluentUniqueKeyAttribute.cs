@@ -8,7 +8,7 @@
 // ReSharper disable CommentTypo
 using System;
 
-namespace Fluente.Arquitetura.Attributes
+namespace dn32.infra.Attributes
 {
     /// <inheritdoc />
     /// <summary>

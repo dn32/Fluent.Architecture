@@ -5,7 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Fluente.Arquitetura.Controllers;
+using dn32.infra.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using System.Collections.Generic;
 
-namespace Fluente.Arquitetura.Test.Mock
+namespace dn32.infra.Test.Mock
 {
     public static class MockActionExecutedContextFactory
     {

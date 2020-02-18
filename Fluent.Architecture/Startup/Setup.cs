@@ -1,13 +1,13 @@
-﻿using Fluente.Arquitetura.Controllers;
-using Fluente.Arquitetura.Exceptions;
-using Fluente.Arquitetura.Filters;
-using Fluente.Arquitetura.Nucleo.Interfaces;
-using Fluente.Arquitetura.Nucleo.Models;
-using Fluente.Arquitetura.Nucleo.Services;
-using Fluente.Arquitetura.Services;
-using Fluente.Arquitetura.Specifications;
-using Fluente.Arquitetura.Util;
-using Fluente.Arquitetura.Validation;
+﻿using dn32.infra.Controllers;
+using dn32.infra.Exceptions;
+using dn32.infra.Filters;
+using dn32.infra.Nucleo.Interfaces;
+using dn32.infra.Nucleo.Models;
+using dn32.infra.Nucleo.Services;
+using dn32.infra.Services;
+using dn32.infra.Specifications;
+using dn32.infra.Util;
+using dn32.infra.Validation;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -16,9 +16,9 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using dn32.infra.dados;
 
-[assembly: InternalsVisibleTo(@"Fluente.Arquitetura.EntityFramework, PublicKey=00240000048000009400000006020000002400005253413100040000010001000da51e0f449f6ee7879b256b497e9f64eda760b5fac3d47a4ba8a54664303024f451098b69154691fad078fe77ee79ac2b6a9770fd7a6555a4c49a2a58e82f411939e1eb44ac4a1327acdd13f2c8ec7698644d019f04197838434be8cb53877f1d22acab90ae7735acc363fdb393a11fa34afe780d1c5fb26f37a8fd6e4d9b9f")]
-[assembly: InternalsVisibleTo(@"Fluente.Arquitetura.Doc, PublicKey=00240000048000009400000006020000002400005253413100040000010001008963bf4072062c4090dd8b8b1b3335b78ac84c4e55c7903a918af1d62ecf0e2ab5504ca1fa722b67f5968cdbbf2f1436cc9303018d57511caefbae6cf903f681d721a1122bcdc4f35fa4aafade1e9900468a69aba391d3e9c2eb3087bd37727bbcc30f704666c62beccdca492d8e5467088b696c39306fa582637041a8c40dc4")]
-namespace Fluente.Arquitetura
+[assembly: InternalsVisibleTo(@"dn32.infra.EntityFramework, PublicKey=00240000048000009400000006020000002400005253413100040000010001000da51e0f449f6ee7879b256b497e9f64eda760b5fac3d47a4ba8a54664303024f451098b69154691fad078fe77ee79ac2b6a9770fd7a6555a4c49a2a58e82f411939e1eb44ac4a1327acdd13f2c8ec7698644d019f04197838434be8cb53877f1d22acab90ae7735acc363fdb393a11fa34afe780d1c5fb26f37a8fd6e4d9b9f")]
+[assembly: InternalsVisibleTo(@"dn32.infra.Doc, PublicKey=00240000048000009400000006020000002400005253413100040000010001008963bf4072062c4090dd8b8b1b3335b78ac84c4e55c7903a918af1d62ecf0e2ab5504ca1fa722b67f5968cdbbf2f1436cc9303018d57511caefbae6cf903f681d721a1122bcdc4f35fa4aafade1e9900468a69aba391d3e9c2eb3087bd37727bbcc30f704666c62beccdca492d8e5467088b696c39306fa582637041a8c40dc4")]
+namespace dn32.infra
 {
     public static class Setup
     {

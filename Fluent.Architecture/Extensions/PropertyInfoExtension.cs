@@ -1,12 +1,12 @@
-﻿using Fluente.Arquitetura.Extensoes;
-using Fluente.Arquitetura.Nucleo.Atributos;
-using Fluente.Arquitetura.Nucleo.Util;
+﻿using dn32.infra.Extensoes;
+using dn32.infra.Nucleo.Atributos;
+using dn32.infra.Nucleo.Util;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using dn32.infra.extensoes;
 
-namespace Fluente.Arquitetura.Nucleo.Extensoes
+namespace dn32.infra.Nucleo.Extensoes
 {
     public static class PropertyInfoExtension
     {

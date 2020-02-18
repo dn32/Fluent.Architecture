@@ -4,7 +4,7 @@ using System;
 using System.Threading.Tasks;
 using dn32.infra.extensoes;
 
-namespace Fluente.Arquitetura.Redis
+namespace dn32.infra.Redis
 {
     public class FluenteRedisContext
     {

@@ -1,7 +1,7 @@
-﻿using Fluente.Arquitetura.Interfaces;
-using Fluente.Arquitetura.Nucleo.Models;
-using Fluente.Arquitetura.Nucleo.Specifications;
-using Fluente.Arquitetura.Specifications;
+﻿using dn32.infra.Interfaces;
+using dn32.infra.Nucleo.Models;
+using dn32.infra.Nucleo.Specifications;
+using dn32.infra.Specifications;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -9,11 +9,11 @@ using dn32.infra.dados;
 using dn32.infra.extensoes;
 
 #if NETCOREAPP3_1
-using Fluente.Arquitetura.Extensoes;
+using dn32.infra.Extensoes;
 #else
 #endif
 
-namespace Fluente.Arquitetura.EntityFramework.Specifications
+namespace dn32.infra.EntityFramework.Specifications
 {
     public class FluenteSqlSpec<TE> : FluenteSpecification<TE> where TE : FluenteEntidade
     {

@@ -15,7 +15,7 @@
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
     <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
     <Nullable>warnings</Nullable>
-    <AssemblyOriginatorKeyFile>Fluente.Arquitetura.Doc.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>dn32.infra.Doc.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,7 +36,7 @@
 
   <ItemGroup>
     <ProjectReference Include="D:\Projetos\dn32\dn32.infra\dn32.infra\dn32.infra.csproj" />
-    <ProjectReference Include="..\Fluent.Architecture\Fluente.Arquitetura.Nucleo.csproj" />
+    <ProjectReference Include="..\Fluent.Architecture\dn32.infra.Nucleo.csproj" />
   </ItemGroup>
 
 

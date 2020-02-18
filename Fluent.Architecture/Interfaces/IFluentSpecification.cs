@@ -6,10 +6,10 @@
 // -----------------------------------------------------------------------
 
 
-using Fluente.Arquitetura.Services;
+using dn32.infra.Services;
 using System;
 
-namespace Fluente.Arquitetura.Interfaces
+namespace dn32.infra.Interfaces
 {
     public interface IFluenteSpecification : ISpec
     {

@@ -1,13 +1,13 @@
-﻿using Fluente.Arquitetura.Extensoes;
-using Fluente.Arquitetura.Nucleo.Interfaces;
-using Fluente.Arquitetura.Services;
-using Fluente.Arquitetura.Validation;
+﻿using dn32.infra.Extensoes;
+using dn32.infra.Nucleo.Interfaces;
+using dn32.infra.Services;
+using dn32.infra.Validation;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.Nucleo.Models
+namespace dn32.infra.Nucleo.Models
 {
     /// <summary>
     /// Entidade organizadora da injeção de dependência e do contexto da requisição do usuário.

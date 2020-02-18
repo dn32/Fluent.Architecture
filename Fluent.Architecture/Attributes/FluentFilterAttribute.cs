@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using dn32.infra.enumeradores;
 
-namespace Fluente.Arquitetura.Nucleo.Atributos
+namespace dn32.infra.Nucleo.Atributos
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class FluenteFilterAttribute : Attribute

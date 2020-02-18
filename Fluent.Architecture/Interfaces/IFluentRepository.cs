@@ -1,11 +1,11 @@
-﻿using Fluente.Arquitetura.Interfaces;
-using Fluente.Arquitetura.Services;
+﻿using dn32.infra.Interfaces;
+using dn32.infra.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.Nucleo.Interfaces
+namespace dn32.infra.Nucleo.Interfaces
 {
     public interface IFluenteRepository<TE> : ITransactionlRepository where TE : EntidadeBase
     {

@@ -7,7 +7,7 @@
 
 //using System.Runtime.InteropServices;
 
-//namespace Fluente.Arquitetura.Test
+//namespace dn32.infra.Test
 //{
 //    [ComVisible(true)]
 //    public static class Setup

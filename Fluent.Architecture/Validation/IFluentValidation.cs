@@ -7,9 +7,9 @@
 
 // ReSharper disable CommentTypo
 
-using Fluente.Arquitetura.Exceptions.ValidationException;
+using dn32.infra.Exceptions.ValidationException;
 
-namespace Fluente.Arquitetura.Validation
+namespace dn32.infra.Validation
 {
     internal interface IFluenteValidation
     {

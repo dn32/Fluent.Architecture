@@ -1,8 +1,8 @@
-﻿//using Fluente.Arquitetura.Model;
+﻿//using dn32.infra.Model;
 //using System;
 //using System.Linq.Expressions;
 
-//namespace Fluente.Arquitetura.Interfaces
+//namespace dn32.infra.Interfaces
 //{
 //    public interface IFluenteChangeEvent<T> : IBaseEvent where T : FluenteEntity
 //    {

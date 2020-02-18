@@ -1,12 +1,12 @@
-﻿using Fluente.Arquitetura.Controllers;
-using Fluente.Arquitetura.Test.Mock;
-using Fluente.Arquitetura.Test.Mock.ControllerMock;
+﻿using dn32.infra.Controllers;
+using dn32.infra.Test.Mock;
+using dn32.infra.Test.Mock.ControllerMock;
 using Newtonsoft.Json;
 using System;
 using System.Runtime.InteropServices;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.Test
+namespace dn32.infra.Test
 {
     [ComVisible(true)]
     public static class TestUtil

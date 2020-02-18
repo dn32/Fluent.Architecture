@@ -1,6 +1,6 @@
 ﻿using dn32.infra.dados;
-using Fluente.Arquitetura.Services;
-namespace Fluente.Arquitetura.Nucleo.Interfaces
+using dn32.infra.Services;
+namespace dn32.infra.Nucleo.Interfaces
 {
     internal interface IRepositoryFactory
     {

@@ -1,8 +1,8 @@
-﻿using Fluente.Arquitetura.Attributes;
-using Fluente.Arquitetura.Exceptions;
-using Fluente.Arquitetura.Nucleo.Atributos;
-using Fluente.Arquitetura.Nucleo.Extensoes;
-using Fluente.Arquitetura.Nucleo.Models;
+﻿using dn32.infra.Attributes;
+using dn32.infra.Exceptions;
+using dn32.infra.Nucleo.Atributos;
+using dn32.infra.Nucleo.Extensoes;
+using dn32.infra.Nucleo.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
 
-namespace Fluente.Arquitetura.Extensoes
+namespace dn32.infra.Extensoes
 {
     public static class FluenteEntityExtension
     {

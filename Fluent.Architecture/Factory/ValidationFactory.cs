@@ -1,9 +1,9 @@
-﻿using Fluente.Arquitetura.Util;
-using Fluente.Arquitetura.Validation;
+﻿using dn32.infra.Util;
+using dn32.infra.Validation;
 using System;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.Factory
+namespace dn32.infra.Factory
 {
     /// <summary>
     /// Método interno.

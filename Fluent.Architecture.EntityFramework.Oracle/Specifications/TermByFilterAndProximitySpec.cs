@@ -1,11 +1,11 @@
-﻿using Fluente.Arquitetura.Extensoes;
-using Fluente.Arquitetura.Nucleo.Extensoes;
-using Fluente.Arquitetura.Specifications;
+﻿using dn32.infra.Extensoes;
+using dn32.infra.Nucleo.Extensoes;
+using dn32.infra.Specifications;
 using System;
 using System.Linq;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.EntityFramework.Oracle.Specifications
+namespace dn32.infra.EntityFramework.Oracle.Specifications
 {
     public class TermByFilterAndProximitySpec<T> : FluenteSpecification<T> where T : FluenteEntidade
     {

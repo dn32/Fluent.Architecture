@@ -1,5 +1,5 @@
-﻿//using Fluente.Arquitetura.Interfaces;
-//using Fluente.Arquitetura.Model;
+﻿//using dn32.infra.Interfaces;
+//using dn32.infra.Model;
 //using System.Collections.Generic;
 
 //namespace FluenteInterfaces

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Routing;
 
-namespace Fluente.Arquitetura.Test.Mock
+namespace dn32.infra.Test.Mock
 {
     public static class MockRouteDataFactory
     {

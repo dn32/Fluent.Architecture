@@ -8,7 +8,7 @@
 // ReSharper disable CommentTypo
 using Newtonsoft.Json;
 
-namespace Fluente.Arquitetura.Exceptions.ValidationException
+namespace dn32.infra.Exceptions.ValidationException
 {
     public class EntityNotFoundFluenteValidationException : FluenteValidationException
     {

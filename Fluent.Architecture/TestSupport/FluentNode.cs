@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Fluente.Arquitetura.Nucleo.TestSupport
+namespace dn32.infra.Nucleo.TestSupport
 {
     public class FluenteNode
     {

@@ -1,6 +1,6 @@
-﻿using Fluente.Arquitetura.Factory;
-using Fluente.Arquitetura.Nucleo.Models;
-using Fluente.Arquitetura.Nucleo.Services;
+﻿using dn32.infra.Factory;
+using dn32.infra.Nucleo.Models;
+using dn32.infra.Nucleo.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +8,7 @@ using System;
 using System.Threading.Tasks;
 using dn32.infra.extensoes;
 
-namespace Fluente.Arquitetura.Nucleo.Doc.Controllers
+namespace dn32.infra.Nucleo.Doc.Controllers
 {
     [AllowAnonymous]
     public class AuthenticationController : Controller

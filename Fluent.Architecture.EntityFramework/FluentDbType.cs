@@ -1,4 +1,4 @@
-﻿namespace Fluente.Arquitetura.EntityFramework
+﻿namespace dn32.infra.EntityFramework
 {
     public enum FluenteDbType
     {

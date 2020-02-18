@@ -1,7 +1,7 @@
 // ReSharper disable CommentTypo
 using Microsoft.EntityFrameworkCore;
 
-namespace Fluente.Arquitetura.EntityFramework.Oracle
+namespace dn32.infra.EntityFramework.Oracle
 {
     /// <inheritdoc />
     /// <summary>

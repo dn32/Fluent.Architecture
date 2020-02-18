@@ -1,7 +1,7 @@
-﻿using Fluente.Arquitetura.Controllers;
-using Fluente.Arquitetura.Exceptions;
-using Fluente.Arquitetura.Factory.Proxy;
-using Fluente.Arquitetura.Nucleo.Atributos;
+﻿using dn32.infra.Controllers;
+using dn32.infra.Exceptions;
+using dn32.infra.Factory.Proxy;
+using dn32.infra.Nucleo.Atributos;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using System;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Fluente.Arquitetura.Nucleo.Factory
+namespace dn32.infra.Nucleo.Factory
 {
     public class ControllerFactory : IApplicationFeatureProvider<ControllerFeature>
     {

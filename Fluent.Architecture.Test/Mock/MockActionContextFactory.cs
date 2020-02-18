@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Routing;
 
-namespace Fluente.Arquitetura.Test.Mock.ControllerMock
+namespace dn32.infra.Test.Mock.ControllerMock
 {
     public static class MockActionContextFactory
     {

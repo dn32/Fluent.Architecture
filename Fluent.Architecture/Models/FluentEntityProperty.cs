@@ -1,5 +1,5 @@
 ﻿
-namespace Fluente.Arquitetura.Nucleo.Models
+namespace dn32.infra.Nucleo.Models
 {
     public class FluenteEventEntityProperty
     {

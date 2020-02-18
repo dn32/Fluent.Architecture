@@ -1,4 +1,4 @@
-﻿namespace Fluente.Arquitetura.Nucleo.Doc.Interfaces
+﻿namespace dn32.infra.Nucleo.Doc.Interfaces
 {
     public interface IFluenteGlobalization
     {

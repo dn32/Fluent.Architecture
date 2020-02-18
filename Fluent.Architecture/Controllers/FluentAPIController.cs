@@ -1,7 +1,7 @@
-﻿using Fluente.Arquitetura.Extensoes;
-using Fluente.Arquitetura.Nucleo.Extensoes;
-using Fluente.Arquitetura.Nucleo.Specifications;
-using Fluente.Arquitetura.Nucleo.Util;
+﻿using dn32.infra.Extensoes;
+using dn32.infra.Nucleo.Extensoes;
+using dn32.infra.Nucleo.Specifications;
+using dn32.infra.Nucleo.Util;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using dn32.infra.dados;
 using dn32.infra.enumeradores;
 using dn32.infra.extensoes;
 
-namespace Fluente.Arquitetura.Controllers
+namespace dn32.infra.Controllers
 {
     [Route("/api/[controller]/[action]")]
     [ApiController]

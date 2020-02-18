@@ -5,10 +5,10 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Fluente.Arquitetura.Controllers;
+using dn32.infra.Controllers;
 using System;
 
-namespace Fluente.Arquitetura.Test.Mock
+namespace dn32.infra.Test.Mock
 {
     public static class MockControllerFactory
     {

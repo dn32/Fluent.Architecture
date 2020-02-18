@@ -1,9 +1,9 @@
-﻿using Fluente.Arquitetura.Extensoes;
-using Fluente.Arquitetura.Nucleo.Extensoes;
+﻿using dn32.infra.Extensoes;
+using dn32.infra.Nucleo.Extensoes;
 using System;
 using System.Reflection;
 
-namespace Fluente.Arquitetura.Nucleo.Util
+namespace dn32.infra.Nucleo.Util
 {
     public static class RandomUtil
     {

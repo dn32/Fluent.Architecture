@@ -6,7 +6,7 @@ using System.Reflection;
 using dn32.infra.atributos;
 using dn32.infra.enumeradores;
 
-namespace Fluente.Arquitetura.Nucleo.Atributos
+namespace dn32.infra.Nucleo.Atributos
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class FluenteJsonPropertyAttribute : FluenteJsoSchemaAttribute

@@ -5,9 +5,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Fluente.Arquitetura.Services;
+using dn32.infra.Services;
 
-namespace Fluente.Arquitetura.Validation
+namespace dn32.infra.Validation
 {
     public abstract class BaseValidation
     {

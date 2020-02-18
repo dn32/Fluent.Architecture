@@ -1,14 +1,14 @@
-﻿using Fluente.Arquitetura.Extensoes;
-using Fluente.Arquitetura.Nucleo.Atributos;
-using Fluente.Arquitetura.Nucleo.Extensoes;
-using Fluente.Arquitetura.Specifications;
+﻿using dn32.infra.Extensoes;
+using dn32.infra.Nucleo.Atributos;
+using dn32.infra.Nucleo.Extensoes;
+using dn32.infra.Specifications;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.Nucleo.Specifications
+namespace dn32.infra.Nucleo.Specifications
 {
     public class TermSpec<T> : FluenteSpecification<T> where T : FluenteEntidade
     {

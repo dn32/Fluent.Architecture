@@ -7,11 +7,11 @@
 
 // ReSharper disable CommentTypo
 
-using Fluente.Arquitetura.Util;
+using dn32.infra.Util;
 using Newtonsoft.Json;
 using System.Threading;
 
-namespace Fluente.Arquitetura.Exceptions.ValidationException
+namespace dn32.infra.Exceptions.ValidationException
 {
     /// <inheritdoc />
     public class FluenteValidationException

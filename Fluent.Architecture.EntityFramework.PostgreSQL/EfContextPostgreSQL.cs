@@ -2,7 +2,7 @@
 
 using Microsoft.EntityFrameworkCore;
 
-namespace Fluente.Arquitetura.EntityFramework.PostgreSQL
+namespace dn32.infra.EntityFramework.PostgreSQL
 {
     /// <inheritdoc />
     /// <summary>

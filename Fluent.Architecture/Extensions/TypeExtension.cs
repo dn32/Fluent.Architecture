@@ -1,9 +1,9 @@
-﻿using Fluente.Arquitetura.Attributes;
-using Fluente.Arquitetura.Nucleo.Atributos;
-using Fluente.Arquitetura.Nucleo.Extensoes;
-using Fluente.Arquitetura.Nucleo.Models;
-using Fluente.Arquitetura.Nucleo.Util;
-using Fluente.Arquitetura.Services;
+﻿using dn32.infra.Attributes;
+using dn32.infra.Nucleo.Atributos;
+using dn32.infra.Nucleo.Extensoes;
+using dn32.infra.Nucleo.Models;
+using dn32.infra.Nucleo.Util;
+using dn32.infra.Services;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -21,7 +21,7 @@ using dn32.infra.dados;
 using dn32.infra.enumeradores;
 using dn32.infra.extensoes;
 
-namespace Fluente.Arquitetura.Extensoes
+namespace dn32.infra.Extensoes
 {
     /// <summary>
     /// Extensão de Type.

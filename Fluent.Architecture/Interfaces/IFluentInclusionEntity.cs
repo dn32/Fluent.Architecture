@@ -10,7 +10,7 @@
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Fluente.Arquitetura.Interfaces
+namespace dn32.infra.Interfaces
 {
     public interface IFluenteInclusionEntity
     {

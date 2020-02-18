@@ -1,9 +1,9 @@
-﻿using Fluente.Arquitetura.Exceptions;
-using Fluente.Arquitetura.Services;
+﻿using dn32.infra.Exceptions;
+using dn32.infra.Services;
 using System.Linq;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.Specifications
+namespace dn32.infra.Specifications
 {
     /// <summary>
     /// Especificação base para todas as especificações do sistema.

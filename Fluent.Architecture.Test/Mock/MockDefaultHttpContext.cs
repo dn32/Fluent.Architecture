@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 
-namespace Fluente.Arquitetura.Test.Mock
+namespace dn32.infra.Test.Mock
 {
 #if NETCOREAPP3_1
 

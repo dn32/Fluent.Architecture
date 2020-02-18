@@ -1,5 +1,5 @@
 ﻿
-namespace Fluente.Arquitetura.Redis
+namespace dn32.infra.Redis
 {
     public static class FluenteRedisExtension
     {

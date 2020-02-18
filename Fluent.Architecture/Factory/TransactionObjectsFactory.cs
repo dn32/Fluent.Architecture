@@ -1,8 +1,8 @@
-﻿using Fluente.Arquitetura.Nucleo.Interfaces;
-using Fluente.Arquitetura.Nucleo.Models;
+﻿using dn32.infra.Nucleo.Interfaces;
+using dn32.infra.Nucleo.Models;
 using System;
 
-namespace Fluente.Arquitetura.Nucleo.Factory
+namespace dn32.infra.Nucleo.Factory
 {
     public static class TransactionObjectsFactory
     {

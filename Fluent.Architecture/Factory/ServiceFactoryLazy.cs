@@ -6,11 +6,11 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluente.Arquitetura.Factory.Proxy;
-using Fluente.Arquitetura.Services;
+using dn32.infra.Factory.Proxy;
+using dn32.infra.Services;
 using System;
 
-namespace Fluente.Arquitetura.Factory
+namespace dn32.infra.Factory
 {
     /// <summary>
     /// Método interno.

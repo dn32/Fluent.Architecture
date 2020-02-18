@@ -1,12 +1,12 @@
 ﻿using ClosedXML.Excel;
-using Fluente.Arquitetura.Extensoes;
-using Fluente.Arquitetura.Nucleo.Atributos;
+using dn32.infra.Extensoes;
+using dn32.infra.Nucleo.Atributos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Fluente.Arquitetura.Nucleo.Util
+namespace dn32.infra.Nucleo.Util
 {
     public static class DataImportationUtil
     {

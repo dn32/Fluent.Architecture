@@ -6,11 +6,11 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluente.Arquitetura.Extensoes;
+using dn32.infra.Extensoes;
 using Newtonsoft.Json;
 using System.Reflection;
 
-namespace Fluente.Arquitetura.Exceptions.ValidationException
+namespace dn32.infra.Exceptions.ValidationException
 {
     public class UiFieldLenghtFluenteValidationException : FluenteUiFieldValidationException
     {

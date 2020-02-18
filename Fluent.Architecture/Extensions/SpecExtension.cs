@@ -1,9 +1,9 @@
-﻿using Fluente.Arquitetura.Exceptions;
-using Fluente.Arquitetura.Interfaces;
+﻿using dn32.infra.Exceptions;
+using dn32.infra.Interfaces;
 using System.Collections.Generic;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.Extensoes
+namespace dn32.infra.Extensoes
 {
     public static class SpecExtension
     {

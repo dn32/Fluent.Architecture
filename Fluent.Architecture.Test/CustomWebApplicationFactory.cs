@@ -5,8 +5,8 @@
 //// </copyright>
 //// -----------------------------------------------------------------------
 
-//using Fluente.Arquitetura.EntityFramework;
-//using Fluente.Arquitetura.EntityFramework.SqLite;
+//using dn32.infra.EntityFramework;
+//using dn32.infra.EntityFramework.SqLite;
 //using Microsoft.AspNetCore.Hosting;
 //using Microsoft.AspNetCore.Mvc.Testing;
 //using Microsoft.Extensions.DependencyInjection;
@@ -14,9 +14,9 @@
 //using Newtonsoft.Json.Serialization;
 //using System;
 //using System.Net.Http;
-//using static Fluente.Arquitetura.Test.IndexPageTests;
+//using static dn32.infra.Test.IndexPageTests;
 
-//namespace Fluente.Arquitetura.Test
+//namespace dn32.infra.Test
 //{
 //    public class IndexPageTests : IClassFixture<CustomWebApplicationFactory<RazorPagesProject.Startup>>
 //    {

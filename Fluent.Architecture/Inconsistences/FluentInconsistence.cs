@@ -1,8 +1,8 @@
 ﻿
-using Fluente.Arquitetura.Exceptions.ValidationException;
+using dn32.infra.Exceptions.ValidationException;
 using Newtonsoft.Json;
 
-namespace Fluente.Arquitetura.Nucleo.Inconsistences
+namespace dn32.infra.Nucleo.Inconsistences
 {
     public class FluenteInconsistence
     {

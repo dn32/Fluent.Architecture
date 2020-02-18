@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Fluente.Arquitetura.Nucleo.Specifications
+namespace dn32.infra.Nucleo.Specifications
 {
     public class FluenteActionAttribute : Attribute
     {

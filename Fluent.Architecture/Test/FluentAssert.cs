@@ -5,10 +5,10 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Fluente.Arquitetura.Extensoes;
+using dn32.infra.Extensoes;
 using System.ComponentModel.DataAnnotations;
 
-namespace Fluente.Arquitetura.Test
+namespace dn32.infra.Test
 {
     public static class FluenteAssert
     {

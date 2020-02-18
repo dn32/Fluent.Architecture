@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 
-namespace Fluente.Arquitetura.Nucleo.Models
+namespace dn32.infra.Nucleo.Models
 {
     public class FluenteEventEntity
     {

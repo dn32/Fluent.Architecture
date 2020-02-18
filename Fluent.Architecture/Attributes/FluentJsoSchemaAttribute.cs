@@ -2,7 +2,7 @@
 using System;
 using System.ComponentModel;
 
-namespace Fluente.Arquitetura.Nucleo.Atributos
+namespace dn32.infra.Nucleo.Atributos
 {
     public class FluenteJsoSchemaAttribute : Attribute
     {

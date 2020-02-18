@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.Nucleo.Interfaces
+namespace dn32.infra.Nucleo.Interfaces
 {
     public interface ITransactionObjects : IDisposable
     {

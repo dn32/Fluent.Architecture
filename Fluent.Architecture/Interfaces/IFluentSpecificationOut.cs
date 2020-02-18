@@ -7,7 +7,7 @@
 
 using System;
 
-namespace Fluente.Arquitetura.Interfaces
+namespace dn32.infra.Interfaces
 {
     public interface IFluenteSpecificationOut : ISpec
     {

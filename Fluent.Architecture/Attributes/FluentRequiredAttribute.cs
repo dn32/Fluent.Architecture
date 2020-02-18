@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Fluente.Arquitetura.Nucleo.Atributos
+namespace dn32.infra.Nucleo.Atributos
 {
     public class FluenteRequiredAttribute : Attribute
     {

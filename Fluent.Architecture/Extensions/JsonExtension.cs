@@ -1,8 +1,8 @@
 ﻿using dn32.infra.extensoes;
-using Fluente.Arquitetura.Extensoes;
+using dn32.infra.Extensoes;
 using Newtonsoft.Json;
 
-namespace Fluente.Arquitetura.Nucleo.Extensoes
+namespace dn32.infra.Nucleo.Extensoes
 {
     public static class JsonExtension
     {

@@ -1,11 +1,11 @@
-﻿using Fluente.Arquitetura.Extensoes;
-using Fluente.Arquitetura.Nucleo.Models;
+﻿using dn32.infra.Extensoes;
+using dn32.infra.Nucleo.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Fluente.Arquitetura.EntityFramework
+namespace dn32.infra.EntityFramework
 {
     internal static class RepositoryUtil
     {

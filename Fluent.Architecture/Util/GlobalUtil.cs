@@ -1,13 +1,13 @@
-﻿using Fluente.Arquitetura.Controllers;
-using Fluente.Arquitetura.Nucleo.Interfaces;
-using Fluente.Arquitetura.Services;
-using Fluente.Arquitetura.Specifications;
-using Fluente.Arquitetura.Validation;
+﻿using dn32.infra.Controllers;
+using dn32.infra.Nucleo.Interfaces;
+using dn32.infra.Services;
+using dn32.infra.Specifications;
+using dn32.infra.Validation;
 using System;
 using System.Linq;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.Util
+namespace dn32.infra.Util
 {
     /// <summary>
     /// Utilitários de uso global.

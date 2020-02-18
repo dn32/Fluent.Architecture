@@ -1,4 +1,4 @@
-﻿namespace Fluente.Arquitetura.Nucleo.Doc.Controllers
+﻿namespace dn32.infra.Nucleo.Doc.Controllers
 {
     public enum EnumParameterSouce
     {

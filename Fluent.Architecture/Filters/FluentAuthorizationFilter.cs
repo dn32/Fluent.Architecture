@@ -10,7 +10,7 @@ using System.Net;
 using System.Reflection;
 using dn32.infra.extensoes;
 
-namespace Fluente.Arquitetura.Filters
+namespace dn32.infra.Filters
 {
     public class FluenteAuthorizationFilter : IAuthorizationFilter
     {

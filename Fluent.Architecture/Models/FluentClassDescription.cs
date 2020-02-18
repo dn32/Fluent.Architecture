@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 
-namespace Fluente.Arquitetura.Nucleo.Models
+namespace dn32.infra.Nucleo.Models
 {
     internal class FluenteClassDescription
     {

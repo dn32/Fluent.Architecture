@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Fluente.Arquitetura.EntityFramework.SqLite
+namespace dn32.infra.EntityFramework.SqLite
 {
     /// <inheritdoc />
     /// <summary>

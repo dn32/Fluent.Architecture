@@ -1,6 +1,6 @@
 ﻿// ReSharper disable CommentTypo
 
-namespace Fluente.Arquitetura.EntityFramework.SqlServer
+namespace dn32.infra.EntityFramework.SqlServer
 {
     /// <inheritdoc />
     /// <summary>

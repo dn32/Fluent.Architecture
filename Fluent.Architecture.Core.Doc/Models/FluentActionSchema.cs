@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Fluente.Arquitetura.Nucleo.Doc.Controllers
+namespace dn32.infra.Nucleo.Doc.Controllers
 {
     public class FluenteActionSchema
     {

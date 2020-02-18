@@ -1,10 +1,10 @@
-﻿using Fluente.Arquitetura.Services;
+﻿using dn32.infra.Services;
 using StackExchange.Redis;
 using System;
 using System.Threading.Tasks;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.Redis
+namespace dn32.infra.Redis
 {
     public class FluenteRedisService : TransactionalService
     {

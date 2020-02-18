@@ -7,7 +7,7 @@
 
 // ReSharper disable CommentTypo
 
-namespace Fluente.Arquitetura.Factory.Interface
+namespace dn32.infra.Factory.Interface
 {
     internal interface IFluenteDynamicProxy
     {

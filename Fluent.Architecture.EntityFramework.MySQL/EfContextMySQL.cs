@@ -1,7 +1,7 @@
 ﻿// ReSharper disable CommentTypo
 using Microsoft.EntityFrameworkCore;
 
-namespace Fluente.Arquitetura.EntityFramework.MySQL
+namespace dn32.infra.EntityFramework.MySQL
 {
     /// <inheritdoc />
     /// <summary>

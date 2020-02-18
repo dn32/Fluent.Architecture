@@ -7,7 +7,7 @@
 
 // ReSharper disable CommentTypo
 
-namespace Fluente.Arquitetura.Nucleo.Models
+namespace dn32.infra.Nucleo.Models
 {
     /// <summary>
     /// Model de Nome e Valor para uso genérico.

@@ -6,15 +6,15 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluente.Arquitetura.Factory;
-using Fluente.Arquitetura.Nucleo.Interfaces;
-using Fluente.Arquitetura.Nucleo.Models;
-using Fluente.Arquitetura.Validation;
+using dn32.infra.Factory;
+using dn32.infra.Nucleo.Interfaces;
+using dn32.infra.Nucleo.Models;
+using dn32.infra.Validation;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Security.Claims;
 
-namespace Fluente.Arquitetura.Services
+namespace dn32.infra.Services
 {
     /// <summary>
     /// Serviço base de todos os serviços do sistema.

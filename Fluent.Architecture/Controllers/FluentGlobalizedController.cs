@@ -5,10 +5,10 @@
 //// </copyright>
 //// -----------------------------------------------------------------------
 
-//using Fluente.Arquitetura.Model;
-//using Fluente.Arquitetura.Services;
+//using dn32.infra.Model;
+//using dn32.infra.Services;
 
-//namespace Fluente.Arquitetura.Controllers
+//namespace dn32.infra.Controllers
 //{
 //    public abstract class FluenteGlobalizedController<T> : FluenteController<T> where T : FluenteGlobalizedEntity
 //    {

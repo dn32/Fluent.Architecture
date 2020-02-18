@@ -1,9 +1,9 @@
-﻿using Fluente.Arquitetura.Exceptions;
-using Fluente.Arquitetura.Services;
-using Fluente.Arquitetura.Specifications;
+﻿using dn32.infra.Exceptions;
+using dn32.infra.Services;
+using dn32.infra.Specifications;
 using System;
 
-namespace Fluente.Arquitetura.Factory
+namespace dn32.infra.Factory
 {
     public static class SpecFactory
     {

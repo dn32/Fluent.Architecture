@@ -1,7 +1,7 @@
-﻿using Fluente.Arquitetura.Nucleo.Atributos;
+﻿using dn32.infra.Nucleo.Atributos;
 using System.Collections.Generic;
 
-namespace Fluente.Arquitetura.Nucleo.Models
+namespace dn32.infra.Nucleo.Models
 {
     public class FluenteJsonSchema
     {

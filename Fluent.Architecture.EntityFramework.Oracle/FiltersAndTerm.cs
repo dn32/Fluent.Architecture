@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.EntityFramework.Oracle
+namespace dn32.infra.EntityFramework.Oracle
 {
     public class FiltersAndTerm
     {

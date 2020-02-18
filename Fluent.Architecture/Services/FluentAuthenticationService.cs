@@ -1,5 +1,5 @@
-﻿using Fluente.Arquitetura.Nucleo.Models;
-using Fluente.Arquitetura.Services;
+﻿using dn32.infra.Nucleo.Models;
+using dn32.infra.Services;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 
-namespace Fluente.Arquitetura.Nucleo.Services
+namespace dn32.infra.Nucleo.Services
 {
     public abstract class FluenteAuthenticationService : TransactionalService
     {

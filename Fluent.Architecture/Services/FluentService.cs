@@ -1,12 +1,12 @@
 ﻿using ClosedXML.Excel;
-using Fluente.Arquitetura.Exceptions;
-using Fluente.Arquitetura.Exceptions.ValidationException;
-using Fluente.Arquitetura.Factory;
-using Fluente.Arquitetura.Interfaces;
-using Fluente.Arquitetura.Nucleo.Interfaces;
-using Fluente.Arquitetura.Nucleo.Models;
-using Fluente.Arquitetura.Nucleo.Util;
-using Fluente.Arquitetura.Validation;
+using dn32.infra.Exceptions;
+using dn32.infra.Exceptions.ValidationException;
+using dn32.infra.Factory;
+using dn32.infra.Interfaces;
+using dn32.infra.Nucleo.Interfaces;
+using dn32.infra.Nucleo.Models;
+using dn32.infra.Nucleo.Util;
+using dn32.infra.Validation;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,7 +14,7 @@ using System.IO;
 using System.Threading.Tasks;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.Services
+namespace dn32.infra.Services
 {
     ///<inheritdoc/>
     /// <summary>

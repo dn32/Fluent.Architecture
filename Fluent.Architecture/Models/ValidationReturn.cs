@@ -7,10 +7,10 @@
 
 // ReSharper disable CommentTypo
 
-using Fluente.Arquitetura.Nucleo.Inconsistences;
+using dn32.infra.Nucleo.Inconsistences;
 using System.Collections.Generic;
 
-namespace Fluente.Arquitetura.Nucleo.Models
+namespace dn32.infra.Nucleo.Models
 {
     public class ValidationReturn
     {

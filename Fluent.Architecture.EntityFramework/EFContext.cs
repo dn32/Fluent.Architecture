@@ -1,10 +1,10 @@
 ﻿// ReSharper disable CommentTypo
-using Fluente.Arquitetura.Attributes;
-using Fluente.Arquitetura.Exceptions;
-using Fluente.Arquitetura.Extensoes;
-using Fluente.Arquitetura.Interfaces;
-using Fluente.Arquitetura.Nucleo.Atributos;
-using Fluente.Arquitetura.Nucleo.Models;
+using dn32.infra.Attributes;
+using dn32.infra.Exceptions;
+using dn32.infra.Extensoes;
+using dn32.infra.Interfaces;
+using dn32.infra.Nucleo.Atributos;
+using dn32.infra.Nucleo.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 using dn32.infra.dados;
 using dn32.infra.enumeradores;
 
-namespace Fluente.Arquitetura.EntityFramework
+namespace dn32.infra.EntityFramework
 {
     /// <inheritdoc />
     /// <summary>

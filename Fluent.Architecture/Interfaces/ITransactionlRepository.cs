@@ -1,4 +1,4 @@
-﻿namespace Fluente.Arquitetura.Nucleo.Interfaces
+﻿namespace dn32.infra.Nucleo.Interfaces
 {
     public interface ITransactionlRepository : IBaseRepository
     {

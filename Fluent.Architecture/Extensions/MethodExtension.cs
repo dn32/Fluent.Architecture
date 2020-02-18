@@ -11,7 +11,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Fluente.Arquitetura.Extensoes
+namespace dn32.infra.Extensoes
 {
     /// <summary>
     /// Extensão de MethodBase e MethodInfo.

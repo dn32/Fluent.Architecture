@@ -1,11 +1,11 @@
-﻿using Fluente.Arquitetura.Factory;
-using Fluente.Arquitetura.Services;
-using Fluente.Arquitetura.Specifications;
+﻿using dn32.infra.Factory;
+using dn32.infra.Services;
+using dn32.infra.Specifications;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.Controllers
+namespace dn32.infra.Controllers
 {
     /// <inheritdoc />
     /// <summary>

@@ -7,10 +7,10 @@
 
 // ReSharper disable CommentTypo
 
-using Fluente.Arquitetura.Exceptions.ValidationException;
+using dn32.infra.Exceptions.ValidationException;
 using System;
 
-namespace Fluente.Arquitetura.Exceptions
+namespace dn32.infra.Exceptions
 {
     [Serializable]
     public class MethodNotFoundException : FluenteValidationException

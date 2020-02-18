@@ -9,7 +9,7 @@
 using Newtonsoft.Json;
 using System.Reflection;
 
-namespace Fluente.Arquitetura.Exceptions.ValidationException
+namespace dn32.infra.Exceptions.ValidationException
 {
     public class FluenteGenericAttributeValidateException : FluenteUiFieldValidationException
     {

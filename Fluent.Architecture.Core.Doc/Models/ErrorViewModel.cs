@@ -1,4 +1,4 @@
-namespace Fluente.Arquitetura.Nucleo.Doc.Models
+namespace dn32.infra.Nucleo.Doc.Models
 {
     public class ErrorViewModel
     {

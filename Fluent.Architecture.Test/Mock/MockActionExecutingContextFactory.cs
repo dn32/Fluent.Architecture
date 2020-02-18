@@ -1,8 +1,8 @@
-﻿using Fluente.Arquitetura.Controllers;
+﻿using dn32.infra.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Collections.Generic;
 
-namespace Fluente.Arquitetura.Test.Mock.ControllerMock
+namespace dn32.infra.Test.Mock.ControllerMock
 {
     public static class MockActionExecutingContextFactory
     {

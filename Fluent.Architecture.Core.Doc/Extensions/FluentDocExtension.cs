@@ -1,9 +1,9 @@
-﻿using Fluente.Arquitetura.Nucleo.Doc.Controllers;
-using Fluente.Arquitetura.Nucleo.Doc.Interfaces;
+﻿using dn32.infra.Nucleo.Doc.Controllers;
+using dn32.infra.Nucleo.Doc.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Fluente.Arquitetura
+namespace dn32.infra
 {
     public static class FluenteDocExtension
     {

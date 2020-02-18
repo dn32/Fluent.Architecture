@@ -1,6 +1,6 @@
 ﻿using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.EntityFramework.MemoryDatabase
+namespace dn32.infra.EntityFramework.MemoryDatabase
 {
     [DbType(FluenteDbType.MEMORY)]
     public abstract class FluenteMySQLEntity : FluenteEntidade

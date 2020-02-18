@@ -1,7 +1,7 @@
-﻿using Fluente.Arquitetura.Extensoes;
-using Fluente.Arquitetura.Factory;
-using Fluente.Arquitetura.Nucleo.Atributos;
-using Fluente.Arquitetura.Services;
+﻿using dn32.infra.Extensoes;
+using dn32.infra.Factory;
+using dn32.infra.Nucleo.Atributos;
+using dn32.infra.Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using dn32.infra.dados;
 using dn32.infra.extensoes;
 
-namespace Fluente.Arquitetura.Validation
+namespace dn32.infra.Validation
 {
     internal static class FluenteValidationExtension
     {

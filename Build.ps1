@@ -1,4 +1,4 @@
-$dirBase = "D:\Projetos\dn32\Fluente.Arquitetura\"
+$dirBase = "D:\Projetos\dn32\dn32.infra\"
 
 function CheckResult {
     param( $result, $sucess )
@@ -16,39 +16,39 @@ function CheckResult {
 }
 
 echo "Clean"
-dotnet clean "$dirBase\Fluente.Arquitetura.sln"
+dotnet clean "$dirBase\dn32.infra.sln"
 
 echo "Build 2.2"
-$result = dotnet build "$dirBase\Fluente.Arquitetura.sln" --configuration Release /p:CopyOutputSymbolsToPublishDirectory=false --framework netcoreapp2.2
+$result = dotnet build "$dirBase\dn32.infra.sln" --configuration Release /p:CopyOutputSymbolsToPublishDirectory=false --framework netcoreapp2.2
 CheckResult $result "Build 2.2 Sucess!"
 
 echo "Build 3.0"
-$result = dotnet build "$dirBase\Fluente.Arquitetura.sln" --configuration Release /p:CopyOutputSymbolsToPublishDirectory=false --framework netcoreapp3.1
+$result = dotnet build "$dirBase\dn32.infra.sln" --configuration Release /p:CopyOutputSymbolsToPublishDirectory=false --framework netcoreapp3.1
 CheckResult $result "Build 3.1 Sucess!"
 
 echo "Cript"
 
 $dirsPack = 
-'Fluente.Arquitetura',
-'Fluente.Arquitetura.Base',
-'Fluente.Arquitetura.Nucleo.Doc', 
-'Fluente.Arquitetura.EntityFramework',
-'Fluente.Arquitetura.EntityFramework.MemoryDatabase',
-'Fluente.Arquitetura.EntityFramework.MySQL',
-'Fluente.Arquitetura.EntityFramework.Oracle',
-'Fluente.Arquitetura.EntityFramework.PostgreSQL',
-'Fluente.Arquitetura.EntityFramework.SqLite',
-'Fluente.Arquitetura.EntityFramework.SqlServer',
-'Fluente.Arquitetura.Redis',
-'Fluente.Arquitetura.Test'
+'dn32.infra',
+'dn32.infra.Base',
+'dn32.infra.Nucleo.Doc', 
+'dn32.infra.EntityFramework',
+'dn32.infra.EntityFramework.MemoryDatabase',
+'dn32.infra.EntityFramework.MySQL',
+'dn32.infra.EntityFramework.Oracle',
+'dn32.infra.EntityFramework.PostgreSQL',
+'dn32.infra.EntityFramework.SqLite',
+'dn32.infra.EntityFramework.SqlServer',
+'dn32.infra.Redis',
+'dn32.infra.Test'
 
 $dirs = 
-'Fluente.Arquitetura\bin\Release\netcoreapp2.2\','Fluente.Arquitetura\bin\Release\netcoreapp3.1\', 
-'Fluente.Arquitetura.Nucleo.Doc\bin\Release\netcoreapp2.2\','Fluente.Arquitetura.Nucleo.Doc\bin\Release\netcoreapp3.1\'
+'dn32.infra\bin\Release\netcoreapp2.2\','dn32.infra\bin\Release\netcoreapp3.1\', 
+'dn32.infra.Nucleo.Doc\bin\Release\netcoreapp2.2\','dn32.infra.Nucleo.Doc\bin\Release\netcoreapp3.1\'
 
 $files = 
-'Fluente.Arquitetura.Nucleo.dll','Fluente.Arquitetura.Nucleo.dll',
-'Fluente.Arquitetura.Nucleo.Doc.dll', 'Fluente.Arquitetura.Nucleo.Doc.dll'
+'dn32.infra.Nucleo.dll','dn32.infra.Nucleo.dll',
+'dn32.infra.Nucleo.Doc.dll', 'dn32.infra.Nucleo.Doc.dll'
 
 For ($i=0; $i -lt $files.Length; $i++) 
 {

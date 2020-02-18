@@ -18,13 +18,13 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Reflection;
-//using Fluente.Arquitetura.Attributes;
-//using Fluente.Arquitetura.Extensoes;
-//using Fluente.Arquitetura.Interfaces;
-//using Fluente.Arquitetura.Model;
-//using Fluente.Arquitetura.Sample.Test.SupportElements.Model;
+//using dn32.infra.Attributes;
+//using dn32.infra.Extensoes;
+//using dn32.infra.Interfaces;
+//using dn32.infra.Model;
+//using dn32.infra.Sample.Test.SupportElements.Model;
 
-//namespace Fluente.Arquitetura.EntityFramework.SqlServer
+//namespace dn32.infra.EntityFramework.SqlServer
 //{
 //    /// <inheritdoc />
 //    /// <summary>

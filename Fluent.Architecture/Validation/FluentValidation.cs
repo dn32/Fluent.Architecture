@@ -1,7 +1,7 @@
-﻿using Fluente.Arquitetura.Exceptions.ValidationException;
-using Fluente.Arquitetura.Nucleo.Atributos;
-using Fluente.Arquitetura.Nucleo.Models;
-using Fluente.Arquitetura.Services;
+﻿using dn32.infra.Exceptions.ValidationException;
+using dn32.infra.Nucleo.Atributos;
+using dn32.infra.Nucleo.Models;
+using dn32.infra.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.Validation
+namespace dn32.infra.Validation
 {
     /// <summary>
     /// A classe de validação base de todas as validações com entidade do sistema.

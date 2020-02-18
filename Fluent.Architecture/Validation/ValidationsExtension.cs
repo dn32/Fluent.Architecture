@@ -1,6 +1,6 @@
-﻿using Fluente.Arquitetura.Exceptions.ValidationException;
-using Fluente.Arquitetura.Extensoes;
-using Fluente.Arquitetura.Nucleo.Atributos;
+﻿using dn32.infra.Exceptions.ValidationException;
+using dn32.infra.Extensoes;
+using dn32.infra.Nucleo.Atributos;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -11,7 +11,7 @@ using dn32.infra.dados;
 using dn32.infra.enumeradores;
 using dn32.infra.extensoes;
 
-namespace Fluente.Arquitetura.Validation
+namespace dn32.infra.Validation
 {
     internal static class ValidationsExtension
     {

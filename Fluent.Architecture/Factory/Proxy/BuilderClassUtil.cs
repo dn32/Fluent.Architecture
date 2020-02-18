@@ -10,7 +10,7 @@ using System;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace Fluente.Arquitetura.Factory.Proxy
+namespace dn32.infra.Factory.Proxy
 {
     internal static class BuilderClassUtil
     {

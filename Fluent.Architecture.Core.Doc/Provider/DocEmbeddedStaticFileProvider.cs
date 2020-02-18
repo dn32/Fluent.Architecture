@@ -3,7 +3,7 @@ using Microsoft.Extensions.Primitives;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace Fluente.Arquitetura.Nucleo.Doc.Controllers
+namespace dn32.infra.Nucleo.Doc.Controllers
 {
     internal class DocEmbeddedStaticFileProvider : IFileProvider
     {

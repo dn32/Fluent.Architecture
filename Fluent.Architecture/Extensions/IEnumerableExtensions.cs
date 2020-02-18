@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Fluente.Arquitetura.Nucleo.Extensoes
+namespace dn32.infra.Nucleo.Extensoes
 {
     internal static class IEnumerableExtensions
     {

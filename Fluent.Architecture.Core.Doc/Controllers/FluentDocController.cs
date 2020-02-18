@@ -1,7 +1,7 @@
-﻿using Fluente.Arquitetura.Extensoes;
-using Fluente.Arquitetura.Nucleo.Atributos;
-using Fluente.Arquitetura.Nucleo.Extensoes;
-using Fluente.Arquitetura.Nucleo.Specifications;
+﻿using dn32.infra.Extensoes;
+using dn32.infra.Nucleo.Atributos;
+using dn32.infra.Nucleo.Extensoes;
+using dn32.infra.Nucleo.Specifications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -16,7 +16,7 @@ using System.Web;
 using dn32.infra.atributos;
 using dn32.infra.enumeradores;
 
-namespace Fluente.Arquitetura.Nucleo.Doc.Controllers
+namespace dn32.infra.Nucleo.Doc.Controllers
 {
 
 #if (!DEBUG)

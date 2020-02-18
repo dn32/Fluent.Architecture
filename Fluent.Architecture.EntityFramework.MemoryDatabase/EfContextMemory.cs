@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace Fluente.Arquitetura.EntityFramework.MemoryDatabase
+namespace dn32.infra.EntityFramework.MemoryDatabase
 {
     /// <inheritdoc />
     /// <summary>

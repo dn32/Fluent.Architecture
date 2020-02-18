@@ -3,7 +3,7 @@ using System.Linq;
 using dn32.infra.dados;
 using dn32.infra.extensoes;
 
-namespace Fluente.Arquitetura.EntityFramework.Oracle.Specifications
+namespace dn32.infra.EntityFramework.Oracle.Specifications
 {
     public static class QueryExtension
     {

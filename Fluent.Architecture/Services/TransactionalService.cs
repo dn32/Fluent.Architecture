@@ -7,13 +7,13 @@
 
 // ReSharper disable CommentTypo
 
-using Fluente.Arquitetura.Factory;
-using Fluente.Arquitetura.Nucleo.Interfaces;
-using Fluente.Arquitetura.Nucleo.Models;
-using Fluente.Arquitetura.Specifications;
-using Fluente.Arquitetura.Validation;
+using dn32.infra.Factory;
+using dn32.infra.Nucleo.Interfaces;
+using dn32.infra.Nucleo.Models;
+using dn32.infra.Specifications;
+using dn32.infra.Validation;
 
-namespace Fluente.Arquitetura.Services
+namespace dn32.infra.Services
 {
     ///<inheritdoc/>
     /// <summary>

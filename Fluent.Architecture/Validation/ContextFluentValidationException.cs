@@ -6,13 +6,13 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluente.Arquitetura.Exceptions.ValidationException;
+using dn32.infra.Exceptions.ValidationException;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Fluente.Arquitetura.Validation
+namespace dn32.infra.Validation
 {
     /// <inheritdoc />
     /// <summary>

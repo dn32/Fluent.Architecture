@@ -9,7 +9,7 @@
 
 using System;
 
-namespace Fluente.Arquitetura.Test
+namespace dn32.infra.Test
 {
     /// <summary>
     /// Extensão de testes automatizados.

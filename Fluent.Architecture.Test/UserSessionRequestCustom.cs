@@ -4,9 +4,9 @@
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
-using Fluente.Arquitetura.Nucleo.Models;
+using dn32.infra.Nucleo.Models;
 
-namespace Fluente.Arquitetura.Test
+namespace dn32.infra.Test
 {
     public class UserSessionRequestCustom : UserSessionRequest
     {

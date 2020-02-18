@@ -5,12 +5,12 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Fluente.Arquitetura.Exceptions.ValidationException;
-using Fluente.Arquitetura.Services;
+using dn32.infra.Exceptions.ValidationException;
+using dn32.infra.Services;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Fluente.Arquitetura.Validation
+namespace dn32.infra.Validation
 {
     public abstract class TransactionalValidation : BaseValidation
     {

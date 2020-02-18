@@ -2,7 +2,7 @@
 using System;
 using System.Text;
 
-namespace Fluente.Arquitetura.Filters
+namespace dn32.infra.Filters
 {
     public class FluenteJwtInfo
     {

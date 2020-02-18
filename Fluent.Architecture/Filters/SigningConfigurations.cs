@@ -1,6 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 
-namespace Fluente.Arquitetura.Filters
+namespace dn32.infra.Filters
 {
     public static class SigningConfigurations
     {

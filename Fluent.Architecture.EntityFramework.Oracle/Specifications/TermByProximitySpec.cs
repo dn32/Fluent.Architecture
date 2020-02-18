@@ -1,10 +1,10 @@
-﻿using Fluente.Arquitetura.Extensoes;
-using Fluente.Arquitetura.Specifications;
+﻿using dn32.infra.Extensoes;
+using dn32.infra.Specifications;
 using System;
 using System.Linq;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.EntityFramework.Oracle.Specifications
+namespace dn32.infra.EntityFramework.Oracle.Specifications
 {
     public class TermByProximitySpec<TE> : FluenteSpecification<TE> where TE : FluenteEntidade
     {

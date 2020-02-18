@@ -1,8 +1,8 @@
-﻿//using Fluente.Arquitetura.Enumerator;
+﻿//using dn32.infra.Enumerator;
 
-namespace Fluente.Arquitetura.Nucleo.Models
+namespace dn32.infra.Nucleo.Models
 {
-    //namespace Fluente.Arquitetura.Model
+    //namespace dn32.infra.Model
     //{
     //    public abstract class BaseEvent
     //    {

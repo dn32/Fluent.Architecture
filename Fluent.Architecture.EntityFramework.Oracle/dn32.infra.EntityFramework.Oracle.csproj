@@ -7,7 +7,7 @@
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
     <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
     <Nullable>warnings</Nullable>
-    <AssemblyOriginatorKeyFile>Fluente.Arquitetura.EntityFramework.Oracle.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>dn32.infra.EntityFramework.Oracle.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.2' ">
@@ -28,8 +28,8 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\Fluent.Architecture.EntityFramework\Fluente.Arquitetura.EntityFramework.csproj" />
-    <ProjectReference Include="..\Fluent.Architecture\Fluente.Arquitetura.Nucleo.csproj" />
+    <ProjectReference Include="..\Fluent.Architecture.EntityFramework\dn32.infra.EntityFramework.csproj" />
+    <ProjectReference Include="..\Fluent.Architecture\dn32.infra.Nucleo.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,7 +7,7 @@
 
 using System;
 
-namespace Fluente.Arquitetura.Sample.Test.SupportElements.Model
+namespace dn32.infra.Sample.Test.SupportElements.Model
 {
     /// <inheritdoc />
     [AttributeUsage(AttributeTargets.Property)]

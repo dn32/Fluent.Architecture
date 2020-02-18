@@ -1,5 +1,5 @@
-﻿using Fluente.Arquitetura.Nucleo.Atributos;
-using Fluente.Arquitetura.Nucleo.Models;
+﻿using dn32.infra.Nucleo.Atributos;
+using dn32.infra.Nucleo.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Fluente.Arquitetura.Extensoes
+namespace dn32.infra.Extensoes
 {
     /// <summary>
     /// Extensão de objetos.

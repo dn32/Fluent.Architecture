@@ -1,15 +1,15 @@
-﻿using Fluente.Arquitetura.Controllers;
-using Fluente.Arquitetura.Exceptions;
-using Fluente.Arquitetura.Extensoes;
-using Fluente.Arquitetura.Nucleo.Interfaces;
-using Fluente.Arquitetura.Nucleo.Models;
-using Fluente.Arquitetura.Services;
+﻿using dn32.infra.Controllers;
+using dn32.infra.Exceptions;
+using dn32.infra.Extensoes;
+using dn32.infra.Nucleo.Interfaces;
+using dn32.infra.Nucleo.Models;
+using dn32.infra.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using dn32.infra.extensoes;
 
-namespace Fluente.Arquitetura.Factory
+namespace dn32.infra.Factory
 {
     /// <summary>
     /// Classe interna.

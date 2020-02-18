@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.Controllers
+namespace dn32.infra.Controllers
 {
     [Route("/api/[controller]/[action]")]
     [ApiController]

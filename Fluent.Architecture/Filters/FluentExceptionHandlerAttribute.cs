@@ -1,7 +1,7 @@
-﻿using Fluente.Arquitetura.Exceptions.ValidationException;
-using Fluente.Arquitetura.Nucleo.Inconsistences;
-using Fluente.Arquitetura.Nucleo.Models;
-using Fluente.Arquitetura.Validation;
+﻿using dn32.infra.Exceptions.ValidationException;
+using dn32.infra.Nucleo.Inconsistences;
+using dn32.infra.Nucleo.Models;
+using dn32.infra.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Reflection;
 using dn32.infra.extensoes;
 
-namespace Fluente.Arquitetura.Filters
+namespace dn32.infra.Filters
 {
     public class FluenteExceptionHandlerAttribute : ExceptionFilterAttribute
     {

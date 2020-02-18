@@ -1,9 +1,9 @@
-﻿using Fluente.Arquitetura.Interfaces;
+﻿using dn32.infra.Interfaces;
 using System;
 using System.Linq;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.Specifications
+namespace dn32.infra.Specifications
 {
     /// <summary>
     /// Especificação base para todas as especificações do sistema que tiverem a saida diferente da entrada.

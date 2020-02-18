@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Fluente.Arquitetura.Factory.Proxy;
-using Fluente.Arquitetura.Nucleo.Models;
-using Fluente.Arquitetura.Nucleo.Util;
-using Fluente.Arquitetura.Services;
+using dn32.infra.Factory.Proxy;
+using dn32.infra.Nucleo.Models;
+using dn32.infra.Nucleo.Util;
+using dn32.infra.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ using System.Linq.Dynamic.Core;
 using System.Reflection.Emit;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.Extensoes
+namespace dn32.infra.Extensoes
 {
     public static class DynamicSpecExtension
     {

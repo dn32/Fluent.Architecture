@@ -1,9 +1,9 @@
 ﻿//using System;
 //using System.Linq.Expressions;
 
-namespace Fluente.Arquitetura.Nucleo.Models
+namespace dn32.infra.Nucleo.Models
 {
-    //namespace Fluente.Arquitetura.Model
+    //namespace dn32.infra.Model
     //{
     //    public class FluenteEvent<T> : BaseEvent where T : BaseEntity
     //    {

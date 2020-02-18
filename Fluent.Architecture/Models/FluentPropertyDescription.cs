@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Fluente.Arquitetura.Nucleo.Models
+namespace dn32.infra.Nucleo.Models
 {
     internal class FluentePropertyDescription
     {

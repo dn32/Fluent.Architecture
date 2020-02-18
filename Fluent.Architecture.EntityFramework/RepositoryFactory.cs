@@ -1,15 +1,15 @@
-﻿using Fluente.Arquitetura.Exceptions;
-using Fluente.Arquitetura.Interfaces;
-using Fluente.Arquitetura.Nucleo.Factory;
-using Fluente.Arquitetura.Nucleo.Interfaces;
-using Fluente.Arquitetura.Nucleo.Models;
-using Fluente.Arquitetura.Services;
+﻿using dn32.infra.Exceptions;
+using dn32.infra.Interfaces;
+using dn32.infra.Nucleo.Factory;
+using dn32.infra.Nucleo.Interfaces;
+using dn32.infra.Nucleo.Models;
+using dn32.infra.Services;
 using System;
 using System.Linq;
 using System.Reflection;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.EntityFramework
+namespace dn32.infra.EntityFramework
 {
     /// <summary>
     /// Classe interna. Nunca a deixe pública, pois o acesso a um repositório à partir de um serviço terceiro não deve ser permitido.

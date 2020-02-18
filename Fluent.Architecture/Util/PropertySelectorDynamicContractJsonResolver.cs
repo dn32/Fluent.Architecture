@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Fluente.Arquitetura.Nucleo.Util
+namespace dn32.infra.Nucleo.Util
 {
     public class PropertySelectorDynamicContractJsonResolver : DefaultContractResolver
     {

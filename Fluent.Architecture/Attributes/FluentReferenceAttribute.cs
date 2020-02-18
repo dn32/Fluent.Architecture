@@ -1,9 +1,9 @@
-﻿using Fluente.Arquitetura.Nucleo.Extensoes;
+﻿using dn32.infra.Nucleo.Extensoes;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
 
-namespace Fluente.Arquitetura.Nucleo.Atributos
+namespace dn32.infra.Nucleo.Atributos
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class FluenteReferenceAttribute : Attribute

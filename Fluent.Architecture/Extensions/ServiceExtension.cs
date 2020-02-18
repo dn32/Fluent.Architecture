@@ -1,11 +1,11 @@
-﻿using Fluente.Arquitetura.Exceptions;
-using Fluente.Arquitetura.Factory;
-using Fluente.Arquitetura.Nucleo.Models;
-using Fluente.Arquitetura.Services;
+﻿using dn32.infra.Exceptions;
+using dn32.infra.Factory;
+using dn32.infra.Nucleo.Models;
+using dn32.infra.Services;
 using System;
 using dn32.infra.dados;
 
-namespace Fluente.Arquitetura.Extensoes
+namespace dn32.infra.Extensoes
 {
     public static class ServiceExtension
     {

@@ -8,7 +8,7 @@
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
     <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
     <Nullable>warnings</Nullable>
-    <AssemblyOriginatorKeyFile>Fluente.Arquitetura.EntityFramework.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>dn32.infra.EntityFramework.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.2|AnyCPU'">
@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="D:\Projetos\dn32\dn32.infra\dn32.infra\dn32.infra.csproj" />
-    <ProjectReference Include="..\Fluent.Architecture\Fluente.Arquitetura.Nucleo.csproj" />
+    <ProjectReference Include="..\Fluent.Architecture\dn32.infra.Nucleo.csproj" />
   </ItemGroup>
 
   <!--<ItemGroup>
