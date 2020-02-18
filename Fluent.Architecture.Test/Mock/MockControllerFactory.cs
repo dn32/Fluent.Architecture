@@ -5,21 +5,22 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using dn32.infra.Controllers;
+using dn32.infra.controladores;
 using System;
+using dn32.infra.nucleo.controladores;
 
 namespace dn32.infra.Test.Mock
 {
     public static class MockControllerFactory
     {
-        public static TC Create<TC>() where TC : BaseController, new()
+        public static TC Create<TC>() where TC : ControladorBase, new()
         {
             return Create(typeof(TC)) as TC;
         }
 
-        public static BaseController Create(Type controllerType)
+        public static ControladorBase Create(Type controllerType)
         {
-            return Activator.CreateInstance(controllerType) as BaseController;
+            return Activator.CreateInstance(controllerType) as ControladorBase;
         }
     }
 }

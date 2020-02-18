@@ -1,12 +1,13 @@
-﻿using dn32.infra.Controllers;
+﻿using dn32.infra.controladores;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Collections.Generic;
+using dn32.infra.nucleo.controladores;
 
 namespace dn32.infra.Test.Mock.ControllerMock
 {
     public static class MockActionExecutingContextFactory
     {
-        public static ActionExecutingContext Create(BaseController controller)
+        public static ActionExecutingContext Create(ControladorBase controller)
         {
             var actionContext = MockActionContextFactory.Create();
             return new ActionExecutingContext(

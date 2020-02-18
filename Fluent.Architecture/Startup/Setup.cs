@@ -1,4 +1,4 @@
-﻿using dn32.infra.Controllers;
+﻿using dn32.infra.controladores;
 using dn32.infra.Exceptions;
 using dn32.infra.Filters;
 using dn32.infra.Nucleo.Interfaces;
@@ -15,6 +15,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using dn32.infra.dados;
+using dn32.infra.nucleo.controladores;
 
 [assembly: InternalsVisibleTo(@"dn32.infra.EntityFramework, PublicKey=00240000048000009400000006020000002400005253413100040000010001000da51e0f449f6ee7879b256b497e9f64eda760b5fac3d47a4ba8a54664303024f451098b69154691fad078fe77ee79ac2b6a9770fd7a6555a4c49a2a58e82f411939e1eb44ac4a1327acdd13f2c8ec7698644d019f04197838434be8cb53877f1d22acab90ae7735acc363fdb393a11fa34afe780d1c5fb26f37a8fd6e4d9b9f")]
 [assembly: InternalsVisibleTo(@"dn32.infra.Doc, PublicKey=00240000048000009400000006020000002400005253413100040000010001008963bf4072062c4090dd8b8b1b3335b78ac84c4e55c7903a918af1d62ecf0e2ab5504ca1fa722b67f5968cdbbf2f1436cc9303018d57511caefbae6cf903f681d721a1122bcdc4f35fa4aafade1e9900468a69aba391d3e9c2eb3087bd37727bbcc30f704666c62beccdca492d8e5467088b696c39306fa582637041a8c40dc4")]
@@ -209,10 +210,10 @@ namespace dn32.infra
             Model = new Dictionary<Type, Type>();
             Controllers = new Dictionary<Type, Type>();
             UserSessionList = new Dictionary<Guid, UserSessionRequest>();
-            Services.Add(typeof(DnEntidade), typeof(DnService<DnEntidade>));
+            Services.Add(typeof(DnEntidade), typeof(Services.DnService<DnEntidade>));
             Repositories.Add(typeof(DnEntidade), typeof(IDnRepository<DnEntidade>));
             Validations.Add(typeof(DnEntidade), typeof(DnValidation<DnEntidade>));
-            Controllers.Add(typeof(DnEntidade), typeof(DnController<DnEntidade>));
+            Controllers.Add(typeof(DnEntidade), typeof(Dn<DnEntidade>));
         }
 
         private static void LoadAssemblies()
@@ -235,9 +236,9 @@ namespace dn32.infra
             ValidateIfAllServicePropertiesHaveDefaultConstructor(transactionalServices);
 
             ValidateSpecifications(types.Where(x => x.IsSubclassOf(typeof(BaseSpecification))).ToList());
-            ValidateController(types.Where(x => x.IsSubclassOf(typeof(BaseController))).ToList());
+            ValidateController(types.Where(x => x.IsSubclassOf(typeof(ControladorBase))).ToList());
 
-            types.Select(x => GlobalUtil.GetDnEntityType(x, typeof(DnService<EntidadeBase>)))
+            types.Select(x => GlobalUtil.GetDnEntityType(x, typeof(Services.DnService<EntidadeBase>)))
                 .Where(x => x.Item1 != null).ToList()
                 .ForEach(AddService);
 
@@ -253,7 +254,7 @@ namespace dn32.infra
                 .Where(x => x.Item1 != null && x.Item2 != typeof(EntidadeBase)).ToList()
                 .ForEach(AddModel);
 
-            types.Select(x => GlobalUtil.GetDnEntityType(x, typeof(DnController<EntidadeBase>)))
+            types.Select(x => GlobalUtil.GetDnEntityType(x, typeof(Dn<EntidadeBase>)))
                .Where(x => x.Item1 != null).ToList()
                .ForEach(AddController);
 

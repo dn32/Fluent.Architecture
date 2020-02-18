@@ -4,11 +4,11 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using dn32.infra.dados;
 
-namespace dn32.infra.Controllers
+namespace dn32.infra.controladores
 {
     [Route("/api/[controller]/[action]")]
     [ApiController]
-    public class DnAPIReadOnlyController<T> : DnAPIController<T> where T : DnEntidade, new()
+    public class DnApiReadOnly<T> : DnApi<T> where T : DnEntidade, new()
     {
         [NonAction]
         public override Task<ResultadoPadrao<T>> Add([Description("The entity you want to add"), FromBody] T Entity) => throw new InvalidOperationException();

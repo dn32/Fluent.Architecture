@@ -5,14 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using dn32.infra.dados;
 
-namespace dn32.infra.Controllers
+namespace dn32.infra.controladores
 {
     /// <inheritdoc />
     /// <summary>
     /// Controlador genérico padrão recomendado para herança por todos os controladores que tiverem entidade.
     /// </summary>
     /// <typeparam Nome="T">O tipo da entidade do controller.</typeparam>
-    public abstract partial class DnController<T> : DnServiceController<DnService<T>> where T : EntidadeBase
+    public abstract partial class Dn<T> : DnService<Services.DnService<T>> where T : EntidadeBase
     {
         protected T2 CreateSpec<T2>() where T2 : BaseSpecification
         {

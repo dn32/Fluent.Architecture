@@ -12,11 +12,11 @@ using dn32.infra.dados;
 using dn32.infra.enumeradores;
 using dn32.infra.extensoes;
 
-namespace dn32.infra.Controllers
+namespace dn32.infra.controladores
 {
     [Route("/api/[controller]/[action]")]
     [ApiController]
-    public class DnAPIController<T> : DnController<T> where T : DnEntidade, new() // Nunca defina como abstract, pois o controle de log espera essa classe como concreta
+    public class DnApi<T> : Dn<T> where T : DnEntidade, new() // Nunca defina como abstract, pois o controle de log espera essa classe como concreta
     {
         #region MANY
 

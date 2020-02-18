@@ -1,4 +1,4 @@
-﻿using dn32.infra.Controllers;
+﻿using dn32.infra.controladores;
 using dn32.infra.Exceptions;
 using dn32.infra.Extensoes;
 using dn32.infra.Nucleo.Interfaces;
@@ -19,7 +19,7 @@ namespace dn32.infra.Factory
     {
         /// <summary>
         /// Cria um serviço que terá controle de transação.
-        /// Essa operação deve ser exclusiva do DnController.
+        /// Essa operação deve ser exclusiva do Dn.
         /// </summary>
         /// <typeparam Nome="TS">
         /// O tipo de serviço a ser criado.
@@ -82,7 +82,7 @@ namespace dn32.infra.Factory
 
             if (serviceType.IsDnEntity())
             {
-                serviceType = typeof(DnService<>).MakeGenericType(serviceType);
+                serviceType = typeof(Services.DnService<>).MakeGenericType(serviceType);
             }
 
             return Create(serviceType, httpContext).DnCast<TransactionalService>();
@@ -97,7 +97,7 @@ namespace dn32.infra.Factory
         //}
 
         /// <summary>
-        /// Cria um serviço em tempo de execução por meio de um processo de lazy-loading, à partir de um serviço original criado pelo <see cref="DnController{T}"/>.
+        /// Cria um serviço em tempo de execução por meio de um processo de lazy-loading, à partir de um serviço original criado pelo <see cref="Dn{T}"/>.
         /// </summary>
         /// <param Nome="serviceType">
         /// O tipo de serviço a ser criado.
@@ -131,7 +131,7 @@ namespace dn32.infra.Factory
                 var entityType = args.First();
                 if (!Setup.Services.TryGetValue(entityType, out serviceType))
                 {
-                    var type = (Setup.Config.Config.GenericServiceType) ?? typeof(DnService<>);
+                    var type = (Setup.Config.Config.GenericServiceType) ?? typeof(Services.DnService<>);
                     serviceType = type.MakeGenericType(entityType);
                 }
             }

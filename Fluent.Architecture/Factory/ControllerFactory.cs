@@ -1,4 +1,4 @@
-﻿using dn32.infra.Controllers;
+﻿using dn32.infra.controladores;
 using dn32.infra.Exceptions;
 using dn32.infra.Factory.Proxy;
 using dn32.infra.nucleo.atributos;
@@ -15,7 +15,7 @@ namespace dn32.infra.Nucleo.Factory
     {
         public void PopulateFeature(IEnumerable<ApplicationPart> parts, ControllerFeature feature)
         {
-            var baseController = (Setup.Config.Config.GenericControllerType) ?? typeof(DnAPIController<>);
+            var baseController = (Setup.Config.Config.GenericControllerType) ?? typeof(DnApi<>);
             var entities = Setup.GetDnApiEntity();
 
             foreach (var entity in entities)
@@ -25,7 +25,7 @@ namespace dn32.infra.Nucleo.Factory
 
                 if (entity.GetCustomAttribute<DnFormularioJsonAtributo>(true)?.EhSomenteLeitura == true)
                 {
-                    baseController = typeof(DnAPIReadOnlyController<>);
+                    baseController = typeof(DnApiReadOnly<>);
                 }
 
                 var typeName = entity.Name + "Controller";

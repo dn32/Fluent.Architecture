@@ -1,4 +1,4 @@
-﻿using dn32.infra.Controllers;
+﻿using dn32.infra.controladores;
 using dn32.infra.EntityFramework.Oracle.Specifications;
 using dn32.infra.Nucleo.Specifications;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +10,7 @@ using dn32.infra.dados;
 
 namespace dn32.infra.EntityFramework.Oracle.Controllers
 {
-    public class DnOracleAPIController<T> : DnAPIController<T> where T : DnEntidade, new()
+    public class DnOracleApi<T> : DnApi<T> where T : DnEntidade, new()
     {
         [HttpGet]
         [DnAction(Pagination = true, DynamicSpec = true)]

@@ -8,9 +8,10 @@ using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using dn32.infra.dados;
+using dn32.infra.nucleo.controladores;
 
 [assembly: InternalsVisibleTo(@"dn32.infra.Controller.Test, PublicKey= 00240000048000009400000006020000002400005253413100040000010001006d1cca26da4daf8230bb524d15453c319d38c381589ab07912b8ab6afff8174aad961a74f171790b60e5ed604bc7bad410214a7d59ed6e101c03440e3b1cd055e2bdba377915b076aa15ac9cd6da1acf488a633cb9bc2bb34536b62593950249111ac7c572e02523978ac82d829fe8be29fba6cc4f4e5b668a6cd57d39eee2aa ")]
-namespace dn32.infra.Controllers
+namespace dn32.infra.controladores
 {
     /// <inheritdoc />
     /// <summary>
@@ -18,7 +19,7 @@ namespace dn32.infra.Controllers
     /// O serviço é inicializado a cada ActionExecuting.
     /// </summary>
     /// <typeparam Nome="TS">O serviço a ser usado pelo controlador.</typeparam>
-    public abstract class DnServiceController<TS> : BaseController where TS : TransactionalService, new()
+    public abstract class DnService<TS> : ControladorBase where TS : TransactionalService, new()
     {
         public virtual DnPaginacao LastRequestPagination => Service.SessionRequest.Pagination;
 
@@ -34,7 +35,7 @@ namespace dn32.infra.Controllers
 
         internal protected bool TransactionIsStarted { get; set; }
 
-        protected DnServiceController()
+        protected DnService()
         {
             Service = null;
         }

@@ -5,19 +5,20 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using dn32.infra.Controllers;
+using dn32.infra.controladores;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using System.Collections.Generic;
+using dn32.infra.nucleo.controladores;
 
 namespace dn32.infra.Test.Mock
 {
     public static class MockActionExecutedContextFactory
     {
-        public static ActionExecutedContext Create(BaseController controller)
+        public static ActionExecutedContext Create(ControladorBase controller)
         {
             var actionContext = new ActionContext(
                       new DefaultHttpContext(),
