@@ -1,10 +1,5 @@
 ﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
 using Fluente.Arquitetura.Controllers;
-using Fluente.Arquitetura.Nucleo.Models;
 using Fluente.Arquitetura.Test.Mock;
 using Fluente.Arquitetura.Test.Mock.ControllerMock;
 using Newtonsoft.Json;
@@ -36,7 +31,7 @@ namespace Fluente.Arquitetura.Test
             }
 
             controller.OnActionExecuted(MockActionExecutedContextFactory.Create(controller));
-            if(result == null) { return default; }
+            if (result == null) { return default; }
             return JsonConvert.DeserializeObject<TR>(JsonConvert.SerializeObject(result.Dados));
         }
 

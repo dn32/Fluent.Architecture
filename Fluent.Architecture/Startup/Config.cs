@@ -6,8 +6,8 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using Fluente.Arquitetura.Nucleo.Interfaces;
 using Fluente.Arquitetura.Filters;
+using Fluente.Arquitetura.Nucleo.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;

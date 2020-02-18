@@ -1,14 +1,9 @@
-﻿using Fluente.Arquitetura.Controllers;
-using Fluente.Arquitetura.Nucleo.Models;
+﻿using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Controllers;
 using Fluente.Arquitetura.Test.Mock;
 using Fluente.Arquitetura.Test.Mock.ControllerMock;
 using Newtonsoft.Json;
 using System;
-using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
 
 namespace Fluente.Arquitetura.Test
 {
@@ -113,7 +108,7 @@ namespace Fluente.Arquitetura.Test
         public virtual TModel GetNew()
         {
             throw new NotImplementedException();
-         //   return new FluenteAPIController<TModel>().ExampleData();
+            //   return new FluenteAPIController<TModel>().ExampleData();
         }
 
         public virtual TModel Execute(Func<FluenteAPIController<TModel>, ResultadoPadrao<TModel>> actionMethod)

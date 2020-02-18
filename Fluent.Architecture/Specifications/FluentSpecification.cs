@@ -1,8 +1,4 @@
 ﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Nucleo.Models;
 using Fluente.Arquitetura.Interfaces;
 using System;
 using System.Linq;
@@ -45,7 +41,7 @@ namespace Fluente.Arquitetura.Specifications
             }
             else
             {
-              return Order(w);
+                return Order(w);
             }
         }
     }

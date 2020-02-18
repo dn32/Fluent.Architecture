@@ -7,7 +7,6 @@
 
 using Fluente.Arquitetura.Exceptions.ValidationException;
 using Fluente.Arquitetura.Services;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 

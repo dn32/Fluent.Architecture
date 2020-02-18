@@ -1,10 +1,6 @@
 ﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
-using Fluente.Arquitetura.Nucleo.Interfaces;
 using Fluente.Arquitetura.Extensoes;
+using Fluente.Arquitetura.Nucleo.Interfaces;
 using Fluente.Arquitetura.Services;
 using Fluente.Arquitetura.Validation;
 using Microsoft.AspNetCore.Http;

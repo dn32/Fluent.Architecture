@@ -1,8 +1,8 @@
 ﻿using Fluente.Arquitetura.Extensoes;
+using Fluente.Arquitetura.Nucleo.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Fluente.Arquitetura.Nucleo.Models;
 using System.Reflection;
 
 namespace Fluente.Arquitetura.EntityFramework

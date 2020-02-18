@@ -1,5 +1,4 @@
 ﻿using Fluente.Arquitetura.Nucleo.Models;
-using Fluente.Arquitetura.Filters;
 using Fluente.Arquitetura.Services;
 using Microsoft.IdentityModel.Tokens;
 using System;

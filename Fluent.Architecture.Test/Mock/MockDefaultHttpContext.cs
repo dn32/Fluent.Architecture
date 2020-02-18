@@ -29,7 +29,7 @@ namespace Fluente.Arquitetura.Test.Mock
     }
 
 #else
-          public class MockDefaultHttpContext : DefaultHttpContext
+    public class MockDefaultHttpContext : DefaultHttpContext
     {
         public IHeaderDictionary Headers { get; }
 

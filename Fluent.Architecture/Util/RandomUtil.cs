@@ -1,5 +1,5 @@
-﻿using Fluente.Arquitetura.Nucleo.Extensoes;
-using Fluente.Arquitetura.Extensoes;
+﻿using Fluente.Arquitetura.Extensoes;
+using Fluente.Arquitetura.Nucleo.Extensoes;
 using System;
 using System.Reflection;
 

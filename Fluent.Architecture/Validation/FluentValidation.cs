@@ -1,8 +1,7 @@
 ﻿using Fluente.Arquitetura.Base.Models;
-
+using Fluente.Arquitetura.Exceptions.ValidationException;
 using Fluente.Arquitetura.Nucleo.Atributos;
 using Fluente.Arquitetura.Nucleo.Models;
-using Fluente.Arquitetura.Exceptions.ValidationException;
 using Fluente.Arquitetura.Services;
 using System;
 using System.Collections.Generic;

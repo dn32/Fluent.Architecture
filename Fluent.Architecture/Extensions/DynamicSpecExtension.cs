@@ -1,12 +1,9 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using AutoMapper;
+﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Factory.Proxy;
 using Fluente.Arquitetura.Nucleo.Models;
 using Fluente.Arquitetura.Nucleo.Util;
-using Fluente.Arquitetura.Factory.Proxy;
 using Fluente.Arquitetura.Services;
 using System;
 using System.Collections.Generic;

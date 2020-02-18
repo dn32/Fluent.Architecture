@@ -1,14 +1,14 @@
-﻿using Fluente.Arquitetura.Nucleo.Models;
+﻿using Fluente.Arquitetura.Base.Atributos;
+using Fluente.Arquitetura.Base.Enumeradores;
+using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Interfaces;
+using Fluente.Arquitetura.Nucleo.Models;
 using Fluente.Arquitetura.Nucleo.Specifications;
 using Fluente.Arquitetura.Specifications;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
-using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
 
 #if NETCOREAPP3_1
 using Fluente.Arquitetura.Extensoes;

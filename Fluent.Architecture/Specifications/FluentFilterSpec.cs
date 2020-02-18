@@ -1,6 +1,6 @@
 ﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Nucleo.Extensoes;
 using Fluente.Arquitetura.Extensoes;
+using Fluente.Arquitetura.Nucleo.Extensoes;
 using Fluente.Arquitetura.Specifications;
 using System.Linq;
 namespace Fluente.Arquitetura.Nucleo.Specifications

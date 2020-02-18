@@ -1,5 +1,4 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using System;
 
 namespace Fluente.Arquitetura.Filters
 {

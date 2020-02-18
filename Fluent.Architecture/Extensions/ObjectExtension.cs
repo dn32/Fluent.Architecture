@@ -1,19 +1,13 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
+﻿using Fluente.Arquitetura.Base.Extensoes;
 using Fluente.Arquitetura.Nucleo.Atributos;
 using Fluente.Arquitetura.Nucleo.Models;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Fluente.Arquitetura.Extensoes
 {

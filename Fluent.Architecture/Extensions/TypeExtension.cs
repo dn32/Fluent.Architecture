@@ -1,11 +1,12 @@
-﻿using Fluente.Arquitetura.Base.Models;
+﻿using Fluente.Arquitetura.Attributes;
 using Fluente.Arquitetura.Base.Atributos;
 using Fluente.Arquitetura.Base.Enumeradores;
 using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
+using Fluente.Arquitetura.Base.Models;
 using Fluente.Arquitetura.Nucleo.Atributos;
-using Fluente.Arquitetura.Nucleo.Models;
 using Fluente.Arquitetura.Nucleo.Extensoes;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Nucleo.Util;
 using Fluente.Arquitetura.Services;
 using Newtonsoft.Json;
 using System;
@@ -18,9 +19,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
-using Fluente.Arquitetura.Attributes;
 using System.Threading.Tasks;
-using Fluente.Arquitetura.Nucleo.Util;
 
 namespace Fluente.Arquitetura.Extensoes
 {
@@ -326,7 +325,7 @@ namespace Fluente.Arquitetura.Extensoes
 
             if (numberType?.IsNumeric() == true)
             {
-                var value = numberType?.GetField(nameof(int.MaxValue))?.GetValue(null)?? int.MaxValue;
+                var value = numberType?.GetField(nameof(int.MaxValue))?.GetValue(null) ?? int.MaxValue;
                 return Convert.ChangeType(value ?? int.MaxValue, typeof(double));
             }
             else
@@ -425,7 +424,7 @@ namespace Fluente.Arquitetura.Extensoes
 
             type.GetProperties().ToList().ForEach(property =>
             {
-                if(property == null) { return; }
+                if (property == null) { return; }
 
                 var attr = GetFluenteJsonPropertyAttributeByProperty(property);
                 attr.Property = property;

@@ -1,23 +1,23 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
+﻿using Fluente.Arquitetura.Base.Atributos;
 using Fluente.Arquitetura.Base.Enumeradores;
 using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
+using Fluente.Arquitetura.Base.Models;
 using Fluente.Arquitetura.Exceptions;
 using Fluente.Arquitetura.Extensoes;
 using Fluente.Arquitetura.Interfaces;
+using Fluente.Arquitetura.Interfaces;
+using Fluente.Arquitetura.Nucleo.Atributos;
 using Fluente.Arquitetura.Nucleo.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using System.Threading.Tasks;
-using Fluente.Arquitetura.Nucleo.Atributos;
-using System.Collections;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Fluente.Arquitetura.EntityFramework
 {

@@ -1,10 +1,6 @@
-﻿using Fluente.Arquitetura.Extensoes;
+﻿using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Extensoes;
 using Newtonsoft.Json;
-using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
 
 namespace Fluente.Arquitetura.Nucleo.Extensoes
 {
@@ -17,7 +13,7 @@ namespace Fluente.Arquitetura.Nucleo.Extensoes
 
         public static string ToFluenteJsonOrPrimitive(this object obj, Formatting formatting = Formatting.None)
         {
-            if(obj == null) { return null; }
+            if (obj == null) { return null; }
             var type = obj.GetType();
             if (type.IsPrimitiveOrPrimitiveNulable()) { return obj.ToString(); }
             return obj.SerializarParaFluenteJson(formatting);

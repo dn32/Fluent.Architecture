@@ -1,16 +1,10 @@
 ﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
-
 using Fluente.Arquitetura.Controllers;
-using Fluente.Arquitetura.Nucleo.Atributos;
-using Fluente.Arquitetura.Nucleo.Interfaces;
-using Fluente.Arquitetura.Nucleo.Services;
-using Fluente.Arquitetura.Nucleo.Models;
 using Fluente.Arquitetura.Exceptions;
 using Fluente.Arquitetura.Filters;
+using Fluente.Arquitetura.Nucleo.Interfaces;
+using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Nucleo.Services;
 using Fluente.Arquitetura.Services;
 using Fluente.Arquitetura.Specifications;
 using Fluente.Arquitetura.Util;
@@ -357,7 +351,7 @@ namespace Fluente.Arquitetura
         {
             foreach (var type in types)
             {
-                if(type == null) { continue; }
+                if (type == null) { continue; }
                 var serviceProperties = type.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
                     .Where(x => x.GetMethod?.IsPrivate == false && x.GetMethod?.IsVirtual == true && x.PropertyType.IsSubclassOf(typeof(BaseService))).ToList();
 

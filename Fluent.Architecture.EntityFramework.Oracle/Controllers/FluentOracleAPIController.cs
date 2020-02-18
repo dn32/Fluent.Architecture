@@ -1,17 +1,12 @@
-﻿using Fluente.Arquitetura.Controllers;
+﻿using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Controllers;
 using Fluente.Arquitetura.EntityFramework.Oracle.Specifications;
-using Microsoft.AspNetCore.Mvc;
-using Fluente.Arquitetura.Nucleo.Models;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using Fluente.Arquitetura.Nucleo.Specifications;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
+using System.Threading.Tasks;
 namespace Fluente.Arquitetura.EntityFramework.Oracle.Controllers
 {
     public class FluenteOracleAPIController<T> : FluenteAPIController<T> where T : FluenteEntidade, new()

@@ -1,13 +1,9 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
+﻿using Fluente.Arquitetura.Attributes;
 using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
-using Fluente.Arquitetura.Attributes;
+using Fluente.Arquitetura.Exceptions;
 using Fluente.Arquitetura.Nucleo.Atributos;
 using Fluente.Arquitetura.Nucleo.Extensoes;
 using Fluente.Arquitetura.Nucleo.Models;
-using Fluente.Arquitetura.Exceptions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

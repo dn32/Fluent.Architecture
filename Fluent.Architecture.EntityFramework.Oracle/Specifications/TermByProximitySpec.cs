@@ -1,17 +1,8 @@
-﻿using Fluente.Arquitetura.Extensoes;
+﻿using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Extensoes;
 using Fluente.Arquitetura.Specifications;
-using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
 using System;
 using System.Linq;
-using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
 
 namespace Fluente.Arquitetura.EntityFramework.Oracle.Specifications
 {

@@ -8,7 +8,6 @@
 // ReSharper disable CommentTypo
 
 using Fluente.Arquitetura.Exceptions.ValidationException;
-using Fluente.Arquitetura.Services;
 
 namespace Fluente.Arquitetura.Validation
 {

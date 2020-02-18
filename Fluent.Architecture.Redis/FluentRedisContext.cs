@@ -1,13 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using Fluente.Arquitetura.Extensoes;
+﻿using Fluente.Arquitetura.Base.Extensoes;
 using Newtonsoft.Json;
 using StackExchange.Redis;
-using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
+using System;
+using System.Threading.Tasks;
 
 namespace Fluente.Arquitetura.Redis
 {

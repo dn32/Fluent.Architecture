@@ -1,12 +1,7 @@
-﻿using Fluente.Arquitetura.Nucleo.Models;
+﻿using Fluente.Arquitetura.Base.Models;
 using Fluente.Arquitetura.Exceptions;
 using Fluente.Arquitetura.Interfaces;
 using System.Collections.Generic;
-using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
 
 namespace Fluente.Arquitetura.Extensoes
 {

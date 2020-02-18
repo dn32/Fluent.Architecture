@@ -1,8 +1,7 @@
 ﻿using Fluente.Arquitetura.Controllers;
-using Fluente.Arquitetura.Nucleo.Atributos;
 using Fluente.Arquitetura.Exceptions;
-using Fluente.Arquitetura.Extensoes;
 using Fluente.Arquitetura.Factory.Proxy;
+using Fluente.Arquitetura.Nucleo.Atributos;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using System;

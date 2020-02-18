@@ -1,13 +1,8 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
-
-using Fluente.Arquitetura.Nucleo.Atributos;
-using Fluente.Arquitetura.Nucleo.Models;
+﻿using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Base.Models;
 using Fluente.Arquitetura.Extensoes;
 using Fluente.Arquitetura.Factory;
+using Fluente.Arquitetura.Nucleo.Atributos;
 using Fluente.Arquitetura.Services;
 using System;
 using System.Collections;

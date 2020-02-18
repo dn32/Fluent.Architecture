@@ -1,14 +1,9 @@
-﻿using Fluente.Arquitetura.Interfaces;
-using Fluente.Arquitetura.Nucleo.Models;
+﻿using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Interfaces;
 using Fluente.Arquitetura.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
 
 namespace Fluente.Arquitetura.Nucleo.Interfaces
 {

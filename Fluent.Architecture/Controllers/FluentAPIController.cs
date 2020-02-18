@@ -1,23 +1,16 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
+﻿using Fluente.Arquitetura.Base.Enumeradores;
 using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Extensoes;
 using Fluente.Arquitetura.Nucleo.Extensoes;
 using Fluente.Arquitetura.Nucleo.Specifications;
-using Fluente.Arquitetura.Extensoes;
-using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using Fluente.Arquitetura.Nucleo.Models;
-using System.Collections.Generic;
-using System;
-using System.IO;
 using Fluente.Arquitetura.Nucleo.Util;
-using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Threading.Tasks;
 namespace Fluente.Arquitetura.Controllers
 {
     [Route("/api/[controller]/[action]")]

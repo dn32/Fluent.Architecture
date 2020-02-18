@@ -14,7 +14,7 @@ namespace Fluente.Arquitetura.Attributes
     public class FluenteEnumValueForSetNullAttribute : Attribute
     {
         public int Value { get; }
-     
+
         public FluenteEnumValueForSetNullAttribute(int value)
         {
             Value = value;

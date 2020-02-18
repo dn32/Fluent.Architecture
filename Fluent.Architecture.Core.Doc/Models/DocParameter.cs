@@ -19,7 +19,7 @@ namespace Fluente.Arquitetura.Nucleo.Doc.Controllers
         public DocParameter()
         {
             Source = EnumParameterSouce.Body;
-        }     
+        }
 
         public DocParameter(string name, Type type, EnumParameterSouce source, string description, string example)
         {

@@ -75,8 +75,8 @@ namespace Fluente.Arquitetura.Extensoes
             //method = generics == null ? method : method.MakeGenericMethod(generics);
             if (parameters == null) { parameters = Array.Empty<object>(); }
             var localParameters = method?.GetAllParameters();
-            
-            if(localParameters?.Length != parameters.Length)
+
+            if (localParameters?.Length != parameters.Length)
             {
                 throw new InvalidOperationException($"the number of method parameters {method?.Name} is different from the amount informed in the call");
             }

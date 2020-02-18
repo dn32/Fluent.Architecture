@@ -1,7 +1,7 @@
-﻿using Fluente.Arquitetura.Nucleo.Extensoes;
+﻿using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Exceptions.ValidationException;
 using Fluente.Arquitetura.Nucleo.Inconsistences;
 using Fluente.Arquitetura.Nucleo.Models;
-using Fluente.Arquitetura.Exceptions.ValidationException;
 using Fluente.Arquitetura.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
 namespace Fluente.Arquitetura.Filters
 {
     public class FluenteExceptionHandlerAttribute : ExceptionFilterAttribute

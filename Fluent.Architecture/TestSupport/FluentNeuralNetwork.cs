@@ -1,5 +1,5 @@
-﻿using Fluente.Arquitetura.Nucleo.Atributos;
-using Fluente.Arquitetura.Extensoes;
+﻿using Fluente.Arquitetura.Extensoes;
+using Fluente.Arquitetura.Nucleo.Atributos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,7 +75,7 @@ namespace Fluente.Arquitetura.Nucleo.TestSupport
 
             foreach (var item in list)
             {
-                if(item == null) { continue; }
+                if (item == null) { continue; }
                 var aggregation = SortedAggregations.Single(x => x.EntityType == item.type);
                 object value = aggregation.Instance;
 

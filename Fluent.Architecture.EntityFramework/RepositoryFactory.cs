@@ -1,13 +1,13 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
+﻿using Fluente.Arquitetura.Base.Atributos;
 using Fluente.Arquitetura.Base.Enumeradores;
 using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Exceptions;
 using Fluente.Arquitetura.Interfaces;
 using Fluente.Arquitetura.Nucleo.Factory;
 using Fluente.Arquitetura.Nucleo.Interfaces;
-using Fluente.Arquitetura.Exceptions;
-using Fluente.Arquitetura.Services;
 using Fluente.Arquitetura.Nucleo.Models;
+using Fluente.Arquitetura.Services;
 using System;
 using System.Linq;
 using System.Reflection;

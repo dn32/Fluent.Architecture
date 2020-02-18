@@ -1,10 +1,5 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Nucleo.Extensoes;
-using Fluente.Arquitetura.Nucleo.Models;
-using Fluente.Arquitetura.Extensoes;
+﻿using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Base.Models;
 using Fluente.Arquitetura.Factory;
 using Fluente.Arquitetura.Services;
 using Microsoft.AspNetCore.Http;
@@ -40,7 +35,7 @@ namespace Fluente.Arquitetura.Controllers
 
         internal protected bool TransactionIsStarted { get; set; }
 
-        protected FluenteServiceController() 
+        protected FluenteServiceController()
         {
             Service = null;
         }

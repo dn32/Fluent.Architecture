@@ -1,30 +1,30 @@
 ﻿// ReSharper disable CommentTypo
 using Fluente.Arquitetura.Attributes;
-using Fluente.Arquitetura.Nucleo.Atributos;
+using Fluente.Arquitetura.Base.Atributos;
+using Fluente.Arquitetura.Base.Enumeradores;
+using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Base.Models;
 using Fluente.Arquitetura.Exceptions;
 using Fluente.Arquitetura.Extensoes;
+using Fluente.Arquitetura.Interfaces;
+using Fluente.Arquitetura.Nucleo.Atributos;
+using Fluente.Arquitetura.Nucleo.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Debug;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Linq.Expressions;
-using Fluente.Arquitetura.Nucleo.Models;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.Extensions.Logging;
-using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
-using Microsoft.Extensions.Logging.Debug;
 
 namespace Fluente.Arquitetura.EntityFramework
 {
@@ -179,7 +179,7 @@ namespace Fluente.Arquitetura.EntityFramework
             return ret;
         }
 
-        protected virtual void UpdateLogicalDeletion(IEnumerable<EntityEntry> entries) 
+        protected virtual void UpdateLogicalDeletion(IEnumerable<EntityEntry> entries)
         {
             var entities = entries.ToList();
         }

@@ -1,33 +1,18 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
+using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Exceptions;
+using Fluente.Arquitetura.Exceptions.ValidationException;
+using Fluente.Arquitetura.Factory;
+using Fluente.Arquitetura.Interfaces;
 using Fluente.Arquitetura.Nucleo.Interfaces;
 using Fluente.Arquitetura.Nucleo.Models;
 using Fluente.Arquitetura.Nucleo.Util;
-using Fluente.Arquitetura.Exceptions;
-using Fluente.Arquitetura.Exceptions.ValidationException;
-using Fluente.Arquitetura.Extensoes;
-using Fluente.Arquitetura.Factory;
-using Fluente.Arquitetura.Interfaces;
 using Fluente.Arquitetura.Validation;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
-using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Interfaces;
 namespace Fluente.Arquitetura.Services
 {
     ///<inheritdoc/>
@@ -90,7 +75,7 @@ namespace Fluente.Arquitetura.Services
                 {
                     var entity = item.Item2;
                     Validation.ClearInconsistencies();
-                                   
+
                     if (await ExistsAsync(entity, true, true))
                     {
                         await Validation.UpdateAsync(entity);
