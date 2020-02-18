@@ -1,12 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
-//     TODOS OS DIREITOS RESERVADOS.
-// </copyright>
-// -----------------------------------------------------------------------
-
-// ReSharper disable CommentTypo
-
+﻿using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Base.Atributos;
+using Fluente.Arquitetura.Base.Enumeradores;
+using Fluente.Arquitetura.Base.Extensoes;
 using Fluente.Arquitetura.Nucleo.Atributos;
 using Fluente.Arquitetura.Nucleo.Models;
 using Fluente.Arquitetura.Exceptions.ValidationException;
@@ -18,6 +13,16 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Base.Atributos;
+using Fluente.Arquitetura.Base.Enumeradores;
+using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Interfaces;
+using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Base.Atributos;
+using Fluente.Arquitetura.Base.Enumeradores;
+using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Interfaces;
 
 namespace Fluente.Arquitetura.Validation
 {
@@ -80,7 +85,7 @@ namespace Fluente.Arquitetura.Validation
                 if (property.GetCustomAttributeAny<FluenteRandomKeyValueOnAddAttribute>(true)) { continue; }
                 if (!string.IsNullOrWhiteSpace(compositionProperty))
                 {
-                    if (property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.form == Nucleo.Enumerator.EnumTipoDeComponenteDeFormularioDeTela.Hidden)
+                    if (property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.form == EnumTipoDeComponenteDeFormularioDeTela.Hidden)
                     {
                         continue;
                     }
@@ -154,7 +159,7 @@ namespace Fluente.Arquitetura.Validation
                 if (property.GetCustomAttributeAny<FluenteRandomKeyValueOnAddAttribute>(true)) { continue; }
                 if (!string.IsNullOrWhiteSpace(compositionProperty))
                 {
-                    if (property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.form == Nucleo.Enumerator.EnumTipoDeComponenteDeFormularioDeTela.Hidden)
+                    if (property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.form == EnumTipoDeComponenteDeFormularioDeTela.Hidden)
                     {
                         continue;
                     }
@@ -177,7 +182,7 @@ namespace Fluente.Arquitetura.Validation
                 if (property.GetCustomAttributeAny<FluenteRandomKeyValueOnAddAttribute>(true)) { continue; }
                 if (!string.IsNullOrWhiteSpace(compositionProperty))
                 {
-                    if (property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.form == Nucleo.Enumerator.EnumTipoDeComponenteDeFormularioDeTela.Hidden)
+                    if (property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.form == EnumTipoDeComponenteDeFormularioDeTela.Hidden)
                     {
                         continue;
                     }
@@ -217,7 +222,7 @@ namespace Fluente.Arquitetura.Validation
                     if (property.GetCustomAttributeAny<FluenteRandomKeyValueOnAddAttribute>(true)) { return; }
                     if (!string.IsNullOrWhiteSpace(compositionProperty))
                     {
-                        if (property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.form == Nucleo.Enumerator.EnumTipoDeComponenteDeFormularioDeTela.Hidden)
+                        if (property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.form == EnumTipoDeComponenteDeFormularioDeTela.Hidden)
                         {
                             return;
                         }

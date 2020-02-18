@@ -4,7 +4,11 @@ using Fluente.Arquitetura.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
-
+using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Base.Atributos;
+using Fluente.Arquitetura.Base.Enumeradores;
+using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Interfaces;
 namespace Fluente.Arquitetura.Nucleo.Extensoes
 {
     public static class SpecExtension2

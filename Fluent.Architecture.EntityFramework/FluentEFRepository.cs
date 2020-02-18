@@ -1,14 +1,14 @@
-﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
-//     TODOS OS DIREITOS RESERVADOS.
-// </copyright>
-// -----------------------------------------------------------------------
-
-// ReSharper disable CommentTypo
-
+﻿using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Base.Atributos;
+using Fluente.Arquitetura.Base.Enumeradores;
+using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Interfaces;
 using Fluente.Arquitetura.Nucleo.Atributos;
-using Fluente.Arquitetura.Nucleo.Enumerator;
+using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Base.Atributos;
+using Fluente.Arquitetura.Base.Enumeradores;
+using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Interfaces;
 using Fluente.Arquitetura.Nucleo.Interfaces;
 using Fluente.Arquitetura.Nucleo.Models;
 using Fluente.Arquitetura.Nucleo.Util;

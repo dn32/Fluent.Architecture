@@ -3,6 +3,11 @@ using System.Threading.Tasks;
 using Fluente.Arquitetura.Extensoes;
 using Newtonsoft.Json;
 using StackExchange.Redis;
+using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Base.Atributos;
+using Fluente.Arquitetura.Base.Enumeradores;
+using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Interfaces;
 
 namespace Fluente.Arquitetura.Redis
 {

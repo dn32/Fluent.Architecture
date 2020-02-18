@@ -1,4 +1,5 @@
-﻿using Fluente.Arquitetura.Nucleo.Enumerator;
+﻿using Fluente.Arquitetura.Base.Atributos;
+using Fluente.Arquitetura.Base.Enumeradores;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

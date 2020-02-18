@@ -7,7 +7,11 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Fluente.Arquitetura.Nucleo.Specifications;
 using System.ComponentModel.DataAnnotations;
-
+using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Base.Atributos;
+using Fluente.Arquitetura.Base.Enumeradores;
+using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Interfaces;
 namespace Fluente.Arquitetura.EntityFramework.Oracle.Controllers
 {
     public class FluenteOracleAPIController<T> : FluenteAPIController<T> where T : FluenteEntidade, new()

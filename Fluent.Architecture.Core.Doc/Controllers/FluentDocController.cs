@@ -1,6 +1,5 @@
 ﻿using Fluente.Arquitetura.Extensoes;
 using Fluente.Arquitetura.Nucleo.Atributos;
-using Fluente.Arquitetura.Nucleo.Enumerator;
 using Fluente.Arquitetura.Nucleo.Extensoes;
 using Fluente.Arquitetura.Nucleo.Specifications;
 using Microsoft.AspNetCore.Authorization;
@@ -14,6 +13,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Base.Atributos;
+using Fluente.Arquitetura.Base.Enumeradores;
+using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Interfaces;
 
 namespace Fluente.Arquitetura.Nucleo.Doc.Controllers
 {

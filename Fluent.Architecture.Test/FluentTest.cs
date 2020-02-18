@@ -1,10 +1,14 @@
 ﻿using Fluente.Arquitetura.Controllers;
-using Fluente.Arquitetura.Nucleo.Enumerator;
 using Fluente.Arquitetura.Nucleo.Models;
 using Fluente.Arquitetura.Test.Mock;
 using Fluente.Arquitetura.Test.Mock.ControllerMock;
 using Newtonsoft.Json;
 using System;
+using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Base.Atributos;
+using Fluente.Arquitetura.Base.Enumeradores;
+using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Interfaces;
 
 namespace Fluente.Arquitetura.Test
 {

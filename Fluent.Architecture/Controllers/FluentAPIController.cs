@@ -1,4 +1,7 @@
-﻿using Fluente.Arquitetura.Nucleo.Enumerator;
+﻿using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Base.Atributos;
+using Fluente.Arquitetura.Base.Enumeradores;
+using Fluente.Arquitetura.Base.Extensoes;
 using Fluente.Arquitetura.Nucleo.Extensoes;
 using Fluente.Arquitetura.Nucleo.Specifications;
 using Fluente.Arquitetura.Extensoes;
@@ -10,7 +13,11 @@ using System.Collections.Generic;
 using System;
 using System.IO;
 using Fluente.Arquitetura.Nucleo.Util;
-
+using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Base.Atributos;
+using Fluente.Arquitetura.Base.Enumeradores;
+using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Interfaces;
 namespace Fluente.Arquitetura.Controllers
 {
     [Route("/api/[controller]/[action]")]

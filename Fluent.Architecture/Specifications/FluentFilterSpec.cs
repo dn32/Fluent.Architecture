@@ -1,10 +1,8 @@
-﻿using Fluente.Arquitetura.Nucleo.Enumerator;
+﻿using Fluente.Arquitetura.Base.Models;
 using Fluente.Arquitetura.Nucleo.Extensoes;
-using Fluente.Arquitetura.Nucleo.Models;
 using Fluente.Arquitetura.Extensoes;
 using Fluente.Arquitetura.Specifications;
 using System.Linq;
-
 namespace Fluente.Arquitetura.Nucleo.Specifications
 {
     public class FluenteFilterSpec<T> : FluenteSpecification<T> where T : FluenteEntidade

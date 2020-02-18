@@ -7,7 +7,14 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-
+using Fluente.Arquitetura.Base.Atributos;
+using Fluente.Arquitetura.Base.Enumeradores;
+using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Base.Atributos;
+using Fluente.Arquitetura.Base.Enumeradores;
+using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Interfaces;
 namespace Fluente.Arquitetura.Nucleo.Specifications
 {
     public class TermSpec<T> : FluenteSpecification<T> where T : FluenteEntidade

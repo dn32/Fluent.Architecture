@@ -1,12 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright company="Fluente System">
-//     Copyright © Fluente System. All rights reserved.
-//     TODOS OS DIREITOS RESERVADOS.
-// </copyright>
-// -----------------------------------------------------------------------
-
-// ReSharper disable CommentTypo
-using Fluente.Arquitetura.Nucleo.Extensoes;
+﻿using Fluente.Arquitetura.Nucleo.Extensoes;
 using Fluente.Arquitetura.Nucleo.Inconsistences;
 using Fluente.Arquitetura.Nucleo.Models;
 using Fluente.Arquitetura.Exceptions.ValidationException;
@@ -18,7 +10,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-
+using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Base.Atributos;
+using Fluente.Arquitetura.Base.Enumeradores;
+using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Interfaces;
 namespace Fluente.Arquitetura.Filters
 {
     public class FluenteExceptionHandlerAttribute : ExceptionFilterAttribute

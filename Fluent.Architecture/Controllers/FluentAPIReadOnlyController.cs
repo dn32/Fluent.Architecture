@@ -3,7 +3,11 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using Fluente.Arquitetura.Nucleo.Models;
 using System;
-
+using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Base.Atributos;
+using Fluente.Arquitetura.Base.Enumeradores;
+using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Interfaces;
 namespace Fluente.Arquitetura.Controllers
 {
     [Route("/api/[controller]/[action]")]

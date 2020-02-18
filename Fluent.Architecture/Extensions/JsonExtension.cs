@@ -1,5 +1,10 @@
 ﻿using Fluente.Arquitetura.Extensoes;
 using Newtonsoft.Json;
+using Fluente.Arquitetura.Base.Models;
+using Fluente.Arquitetura.Base.Atributos;
+using Fluente.Arquitetura.Base.Enumeradores;
+using Fluente.Arquitetura.Base.Extensoes;
+using Fluente.Arquitetura.Interfaces;
 
 namespace Fluente.Arquitetura.Nucleo.Extensoes
 {
