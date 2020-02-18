@@ -1,5 +1,4 @@
-﻿using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Controllers;
+﻿using Fluente.Arquitetura.Controllers;
 using Fluente.Arquitetura.Exceptions;
 using Fluente.Arquitetura.Extensoes;
 using Fluente.Arquitetura.Nucleo.Interfaces;
@@ -8,6 +7,7 @@ using Fluente.Arquitetura.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using dn32.infra.extensoes;
 
 namespace Fluente.Arquitetura.Factory
 {

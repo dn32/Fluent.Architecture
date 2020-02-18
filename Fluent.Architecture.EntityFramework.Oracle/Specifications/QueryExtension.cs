@@ -1,7 +1,7 @@
-﻿using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Base.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using dn32.infra.dados;
+using dn32.infra.extensoes;
 
 namespace Fluente.Arquitetura.EntityFramework.Oracle.Specifications
 {

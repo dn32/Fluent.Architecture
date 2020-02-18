@@ -1,10 +1,10 @@
-﻿using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Extensoes;
+﻿using Fluente.Arquitetura.Extensoes;
 using Fluente.Arquitetura.Nucleo.Atributos;
 using Fluente.Arquitetura.Nucleo.Util;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using dn32.infra.extensoes;
 
 namespace Fluente.Arquitetura.Nucleo.Extensoes
 {

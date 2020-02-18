@@ -1,7 +1,4 @@
-﻿using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Extensoes;
+﻿using Fluente.Arquitetura.Extensoes;
 using Fluente.Arquitetura.Nucleo.Extensoes;
 using Fluente.Arquitetura.Nucleo.Specifications;
 using Fluente.Arquitetura.Nucleo.Util;
@@ -11,6 +8,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
+using dn32.infra.dados;
+using dn32.infra.enumeradores;
+using dn32.infra.extensoes;
+
 namespace Fluente.Arquitetura.Controllers
 {
     [Route("/api/[controller]/[action]")]
@@ -56,7 +57,7 @@ namespace Fluente.Arquitetura.Controllers
         [HttpGet]
         [Description("Get a paginated list of items based on a term")]
         [FluenteAction(Pagination = true, DynamicSpec = true)]
-        public virtual async Task<ResultadoPasdraoPaginadoComTermo<List<T>>> ListByTerm([Description("The term to use as a comparator")] string Term)
+        public virtual async Task<ResultadoPadraoPaginadoComTermo<List<T>>> ListByTerm([Description("The term to use as a comparator")] string Term)
         {
             var spec = CreateSpec<TermSpec<T>>().SetParameter(Term, isList: true);
             var list = Service.ListAsync(spec);

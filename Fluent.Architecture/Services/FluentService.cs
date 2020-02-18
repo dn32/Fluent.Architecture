@@ -1,5 +1,4 @@
 ﻿using ClosedXML.Excel;
-using Fluente.Arquitetura.Base.Models;
 using Fluente.Arquitetura.Exceptions;
 using Fluente.Arquitetura.Exceptions.ValidationException;
 using Fluente.Arquitetura.Factory;
@@ -13,6 +12,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using dn32.infra.dados;
+
 namespace Fluente.Arquitetura.Services
 {
     ///<inheritdoc/>

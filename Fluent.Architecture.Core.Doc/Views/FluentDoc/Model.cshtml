@@ -2,11 +2,9 @@
 @using Fluente.Arquitetura.Extensoes
 @using Fluente.Arquitetura
 @using System.Reflection;
+@using dn32.infra.atributos
+@using dn32.infra.enumeradores
 @using Fluente.Arquitetura.Nucleo.Atributos
-@using Fluente.Arquitetura.Base.Models;
-@using Fluente.Arquitetura.Base.Atributos;
-@using Fluente.Arquitetura.Base.Enumeradores;
-@using Fluente.Arquitetura.Base.Extensoes;
 @using Fluente.Arquitetura.Interfaces;
 
 @using static Fluente.Arquitetura.FluenteDocExtension
@@ -45,7 +43,7 @@
                 @foreach (var property in Model.Properties)
                 {
                     if (property.form == EnumTipoDeComponenteDeFormularioDeTela.Nenhum) { continue; }
-                    if (property.Property?.GetCustomAttribute<FluenteDocAttribute>()?.Display == EnumMostrar.Ocultar) { continue; }
+                    if (property.Property?.GetCustomAttribute<FluenteDocAtributo>()?.Apresentacao == EnumMostrar.Ocultar) { continue; }
 
                     var range = (property.min == property.max ? property.min.ToString() : property.min + ", " + property.max);
                     range = range == "0" ? "" : $" ({range})";

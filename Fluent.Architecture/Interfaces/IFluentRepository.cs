@@ -1,9 +1,9 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Interfaces;
+﻿using Fluente.Arquitetura.Interfaces;
 using Fluente.Arquitetura.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using dn32.infra.dados;
 
 namespace Fluente.Arquitetura.Nucleo.Interfaces
 {

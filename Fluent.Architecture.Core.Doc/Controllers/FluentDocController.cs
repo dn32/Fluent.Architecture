@@ -1,7 +1,4 @@
-﻿using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Extensoes;
+﻿using Fluente.Arquitetura.Extensoes;
 using Fluente.Arquitetura.Nucleo.Atributos;
 using Fluente.Arquitetura.Nucleo.Extensoes;
 using Fluente.Arquitetura.Nucleo.Specifications;
@@ -16,6 +13,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using dn32.infra.atributos;
+using dn32.infra.enumeradores;
 
 namespace Fluente.Arquitetura.Nucleo.Doc.Controllers
 {
@@ -54,9 +53,9 @@ namespace Fluente.Arquitetura.Nucleo.Doc.Controllers
             {
                 if (Setup.Controllers.TryGetValue(type, out Type controllerType))
                 {
-                    if (controllerType.GetCustomAttribute<FluenteDocAttribute>()?.Display == EnumMostrar.Ocultar)
+                    if (controllerType.GetCustomAttribute<FluenteDocAtributo>()?.Apresentacao == EnumMostrar.Ocultar)
                     {
-                        throw new InvalidOperationException("FluenteDocAttributeAttribute is EnumFluenteMostrar.Hidden");
+                        throw new InvalidOperationException("FluenteDocAtributoAttribute is EnumFluenteMostrar.Hidden");
                     }
 
                     var model = type.GetFluenteJsonSchema(false);
@@ -67,7 +66,7 @@ namespace Fluente.Arquitetura.Nucleo.Doc.Controllers
                               .GetMethods()
                               .Where(method => method.IsPublic && !method.IsDefined(typeof(NonActionAttribute)))
                               .Where(method => !method.Name.StartsWith("get_") && !method.Name.Equals("Dispose") && !method.Name.Equals("GetType") && !method.Name.StartsWith("set_"))
-                              .Where(method => method.GetCustomAttribute<FluenteDocAttribute>()?.Display != EnumMostrar.Ocultar)
+                              .Where(method => method.GetCustomAttribute<FluenteDocAtributo>()?.Apresentacao != EnumMostrar.Ocultar)
                               .FirstOrDefault(method => method.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
 
                         if (actionMethod == null) { return Content("Action not found"); }
@@ -99,7 +98,7 @@ namespace Fluente.Arquitetura.Nucleo.Doc.Controllers
             {
                 var jsonSchema = type.GetFluenteJsonSchema(false);
                 jsonSchema.FluenteJsonForm.name = type.GetFriendlyName();
-                jsonSchema.Properties.Where(x => x.Property.GetCustomAttribute<FluenteDocAttribute>()?.Display != EnumMostrar.Ocultar).ToList()
+                jsonSchema.Properties.Where(x => x.Property.GetCustomAttribute<FluenteDocAtributo>()?.Apresentacao != EnumMostrar.Ocultar).ToList()
                 .ForEach(x =>
                 {
                     x.desc = x.desc.G();
@@ -144,9 +143,9 @@ namespace Fluente.Arquitetura.Nucleo.Doc.Controllers
             {
                 if (Setup.Controllers.TryGetValue(type, out Type controllerType))
                 {
-                    if (controllerType.GetCustomAttribute<FluenteDocAttribute>()?.Display == EnumMostrar.Ocultar)
+                    if (controllerType.GetCustomAttribute<FluenteDocAtributo>()?.Apresentacao == EnumMostrar.Ocultar)
                     {
-                        throw new InvalidOperationException("FluenteDocAttributeAttribute is EnumFluenteMostrar.Hidden");
+                        throw new InvalidOperationException("FluenteDocAtributoAttribute is EnumFluenteMostrar.Hidden");
                     }
 
                     var model = type.GetFluenteJsonSchema(false);
@@ -157,7 +156,7 @@ namespace Fluente.Arquitetura.Nucleo.Doc.Controllers
                               .GetMethods()
                               .Where(method => method.IsPublic && !method.IsDefined(typeof(NonActionAttribute)))
                               .Where(method => !method.Name.StartsWith("get_") && !method.Name.Equals("Dispose") && !method.Name.Equals("GetType") && !method.Name.StartsWith("set_"))
-                              .Where(method => method.GetCustomAttribute<FluenteDocAttribute>()?.Display != EnumMostrar.Ocultar)
+                              .Where(method => method.GetCustomAttribute<FluenteDocAtributo>()?.Apresentacao != EnumMostrar.Ocultar)
                               .SelectMany(action =>
                               {
                                   return GetActionData(action, type, controllerType, routeAtributeController);
@@ -364,7 +363,7 @@ xhr.addEventListener(""readystatechange"", function() {{
 
                         if (Setup.Controllers.TryGetValue(type, out Type controllerType))
                         {
-                            if (controllerType.GetCustomAttribute<FluenteDocAttribute>()?.Display == EnumMostrar.Ocultar)
+                            if (controllerType.GetCustomAttribute<FluenteDocAtributo>()?.Apresentacao == EnumMostrar.Ocultar)
                             {
                                 return;
                             }
@@ -379,14 +378,14 @@ xhr.addEventListener(""readystatechange"", function() {{
                     AllTypes = Setup.AllTypes
                                   .GroupBy(x => x.FullName)
                                   .Select(x => x.First())
-                                  .Where(x => x.GetCustomAttribute<FluenteDocAttribute>()?.Display != EnumMostrar.Ocultar)
+                                  .Where(x => x.GetCustomAttribute<FluenteDocAtributo>()?.Apresentacao != EnumMostrar.Ocultar)
                                   .Where(x => x.GetCustomAttribute<FluenteAPIControllerAttribute>()?.AutomaticGeneration != false)
                                   .OrderBy(x => x.Name)
                                   .ToDictionary(x => x.FullName, x => x);
                 }
 
                 AllEntities = Models.Values
-                    .Where(x => x.GetCustomAttribute<FluenteDocAttribute>()?.Display != EnumMostrar.Ocultar)
+                    .Where(x => x.GetCustomAttribute<FluenteDocAtributo>()?.Apresentacao != EnumMostrar.Ocultar)
                     .Where(x => x.GetCustomAttribute<FluenteAPIControllerAttribute>()?.AutomaticGeneration != false)
                     .Select(x => new EntityModelAndName
                     {
@@ -413,7 +412,7 @@ xhr.addEventListener(""readystatechange"", function() {{
                     .Where(x => x.FullName?.StartsWith("Microsoft") == false)
                     .Where(x => x.FullName?.StartsWith("Internal") == false)
                     .Where(x => x.FullName?.StartsWith("FxResources") == false)
-                    .Where(x => x.GetCustomAttribute<FluenteDocAttribute>()?.Display == EnumMostrar.Mostrar)
+                    .Where(x => x.GetCustomAttribute<FluenteDocAtributo>()?.Apresentacao == EnumMostrar.Mostrar)
                     .Select(x => new EntityModelAndName
                     {
                         Description = (x.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? x.GetCustomAttribute<FluenteJsonFormAttribute>(true)?.desc ?? x.GetFriendlyName()).G(),

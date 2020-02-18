@@ -45,7 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="D:\Projetos\dn32\Fluente.Arquitetura\Fluente.Arquitetura.Base\Fluente.Arquitetura.Base.csproj" />
+    <ProjectReference Include="..\..\Fluente.Arquitetura\Fluente.Arquitetura.Base\dn32.infra.csproj" />
   </ItemGroup>
 
 </Project>

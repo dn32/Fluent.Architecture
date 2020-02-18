@@ -1,10 +1,10 @@
-﻿using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using dn32.infra.atributos;
+using dn32.infra.enumeradores;
 
 namespace Fluente.Arquitetura.Nucleo.Atributos
 {
@@ -71,6 +71,6 @@ namespace Fluente.Arquitetura.Nucleo.Atributos
         [JsonIgnore]
         public bool IsFk { get; internal set; }
 
-        public IEnumerable<FluenteOperacaoDeCondicionalDeTelaAttribute> ConditionalFluenteUIOperations { get; internal set; }
+        public IEnumerable<FluenteOperacaoDeCondicionalDeTelaAtributo> ConditionalFluenteUIOperations { get; internal set; }
     }
 }

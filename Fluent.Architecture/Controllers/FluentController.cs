@@ -1,9 +1,9 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Factory;
+﻿using Fluente.Arquitetura.Factory;
 using Fluente.Arquitetura.Services;
 using Fluente.Arquitetura.Specifications;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using dn32.infra.dados;
 
 namespace Fluente.Arquitetura.Controllers
 {

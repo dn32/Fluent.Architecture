@@ -1,11 +1,11 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Extensoes;
+﻿using Fluente.Arquitetura.Extensoes;
 using Fluente.Arquitetura.Nucleo.Interfaces;
 using Fluente.Arquitetura.Services;
 using Fluente.Arquitetura.Validation;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using dn32.infra.dados;
 
 namespace Fluente.Arquitetura.Nucleo.Models
 {

@@ -1,7 +1,7 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Exceptions;
+﻿using Fluente.Arquitetura.Exceptions;
 using Fluente.Arquitetura.Services;
 using System.Linq;
+using dn32.infra.dados;
 
 namespace Fluente.Arquitetura.Specifications
 {

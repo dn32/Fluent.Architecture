@@ -1,5 +1,4 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Controllers;
+﻿using Fluente.Arquitetura.Controllers;
 using Fluente.Arquitetura.EntityFramework.Oracle.Specifications;
 using Fluente.Arquitetura.Nucleo.Specifications;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +6,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using dn32.infra.dados;
+
 namespace Fluente.Arquitetura.EntityFramework.Oracle.Controllers
 {
     public class FluenteOracleAPIController<T> : FluenteAPIController<T> where T : FluenteEntidade, new()

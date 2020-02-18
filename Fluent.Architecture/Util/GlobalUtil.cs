@@ -1,11 +1,11 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Controllers;
+﻿using Fluente.Arquitetura.Controllers;
 using Fluente.Arquitetura.Nucleo.Interfaces;
 using Fluente.Arquitetura.Services;
 using Fluente.Arquitetura.Specifications;
 using Fluente.Arquitetura.Validation;
 using System;
 using System.Linq;
+using dn32.infra.dados;
 
 namespace Fluente.Arquitetura.Util
 {

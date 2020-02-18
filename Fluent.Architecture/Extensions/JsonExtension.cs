@@ -1,4 +1,4 @@
-﻿using Fluente.Arquitetura.Base.Extensoes;
+﻿using dn32.infra.extensoes;
 using Fluente.Arquitetura.Extensoes;
 using Newtonsoft.Json;
 
@@ -22,14 +22,14 @@ namespace Fluente.Arquitetura.Nucleo.Extensoes
 
         public static T ToFluenteObject<T>(this string json)
         {
-            return JsonConvert.DeserializeObject<T>(json, ExtensoesJson.JsonSerializerSettings);
+            return JsonConvert.DeserializeObject<T>(json, ExtensoesJson.ConfiguracoesDeSerializacao);
         }
 
         public static string ToFluenteJsonStringNormalized(this string text)
         {
             if (string.IsNullOrWhiteSpace(text)) { return text; }
 
-            if (ExtensoesJson.JsonSerializerSettings?.ContractResolver?.GetType()?.Name == "CamelCasePropertyNamesContractResolver")
+            if (ExtensoesJson.ConfiguracoesDeSerializacao?.ContractResolver?.GetType()?.Name == "CamelCasePropertyNamesContractResolver")
             {
                 return text.ToCamelCase();
             }

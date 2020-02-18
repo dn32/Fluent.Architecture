@@ -1,6 +1,4 @@
-﻿using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Factory;
+﻿using Fluente.Arquitetura.Factory;
 using Fluente.Arquitetura.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +7,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using dn32.infra.dados;
 
 [assembly: InternalsVisibleTo(@"Fluente.Arquitetura.Controller.Test, PublicKey= 00240000048000009400000006020000002400005253413100040000010001006d1cca26da4daf8230bb524d15453c319d38c381589ab07912b8ab6afff8174aad961a74f171790b60e5ed604bc7bad410214a7d59ed6e101c03440e3b1cd055e2bdba377915b076aa15ac9cd6da1acf488a633cb9bc2bb34536b62593950249111ac7c572e02523978ac82d829fe8be29fba6cc4f4e5b668a6cd57d39eee2aa ")]
 namespace Fluente.Arquitetura.Controllers
@@ -60,16 +59,14 @@ namespace Fluente.Arquitetura.Controllers
         protected async Task<ResultadoPadraoPaginado<T>> ResultAsync<T>(T data, FluentePaginacao pagination)
         {
             await CloseTransactionAsync();
-            data = (T)data.FluenteResuladoOuValor();
             return new ResultadoPadraoPaginado<T>(data, pagination);
         }
 
         [NonAction]
-        protected async Task<ResultadoPasdraoPaginadoComTermo<T>> ResultAsync<T>(T data, FluentePaginacao pagination, string term)
+        protected async Task<ResultadoPadraoPaginadoComTermo<T>> ResultAsync<T>(T data, FluentePaginacao pagination, string term)
         {
             await CloseTransactionAsync();
-            data = (T)data.FluenteResuladoOuValor();
-            return new ResultadoPasdraoPaginadoComTermo<T>(data, pagination, term);
+            return new ResultadoPadraoPaginadoComTermo<T>(data, pagination, term);
         }
 
         [NonAction]

@@ -1,5 +1,4 @@
-﻿using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Factory;
+﻿using Fluente.Arquitetura.Factory;
 using Fluente.Arquitetura.Nucleo.Models;
 using Fluente.Arquitetura.Nucleo.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using dn32.infra.extensoes;
 
 namespace Fluente.Arquitetura.Nucleo.Doc.Controllers
 {

@@ -1,5 +1,4 @@
-﻿using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Nucleo.Atributos;
+﻿using Fluente.Arquitetura.Nucleo.Atributos;
 using Fluente.Arquitetura.Nucleo.Models;
 using Newtonsoft.Json;
 using System;

@@ -1,8 +1,9 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using dn32.infra.dados;
+
 namespace Fluente.Arquitetura.Controllers
 {
     [Route("/api/[controller]/[action]")]

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Fluente.Arquitetura.Base.Models;
 using Fluente.Arquitetura.Factory.Proxy;
 using Fluente.Arquitetura.Nucleo.Models;
 using Fluente.Arquitetura.Nucleo.Util;
@@ -10,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Reflection.Emit;
+using dn32.infra.dados;
 
 namespace Fluente.Arquitetura.Extensoes
 {

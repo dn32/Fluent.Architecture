@@ -1,8 +1,4 @@
 ﻿using Fluente.Arquitetura.Attributes;
-using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Base.Models;
 using Fluente.Arquitetura.Nucleo.Atributos;
 using Fluente.Arquitetura.Nucleo.Extensoes;
 using Fluente.Arquitetura.Nucleo.Models;
@@ -20,6 +16,10 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using dn32.infra.atributos;
+using dn32.infra.dados;
+using dn32.infra.enumeradores;
+using dn32.infra.extensoes;
 
 namespace Fluente.Arquitetura.Extensoes
 {
@@ -382,7 +382,7 @@ namespace Fluente.Arquitetura.Extensoes
                 };
             }
 
-            attr.ConditionalFluenteUIOperations = property.GetCustomAttributes<FluenteOperacaoDeCondicionalDeTelaAttribute>();
+            attr.ConditionalFluenteUIOperations = property.GetCustomAttributes<FluenteOperacaoDeCondicionalDeTelaAtributo>();
             attr.FluenteAggregation = property.GetCustomAttribute<FluenteManyToManyAggregationAttribute>(true) ?? property.GetCustomAttribute<FluenteAggregationAttribute>(true);
             attr.FluenteComposition = property.GetCustomAttribute<FluenteCompositionAttribute>(true);
             attr.IsKey = property.IsDefined(typeof(KeyAttribute));

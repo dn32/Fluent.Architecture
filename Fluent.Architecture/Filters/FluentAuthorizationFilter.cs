@@ -1,5 +1,4 @@
-﻿using Fluente.Arquitetura.Base.Extensoes;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -9,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using dn32.infra.extensoes;
 
 namespace Fluente.Arquitetura.Filters
 {

@@ -1,5 +1,5 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using dn32.infra.dados;
 
 namespace Fluente.Arquitetura.EntityFramework.Oracle
 {

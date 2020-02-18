@@ -1,4 +1,4 @@
-﻿using Fluente.Arquitetura.Base.Models;
+﻿using dn32.infra.dados;
 using Fluente.Arquitetura.Services;
 namespace Fluente.Arquitetura.Nucleo.Interfaces
 {

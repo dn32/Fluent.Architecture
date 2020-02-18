@@ -1,7 +1,8 @@
-﻿using Fluente.Arquitetura.Base.Enumeradores;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Linq;
+using dn32.infra.enumeradores;
+
 namespace Fluente.Arquitetura.Nucleo.Atributos
 {
     [AttributeUsage(AttributeTargets.Property)]

@@ -1,8 +1,9 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Extensoes;
+﻿using Fluente.Arquitetura.Extensoes;
 using Fluente.Arquitetura.Nucleo.Extensoes;
 using Fluente.Arquitetura.Specifications;
 using System.Linq;
+using dn32.infra.dados;
+
 namespace Fluente.Arquitetura.Nucleo.Specifications
 {
     public class FluenteAllSpec<T> : FluenteSpecification<T> where T : FluenteEntidade

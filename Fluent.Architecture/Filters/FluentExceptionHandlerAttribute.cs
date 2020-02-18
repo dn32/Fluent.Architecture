@@ -1,5 +1,4 @@
-﻿using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Exceptions.ValidationException;
+﻿using Fluente.Arquitetura.Exceptions.ValidationException;
 using Fluente.Arquitetura.Nucleo.Inconsistences;
 using Fluente.Arquitetura.Nucleo.Models;
 using Fluente.Arquitetura.Validation;
@@ -10,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using dn32.infra.extensoes;
+
 namespace Fluente.Arquitetura.Filters
 {
     public class FluenteExceptionHandlerAttribute : ExceptionFilterAttribute

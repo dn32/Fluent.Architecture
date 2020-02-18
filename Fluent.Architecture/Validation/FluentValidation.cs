@@ -1,5 +1,4 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Exceptions.ValidationException;
+﻿using Fluente.Arquitetura.Exceptions.ValidationException;
 using Fluente.Arquitetura.Nucleo.Atributos;
 using Fluente.Arquitetura.Nucleo.Models;
 using Fluente.Arquitetura.Services;
@@ -8,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using dn32.infra.dados;
 
 namespace Fluente.Arquitetura.Validation
 {

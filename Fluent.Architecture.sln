@@ -44,13 +44,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 Núcleos", "01 Núcleos"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 BD e Doc", "02 BD e Doc", "{F1AE78C0-4894-4D1C-9A02-AB71E94306F7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluente.Arquitetura.Base", "..\Fluente.Arquitetura\Fluente.Arquitetura.Base\Fluente.Arquitetura.Base.csproj", "{08982B38-87FF-4D71-BD06-679594A2D949}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dn32.infra", "..\Fluente.Arquitetura\Fluente.Arquitetura.Base\dn32.infra.csproj", "{08982B38-87FF-4D71-BD06-679594A2D949}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pt-br", "pt-br", "{4158C429-5F1F-4FC6-B3E0-23FB8679F639}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluent.Architecture.Controller.Test", "Fluent.Architecture.Controller.Test\Fluent.Architecture.Controller.Test.csproj", "{79038E58-09B7-423A-9A72-88BA99881C49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluente.Arquitetura.Base.Teste", "..\Fluente.Arquitetura\Testes\Fluente.Arquitetura.Base.Teste\Fluente.Arquitetura.Base.Teste.csproj", "{E7A99C52-2406-4A2E-A352-B2032D83DECC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dn32.infra.Teste", "..\Fluente.Arquitetura\Testes\Fluente.Arquitetura.Base.Teste\dn32.infra.Teste.csproj", "{E7A99C52-2406-4A2E-A352-B2032D83DECC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

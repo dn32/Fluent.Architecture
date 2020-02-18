@@ -1,10 +1,11 @@
-﻿using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Extensoes;
+﻿using Fluente.Arquitetura.Extensoes;
 using Fluente.Arquitetura.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using dn32.infra.dados;
+using dn32.infra.extensoes;
+
 namespace Fluente.Arquitetura.Nucleo.Extensoes
 {
     public static class SpecExtension2

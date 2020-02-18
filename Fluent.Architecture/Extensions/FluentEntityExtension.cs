@@ -1,5 +1,4 @@
 ﻿using Fluente.Arquitetura.Attributes;
-using Fluente.Arquitetura.Base.Extensoes;
 using Fluente.Arquitetura.Exceptions;
 using Fluente.Arquitetura.Nucleo.Atributos;
 using Fluente.Arquitetura.Nucleo.Extensoes;

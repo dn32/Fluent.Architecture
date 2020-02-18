@@ -1,7 +1,8 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Util;
+﻿using Fluente.Arquitetura.Util;
 using Fluente.Arquitetura.Validation;
 using System;
+using dn32.infra.dados;
+
 namespace Fluente.Arquitetura.Factory
 {
     /// <summary>

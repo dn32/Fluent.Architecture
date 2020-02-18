@@ -49,7 +49,7 @@
 //                builder.ConfigureServices(services =>
 //                {
 
-//                    var jsonSerializerSettings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
+//                    var jsonSerializerSettings = new ConfiguracoesDeSerializacao { ContractResolver = new CamelCasePropertyNamesContractResolver() };
 //                    /* 1. Startup Arquitetura */
 //                    services
 //                        .AddMvc()

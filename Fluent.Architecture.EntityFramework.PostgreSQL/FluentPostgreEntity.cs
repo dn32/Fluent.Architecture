@@ -1,4 +1,4 @@
-﻿using Fluente.Arquitetura.Base.Models;
+﻿using dn32.infra.dados;
 
 namespace Fluente.Arquitetura.EntityFramework.PostgreSQL
 {

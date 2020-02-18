@@ -1,6 +1,7 @@
-﻿using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Nucleo.Models;
+﻿using Fluente.Arquitetura.Nucleo.Models;
 using System;
+using dn32.infra.enumeradores;
+
 namespace Fluente.Arquitetura.Nucleo.Atributos
 {
     [AttributeUsage(AttributeTargets.Property)]

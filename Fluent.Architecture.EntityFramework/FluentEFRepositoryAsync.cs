@@ -1,8 +1,4 @@
-﻿using Fluente.Arquitetura.Base.Atributos;
-using Fluente.Arquitetura.Base.Enumeradores;
-using Fluente.Arquitetura.Base.Extensoes;
-using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Exceptions;
+﻿using Fluente.Arquitetura.Exceptions;
 using Fluente.Arquitetura.Extensoes;
 using Fluente.Arquitetura.Interfaces;
 using Fluente.Arquitetura.Interfaces;
@@ -18,6 +14,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
+using dn32.infra.dados;
 
 namespace Fluente.Arquitetura.EntityFramework
 {

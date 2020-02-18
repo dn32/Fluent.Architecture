@@ -1,7 +1,7 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Exceptions;
+﻿using Fluente.Arquitetura.Exceptions;
 using Fluente.Arquitetura.Interfaces;
 using System.Collections.Generic;
+using dn32.infra.dados;
 
 namespace Fluente.Arquitetura.Extensoes
 {

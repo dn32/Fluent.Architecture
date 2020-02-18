@@ -1,8 +1,8 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Services;
+﻿using Fluente.Arquitetura.Services;
 using StackExchange.Redis;
 using System;
 using System.Threading.Tasks;
+using dn32.infra.dados;
 
 namespace Fluente.Arquitetura.Redis
 {

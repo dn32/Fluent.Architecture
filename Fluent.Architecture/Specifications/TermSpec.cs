@@ -1,5 +1,4 @@
-﻿using Fluente.Arquitetura.Base.Models;
-using Fluente.Arquitetura.Extensoes;
+﻿using Fluente.Arquitetura.Extensoes;
 using Fluente.Arquitetura.Nucleo.Atributos;
 using Fluente.Arquitetura.Nucleo.Extensoes;
 using Fluente.Arquitetura.Specifications;
@@ -7,6 +6,8 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using dn32.infra.dados;
+
 namespace Fluente.Arquitetura.Nucleo.Specifications
 {
     public class TermSpec<T> : FluenteSpecification<T> where T : FluenteEntidade
