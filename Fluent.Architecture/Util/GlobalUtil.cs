@@ -1,4 +1,4 @@
-﻿using dn32.infra.controladores;
+﻿using dn32.infra.nucleo.controladores;
 using dn32.infra.Nucleo.Interfaces;
 using dn32.infra.Services;
 using dn32.infra.Specifications;
@@ -15,13 +15,13 @@ namespace dn32.infra.Util
     public static class GlobalUtil
     {
         /// <summary>
-        /// Obtem o tipo da entidade de um objeto baseado em um tipo esperado. Ex <see cref="Services.DnService{T}"/>, <see cref="DnRepository{TE}"/>, etc. O retorno será o tipo de T.
+        /// Obtem o tipo da entidade de um objeto baseado em um tipo esperado. Ex <see cref="Services.DnControladorDeServico{T}"/>, <see cref="DnRepository{TE}"/>, etc. O retorno será o tipo de T.
         /// </summary>
         /// <param Nome="objectTypeToCheck">
         /// Objeto a ser avaliado.
         /// </param>
         /// <param Nome="expectedType">
-        /// Tipo esperado. Exemplo:  <see cref="Services.DnService{T}"/>, <see cref="DnRepository{TE}"/>
+        /// Tipo esperado. Exemplo:  <see cref="Services.DnControladorDeServico{T}"/>, <see cref="DnRepository{TE}"/>
         /// </param>
         /// <returns>
         /// O tipo.
@@ -67,7 +67,7 @@ namespace dn32.infra.Util
 
         private static string[] DnEntityNames => new[]
         {
-            typeof(Dn<DnEntidade>).Name,
+            typeof(DnControlador<DnEntidade>).Name,
             typeof(Services.DnService<DnEntidade>).Name,
             typeof(IDnRepository<DnEntidade>).Name,
             typeof(DnValidation<DnEntidade>).Name,
@@ -75,7 +75,7 @@ namespace dn32.infra.Util
         };
 
         /// <summary>
-        /// Obtem o tipo da entidade de um tipo. Ex <see cref="Services.DnService{T}"/>. O tipo a ser encontrado é o tipo de T.
+        /// Obtem o tipo da entidade de um tipo. Ex <see cref="Services.DnControladorDeServico{T}"/>. O tipo a ser encontrado é o tipo de T.
         /// </summary>
         /// <param Nome="currentType">
         /// Objeto a ser avaliado.

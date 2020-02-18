@@ -145,7 +145,7 @@ namespace dn32.infra.Services
         /// <returns>
         /// A lista paginada de resultados.
         /// </returns>
-        public virtual async Task<List<T>> ListAsync(IDnSpecification spec, DnPaginacao pagination = null)
+        public virtual async Task<List<T>> ListarAsync(IDnSpecification spec, DnPaginacao pagination = null)
         {
             var list = await Repository.ListAsync(spec, pagination);
             list.ForEach(x => Repository.Detach(x));
@@ -191,7 +191,7 @@ namespace dn32.infra.Services
             return entity;
         }
 
-        public virtual async Task<T> SingleOrDefaultAsync(IDnSpecification spec)
+        public virtual async Task<T> ObterOUnicoOuPadraoAsync(IDnSpecification spec)
         {
             var entity = await Repository.SingleOrDefaultAsync(spec);
             entity = Repository.Detach(entity);
@@ -239,9 +239,9 @@ namespace dn32.infra.Services
         // Todo2 documentar
         public virtual void RemoveRange(IDnSpecification spec) => Repository.RemoveRange(spec);
 
-        public virtual async Task TruncateAsync(string ERASE_ALL_DATA)
+        public virtual async Task TruncateAsync(string APAGAR_TUDO)
         {
-            Validation.Truncate(ERASE_ALL_DATA);
+            Validation.EliminarTudo(APAGAR_TUDO);
             await Repository.TruncateAsync();
         }
 
@@ -315,7 +315,7 @@ namespace dn32.infra.Services
         }
 
         /// IsAsNoTracking
-        public virtual async Task<T> FindAsync(T entity, bool checkId = true, bool detach = true)
+        public virtual async Task<T> BuscaAsync(T entity, bool checkId = true, bool detach = true)
         {
             Validation.Find(entity, checkId);
             entity = await Repository.FindAsync(entity);
@@ -358,7 +358,7 @@ namespace dn32.infra.Services
 
         /// <summary>
         /// IsAsNoTracking
-        /// Remove um item do banco de dados baseado em seu identificador.
+        /// Remover um item do banco de dados baseado em seu identificador.
         /// </summary>
         /// <param Nome="entity">
         /// Entidade a ser removida.

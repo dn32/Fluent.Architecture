@@ -1,6 +1,6 @@
 ﻿//// -----------------------------------------------------------------------
-//// <copyright company="Dn System">
-////     Copyright © Dn System. All rights reserved.
+//// <copyright company="DnControlador System">
+////     Copyright © DnControlador System. All rights reserved.
 ////     TODOS OS DIREITOS RESERVADOS.
 //// </copyright>
 //// -----------------------------------------------------------------------
@@ -43,7 +43,7 @@
 //        /// Item a ser adicionado.
 //        /// </param>
 
-//        public override TE Add(TE entity)
+//        public override TE Adicionar(TE entity)
 //        {
 //            if (string.IsNullOrWhiteSpace(entity.Language))
 //            {
@@ -52,26 +52,26 @@
 
 //            entity.IsDefaultLanguage = true;
 
-//            var entityAdded = base.Add(entity);
+//            var entityAdded = base.Adicionar(entity);
 
-//            Service.AddInteractions(AddTranslation, entity);
+//            Servico.AddInteractions(AddTranslation, entity);
 
 //            return entityAdded;
 //        }
 
 //        // Tradução ok
 
-//        public override void AddRange(params TE[] entities)
+//        public override void AdicionarLista(params TE[] entities)
 //        {
 //            foreach (var entity in entities)
 //            {
-//                Add(entity);
+//                Adicionar(entity);
 //            }
 //        }
 
 //        // Tradução ok
 
-//        public override TE Update(TE entity)
+//        public override TE Atualizar(TE entity)
 //        {
 //            RunTheContextValidation();
 
@@ -100,9 +100,9 @@
 
 //        // Tradução ok
 
-//        public virtual List<TE> List(IDnSpecification spec, DnPagination pagination, string language)
+//        public virtual Listar<TE> Listar(IDnSpecification spec, DnPagination pagination, string language)
 //        {
-//            var list = base.List(spec, pagination);
+//            var list = base.Listar(spec, pagination);
 
 //            list.ForEach(x => UpdateTranslationForFoundEntity(x, language));
 
@@ -111,9 +111,9 @@
 
 //        // Tradução ok
 //        //
-//        //public virtual List<TE> List(string language)
+//        //public virtual Listar<TE> Listar(string language)
 //        //{
-//        //    var list = base.List();
+//        //    var list = base.Listar();
 
 //        //    list.ForEach(x => UpdateTranslationForFoundEntity(x, language));
 
@@ -146,10 +146,10 @@
 
 //        // Tradução ok
 
-//        public override TE Remove(TE entity)
+//        public override TE Remover(TE entity)
 //        {
-//            TranslactionInput.RemoveRange(FindAllTranslationsOfAnEntity(entity));
-//            return base.Remove(entity);
+//            TranslactionInput.RemoverLista(FindAllTranslationsOfAnEntity(entity));
+//            return base.Remover(entity);
 //        }
 
 //        #region PRIVATE
@@ -173,11 +173,11 @@
 
 //            foreach (var translation in translations)
 //            {
-//                TranslactionInput.Add(translation);
+//                TranslactionInput.Adicionar(translation);
 //            }
 //        }
 
-//        private static List<Translation> ExtractTranslactionsOfEntity(DnGlobalizedEntity entity)
+//        private static Listar<Translation> ExtractTranslactionsOfEntity(DnGlobalizedEntity entity)
 //        {
 //            var properties = typeof(TE).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => x.GetCustomAttribute<DnGlobalizationAttribute>() != null).ToList();
 //            var translations = properties.Select(x =>

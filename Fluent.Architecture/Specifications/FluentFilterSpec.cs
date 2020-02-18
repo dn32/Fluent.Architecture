@@ -12,10 +12,10 @@ namespace dn32.infra.Nucleo.Specifications
 
         public bool IsList { get; set; }
 
-        public DnFilterSpec<T> SetParameter(Filtro[] filters, bool isList)
+        public DnFilterSpec<T> SetParameter(Filtro[] filters, bool ehLista)
         {
             Filters = filters;
-            IsList = isList;
+            IsList = ehLista;
             return this;
         }
 

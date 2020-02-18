@@ -65,9 +65,9 @@ namespace dn32.infra.Extensoes
             throw new IncorrectDevelopmentException("The specification is of a different type than expected");
         }
 
-        //public static T Add<T>(this TransactionalService service, T entity) where T : BaseEntity
+        //public static T Adicionar<T>(this TransactionalService service, T entity) where T : BaseEntity
         //{
-        //    return service.Add(entity);
+        //    return service.Adicionar(entity);
         //}
 
         //public static bool Exists(this TransactionalService service, IDnSpecification spec)
@@ -80,9 +80,9 @@ namespace dn32.infra.Extensoes
         //    return spec.Exists();
         //}
 
-        //public static void AddRange<T>(this TransactionalService service, params T[] entities) where T : BaseEntity
+        //public static void AdicionarLista<T>(this TransactionalService service, params T[] entities) where T : BaseEntity
         //{
-        //    return service.AddRange(entities);
+        //    return service.AdicionarLista(entities);
         //}
 
         //public static int Count<TO>(this TransactionalService service, IDnSpecification<TO> spec)
@@ -121,34 +121,34 @@ namespace dn32.infra.Extensoes
         //    return service.FirstOrDefault(entity);
         //}
 
-        //public static List<TO> List<TO>(this TransactionalService service, IDnSpecification<TO> spec, DnPagination pagination = null)
+        //public static Listar<TO> Listar<TO>(this TransactionalService service, IDnSpecification<TO> spec, DnPagination pagination = null)
         //{
-        //    return service.List(spec, pagination);
+        //    return service.Listar(spec, pagination);
         //}
 
-        //public static List<T> List<T>(this TransactionalService service, IDnSpecification spec, DnPagination pagination = null) where T : BaseEntity
+        //public static Listar<T> Listar<T>(this TransactionalService service, IDnSpecification spec, DnPagination pagination = null) where T : BaseEntity
         //{
-        //    return service.List(spec, pagination);
+        //    return service.Listar(spec, pagination);
         //}
 
-        //public static T Remove<T>(this TransactionalService service, T entity) where T : BaseEntity
+        //public static T Remover<T>(this TransactionalService service, T entity) where T : BaseEntity
         //{
-        //    return service.Remove(entity);
+        //    return service.Remover(entity);
         //}
 
-        //public static void RemoveRange(this TransactionalService service, IDnSpecification spec)
+        //public static void RemoverLista(this TransactionalService service, IDnSpecification spec)
         //{
-        //    service.RemoveRange(spec);
+        //    service.RemoverLista(spec);
         //}
 
-        //public static void RemoveRange<T>(this TransactionalService service, params T[] entities) where T : BaseEntity
+        //public static void RemoverLista<T>(this TransactionalService service, params T[] entities) where T : BaseEntity
         //{
-        //    service.AddRange(entities);
+        //    service.AdicionarLista(entities);
         //}
 
-        //public static T Update<T>(this TransactionalService service, T entity) where T : BaseEntity
+        //public static T Atualizar<T>(this TransactionalService service, T entity) where T : BaseEntity
         //{
-        //    return service.Update(entity);
+        //    return service.Atualizar(entity);
         //}
 
         #region PRIVATES
@@ -158,9 +158,9 @@ namespace dn32.infra.Extensoes
         //    return spec as DnSpecification<TE>;
         //}
 
-        //private static DnService<TE> GetService<TE>(UserSessionRequest sessionRequest) where TE : BaseEntity
+        //private static DnControladorDeServico<TE> GetService<TE>(UserSessionRequest sessionRequest) where TE : BaseEntity
         //{
-        //    return typeof(TE).GetServiceInstanceByEntity(sessionRequest) as DnService<TE>;
+        //    return typeof(TE).GetServiceInstanceByEntity(sessionRequest) as DnControladorDeServico<TE>;
         //}
 
         #endregion

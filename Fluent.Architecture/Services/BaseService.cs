@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright company="Dn System">
-//     Copyright © Dn System. All rights reserved.
+// <copyright company="DnControlador System">
+//     Copyright © DnControlador System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -38,7 +38,7 @@ namespace dn32.infra.Services
         /// <summary>
         /// Obtem o identificador da sessão da requisição atual.
         /// </summary>
-        public Guid SessionRequestId => this.SessionRequest.SessionRequestId;
+        public Guid IdentificadorDaSessaoDaRequisicao => this.SessionRequest.SessionRequestId;
 
         /// <summary>
         /// HttpContext da requisição vinda do controller.

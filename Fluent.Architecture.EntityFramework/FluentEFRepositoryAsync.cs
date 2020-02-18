@@ -80,7 +80,7 @@ namespace dn32.infra.EntityFramework
         {
             if (spec.DnEntityType != typeof(TE))
             {
-                var serviceName = $"{spec.DnEntityType.Name}Service";
+                var serviceName = $"{spec.DnEntityType.Name}Servico";
                 throw new IncorrectDevelopmentException($"The type of input reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.DnEntityType}.\r\nRequisition Tipo: {typeof(TE)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
             }
 
@@ -269,7 +269,7 @@ namespace dn32.infra.EntityFramework
         public virtual async Task<TE> RemoveAsync(TE entity)
         {
             RunTheContextValidation();
-            var teEntity = await Service.FindAsync(entity, false);
+            var teEntity = await Service.BuscaAsync(entity, false);
             var ret = Input.Remove(teEntity).Entity;
 
             RemoveDnCompositionsAndDnAggregations(entity);
@@ -289,7 +289,7 @@ namespace dn32.infra.EntityFramework
                 var dbSet = TransactionObjects.GetObjectInputDataInternal(compositionPropertyType.GetListTypeNonNull());
                 if (compositionListElements.Count > 0)
                 {
-                    var method = dbSet.GetType().GetMethods().Last(x => x.Name == "RemoveRange");
+                    var method = dbSet.GetType().GetMethods().Last(x => x.Name == "RemoverLista");
                     method.Invoke(dbSet, new[] { compositionListElements });
                 }
             }

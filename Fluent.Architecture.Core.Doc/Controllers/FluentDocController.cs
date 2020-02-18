@@ -87,7 +87,7 @@ namespace dn32.infra.Nucleo.Doc.Controllers
             }
             else
             {
-                throw new InvalidOperationException($"Service {service} not found");
+                throw new InvalidOperationException($"Servico {service} not found");
             }
         }
 
@@ -136,7 +136,7 @@ namespace dn32.infra.Nucleo.Doc.Controllers
             return View(AllModel);
         }
 
-        [Route("DnDoc/Service")]
+        [Route("DnDoc/Servico")]
         public IActionResult Service(string name)
         {
             if (Models.TryGetValue<string, Type>(name, StringComparison.InvariantCultureIgnoreCase, out Type type))
@@ -179,7 +179,7 @@ namespace dn32.infra.Nucleo.Doc.Controllers
             }
             else
             {
-                throw new InvalidOperationException($"Service {name} not found");
+                throw new InvalidOperationException($"Servico {name} not found");
             }
         }
 
@@ -250,9 +250,9 @@ namespace dn32.infra.Nucleo.Doc.Controllers
                                 }).ToList();
 
                 var description = action.GetCustomAttribute<DescriptionAttribute>()?.Description;
-                var fluentAction = action.GetCustomAttribute<DnActionAttribute>();
+                var fluentAction = action.GetCustomAttribute<DnActionAtributo>();
 
-                if (fluentAction?.Pagination == true)
+                if (fluentAction?.Paginacao == true)
                 {
                     parameters.AddRange(new[] {
                     new DocParameter("CurrentPage", typeof(string), EnumParameterSouce.Header, "The current page", "1"),
@@ -261,7 +261,7 @@ namespace dn32.infra.Nucleo.Doc.Controllers
                 });
                 }
 
-                if (fluentAction?.DynamicSpec == true)
+                if (fluentAction?.EspecificacaoDinamica == true)
                 {
                     parameters.AddRange(new[] {
                     //new DocParameter("PropertyToIgnore", typeof(string), EnumParameterSouce.Header, "The properties you want to ignore in the query", "Code,Adress.Code"),

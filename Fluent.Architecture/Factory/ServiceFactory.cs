@@ -1,4 +1,4 @@
-﻿using dn32.infra.controladores;
+﻿using dn32.infra.nucleo.controladores;
 using dn32.infra.Exceptions;
 using dn32.infra.Extensoes;
 using dn32.infra.Nucleo.Interfaces;
@@ -19,7 +19,7 @@ namespace dn32.infra.Factory
     {
         /// <summary>
         /// Cria um serviço que terá controle de transação.
-        /// Essa operação deve ser exclusiva do Dn.
+        /// Essa operação deve ser exclusiva do DnControlador.
         /// </summary>
         /// <typeparam Nome="TS">
         /// O tipo de serviço a ser criado.
@@ -97,7 +97,7 @@ namespace dn32.infra.Factory
         //}
 
         /// <summary>
-        /// Cria um serviço em tempo de execução por meio de um processo de lazy-loading, à partir de um serviço original criado pelo <see cref="Dn{T}"/>.
+        /// Cria um serviço em tempo de execução por meio de um processo de lazy-loading, à partir de um serviço original criado pelo <see cref="DnControllerController{T}"/>.
         /// </summary>
         /// <param Nome="serviceType">
         /// O tipo de serviço a ser criado.

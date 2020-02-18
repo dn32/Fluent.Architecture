@@ -68,7 +68,7 @@ namespace dn32.infra.EntityFramework
                     var conn = Setup.Config?.Config?.Connections.Where(x => x.DbContextType.GetCustomAttribute<DbTypeAttribute>()?.DbType == dbType.DbType);
                     if (conn.Count() > 1)
                     {
-                        throw new IncorrectDevelopmentException($"More than one connection of the same type was found with the same type \"{dbType.DbType}\". Add identifiers for them.");
+                        throw new IncorrectDevelopmentException($"More than one connection of the same type was found with the same type \"{dbType.DbType}\". Adicionar identifiers for them.");
                     }
 
                     if (conn.Count() == 0)

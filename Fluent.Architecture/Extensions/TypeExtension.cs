@@ -283,7 +283,7 @@ namespace dn32.infra.Extensoes
         public static bool IsList(this Type type)
         {
             return (type.GetNonNullableType().GetInterface(nameof(ICollection)) != null);
-            //return type.Name.StartsWith("List`");
+            //return type.Name.StartsWith("Listar`");
         }
 
         public static bool IsDnEntity(this Type type)

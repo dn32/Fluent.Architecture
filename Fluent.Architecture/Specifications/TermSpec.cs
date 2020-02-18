@@ -16,10 +16,10 @@ namespace dn32.infra.Nucleo.Specifications
 
         public bool IsList { get; set; }
 
-        public TermSpec<T> SetParameter(string term, bool isList)
+        public TermSpec<T> SetParameter(string term, bool ehLista)
         {
             Term = term;
-            IsList = isList;
+            IsList = ehLista;
             return this;
         }
 

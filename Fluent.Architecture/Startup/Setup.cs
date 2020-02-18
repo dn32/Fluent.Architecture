@@ -1,5 +1,4 @@
-﻿using dn32.infra.controladores;
-using dn32.infra.Exceptions;
+﻿using dn32.infra.Exceptions;
 using dn32.infra.Filters;
 using dn32.infra.Nucleo.Interfaces;
 using dn32.infra.Nucleo.Models;
@@ -213,7 +212,7 @@ namespace dn32.infra
             Services.Add(typeof(DnEntidade), typeof(Services.DnService<DnEntidade>));
             Repositories.Add(typeof(DnEntidade), typeof(IDnRepository<DnEntidade>));
             Validations.Add(typeof(DnEntidade), typeof(DnValidation<DnEntidade>));
-            Controllers.Add(typeof(DnEntidade), typeof(Dn<DnEntidade>));
+            Controllers.Add(typeof(DnEntidade), typeof(DnControlador<DnEntidade>));
         }
 
         private static void LoadAssemblies()
@@ -236,7 +235,7 @@ namespace dn32.infra
             ValidateIfAllServicePropertiesHaveDefaultConstructor(transactionalServices);
 
             ValidateSpecifications(types.Where(x => x.IsSubclassOf(typeof(BaseSpecification))).ToList());
-            ValidateController(types.Where(x => x.IsSubclassOf(typeof(ControladorBase))).ToList());
+            ValidateController(types.Where(x => x.IsSubclassOf(typeof(DnControladorBase))).ToList());
 
             types.Select(x => GlobalUtil.GetDnEntityType(x, typeof(Services.DnService<EntidadeBase>)))
                 .Where(x => x.Item1 != null).ToList()
@@ -254,7 +253,7 @@ namespace dn32.infra
                 .Where(x => x.Item1 != null && x.Item2 != typeof(EntidadeBase)).ToList()
                 .ForEach(AddModel);
 
-            types.Select(x => GlobalUtil.GetDnEntityType(x, typeof(Dn<EntidadeBase>)))
+            types.Select(x => GlobalUtil.GetDnEntityType(x, typeof(DnControlador<EntidadeBase>)))
                .Where(x => x.Item1 != null).ToList()
                .ForEach(AddController);
 
@@ -365,7 +364,7 @@ namespace dn32.infra
                 {
                     if (prop.SetMethod != null)
                     {
-                        throw new IncorrectDevelopmentException($"The property {type}.{prop.Name} has a set method. Service properties are not allowed to have the set method.");
+                        throw new IncorrectDevelopmentException($"The property {type}.{prop.Name} has a set method. Servico properties are not allowed to have the set method.");
                     }
                 }
             }

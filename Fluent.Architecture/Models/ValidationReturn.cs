@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Dn System">
-//     Copyright © Dn System. All rights reserved.
+// <copyright company="DnControlador System">
+//     Copyright © DnControlador System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -29,7 +29,7 @@ namespace dn32.infra.Nucleo.Models
     //    }
 
     //    [JsonProperty("inconsistencies")]
-    //    public List<DnValidationException> Inconsistencies => ValidationException?.Inconsistencies;
+    //    public Listar<DnValidationException> Inconsistencies => ValidationException?.Inconsistencies;
 
     //    [JsonProperty("validation_error")]
     //    public new bool ValidationError => ValidationException?.ValidationError ?? true;

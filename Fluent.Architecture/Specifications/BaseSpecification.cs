@@ -29,7 +29,7 @@ namespace dn32.infra.Specifications
         {
             if (Service == null)
             {
-                throw new IncorrectDevelopmentException($"Failed to initialize specification [{GetType().Name}].\nYou must use [CreateSpec] present in the service or controller.");
+                throw new IncorrectDevelopmentException($"Failed to initialize specification [{GetType().Name}].\nYou must use [CriarEspecificacao] present in the service or controller.");
             }
 
             var transactionObjects = Service.TransactionObjects;

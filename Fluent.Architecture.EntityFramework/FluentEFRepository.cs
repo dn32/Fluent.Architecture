@@ -71,7 +71,7 @@ namespace dn32.infra.EntityFramework
         /// </summary>
         public DnService<TE> Service { get; set; }
 
-        // DnService<TE> IDnRepository<TE>.Service { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        // DnControladorDeServico<TE> IDnRepository<TE>.Servico { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
         internal protected void RunTheContextValidation() => Service.SessionRequest.ContextDnValidationException.Validate();
 
@@ -146,7 +146,7 @@ namespace dn32.infra.EntityFramework
                             lock (SessionRequest) { Session.EnableLogicalDeletion = true; }
 
                             if (currentEntity == null)
-                            { //Add
+                            { //Adicionar
                                 Session.Add(auth);
                             }
                             else
@@ -417,7 +417,7 @@ namespace dn32.infra.EntityFramework
                 Session.EnableLogicalDeletion = false;
             }
 
-            var currentEntity = await Service.FindAsync(entity, true, false);
+            var currentEntity = await Service.BuscaAsync(entity, true, false);
 
             TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
 
@@ -431,14 +431,14 @@ namespace dn32.infra.EntityFramework
             return entity;
         }
 
-        //Todo - tratar recuperação de exclusão lógica, como foi feito no Update
+        //Todo - tratar recuperação de exclusão lógica, como foi feito no Atualizar
         public virtual async Task UpdateRangeAsync(IEnumerable<TE> entities)
         {
             RunTheContextValidation();
             foreach (var entity in entities)
             {
                 DefineForeignKeyOfCompositionsOrAggregations(entity);
-                var currentEntity = await Service.FindAsync(entity);
+                var currentEntity = await Service.BuscaAsync(entity);
                 TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
                 await UpdateCompositionListAsync(entity, true);
             }
@@ -466,13 +466,13 @@ namespace dn32.infra.EntityFramework
             {
                 if (spec.DnEntityType != typeof(TE))
                 {
-                    var serviceName = $"{spec.DnEntityType.Name}Service";
+                    var serviceName = $"{spec.DnEntityType.Name}Servico";
                     throw new IncorrectDevelopmentException($"The type of input reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.DnEntityType}.\r\nRequisition Tipo: {typeof(TE)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
                 }
 
                 if (spec.DnEntityOutType != typeof(TO))
                 {
-                    var serviceName = $"{typeof(TE).Name}Service";
+                    var serviceName = $"{typeof(TE).Name}Servico";
                     throw new IncorrectDevelopmentException($"The type of output reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.DnEntityType}.\r\nRequisition Tipo: {typeof(TO)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
                 }
 

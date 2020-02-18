@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Dn System">
-//     Copyright © Dn System. All rights reserved.
+// <copyright company="DnControlador System">
+//     Copyright © DnControlador System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -26,7 +26,7 @@ namespace dn32.infra.Exceptions.ValidationException
     public class AlterLossOfDadaValidationException : DnValidationException
     {
         public AlterLossOfDadaValidationException()
-            : base($"This operation physically removes all data from the requested table. If you really want to do this, you should add to the request header the term \"ERASE_ALL_DATA=YES\"")
+            : base($"This operation physically removes all data from the requested table. If you really want to do this, you should add to the request header the term \"APAGAR_TUDO=YES\"")
         {
         }
         [JsonProperty("globalization_key")]

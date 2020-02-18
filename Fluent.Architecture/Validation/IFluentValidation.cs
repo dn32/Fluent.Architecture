@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Dn System">
-//     Copyright © Dn System. All rights reserved.
+// <copyright company="DnControlador System">
+//     Copyright © DnControlador System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -15,7 +15,7 @@ namespace dn32.infra.Validation
     {
         bool NullParameterOk { get; set; }
         bool KeyValuesOk { get; set; }
-        //TransactionalService Service { get; set; }
+        //TransactionalService Servico { get; set; }
 
         void AddInconsistency(DnValidationException ex);
     }

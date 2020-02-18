@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace dn32.infra.nucleo.controladores
 {
     [SuppressMessage("ReSharper", "IdentifierTypo")]
-    public abstract class ControladorBase : Controller
+    public abstract class DnControladorBase : Controller
     {
         private HttpContext localHttpContext;
 

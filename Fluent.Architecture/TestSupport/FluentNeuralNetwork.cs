@@ -66,8 +66,8 @@ namespace dn32.infra.Nucleo.TestSupport
                                 new
                                 {
                                     property = p,
-                                    isList = p.PropertyType.Name == "List`1",
-                                    type = p.PropertyType.Name == "List`1" ? p.PropertyType.GenericTypeArguments[0] : p.PropertyType,
+                                    isList = p.PropertyType.Name == "Listar`1",
+                                    type = p.PropertyType.Name == "Listar`1" ? p.PropertyType.GenericTypeArguments[0] : p.PropertyType,
                                     attr = p.GetCustomAttribute<DnAgregacaoAtributo>(true)
                                 })
                             .Where(x => x.attr != null)

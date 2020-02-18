@@ -191,9 +191,9 @@ namespace dn32.infra.Validation
             RunTheContextValidation();
         }
 
-        public void Truncate(string ERASE_ALL_DATA)
+        public void EliminarTudo(string APAGAR_TUDO)
         {
-            if (ERASE_ALL_DATA?.Equals("Yes", StringComparison.InvariantCultureIgnoreCase) != true)
+            if (APAGAR_TUDO?.Equals("Yes", StringComparison.InvariantCultureIgnoreCase) != true)
             {
                 AddInconsistency(new AlterLossOfDadaValidationException());
             }

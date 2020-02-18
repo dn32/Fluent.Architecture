@@ -1,5 +1,4 @@
-﻿using dn32.infra.controladores;
-using dn32.infra.Test.Mock;
+﻿using dn32.infra.Test.Mock;
 using dn32.infra.Test.Mock.ControllerMock;
 using Newtonsoft.Json;
 using System;
@@ -12,12 +11,12 @@ namespace dn32.infra.Test
     [ComVisible(true)]
     public static class TestUtil
     {
-        public static ControladorBase GetController(Type controllerType)
+        public static DnControladorBase GetController(Type controllerType)
         {
             return MockControllerFactory.Create(controllerType);
         }
 
-        public static TR Execute<TC, TR>(TC controller, Func<TC, object> actionMethod) where TC : ControladorBase
+        public static TR Execute<TC, TR>(TC controller, Func<TC, object> actionMethod) where TC : DnControladorBase
         {
             controller.OnActionExecuting(MockActionExecutingContextFactory.Create(controller));
             ResultadoPadrao<TR> result;
@@ -36,7 +35,7 @@ namespace dn32.infra.Test
             return JsonConvert.DeserializeObject<TR>(JsonConvert.SerializeObject(result.Dados));
         }
 
-        public static object Execute<TC>(TC controller, Func<TC, object> actionMethod) where TC : ControladorBase
+        public static object Execute<TC>(TC controller, Func<TC, object> actionMethod) where TC : DnControladorBase
         {
             controller.OnActionExecuting(MockActionExecutingContextFactory.Create(controller));
             object result;

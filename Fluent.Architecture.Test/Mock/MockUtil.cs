@@ -1,5 +1,4 @@
-﻿using dn32.infra.controladores;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
@@ -20,7 +19,7 @@ namespace dn32.infra.Test.Mock
             return GetMockController(typeof(TC), null, Headers) as TC;
         }
 
-        public static ControladorBase GetMockController(Type controllerType, ClaimsPrincipal user = null, IHeaderDictionary Headers = null)
+        public static DnControladorBase GetMockController(Type controllerType, ClaimsPrincipal user = null, IHeaderDictionary Headers = null)
         {
             var controller = TestUtil.GetController(controllerType);
             var context = MockHttpControllerContextFactory.Create(Headers);
@@ -29,7 +28,7 @@ namespace dn32.infra.Test.Mock
             return controller;
         }
 
-        public static ExceptionContext GetMockExceptionContext<TC>(Exception exception, ControladorBase controller)
+        public static ExceptionContext GetMockExceptionContext<TC>(Exception exception, DnControladorBase controller)
         {
             var context = MockHttpControllerContextFactory.Create();
             return new ExceptionContext(context, new List<IFilterMetadata>()) { Exception = exception };

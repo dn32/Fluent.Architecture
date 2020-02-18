@@ -1,11 +1,10 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Dn System">
-//     Copyright © Dn System. All rights reserved.
+// <copyright company="DnControlador System">
+//     Copyright © DnControlador System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
 
-using dn32.infra.controladores;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -18,7 +17,7 @@ namespace dn32.infra.Test.Mock
 {
     public static class MockActionExecutedContextFactory
     {
-        public static ActionExecutedContext Create(ControladorBase controller)
+        public static ActionExecutedContext Create(DnControladorBase controller)
         {
             var actionContext = new ActionContext(
                       new DefaultHttpContext(),

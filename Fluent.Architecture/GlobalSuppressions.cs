@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Dn System">
-//     Copyright © Dn System. All rights reserved.
+// <copyright company="DnControlador System">
+//     Copyright © DnControlador System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -32,7 +32,7 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1819:Propriedades should not return arrays", Justification = "<Pending>", Scope = "member", Target = "~P:dn32.infra.Exceptions.ValidationException.DnValidationException.Values")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "<Pending>", Scope = "member", Target = "~M:dn32.infra.Util.AutenticationUtil.GenerateToken(System.Int32,System.Int32)~System.String")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>", Scope = "member", Target = "~M:dn32.infra.Setup.InternalInitialize")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>", Scope = "member", Target = "~M:dn32.infra.Setup.LoadAssemblies~System.Collections.Generic.List{System.Tipo[]}")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>", Scope = "member", Target = "~M:dn32.infra.Setup.LoadAssemblies~System.Collections.Generic.Listar{System.Tipo[]}")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1040:Avoid empty interfaces", Justification = "<Pending>", Scope = "type", Target = "~T:dn32.infra.Nucleo.Interfaces.ITransactionlRepository")]
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", MessageId = "TraceManager.Publish(System.String,TraceMessageTypes)")]

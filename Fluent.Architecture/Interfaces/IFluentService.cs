@@ -6,7 +6,7 @@
 //{
 //    public interface IDnService
 //    {
-//        List<TO> ListSelect<TO>(IDnSpecification<TO> spec, DnPagination pagination = null);
+//        Listar<TO> ListSelect<TO>(IDnSpecification<TO> spec, DnPagination pagination = null);
 
 //        /// <summary>
 //        /// Executa uma solicitação baseada em uma especificação e retorna uma lista paginada de resultados.
@@ -20,7 +20,7 @@
 //        /// <returns>
 //        /// A lista paginada de resultados.
 //        /// </returns>
-//        //List<T> List(IDnSpecification spec, DnPagination pagination = null);
+//        //Listar<T> Listar(IDnSpecification spec, DnPagination pagination = null);
 
 //        /// <summary>
 //        /// Executa uma solicitação baseada em uma especificação e retorna um resultado ou nulo quando a consulta não é satisfeita.
@@ -79,7 +79,7 @@
 //        int Count();
 
 //        // Todo2 documentar
-//        void RemoveRange(IDnSpecification spec);
+//        void RemoverLista(IDnSpecification spec);
 
 //        /// <summary>
 //        /// Avalia se um item existe no banco de dados, baseado em uma especificação.
@@ -100,7 +100,7 @@
 //        //// <param Nome = "entities" >
 //        //// Itens a serem adicionados.
 //        //// </param>
-//        //void AddRange(params T[] entities);
+//        //void AdicionarLista(params T[] entities);
 
 //        //// <summary>
 //        //// Adiciona um item ao banco de dados.
@@ -108,7 +108,7 @@
 //        //// <param Nome = "entity" >
 //        //// Item a ser adicionado.
 //        //// </param>
-//        //T Add(T entity);
+//        //T Adicionar(T entity);
 
 //        ////Todo2 documentar
 //        //T Find(T entity);
@@ -119,17 +119,17 @@
 //        //// <param Nome = "entity" >
 //        //// Entidade a ser atualizada com o identificador preenchido.
 //        //// </param>
-//        //T Update(T entity);
+//        //T Atualizar(T entity);
 
 //        //// <summary>
-//        //// Remove um item do banco de dados baseado em seu identificador.
+//        //// Remover um item do banco de dados baseado em seu identificador.
 //        //// </summary>
 //        //// <param Nome = "entity" >
 //        //// Entidade a ser removida.
 //        //// </param>
-//        //T Remove(T entity);
+//        //T Remover(T entity);
 
 //        ////Todo2 documentar
-//        //void RemoveRange(params T[] entities);
+//        //void RemoverLista(params T[] entities);
 //    }
 //}

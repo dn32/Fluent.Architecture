@@ -30,9 +30,9 @@ namespace dn32.infra.Extensoes
         //    return propInfo;
         //}
 
-        //public static List<Tuple<string, Tipo>> ValideExpression<T>(Expression<Func<T, object>> par, bool valide = true) where T : BaseEntity, new()
+        //public static Listar<Tuple<string, Tipo>> ValideExpression<T>(Expression<Func<T, object>> par, bool valide = true) where T : BaseEntity, new()
         //{
-        //    var listaDepropriedades = new List<Tuple<string, Tipo>>();
+        //    var listaDepropriedades = new Listar<Tuple<string, Tipo>>();
         //    var membros = ((NewExpression)par.Body).Members as IReadOnlyCollection<MemberInfo>;
         //    var typeOriginal = typeof(T);
 
@@ -69,7 +69,7 @@ namespace dn32.infra.Extensoes
         //            typeOriginal = propriedade.PropertyType;
         //        }
 
-        //        listaDepropriedades.Add(new Tuple<string, Tipo>(nomeConcatenadoDasPropriedades, typeInformado));
+        //        listaDepropriedades.Adicionar(new Tuple<string, Tipo>(nomeConcatenadoDasPropriedades, typeInformado));
         //    }
 
         //    return listaDepropriedades;

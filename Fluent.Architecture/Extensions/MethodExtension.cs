@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright company="Dn System">
-//     Copyright © Dn System. All rights reserved.
+// <copyright company="DnControlador System">
+//     Copyright © DnControlador System. All rights reserved.
 //     TODOS OS DIREITOS RESERVADOS.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -19,10 +19,10 @@ namespace dn32.infra.Extensoes
     public static class MethodExtension
     {
         /// <summary>
-        /// Obtém o nome amigável de um método. Exemplo Add(User user)
+        /// Obtém o nome amigável de um método. Exemplo Adicionar(User user)
         /// </summary>
         /// <param Nome="method">Método a ser tratado.</param>
-        /// <param Nome="showParameterName">Se deseja mostrar o nome dos parâmetros. Exemplo com true: Add(User user). Exemplo com false: Add(User)</param>
+        /// <param Nome="showParameterName">Se deseja mostrar o nome dos parâmetros. Exemplo com true: Adicionar(User user). Exemplo com false: Adicionar(User)</param>
         /// <returns>O nome amigável do método.</returns>
         public static string GetFriendlyName(this MethodBase method, bool showParameterName = false)
         {

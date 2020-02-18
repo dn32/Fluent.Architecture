@@ -23,7 +23,7 @@ namespace dn32.infra.Test.Mock
         //protected HttpRequest InitializeHttpRequest()
         //{
         //    var httpRequest = base.InitializeHttpRequest();
-        //    if (Headers != null) { foreach (var header in Headers) { httpRequest.Headers.Add(header); } }
+        //    if (Headers != null) { foreach (var header in Headers) { httpRequest.Headers.Adicionar(header); } }
         //    return httpRequest;
         //}
     }

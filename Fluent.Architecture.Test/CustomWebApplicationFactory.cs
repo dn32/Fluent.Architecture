@@ -1,6 +1,6 @@
 ﻿//// -----------------------------------------------------------------------
-//// <copyright company="Dn System">
-////     Copyright © Dn System. All rights reserved.
+//// <copyright company="DnControlador System">
+////     Copyright © DnControlador System. All rights reserved.
 ////     TODOS OS DIREITOS RESERVADOS.
 //// </copyright>
 //// -----------------------------------------------------------------------
@@ -64,7 +64,7 @@
 //                    //    .AddEntityFrameworkInMemoryDatabase()
 //                    //    .BuildServiceProvider();
 
-//                    //// Add a database context (ApplicationDbContext) using an in-memory 
+//                    //// Adicionar a database context (ApplicationDbContext) using an in-memory 
 //                    //// database for testing.
 //                    //services.AddDbContext<ApplicationDbContext>((options, context) =>
 //                    //{

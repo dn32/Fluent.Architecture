@@ -1,34 +1,28 @@
 ﻿using dn32.infra.Factory;
-using dn32.infra.Services;
 using dn32.infra.Specifications;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using dn32.infra.dados;
 
-namespace dn32.infra.controladores
+namespace dn32.infra.nucleo.controladores
 {
-    /// <inheritdoc />
-    /// <summary>
-    /// Controlador genérico padrão recomendado para herança por todos os controladores que tiverem entidade.
-    /// </summary>
-    /// <typeparam Nome="T">O tipo da entidade do controller.</typeparam>
-    public abstract partial class Dn<T> : DnService<Services.DnService<T>> where T : EntidadeBase
+    public abstract class DnControlador<T> : DnControladorDeServico<Services.DnService<T>> where T : EntidadeBase
     {
-        protected T2 CreateSpec<T2>() where T2 : BaseSpecification
+        protected T2 CriarEspecificacao<T2>() where T2 : BaseSpecification
         {
-            return SpecFactory.Create<T2>(Service);
+            return SpecFactory.Create<T2>(this.Servico);
         }
 
         [NonAction]
-        protected override void Dispose(bool disposing)
+        protected override void Dispose(bool finalizando)
         {
-            base.Dispose(disposing);
+            base.Dispose(finalizando);
         }
 
         [NonAction]
         public new Type GetType()
         {
-            return GetType();
+            return base.GetType();
         }
 
         [NonAction]
