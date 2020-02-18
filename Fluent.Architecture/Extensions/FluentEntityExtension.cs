@@ -98,7 +98,7 @@ namespace Fluente.Arquitetura.Extensoes
 
         public static List<PropertyInfo> GetFluenteUniqueKeyProperties(this Type entityType)
         {
-            return entityType?.GetProperties()?.Where(x => x.GetCustomAttributeAny<FluenteUniqueKeyAttribute>(true))?.ToList();
+            return entityType?.GetProperties()?.Where(x => x.IsDefined(typeof(FluenteUniqueKeyAttribute), true))?.ToList();
         }
 
         public static List<PropertyInfo> GetKeyAndFluenteUniqueKeyProperties(this Type entityType)

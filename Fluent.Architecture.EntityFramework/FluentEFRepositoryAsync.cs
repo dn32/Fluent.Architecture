@@ -284,7 +284,7 @@ namespace Fluente.Arquitetura.EntityFramework
             var type = entity.GetType();
             if (type.GetCustomAttribute<FluenteJsonFormAttribute>()?.IsIntermediateTable == true) { return; }
 
-            var compositionProperties = type.GetProperties().Where(x => x.GetCustomAttributeAny<FluenteCompositionAttribute>() || x.GetCustomAttributeAny<FluenteManyToManyAggregationAttribute>());
+            var compositionProperties = type.GetProperties().Where(x => x.IsDefined(typeof(FluenteCompositionAttribute)) || x.IsDefined(typeof(FluenteManyToManyAggregationAttribute)));
             foreach (var compositionProperty in compositionProperties)
             {
                 var compositionPropertyType = compositionProperty.PropertyType;

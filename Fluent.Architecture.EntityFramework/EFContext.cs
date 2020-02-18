@@ -60,7 +60,7 @@ namespace Fluente.Arquitetura.EntityFramework
             var exportedTypes = Setup.Model.Values.ToList();
             foreach (var type in exportedTypes)
             {
-                if (type.GetCustomAttributeAny<NotMappedAttribute>(false) || type.IsAbstract)
+                if (type.IsDefined(typeof(NotMappedAttribute),false) || type.IsAbstract)
                 {
                     continue;
                 }
@@ -91,7 +91,7 @@ namespace Fluente.Arquitetura.EntityFramework
                             continue;
                         }
 
-                        if (property.GetCustomAttributeAny<NotMappedAttribute>(true))
+                        if (property.IsDefined(typeof(NotMappedAttribute),true))
                         {
                             entity.Ignore(property.Name);
                             continue;
@@ -107,7 +107,7 @@ namespace Fluente.Arquitetura.EntityFramework
                             }
                             else
                             {
-                                if (!property.PropertyType.GetListTypeNonNull().GetCustomAttributeAny<FluenteUseEnumValueToDBAttribute>())
+                                if (!property.PropertyType.GetListTypeNonNull().IsDefined(typeof(FluenteUseEnumValueToDBAttribute)))
                                 {
                                     entity.Property(property.Name).HasConversion<string>();// Converte os enumeradores para salvar o valor string no BD
                                 }
@@ -128,7 +128,7 @@ namespace Fluente.Arquitetura.EntityFramework
             {
                 ValueConverter converter = null;
 
-                if (property.PropertyType.GetListTypeNonNull().GetCustomAttributeAny<FluenteUseEnumValueToDBAttribute>())
+                if (property.PropertyType.GetListTypeNonNull().IsDefined(typeof(FluenteUseEnumValueToDBAttribute)))
                 {
                     converter = new ValueConverter<TEnum, int?>(v => v.GetHashCode() == fluentEnumValueForSetNullAttribute.Value ? null : (int?)v.GetHashCode(), v => (TEnum)Enum.ToObject(typeof(TEnum), v ?? 0));
                 }
@@ -141,7 +141,7 @@ namespace Fluente.Arquitetura.EntityFramework
             }
             else
             {
-                if (!property.PropertyType.GetListTypeNonNull().GetCustomAttributeAny<FluenteUseEnumValueToDBAttribute>())
+                if (!property.PropertyType.GetListTypeNonNull().IsDefined(typeof(FluenteUseEnumValueToDBAttribute)))
                 {
                     entity.Property(property.Name).HasConversion<string>();// Converte os enumeradores para salvar o valor string no BD
                 }
@@ -181,7 +181,6 @@ namespace Fluente.Arquitetura.EntityFramework
 
         protected virtual void UpdateLogicalDeletion(IEnumerable<EntityEntry> entries)
         {
-            var entities = entries.ToList();
         }
 
         protected virtual LambdaExpression IsAvailable()

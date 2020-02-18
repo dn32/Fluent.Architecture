@@ -60,7 +60,7 @@ namespace Fluente.Arquitetura.Controllers
         protected async Task<ResultadoPadraoPaginado<T>> ResultAsync<T>(T data, FluentePaginacao pagination)
         {
             await CloseTransactionAsync();
-            data = (T)data.FluenteResultOrValue();
+            data = (T)data.FluenteResuladoOuValor();
             return new ResultadoPadraoPaginado<T>(data, pagination);
         }
 
@@ -68,7 +68,7 @@ namespace Fluente.Arquitetura.Controllers
         protected async Task<ResultadoPasdraoPaginadoComTermo<T>> ResultAsync<T>(T data, FluentePaginacao pagination, string term)
         {
             await CloseTransactionAsync();
-            data = (T)data.FluenteResultOrValue();
+            data = (T)data.FluenteResuladoOuValor();
             return new ResultadoPasdraoPaginadoComTermo<T>(data, pagination, term);
         }
 

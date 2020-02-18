@@ -57,7 +57,7 @@ namespace Fluente.Arquitetura.Extensoes
 
         public static bool IsKey(this MemberInfo info)
         {
-            return info.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || info.GetCustomAttributeAny<KeyAttribute>(true);
+            return info.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase) || info.IsDefined(typeof(KeyAttribute), true);
         }
 
         //public static bool GetCustomAttributeAny<T>(this Type type, bool inherit = false) where T : Attribute
@@ -385,10 +385,10 @@ namespace Fluente.Arquitetura.Extensoes
             attr.ConditionalFluenteUIOperations = property.GetCustomAttributes<FluenteOperacaoDeCondicionalDeTelaAttribute>();
             attr.FluenteAggregation = property.GetCustomAttribute<FluenteManyToManyAggregationAttribute>(true) ?? property.GetCustomAttribute<FluenteAggregationAttribute>(true);
             attr.FluenteComposition = property.GetCustomAttribute<FluenteCompositionAttribute>(true);
-            attr.IsKey = property.GetCustomAttributeAny<KeyAttribute>();
-            attr.IsFluenteUniqueKeyKey = property.GetCustomAttributeAny<FluenteUniqueKeyAttribute>();
+            attr.IsKey = property.IsDefined(typeof(KeyAttribute));
+            attr.IsFluenteUniqueKeyKey = property.IsDefined(typeof(FluenteUniqueKeyAttribute));
             attr.IsList = property.PropertyType.IsList();
-            attr.required = attr.required || property.GetCustomAttributeAny<RequiredAttribute>(true);
+            attr.required = attr.required || property.IsDefined(typeof(RequiredAttribute), true);
             attr.IsNullable = (property.PropertyType.IsOfNullableType() && !attr.required);
             attr.Type = property.PropertyType.GetNonNullableType();
             attr.Property = property;
@@ -398,7 +398,7 @@ namespace Fluente.Arquitetura.Extensoes
                 attr.max = property.PropertyType.GetMaxValueOfNumber().FluenteCast<double>();
             }
 
-            if (property.GetCustomAttributeAny<JsonIgnoreAttribute>())
+            if (property.IsDefined(typeof(JsonIgnoreAttribute)))
             {
                 attr.form = EnumTipoDeComponenteDeFormularioDeTela.Nenhum;
             }
@@ -465,7 +465,7 @@ namespace Fluente.Arquitetura.Extensoes
                     attr.FluenteComposition.Form = GetFluenteJsonSchema(property.PropertyType, tablet);
                 }
 
-                if (property.GetCustomAttributeAny<RequiredAttribute>() || property.GetCustomAttributeAny<FluenteRequiredAttribute>())
+                if (property.IsDefined(typeof(RequiredAttribute)) || property.IsDefined(typeof(FluenteRequiredAttribute)))
                 {
                     attr.required = true;
                 }

@@ -69,7 +69,7 @@ namespace Fluente.Arquitetura.Validation
             var properties = entity.GetType().GetProperties().ToList();
             foreach (var property in properties)
             {
-                if (property.GetCustomAttributeAny<FluenteRandomKeyValueOnAddAttribute>(true)) { continue; }
+                if (property.IsDefined(typeof(FluenteRandomKeyValueOnAddAttribute), true)) { continue; }
                 if (!string.IsNullOrWhiteSpace(compositionProperty))
                 {
                     if (property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.form == EnumTipoDeComponenteDeFormularioDeTela.Hidden)
@@ -143,7 +143,7 @@ namespace Fluente.Arquitetura.Validation
 
             foreach (var property in properties)
             {
-                if (property.GetCustomAttributeAny<FluenteRandomKeyValueOnAddAttribute>(true)) { continue; }
+                if (property.IsDefined(typeof(FluenteRandomKeyValueOnAddAttribute), true)) { continue; }
                 if (!string.IsNullOrWhiteSpace(compositionProperty))
                 {
                     if (property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.form == EnumTipoDeComponenteDeFormularioDeTela.Hidden)
@@ -166,7 +166,7 @@ namespace Fluente.Arquitetura.Validation
             var properties = entity.GetType().GetKeyProperties();
             foreach (var property in properties)
             {
-                if (property.GetCustomAttributeAny<FluenteRandomKeyValueOnAddAttribute>(true)) { continue; }
+                if (property.IsDefined(typeof(FluenteRandomKeyValueOnAddAttribute), true)) { continue; }
                 if (!string.IsNullOrWhiteSpace(compositionProperty))
                 {
                     if (property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.form == EnumTipoDeComponenteDeFormularioDeTela.Hidden)
@@ -206,7 +206,7 @@ namespace Fluente.Arquitetura.Validation
                         return;
                     }
 
-                    if (property.GetCustomAttributeAny<FluenteRandomKeyValueOnAddAttribute>(true)) { return; }
+                    if (property.IsDefined(typeof(FluenteRandomKeyValueOnAddAttribute), true)) { return; }
                     if (!string.IsNullOrWhiteSpace(compositionProperty))
                     {
                         if (property.GetCustomAttribute<FluenteJsonPropertyAttribute>(true)?.form == EnumTipoDeComponenteDeFormularioDeTela.Hidden)

@@ -28,7 +28,7 @@ namespace Fluente.Arquitetura.Validation
 
             if (entity != null)
             {
-                var properties = entity.GetType().GetProperties().ToList().Where(x => x.GetCustomAttributeAny<FluenteCompositionAttribute>()).ToList();
+                var properties = entity.GetType().GetProperties().ToList().Where(x => x.IsDefined(typeof(FluenteCompositionAttribute))).ToList();
                 foreach (var property in properties)
                 {
                     var entityCompositionValue = property.GetValue(entity);

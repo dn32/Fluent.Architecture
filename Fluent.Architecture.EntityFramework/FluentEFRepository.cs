@@ -103,7 +103,7 @@ namespace Fluente.Arquitetura.EntityFramework
         */
         protected async Task UpdateCompositionListAsync(TE entity, bool isUpdate)
         {
-            var compositionProperties = entity.GetType().GetProperties().Where(x => x.GetCustomAttributeAny<FluenteCompositionAttribute>());
+            var compositionProperties = entity.GetType().GetProperties().Where(x => x.IsDefined(typeof(FluenteCompositionAttribute)));
             foreach (var compositionProperty in compositionProperties)
             {
                 var attr = compositionProperty.GetCustomAttribute<FluenteCompositionAttribute>();
@@ -190,7 +190,7 @@ namespace Fluente.Arquitetura.EntityFramework
                         else
                         { // Tem no bd e precisa ser atualizado
 
-                            var keyProperties = currentEntity.GetType().GetProperties().Where(x => x.GetCustomAttributeAny<KeyAttribute>()).ToList();
+                            var keyProperties = currentEntity.GetType().GetProperties().Where(x => x.IsDefined(typeof(KeyAttribute))).ToList();
                             foreach (var p in keyProperties)
                             {
                                 var value = p.GetValue(currentEntity);
@@ -288,7 +288,7 @@ namespace Fluente.Arquitetura.EntityFramework
         private async Task CompleteEmptyKeysAsync(object compositionValue)
         {
             if (compositionValue == null) { return; }
-            var keyPoroperties = compositionValue.GetType().GetProperties().Where(x => x.GetCustomAttributeAny<FluenteRandomKeyValueOnAddAttribute>()).ToList();
+            var keyPoroperties = compositionValue.GetType().GetProperties().Where(x => x.IsDefined(typeof(FluenteRandomKeyValueOnAddAttribute))).ToList();
             //Todo - Permitir esse atributo somente em tipos primitivos
             foreach (var property in keyPoroperties)
             {

@@ -1,8 +1,8 @@
 ﻿using Fluent.Architecture.Test;
+using Fluente.Arquitetura.Test;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using NUnit.Framework;
-using SimpleHelloWorld;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-internal class InternalUserTestBase : FluentTest<User>
+internal class InternalUserTestBase : FluenteTest<User>
 {
     public class APIWebApplicationFactory : WebApplicationFactory<SimpleHelloWorld.Startup>
     {

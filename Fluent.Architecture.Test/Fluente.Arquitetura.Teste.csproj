@@ -6,8 +6,6 @@
     <LangVersion>8</LangVersion>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
     <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
-    <AssemblyName>Fluente.Arquitetura.Teste</AssemblyName>
-    <RootNamespace>Fluente.Arquitetura.Teste</RootNamespace>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Fluente.Arquitetura.Teste.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>

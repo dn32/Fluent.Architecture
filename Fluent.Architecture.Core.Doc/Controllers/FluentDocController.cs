@@ -194,12 +194,12 @@ namespace Fluente.Arquitetura.Nucleo.Doc.Controllers
 
         private EnumParameterSouce GetParameterSource(ParameterInfo parameterInfo, int orderMethod)
         {
-            if (parameterInfo.GetCustomAttributeAny<FromQueryAttribute>()) { return EnumParameterSouce.Query; }
-            if (parameterInfo.GetCustomAttributeAny<FromBodyAttribute>()) { return EnumParameterSouce.Body; }
-            if (parameterInfo.GetCustomAttributeAny<FromFormAttribute>()) { return EnumParameterSouce.Form; }
-            if (parameterInfo.GetCustomAttributeAny<FromRouteAttribute>()) { return EnumParameterSouce.Route; }
-            if (parameterInfo.GetCustomAttributeAny<FromHeaderAttribute>()) { return EnumParameterSouce.Header; }
-            if (parameterInfo.GetCustomAttributeAny<FromServicesAttribute>()) { return EnumParameterSouce.Service; }
+            if (parameterInfo.IsDefined(typeof(FromQueryAttribute))) { return EnumParameterSouce.Query; }
+            if (parameterInfo.IsDefined(typeof(FromBodyAttribute))) { return EnumParameterSouce.Body; }
+            if (parameterInfo.IsDefined(typeof(FromFormAttribute))) { return EnumParameterSouce.Form; }
+            if (parameterInfo.IsDefined(typeof(FromRouteAttribute))) { return EnumParameterSouce.Route; }
+            if (parameterInfo.IsDefined(typeof(FromHeaderAttribute))) { return EnumParameterSouce.Header; }
+            if (parameterInfo.IsDefined(typeof(FromServicesAttribute))) { return EnumParameterSouce.Service; }
             if (orderMethod == 2 || orderMethod == 3) { return EnumParameterSouce.Body; } else return EnumParameterSouce.Query;
         }
 

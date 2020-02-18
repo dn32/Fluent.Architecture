@@ -89,7 +89,7 @@ namespace Fluente.Arquitetura.Extensoes
 
             if (value.GetType().IsNullableEnum())
             {
-                if (value.GetType().GetCustomAttributeAny<FluenteUseEnumValueToDBAttribute>())
+                if (value.GetType().IsDefined(typeof(FluenteUseEnumValueToDBAttribute)))
                 {
                     return (int)value;
                 }
