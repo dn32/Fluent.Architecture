@@ -44,7 +44,7 @@ namespace dn32.infra.Extensoes
 
         //        var nomeConcatenadoDasPropriedades = string.Empty;
 
-        //        for (int i = 0; i < propriedades.Count(); i++)
+        //        for (int i = 0; i < propriedades.Quantidade(); i++)
         //        {
         //            var nome = propriedades[i];
         //            nomeConcatenadoDasPropriedades += string.IsNullOrEmpty(nomeConcatenadoDasPropriedades) ? nome : "." + nome;
@@ -58,7 +58,7 @@ namespace dn32.infra.Extensoes
 
         //                throw new Exception($"Não foi encontrado uma property com caminho {nomeConcatenadoDasPropriedades} no type {typeOriginal.Name}. Confira o elemento {nomeDoParametro}, pois é provável que esteja escrito incorretamente.");
         //            }
-        //            if (propriedades.Count() == i + 1)
+        //            if (propriedades.Quantidade() == i + 1)
         //            {
         //                if (propriedade.PropertyType != typeInformado)
         //                {
@@ -88,14 +88,14 @@ namespace dn32.infra.Extensoes
         //    var valueOriginal = p;
         //    var nomeConcatenadoDaspropriedades = string.Empty;
 
-        //    for (int i = 0; i < propriedades.Count(); i++)
+        //    for (int i = 0; i < propriedades.Quantidade(); i++)
         //    {
         //        var nome = propriedades[i];
         //        nomeConcatenadoDaspropriedades += string.IsNullOrEmpty(nomeConcatenadoDaspropriedades) ? nome : "." + nome;
         //        var propriedade = typeOriginal.GetProperty(nome);
         //        valueOriginal = propriedade.GetValue(valueOriginal);
 
-        //        if (propriedades.Count() == i + 1)
+        //        if (propriedades.Quantidade() == i + 1)
         //        {
         //            typeDaPropriedade = propriedade.PropertyType;
         //            return valueOriginal;

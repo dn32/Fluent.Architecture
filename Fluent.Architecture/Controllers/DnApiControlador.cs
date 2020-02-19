@@ -17,55 +17,46 @@ namespace dn32.infra.nucleo.controladores
     [ApiController] // Nunca defina como abstrato, pois o controle de log espera essa classe como concreta
     public partial class DnApiControlador<T> : DnControlador<T> where T : DnEntidade, new()
     {
-        #region ANOTHER
+        [HttpGet]
+        public virtual T Exemplo() => typeof(T).GetExampleValue() as T;
 
         [HttpGet]
-        [Description("Get an example of the item")]
-        public virtual T ExampleData()
-        {
-            return typeof(T).GetExampleValue() as T;
-        }
-
-        [HttpGet]
-        [Description("Get total amount of items")]
-        public virtual async Task<ResultadoPadrao<int>> Count()
-        {
-            return await this.CrieResultadoAsync<int>(await this.Servico.CountAsync());
-        }
+        public virtual async Task<ResultadoPadrao<int>> Quantidade() =>
+            await this.CrieResultadoAsync(await this.Servico.CountAsync());
 
         [HttpPost]
-        [Description("Get the number of items based on filters")]
-        public virtual async Task<ResultadoPadrao<int>> CountByFilter([FromBody, Description("The filters to apply to the query")] Filtro[] Filters)
+        public virtual async Task<ResultadoPadrao<int>> QuantidadePorFiltro([FromBody] Filtro[] filtros)
         {
-            var spec = this.CriarEspecificacao<DnFilterSpec<T>>().SetParameter(Filters, ehLista: true);
-            return await this.CrieResultadoAsync<int>(await this.Servico.CountAsync(spec));
+            var especificacao = this.CriarEspecificacaoDeFiltros(filtros, true);
+            var quantidade = await this.Servico.CountAsync(especificacao);
+            return await this.CrieResultadoAsync(quantidade);
         }
 
         [HttpGet]
-        [Route("/api/[controller]/ExistsByEntity")]
-        [Description("Checks if an entity exists based on filters")]
-        public virtual async Task<ResultadoPadrao<bool>> ExistsByEntityGet([FromQuery, Description("The entity that wants to check for existence")] T Entity)
-        {
-            return await this.CrieResultadoAsync<bool>(await this.Servico.ExistsAsync(Entity));
-        }
+        [Route("/api/[controller]/EntidadeExiste")]
+        public virtual async Task<ResultadoPadrao<bool>> EntidadeExisteGet([FromQuery] T entidade) =>
+             await this.CrieResultadoAsync(await this.Servico.ExistsAsync(entidade));
 
         [HttpPost]
-        [Route("/api/[controller]/ExistsByEntity")]
-        [Description("Checks if an item exists based on their identifiers")]
-        public virtual async Task<ResultadoPadrao<bool>> ExistsByEntityPost([FromBody, Description("The entity that wants to check for existence")] T Entity)
-        {
-            return await this.CrieResultadoAsync<bool>(await this.Servico.ExistsAsync(Entity));
-        }
+        [Route("/api/[controller]/EntidadeExiste")]
+        public virtual async Task<ResultadoPadrao<bool>> EntidadeExistePost([FromBody] T entidade) =>
+             await this.CrieResultadoAsync<bool>(await this.Servico.ExistsAsync(entidade));
 
         [HttpGet]
-        [Description("Get item type schema")]
-        public virtual string JsonForm([Description("If you want to generate a tablet layout")] bool Tablet = false)
-        {
-            return typeof(T).GetDnJsonSchema(Tablet).SerializarParaDnJson();
-        }
+        public virtual string Formulario(bool ehTablet = false) =>
+             typeof(T).GetDnJsonSchema(ehTablet).SerializarParaDnJson();
+
+
+
+
+
+
+
+
+
+        #region Importação
 
         [HttpGet]
-        [Description("Get data import template")]
         public ActionResult ImportationTemplate(EnumTipoDeTemplate type, int addExample = 0)
         {
             using var workbook = DataImportationUtil.ImportationTemplateXLSX<T>(addExample);

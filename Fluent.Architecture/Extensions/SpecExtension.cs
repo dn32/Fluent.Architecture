@@ -85,19 +85,19 @@ namespace dn32.infra.Extensoes
         //    return service.AdicionarLista(entities);
         //}
 
-        //public static int Count<TO>(this TransactionalService service, IDnSpecification<TO> spec)
+        //public static int Quantidade<TO>(this TransactionalService service, IDnSpecification<TO> spec)
         //{
-        //    return service.Count(spec);
+        //    return service.Quantidade(spec);
         //}
 
-        ////public static int Count(this TransactionalService service)
+        ////public static int Quantidade(this TransactionalService service)
         ////{
-        ////    return service.Count(spec);
+        ////    return service.Quantidade(spec);
         ////}
 
-        //public static int Count(this TransactionalService service, IDnSpecification spec)
+        //public static int Quantidade(this TransactionalService service, IDnSpecification spec)
         //{
-        //    return spec.Count();
+        //    return spec.Quantidade();
         //}
 
 

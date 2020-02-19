@@ -50,7 +50,7 @@ namespace dn32.infra.Test
         public virtual bool Exists(TModel model)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<nucleo.controladores.DnApiControlador<TModel>, bool>(newController, (nucleo.controladores.DnApiControlador<TModel> controller) => controller.ExistsByEntityGet(model).Result);
+            return TestUtil.Execute<nucleo.controladores.DnApiControlador<TModel>, bool>(newController, (nucleo.controladores.DnApiControlador<TModel> controller) => controller.EntidadeExisteGet(model).Result);
         }
 
         public virtual TModel[] AddRange(TModel[] models)
@@ -73,13 +73,13 @@ namespace dn32.infra.Test
         public virtual int Count()
         {
             var newController = GetNewController();
-            return TestUtil.Execute<nucleo.controladores.DnApiControlador<TModel>, int>(newController, (nucleo.controladores.DnApiControlador<TModel> controller) => controller.Count().Result);
+            return TestUtil.Execute<nucleo.controladores.DnApiControlador<TModel>, int>(newController, (nucleo.controladores.DnApiControlador<TModel> controller) => controller.Quantidade().Result);
         }
 
         public virtual int Count(Filtro[] filters)
         {
             var newController = GetNewController();
-            return TestUtil.Execute<nucleo.controladores.DnApiControlador<TModel>, int>(newController, (nucleo.controladores.DnApiControlador<TModel> controller) => controller.CountByFilter(filters).Result);
+            return TestUtil.Execute<nucleo.controladores.DnApiControlador<TModel>, int>(newController, (nucleo.controladores.DnApiControlador<TModel> controller) => controller.QuantidadePorFiltro(filters).Result);
         }
 
         public virtual bool UpdateRange(TModel[] models)

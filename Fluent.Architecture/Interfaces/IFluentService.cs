@@ -73,10 +73,10 @@
 //        /// <returns>
 //        /// A quantidade de itens.
 //        /// </returns>
-//        int Count(IDnSpecification spec);
+//        int Quantidade(IDnSpecification spec);
 
 //        // Todo2 documentar
-//        int Count();
+//        int Quantidade();
 
 //        // Todo2 documentar
 //        void RemoverLista(IDnSpecification spec);
