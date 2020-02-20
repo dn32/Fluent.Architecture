@@ -41,9 +41,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 Núcleos", "01 Núcleos", "{0EBABE71-7A0B-4253-BC8A-51E338F9EAA6}"
-	ProjectSection(SolutionItems) = preProject
-		Fluent.Architecture\atributosX\DnPropriedadeJsonAtributo.cs = Fluent.Architecture\atributosX\DnPropriedadeJsonAtributo.cs
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 BD e Doc", "02 BD e Doc", "{F1AE78C0-4894-4D1C-9A02-AB71E94306F7}"
 EndProject

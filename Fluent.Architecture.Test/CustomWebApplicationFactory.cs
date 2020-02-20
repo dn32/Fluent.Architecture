@@ -95,7 +95,7 @@
 //                    //    catch (Exception ex)
 //                    //    {
 //                    //        logger.LogError(ex, "An error occurred seeding the " +
-//                    //            "database with test messages. Error: {Message}", ex.Message);
+//                    //            "database with test messages. Error: {Mensagem}", ex.Mensagem);
 //                    //    }
 //                    //}
 //                });

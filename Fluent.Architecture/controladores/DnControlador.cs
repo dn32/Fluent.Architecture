@@ -3,45 +3,30 @@ using dn32.infra.Specifications;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using dn32.infra.dados;
+using dn32.infra.Services;
 
 namespace dn32.infra.nucleo.controladores
 {
-    public abstract class DnControlador<T> : DnControladorDeServico<Services.DnService<T>> where T : EntidadeBase
+    public abstract class DnControlador<T> : DnControladorDeServico<DnService<T>> where T : EntidadeBase
     {
-        protected T2 CriarEspecificacao<T2>() where T2 : BaseSpecification
-        {
-            return SpecFactory.Create<T2>(this.Servico);
-        }
+        protected T2 CriarEspecificacao<T2>() where T2 : BaseSpecification 
+            => SpecFactory.Create<T2>(this.Servico);
 
         [NonAction]
-        protected override void Dispose(bool finalizando)
-        {
-            base.Dispose(finalizando);
-        }
+        protected override void Dispose(bool finalizando) => base.Dispose(finalizando);
 
         [NonAction]
-        public new Type GetType()
-        {
-            return base.GetType();
-        }
+        public new Type GetType() => base.GetType();
 
         [NonAction]
-        public override string ToString()
-        {
-            return base.ToString();
-        }
+        public override string ToString() => base.ToString();
+
 
         [NonAction]
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
+        public override bool Equals(object obj) => base.Equals(obj);
 
         [NonAction]
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        public override int GetHashCode() => base.GetHashCode();
     }
 }
 

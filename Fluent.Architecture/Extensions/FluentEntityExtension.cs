@@ -1,4 +1,4 @@
-﻿using dn32.infra.Exceptions;
+﻿using dn32.infra.nucleo.excecoes;
 using dn32.infra.Nucleo.Extensoes;
 using dn32.infra.Nucleo.Models;
 using Newtonsoft.Json;
@@ -184,13 +184,13 @@ namespace dn32.infra.Extensoes
                     var destinalKeyProperty = destinalType.GetProperty(externalKey);
                     if (destinalKeyProperty == null)
                     {
-                        throw new IncorrectDevelopmentException($"Entidade {entity.GetType().Name} has an incorrectly named foreign key because the Referencia property could not be found in entity {destinalType.Name}. The key in question has the Nome: '{externalKey}'.");
+                        throw new DesenvolvimentoIncorretoException($"Entidade {entity.GetType().Name} has an incorrectly named foreign key because the Referencia property could not be found in entity {destinalType.Name}. The key in question has the Nome: '{externalKey}'.");
                     }
 
                     var localKeylProperty = localType.GetProperty(localKey);
                     if (localKeylProperty == null)
                     {
-                        throw new IncorrectDevelopmentException($"Entidade {localType.Name} has an incorrectly named foreign key because the Referencia property could not be found in entity {localType.Name}. The key in question has the Nome: '{localKey}'.");
+                        throw new DesenvolvimentoIncorretoException($"Entidade {localType.Name} has an incorrectly named foreign key because the Referencia property could not be found in entity {localType.Name}. The key in question has the Nome: '{localKey}'.");
                     }
 
                     var columnName = destinalKeyProperty.GetColumnName();

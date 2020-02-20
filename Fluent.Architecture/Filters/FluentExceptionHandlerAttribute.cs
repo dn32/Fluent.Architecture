@@ -1,4 +1,4 @@
-﻿using dn32.infra.Exceptions.ValidationException;
+﻿using dn32.infra.nucleo.erros_de_validacao;
 using dn32.infra.Nucleo.Inconsistences;
 using dn32.infra.Nucleo.Models;
 using dn32.infra.Validation;
@@ -41,24 +41,24 @@ namespace dn32.infra.Filters
             {
                 var inconsistencies = exception.Inconsistencies.Select(inconsistence =>
                 {
-                    if (inconsistence is DnUiFieldValidationException field)
+                    if (inconsistence is DnCampoDeTelaErroDeValidacao field)
                     {
                         return new DnUiFieldInconsistence
                         {
-                            Field = field.Field,
-                            Message = field.Message,
-                            GlobalizationKey = field.GlobalizationKey,
-                            PropertyName = field.PropertyName,
+                            Field = field.Campo,
+                            Message = field.Mensagem,
+                            ChaveDeGlobalizacao = field.ChaveDeGlobalizacao,
+                            PropertyName = field.NomeDaPropriedade,
                             DnException = inconsistence
                         };
                     }
-                    else if (inconsistence is DnPropertyValidationException prop)
+                    else if (inconsistence is DnPropriedadeErroDeValidacao prop)
                     {
                         return new DnPropertyInconsistence
                         {
-                            Message = prop.Message,
-                            GlobalizationKey = prop.GlobalizationKey,
-                            PropertyName = prop.PropertyName,
+                            Message = prop.Mensagem,
+                            ChaveDeGlobalizacao = prop.ChaveDeGlobalizacao,
+                            PropertyName = prop.NomeDaPropriedade,
                             DnException = inconsistence
                         };
                     }
@@ -66,8 +66,8 @@ namespace dn32.infra.Filters
                     {
                         return new DnInconsistence
                         {
-                            Message = inconsistence.Message,
-                            GlobalizationKey = inconsistence.GlobalizationKey,
+                            Message = inconsistence.Mensagem,
+                            ChaveDeGlobalizacao = inconsistence.ChaveDeGlobalizacao,
                             DnException = inconsistence
                         };
                     }

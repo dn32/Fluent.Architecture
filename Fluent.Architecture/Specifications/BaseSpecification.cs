@@ -1,4 +1,4 @@
-﻿using dn32.infra.Exceptions;
+﻿using dn32.infra.nucleo.excecoes;
 using dn32.infra.Services;
 using System.Linq;
 using dn32.infra.dados;
@@ -29,7 +29,7 @@ namespace dn32.infra.Specifications
         {
             if (Service == null)
             {
-                throw new IncorrectDevelopmentException($"Failed to initialize specification [{GetType().Name}].\nYou must use [CriarEspecificacao] present in the service or controller.");
+                throw new DesenvolvimentoIncorretoException($"Failed to initialize specification [{GetType().Name}].\nYou must use [CriarEspecificacao] present in the service or controller.");
             }
 
             var transactionObjects = Service.TransactionObjects;

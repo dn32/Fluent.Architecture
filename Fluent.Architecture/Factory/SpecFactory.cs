@@ -1,4 +1,4 @@
-﻿using dn32.infra.Exceptions;
+﻿using dn32.infra.nucleo.excecoes;
 using dn32.infra.Services;
 using dn32.infra.Specifications;
 using System;
@@ -17,7 +17,7 @@ namespace dn32.infra.Factory
         {
             if (!(Activator.CreateInstance(typeof(T)) is T ts))
             {
-                throw new IncorrectDevelopmentException($"Failed to initialize specification [{typeof(T).Name}] type with specified constructor parameters not found.");
+                throw new DesenvolvimentoIncorretoException($"Failed to initialize specification [{typeof(T).Name}] type with specified constructor parameters not found.");
             }
 
             ts.SetService(service);

@@ -1,6 +1,5 @@
 ﻿using dn32.infra.dados;
 using dn32.infra.enumeradores;
-using dn32.infra.Exceptions;
 using dn32.infra.extensoes;
 using dn32.infra.Extensoes;
 using dn32.infra.Interfaces;
@@ -24,6 +23,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using dn32.infra.nucleo.excecoes;
 
 [assembly: InternalsVisibleTo(@"dn32.infra.EntityFramework.SqlServer, PublicKey=00240000048000009400000006020000002400005253413100040000010001002d98533364f3b3fbd11e7a3f14cd73d169e1daabd62ba2d1e5bc6a48a9bc709a503960db0e76c190e7a8dcefaed037e539682d6a891b242ddb91a3ab20fbfa0c04fb6304c8903857e1ed75399850fca4037dd2c810749e75770e5d455e950ccb9d06cf6fea5f30b00557a29408ce4c45021c412eca32616f47809bfe2cf404cc")]
 [assembly: InternalsVisibleTo(@"dn32.infra.EntityFramework.PostgreSQL, PublicKey=0024000004800000940000000602000000240000525341310004000001000100192d4ee01ba583399ab1d381c4301592f8520d29c628f3220e1550b2068e540e26886fa8d8b52618553f89fed1dccb18d5d3c07c548fca3c916a10823f411c23ef0e85bf0526ed94aa3cfbdf79a9595861348cfc369670f8ed9f7c4afd08de5f3cd87a0c7c6b1d8a0b94622c163a764813ba95d39dc44ea1baf7b663800a49bc")]
@@ -214,7 +214,7 @@ namespace dn32.infra.EntityFramework
                 var externalProperties = LocalProperty.PropertyType.GetListTypeNonNull().GetProperties();
                 var externalValue = LocalProperty.GetValue(entity);
 
-                if (composition.ChavesExternas == null) throw new IncorrectDevelopmentException(entity.GetType().Name + "- When indicating an aggregation or composition attribute, it is necessary to inform the properties {ChavesExternas}");
+                if (composition.ChavesExternas == null) throw new DesenvolvimentoIncorretoException(entity.GetType().Name + "- When indicating an aggregation or composition attribute, it is necessary to inform the properties {ChavesExternas}");
 
                 for (int i = 0; i < composition.ChavesExternas.Length; i++)
                 {
@@ -467,19 +467,19 @@ namespace dn32.infra.EntityFramework
                 if (spec.DnEntityType != typeof(TE))
                 {
                     var serviceName = $"{spec.DnEntityType.Name}Servico";
-                    throw new IncorrectDevelopmentException($"The type of input reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.DnEntityType}.\r\nRequisition Tipo: {typeof(TE)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
+                    throw new DesenvolvimentoIncorretoException($"The type of input reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.DnEntityType}.\r\nRequisition Tipo: {typeof(TE)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
                 }
 
                 if (spec.DnEntityOutType != typeof(TO))
                 {
                     var serviceName = $"{typeof(TE).Name}Servico";
-                    throw new IncorrectDevelopmentException($"The type of output reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.DnEntityType}.\r\nRequisition Tipo: {typeof(TO)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
+                    throw new DesenvolvimentoIncorretoException($"The type of output reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.DnEntityType}.\r\nRequisition Tipo: {typeof(TO)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
                 }
 
                 return spec as DnSelectSpecification<TE, TO>;
             }
 
-            throw new IncorrectDevelopmentException("The specification is of a different type than expected");
+            throw new DesenvolvimentoIncorretoException("The specification is of a different type than expected");
         }
 
         protected DnSpecification<TE> GetSpec(ISpec spec1)
@@ -489,7 +489,7 @@ namespace dn32.infra.EntityFramework
                 return spec as DnSpecification<TE>;
             }
 
-            throw new IncorrectDevelopmentException("The specification is of a different type than expected");
+            throw new DesenvolvimentoIncorretoException("The specification is of a different type than expected");
         }
 
         // private static string CreateSqlFromKeys(TE entity)

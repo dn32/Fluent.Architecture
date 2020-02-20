@@ -1,5 +1,5 @@
 ﻿using dn32.infra.nucleo.controladores;
-using dn32.infra.Exceptions;
+using dn32.infra.nucleo.excecoes;
 using dn32.infra.Extensoes;
 using dn32.infra.Nucleo.Interfaces;
 using dn32.infra.Nucleo.Models;
@@ -67,7 +67,7 @@ namespace dn32.infra.Factory
         {
             if (string.IsNullOrWhiteSpace(justification))
             {
-                throw new IncorrectDevelopmentException("Report the justification");
+                throw new DesenvolvimentoIncorretoException("Report the justification");
             }
 
             return Create(typeof(TS), httpContext).DnCast<TS>();
@@ -77,7 +77,7 @@ namespace dn32.infra.Factory
         {
             if (string.IsNullOrWhiteSpace(justification))
             {
-                throw new IncorrectDevelopmentException("Report the justification");
+                throw new DesenvolvimentoIncorretoException("Report the justification");
             }
 
             if (serviceType.IsDnEntity())

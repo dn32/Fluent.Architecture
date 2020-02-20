@@ -59,11 +59,11 @@
                                         <td class="name">@parameter.Name</td>
                                         @if (string.IsNullOrWhiteSpace(parameter.Link))
                                         {
-                                            <td class="type">@Html.Raw(parameter.Type.GetFriendlyName())</td>
+                                            <td class="tipo">@Html.Raw(parameter.Type.GetFriendlyName())</td>
                                         }
                                         else
                                         {
-                                            <td class="type"><a href="@parameter.Link">@Html.Raw(parameter.Type.GetFriendlyName())</a></td>
+                                            <td class="tipo"><a href="@parameter.Link">@Html.Raw(parameter.Type.GetFriendlyName())</a></td>
                                         }
                                         <td class="source">@parameter.Source.ToString().G()</td>
                                         <td class="Descricaoription">@parameter.Description.G()</td>
@@ -77,7 +77,7 @@
                             </div>
 
                             <div class="example-valor-container">
-                                <span>@("Return type".G())</span>
+                                <span>@("Return tipo".G())</span>
                                 <pre class="example-value">@(Model.ReturnType)</pre>
                             </div>
                         </div>

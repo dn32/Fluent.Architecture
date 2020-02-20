@@ -29,10 +29,10 @@ namespace dn32.infra.Nucleo.Models
     //    }
 
     //    [JsonProperty("inconsistencies")]
-    //    public Listar<DnValidationException> Inconsistencies => ValidationException?.Inconsistencies;
+    //    public Listar<DnErroDeValidacao> Inconsistencies => ValidationException?.Inconsistencies;
 
     //    [JsonProperty("validation_error")]
-    //    public new bool ValidationError => ValidationException?.ValidationError ?? true;
+    //    public new bool ErroDeValidacao => ValidationException?.ErroDeValidacao ?? true;
 
     //    /// <summary>
     //    /// Se a validação retornou sucesso.
@@ -50,8 +50,8 @@ namespace dn32.infra.Nucleo.Models
     //    /// <summary>
     //    /// A mensagem de erro da falidação em caso de falha,
     //    /// </summary>
-    //    [JsonProperty("message")]
-    //    public new string Message => ValidationException?.Message ?? string.Empty;
+    //    [JsonProperty("mensagem")]
+    //    public new string Mensagem => ValidationException?.Mensagem ?? string.Empty;
 
     //    [JsonIgnore]
     //    public ContextDnValidationException ValidationException { get; set; }

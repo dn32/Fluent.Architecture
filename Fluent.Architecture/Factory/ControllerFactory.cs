@@ -1,5 +1,5 @@
 ﻿using dn32.infra.nucleo.controladores;
-using dn32.infra.Exceptions;
+using dn32.infra.nucleo.excecoes;
 using dn32.infra.Factory.Proxy;
 using dn32.infra.nucleo.atributos;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -31,7 +31,7 @@ namespace dn32.infra.Nucleo.Factory
                 var typeName = entity.Name + "Controller";
                 if (feature.Controllers.Any(t => t.Name == typeName))
                 {
-                    throw new IncorrectDevelopmentException($"There is a controller named {typeName}. This interferes with the creation of a generic controller with this Nome for the {entity.Name} entity. Consider renaming this controller or entity");
+                    throw new DesenvolvimentoIncorretoException($"There is a controller named {typeName}. This interferes with the creation of a generic controller with this Nome for the {entity.Name} entity. Consider renaming this controller or entity");
                 }
 
                 var parentClass = baseController.MakeGenericType(entity);

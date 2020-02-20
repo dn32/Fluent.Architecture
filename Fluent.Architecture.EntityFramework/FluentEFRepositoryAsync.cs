@@ -1,8 +1,9 @@
-﻿using dn32.infra.Exceptions;
+﻿using dn32.infra.dados;
 using dn32.infra.Extensoes;
 using dn32.infra.Interfaces;
 using dn32.infra.Interfaces;
 using dn32.infra.nucleo.atributos;
+using dn32.infra.nucleo.excecoes;
 using dn32.infra.Nucleo.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,7 +15,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
-using dn32.infra.dados;
 
 namespace dn32.infra.EntityFramework
 {
@@ -81,7 +81,7 @@ namespace dn32.infra.EntityFramework
             if (spec.DnEntityType != typeof(TE))
             {
                 var serviceName = $"{spec.DnEntityType.Name}Servico";
-                throw new IncorrectDevelopmentException($"The type of input reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.DnEntityType}.\r\nRequisition Tipo: {typeof(TE)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
+                throw new DesenvolvimentoIncorretoException($"The type of input reported in the {spec} specification is not the same as that requested in the repository request.\r\nSpecification type: {spec.DnEntityType}.\r\nRequisition Tipo: {typeof(TE)}\r\nThis usually occurs when you make use of the wrong service. Make sure that when invoking the method that is causing this error you are making use of the service: {serviceName}");
             }
 
             return await GetSpecSelect<TO>(spec).ToIQueryable(Query).CountAsync();

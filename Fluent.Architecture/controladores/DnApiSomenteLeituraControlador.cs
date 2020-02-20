@@ -7,7 +7,7 @@ namespace dn32.infra.nucleo.controladores
 {
     [Route("/api/[controller]/[action]")]
     [ApiController]
-    public class DnApiSomenteLeituraControlador<T> : nucleo.controladores.DnApiControlador<T> where T : DnEntidade, new()
+    public class DnApiSomenteLeituraControlador<T> : DnApiControlador<T> where T : DnEntidade, new()
     {
         [NonAction]
         public override Task<ResultadoPadrao<T>> Adicionar([FromBody] T entidade) => throw new InvalidOperationException();

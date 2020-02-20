@@ -1,6 +1,6 @@
-﻿// ReSharper disable CommentTypo
-using dn32.infra.atributos;
-using dn32.infra.Exceptions;
+﻿using dn32.infra.atributos;
+using dn32.infra.dados;
+using dn32.infra.enumeradores;
 using dn32.infra.Extensoes;
 using dn32.infra.Interfaces;
 using dn32.infra.nucleo.atributos;
@@ -21,8 +21,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using dn32.infra.dados;
-using dn32.infra.enumeradores;
+using dn32.infra.nucleo.excecoes;
 
 namespace dn32.infra.EntityFramework
 {
@@ -58,7 +57,7 @@ namespace dn32.infra.EntityFramework
             var exportedTypes = Setup.Model.Values.ToList();
             foreach (var type in exportedTypes)
             {
-                if (type.IsDefined(typeof(NotMappedAttribute),false) || type.IsAbstract)
+                if (type.IsDefined(typeof(NotMappedAttribute), false) || type.IsAbstract)
                 {
                     continue;
                 }
@@ -89,7 +88,7 @@ namespace dn32.infra.EntityFramework
                             continue;
                         }
 
-                        if (property.IsDefined(typeof(NotMappedAttribute),true))
+                        if (property.IsDefined(typeof(NotMappedAttribute), true))
                         {
                             entity.Ignore(property.Name);
                             continue;
@@ -183,7 +182,7 @@ namespace dn32.infra.EntityFramework
 
         protected virtual LambdaExpression IsAvailable()
         {
-            throw new IncorrectDevelopmentException($"The Enable {nameof(UseLogicalDeletion)} method set to 'true' requires the override of the {nameof(IsAvailable)} method in the context of the entity framework. Do not invoke the base.");
+            throw new DesenvolvimentoIncorretoException($"The Enable {nameof(UseLogicalDeletion)} method set to 'true' requires the override of the {nameof(IsAvailable)} method in the context of the entity framework. Do not invoke the base.");
         }
 
         protected virtual bool UseLogicalDeletion(Type type, EntityTypeBuilder entity, ModelBuilder modelBuilder) => false;

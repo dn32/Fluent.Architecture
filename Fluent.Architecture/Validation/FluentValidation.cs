@@ -1,4 +1,4 @@
-﻿using dn32.infra.Exceptions.ValidationException;
+﻿using dn32.infra.nucleo.erros_de_validacao;
 using dn32.infra.nucleo.atributos;
 using dn32.infra.Nucleo.Models;
 using dn32.infra.Services;
@@ -157,7 +157,7 @@ namespace dn32.infra.Validation
                 var property = properties.SingleOrDefault(x => x.Name.Equals(filter.NomeDaPropriedade, StringComparison.InvariantCultureIgnoreCase));
                 if (property == null)
                 {
-                    AddInconsistency(new FilteredPropertyNotFound(typeof(T).Name, filter.NomeDaPropriedade));
+                    AddInconsistency(new DnPropriedadeASerFiltradaNaoEncontradaErroDeValidacao(typeof(T).Name, filter.NomeDaPropriedade));
                 }
             }
 
@@ -180,12 +180,12 @@ namespace dn32.infra.Validation
         {
             if (string.IsNullOrEmpty(term))
             {
-                AddInconsistency(new NullParameterDnValidationException(nameof(term)));
+                AddInconsistency(new DnParametroNuloErroDeValidacao(nameof(term)));
             }
 
             if (!typeof(T).GetProperties().Any(x => x.GetCustomAttribute<DnBuscavelAtributo>() != null))
             {
-                AddInconsistency(new EntityHasNotSearchableAttributeProperties(typeof(T).Name));
+                AddInconsistency(new DnEntidadeNaoPossuiUmaPropriedadeBuscavelErroDeValidacao(typeof(T).Name));
             }
 
             RunTheContextValidation();
@@ -195,7 +195,7 @@ namespace dn32.infra.Validation
         {
             if (APAGAR_TUDO?.Equals("Yes", StringComparison.InvariantCultureIgnoreCase) != true)
             {
-                AddInconsistency(new AlterLossOfDadaValidationException());
+                AddInconsistency(new AlterLossOfDadaErroDeValidacao());
             }
 
             RunTheContextValidation();

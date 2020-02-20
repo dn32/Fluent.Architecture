@@ -1,6 +1,6 @@
 ﻿using ClosedXML.Excel;
-using dn32.infra.Exceptions;
-using dn32.infra.Exceptions.ValidationException;
+using dn32.infra.nucleo.excecoes;
+using dn32.infra.nucleo.erros_de_validacao;
 using dn32.infra.Factory;
 using dn32.infra.Interfaces;
 using dn32.infra.Nucleo.Interfaces;
@@ -300,7 +300,7 @@ namespace dn32.infra.Services
             TransformToPersist(entity, null);
 
             var anotherServices = await Validation.AddOrUpdateAsync(entity);
-            var exists = SessionRequest.ContextDnValidationException.Inconsistencies.RemoveAll(x => x.ExceptionType == nameof(EntityExistsDnValidationException)) > 0;
+            var exists = SessionRequest.ContextDnValidationException.Inconsistencies.RemoveAll(x => x.NomeDoErroDeValidacao == nameof(DnEntidadeExisteErroDeValidacao)) > 0;
 
             Validation.RunTheContextValidation(anotherServices);
 
@@ -393,7 +393,7 @@ namespace dn32.infra.Services
                 return;
             }
 
-            throw new IncorrectDevelopmentException($"You can not initialize the {nameof(DnService<T>)}");
+            throw new DesenvolvimentoIncorretoException($"You can not initialize the {nameof(DnService<T>)}");
         }
 
 

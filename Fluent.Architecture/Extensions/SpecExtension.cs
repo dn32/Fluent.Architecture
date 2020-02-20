@@ -1,4 +1,4 @@
-﻿using dn32.infra.Exceptions;
+﻿using dn32.infra.nucleo.excecoes;
 using dn32.infra.Interfaces;
 using System.Collections.Generic;
 using dn32.infra.dados;
@@ -35,7 +35,7 @@ namespace dn32.infra.Extensoes
 
             if (spec != null && spec.Service == null)
             {
-                throw new IncorrectDevelopmentException($"The past spec does not have a valid service. See at the time the spec is created if a service has been passed in the spec creator.");
+                throw new DesenvolvimentoIncorretoException($"The past spec does not have a valid service. See at the time the spec is created if a service has been passed in the spec creator.");
             }
 
             if (spec is IDnSpecificationOut spec2)
@@ -44,7 +44,7 @@ namespace dn32.infra.Extensoes
                 var method = service.GetType().GetMethod($"{methodName}Select");
                 if (method == null)
                 {
-                    throw new IncorrectDevelopmentException($"Method not found: {methodName}Select");
+                    throw new DesenvolvimentoIncorretoException($"Method not found: {methodName}Select");
                 }
 
                 return method.MakeGenericMethod(spec2.DnEntityOutType).Invoke(service, parameters);
@@ -56,13 +56,13 @@ namespace dn32.infra.Extensoes
                 var method = service.GetType().GetMethodWithoutAmbiguity(methodName, parameters);
                 if (method == null)
                 {
-                    throw new IncorrectDevelopmentException($"Method not found: {methodName}");
+                    throw new DesenvolvimentoIncorretoException($"Method not found: {methodName}");
                 }
 
                 return method.Invoke(service, parameters);
             }
 
-            throw new IncorrectDevelopmentException("The specification is of a different type than expected");
+            throw new DesenvolvimentoIncorretoException("The specification is of a different type than expected");
         }
 
         //public static T Adicionar<T>(this TransactionalService service, T entity) where T : BaseEntity

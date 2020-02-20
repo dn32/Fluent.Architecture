@@ -2,7 +2,7 @@
 @using static dn32.infra.DnDocExtension
 @{
     var values = ViewContext.RouteData.Values;
-    if (values == null) { throw new InvalidOperationException("ViewContext.RouteData.Values is null"); }
+    if (values == null) { throw new InvalidOperationException("ViewContext.RouteData.Valores is null"); }
 
     var action = values["Action"]?.ToString()?.ToLower() ?? "";
     var controller = values["Controller"]?.ToString()?.ToLower() ?? "";

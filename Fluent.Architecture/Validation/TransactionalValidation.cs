@@ -5,7 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using dn32.infra.Exceptions.ValidationException;
+using dn32.infra.nucleo.erros_de_validacao;
 using dn32.infra.Services;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,7 +43,7 @@ namespace dn32.infra.Validation
         /// <param Nome="ex">
         /// A inconsitência.
         /// </param>
-        public void AddInconsistency(DnValidationException ex)
+        public void AddInconsistency(DnErroDeValidacao ex)
         {
             this.Service.SessionRequest.ContextDnValidationException.AddInconsistency(ex);
         }
@@ -81,7 +81,7 @@ namespace dn32.infra.Validation
             }
 
             message = string.IsNullOrWhiteSpace(message) ? "Valor can not be null" : message;
-            AddInconsistency(new NullValueDnValidationException(message));
+            AddInconsistency(new DnValorNuloErroDeValidacao(message));
             RunTheContextValidation();
         }
     }

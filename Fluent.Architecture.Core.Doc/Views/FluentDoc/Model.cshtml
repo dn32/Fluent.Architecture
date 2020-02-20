@@ -55,11 +55,11 @@
 
                         @if (string.IsNullOrWhiteSpace(property.Link))
                         {
-                            <td class="type">@Html.Raw(property.Tipo.GetFriendlyName())</td>
+                            <td class="tipo">@Html.Raw(property.Tipo.GetFriendlyName())</td>
                         }
                         else
                         {
-                            <td class="type"><a href="@property.Link">@Html.Raw(property.Tipo.GetFriendlyName())</a></td>
+                            <td class="tipo"><a href="@property.Link">@Html.Raw(property.Tipo.GetFriendlyName())</a></td>
                         }
                         <td>
                             @Html.Raw(Is(property.EhEnumerador, "<span><img src='/DnDoc/img/ok.png'/> " + "enum".G() + "</span>"))

@@ -1,4 +1,4 @@
-﻿using dn32.infra.Exceptions;
+﻿using dn32.infra.nucleo.excecoes;
 using dn32.infra.Filters;
 using dn32.infra.Nucleo.Interfaces;
 using dn32.infra.Nucleo.Models;
@@ -258,9 +258,9 @@ namespace dn32.infra
                .ForEach(AddController);
 
             // Todo - Não me recordo o motivo de estar comentado, mas acredito que tenha que descomentar
-            // ValidateIfAllMethodsAreVirtual(Services.Values.ToList()); // To intercept
-            // ValidateIfAllMethodsAreVirtual(Repositories.Values.ToList()); // To intercept
-            // ValidateIfAllMethodsAreVirtual(Validations.Values.ToList()); //It is not necessary
+            // ValidateIfAllMethodsAreVirtual(Services.Valores.ToList()); // To intercept
+            // ValidateIfAllMethodsAreVirtual(Repositories.Valores.ToList()); // To intercept
+            // ValidateIfAllMethodsAreVirtual(Validations.Valores.ToList()); //It is not necessary
             CheckErrorInTheRepository(Repositories.Values.ToList());
 
             // DbSetup(createDatabaseIfNotExists);
@@ -273,7 +273,7 @@ namespace dn32.infra
             {
                 if (type.GetConstructors().Any(x => x.GetParameters().Any()))
                 {
-                    throw new IncorrectDevelopmentException($"A specification can not have a parameterized constructor {type}");
+                    throw new DesenvolvimentoIncorretoException($"A specification can not have a parameterized constructor {type}");
                 }
             });
         }
@@ -285,7 +285,7 @@ namespace dn32.infra
             {
                 if (type.GetMethods().Any(x => x.IsPublic && x.GetParameters().Any(y => y.ParameterType.IsSubclassOf(typeof(BaseSpecification)))))
                 {
-                    throw new IncorrectDevelopmentException($"A controller can not have public methods that receive specifications as a parameter {type}");
+                    throw new DesenvolvimentoIncorretoException($"A controller can not have public methods that receive specifications as a parameter {type}");
                 }
             });
         }
@@ -342,7 +342,7 @@ namespace dn32.infra
                 var defaultConstructor = type.GetConstructors().Any(x => !x.GetParameters().Any());
                 if (!defaultConstructor)
                 {
-                    throw new IncorrectDevelopmentException($"Every repository must have an empty constructor. {type}");
+                    throw new DesenvolvimentoIncorretoException($"Every repository must have an empty constructor. {type}");
                 }
             }
         }
@@ -364,7 +364,7 @@ namespace dn32.infra
                 {
                     if (prop.SetMethod != null)
                     {
-                        throw new IncorrectDevelopmentException($"The property {type}.{prop.Name} has a set method. Servico properties are not allowed to have the set method.");
+                        throw new DesenvolvimentoIncorretoException($"The property {type}.{prop.Name} has a set method. Servico properties are not allowed to have the set method.");
                     }
                 }
             }
@@ -379,7 +379,7 @@ namespace dn32.infra
 
                 if (serviceProperties != null && serviceProperties.Any())
                 {
-                    throw new IncorrectDevelopmentException($"All service properties must be protected virtual. {type}.{serviceProperties.First().Name}");
+                    throw new DesenvolvimentoIncorretoException($"All service properties must be protected virtual. {type}.{serviceProperties.First().Name}");
                 }
             }
         }
@@ -393,7 +393,7 @@ namespace dn32.infra
 
                 if (serviceProperties != null && serviceProperties.Any())
                 {
-                    throw new IncorrectDevelopmentException($"All repository properties must be protected virtual.{type}.{serviceProperties.First().Name}");
+                    throw new DesenvolvimentoIncorretoException($"All repository properties must be protected virtual.{type}.{serviceProperties.First().Name}");
                 }
             }
         }
@@ -402,7 +402,7 @@ namespace dn32.infra
         {
             if (Model.ContainsKey(service.Item2))
             {
-                throw new IncorrectDevelopmentException($"There are two entity classes with the same Nome {service.Item2.Name}. This is not allowed.");
+                throw new DesenvolvimentoIncorretoException($"There are two entity classes with the same Nome {service.Item2.Name}. This is not allowed.");
             }
 
             Model.Add(service.Item2, service.Item2);
@@ -412,7 +412,7 @@ namespace dn32.infra
         {
             if (Services.ContainsKey(service.Item1))
             {
-                throw new IncorrectDevelopmentException($"There are two service classes with the same Nome {service.Item1} -  {service.Item2}. This is not allowed.");
+                throw new DesenvolvimentoIncorretoException($"There are two service classes with the same Nome {service.Item1} -  {service.Item2}. This is not allowed.");
             }
 
             Services.Add(service.Item1, service.Item2);
@@ -422,7 +422,7 @@ namespace dn32.infra
         {
             if (Validations.ContainsKey(validation.Item1))
             {
-                throw new IncorrectDevelopmentException($"There are two validation classes with the same Nome {validation.Item1} - {validation.Item2}. This is not allowed.");
+                throw new DesenvolvimentoIncorretoException($"There are two validation classes with the same Nome {validation.Item1} - {validation.Item2}. This is not allowed.");
             }
 
             Validations.Add(validation.Item1, validation.Item2);
@@ -432,7 +432,7 @@ namespace dn32.infra
         {
             if (Controllers.ContainsKey(controller.Item1))
             {
-                throw new IncorrectDevelopmentException($"There are two controller classes with the same Nome {controller.Item1} - {controller.Item2}. This is not allowed.");
+                throw new DesenvolvimentoIncorretoException($"There are two controller classes with the same Nome {controller.Item1} - {controller.Item2}. This is not allowed.");
             }
 
             Controllers.Add(controller.Item1, controller.Item2);
@@ -442,7 +442,7 @@ namespace dn32.infra
         {
             if (Repositories.ContainsKey(repository.Item1))
             {
-                throw new IncorrectDevelopmentException($"There are two entity repository with the same Nome {repository.Item1} - {repository.Item2}. This is not allowed.");
+                throw new DesenvolvimentoIncorretoException($"There are two entity repository with the same Nome {repository.Item1} - {repository.Item2}. This is not allowed.");
             }
 
             Repositories.Add(repository.Item1, repository.Item2);
@@ -458,7 +458,7 @@ namespace dn32.infra
                     var name = $"{type.Name}.{method.Name}";
                     if (method.IsPublic && method.ReturnType.Name == typeof(IEnumerable<DnEntidade>).Name || method.ReturnType.Name == typeof(IQueryable<DnEntidade>).Name)
                     {
-                        throw new IncorrectDevelopmentException($"The use of non-materialized returns in repositories is not allowed. Change the return type and execute the ToList before the return in the {name}.");
+                        throw new DesenvolvimentoIncorretoException($"The use of non-materialized returns in repositories is not allowed. Change the return type and execute the ToList before the return in the {name}.");
                     }
 
                     var parameters = method.GetParameters().Select(x => x.ParameterType).ToList();
@@ -466,7 +466,7 @@ namespace dn32.infra
                     {
                         if (parameter.Name.StartsWith("Func", StringComparison.CurrentCultureIgnoreCase) && method.Name != "RawSqlQuery")
                         {
-                            throw new IncorrectDevelopmentException($"You should not use Func as the input parameter of the repository methods, since Func requires the materialization of the entire list of entities. {name}");
+                            throw new DesenvolvimentoIncorretoException($"You should not use Func as the input parameter of the repository methods, since Func requires the materialization of the entire list of entities. {name}");
                         }
                     }
                 }

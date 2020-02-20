@@ -1,4 +1,4 @@
-﻿using dn32.infra.Exceptions;
+﻿using dn32.infra.nucleo.excecoes;
 using dn32.infra.Factory;
 using dn32.infra.Nucleo.Models;
 using dn32.infra.Services;
@@ -18,7 +18,7 @@ namespace dn32.infra.Extensoes
 
             if (!serviceType.IsSubclassOf(typeof(TransactionalService)))
             {
-                throw new IncorrectDevelopmentException($"The service instance attempt using the {nameof(GetServiceInstanceByServiceType)} method failed because the passed type is not a {nameof(TransactionalService)}");
+                throw new DesenvolvimentoIncorretoException($"The service instance attempt using the {nameof(GetServiceInstanceByServiceType)} method failed because the passed type is not a {nameof(TransactionalService)}");
             }
 
             if (SessionRequest.Services.TryGetValue(serviceType, out var ser))
@@ -36,7 +36,7 @@ namespace dn32.infra.Extensoes
         {
             if (entityType?.IsSubclassOf(typeof(DnEntidade)) != true)
             {
-                throw new IncorrectDevelopmentException($"The service instance attempt using the {nameof(GetServiceInstanceByEntity)} method failed because the passed type is not a {nameof(DnEntidade)}");
+                throw new DesenvolvimentoIncorretoException($"The service instance attempt using the {nameof(GetServiceInstanceByEntity)} method failed because the passed type is not a {nameof(DnEntidade)}");
             }
 
             var type = (Setup.Config.Config.GenericServiceType) ?? typeof(DnService<>);

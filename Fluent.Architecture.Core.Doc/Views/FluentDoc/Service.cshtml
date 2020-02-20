@@ -99,7 +99,7 @@
                     <tr class="property">
                         <td class="name">@property.NomeDaPropriedade</td>
                         <td class="Descricaoription">@property.Nome</td>
-                        <td class="type">@Html.Raw(GetTypeName(property.Tipo, property.Tipo.Name))@range</td>
+                        <td class="tipo">@Html.Raw(GetTypeName(property.Tipo, property.Tipo.Name))@range</td>
                         <td>
                             @Html.Raw(Is(property.EhEnumerador, "<span><img src='/DnDoc/img/ok.png'/> " + "enum".G() + "</span>"))
                             @Html.Raw(Is(property.EhChave || property.EhDnChaveUnica, "<span><img src='/DnDoc/img/ok.png'/> " + "key".G() + "</span>"))

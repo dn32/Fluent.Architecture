@@ -6,7 +6,7 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using dn32.infra.Exceptions.ValidationException;
+using dn32.infra.nucleo.erros_de_validacao;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ namespace dn32.infra.Validation
         public bool ValidationError => true;
 
         [JsonProperty("inconsistencies")]
-        public List<DnValidationException> Inconsistencies { get; }
+        public List<DnErroDeValidacao> Inconsistencies { get; }
 
         /// <summary>
         /// Se a validação retornou sucesso.
@@ -40,7 +40,7 @@ namespace dn32.infra.Validation
         /// <summary>
         /// A mensagem de erro da falidação em caso de falha,
         /// </summary>
-        public override string Message => string.Join("\n", this.Inconsistencies.Select(x => "* " + (x.GlobalizedMessage ?? x.Message)).ToArray());
+        public override string Message => string.Join("\n", this.Inconsistencies.Select(x => "* " + (x.MensagemDeGlobalizacao ?? x.Mensagem)).ToArray());
 
         /// <summary>
         /// Adiciona uma nova inconsistência ao contexto.
@@ -48,7 +48,7 @@ namespace dn32.infra.Validation
         /// <param Nome="exception">
         /// A inconsistência que deseja adicionar.
         /// </param>
-        public void AddInconsistency(DnValidationException exception)
+        public void AddInconsistency(DnErroDeValidacao exception)
         {
             Inconsistencies.Add(exception);
         }
@@ -59,7 +59,7 @@ namespace dn32.infra.Validation
         /// </summary>
         public ContextDnValidationException() : base(string.Empty)
         {
-            Inconsistencies = new List<DnValidationException>();
+            Inconsistencies = new List<DnErroDeValidacao>();
         }
 
         /// <summary>

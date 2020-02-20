@@ -7,7 +7,7 @@
 
 // ReSharper disable CommentTypo
 
-using dn32.infra.Exceptions.ValidationException;
+using dn32.infra.nucleo.erros_de_validacao;
 
 namespace dn32.infra.Validation
 {
@@ -17,6 +17,6 @@ namespace dn32.infra.Validation
         bool KeyValuesOk { get; set; }
         //TransactionalService Servico { get; set; }
 
-        void AddInconsistency(DnValidationException ex);
+        void AddInconsistency(DnErroDeValidacao ex);
     }
 }
