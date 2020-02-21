@@ -1,4 +1,4 @@
-﻿using dn32.infra.Extensoes;
+﻿using dn32.infra.extensoes;
 using dn32.infra.nucleo.atributos;
 using dn32.infra.Nucleo.Extensoes;
 using dn32.infra.Specifications;
@@ -48,8 +48,8 @@ namespace dn32.infra.Nucleo.Specifications
                 var properties = typeof(T).GetProperties().Where(x => x.GetCustomAttribute<DnBuscavelAtributo>() != null).ToArray();
                 foreach (var property in properties)
                 {
-                    var expression = ExpressionUtil.IsNull<T>(property.Name).Not();
-                    expression = expression.And(ExpressionUtil.Contains<T>(property.Name, term, property.PropertyType));
+                    var expression = DnExpressoesExtensao.EhNulo<T>(property.Name).Not();
+                    expression = expression.And(DnExpressoesExtensao.Contem<T>(property.Name, term, property.PropertyType));
                     allExpression = allExpression == null ? expression : allExpression.Or(expression);
                 }
             }

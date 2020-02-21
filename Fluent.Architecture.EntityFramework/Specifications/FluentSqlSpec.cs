@@ -9,7 +9,7 @@ using dn32.infra.dados;
 using dn32.infra.extensoes;
 
 #if NETCOREAPP3_1
-using dn32.infra.Extensoes;
+
 #else
 #endif
 

@@ -11,7 +11,7 @@ using System.Linq;
 using System.Reflection;
 using dn32.infra.nucleo.atributos;
 
-namespace dn32.infra.Extensoes
+namespace dn32.infra.extensoes
 {
     public static class DnEntityExtension
     {

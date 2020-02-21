@@ -1,5 +1,4 @@
 ﻿@using dn32.infra.Nucleo.Models
-@using dn32.infra.Extensoes
 @using dn32.infra.Nucleo.Doc.Controllers
 @using dn32.infra.Nucleo.Extensoes
 @using dn32.infra
@@ -67,7 +66,7 @@
                         <span class="route">@action.Route</span>
                     }
 
-                    @*@if (!string.IsNullOrWhiteSpace(paramString))
+                    @*@if (!string.EhNuloOrWhiteSpace(paramString))
                         {
                             <span class="parameters">@(("params").G()): @Html.Raw(paramString)</span>
                         }*@

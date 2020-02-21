@@ -1,6 +1,5 @@
 ﻿using dn32.infra.nucleo.controladores;
 using dn32.infra.nucleo.excecoes;
-using dn32.infra.Extensoes;
 using dn32.infra.Nucleo.Interfaces;
 using dn32.infra.Nucleo.Models;
 using dn32.infra.Services;

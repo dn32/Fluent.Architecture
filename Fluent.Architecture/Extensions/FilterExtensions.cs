@@ -1,4 +1,4 @@
-﻿using dn32.infra.Extensoes;
+﻿using dn32.infra.extensoes;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -36,39 +36,39 @@ namespace dn32.infra.Nucleo.Extensoes
                 switch (filter.TipoDeFiltro)
                 {
                     case EnumTipoDeFiltro.Contem:
-                        expression = ExpressionUtil.Contains<T>(property.Name, filter?.Valor?.ToUpper(CultureInfo.InvariantCulture) ?? "", property.PropertyType);
-                        expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
+                        expression = DnExpressoesExtensao.Contem<T>(property.Name, filter?.Valor?.ToUpper(CultureInfo.InvariantCulture) ?? "", property.PropertyType);
+                        expression = DnExpressoesExtensao.NaoEhNulo<T>(property.Name).And(expression);
                         break;
                     case EnumTipoDeFiltro.MaiorQue:
-                        expression = ExpressionUtil.Greate<T>(property.Name, filter?.Valor?.ToUpper(CultureInfo.InvariantCulture) ?? "", filter?.Inclusive ?? false, property.PropertyType);
-                        expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
+                        expression = DnExpressoesExtensao.EhMaiorQue<T>(property.Name, filter?.Valor?.ToUpper(CultureInfo.InvariantCulture) ?? "", filter?.Inclusive ?? false, property.PropertyType);
+                        expression = DnExpressoesExtensao.NaoEhNulo<T>(property.Name).And(expression);
                         break;
                     case EnumTipoDeFiltro.MenorQue:
-                        expression = ExpressionUtil.Smaller<T>(property.Name, filter?.Valor?.ToUpper(CultureInfo.InvariantCulture) ?? "", filter?.Inclusive ?? false, property.PropertyType);
-                        expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
+                        expression = DnExpressoesExtensao.EhMenorQue<T>(property.Name, filter?.Valor?.ToUpper(CultureInfo.InvariantCulture) ?? "", filter?.Inclusive ?? false, property.PropertyType);
+                        expression = DnExpressoesExtensao.NaoEhNulo<T>(property.Name).And(expression);
                         break;
                     case EnumTipoDeFiltro.IniciaCom:
-                        expression = ExpressionUtil.StartWith<T>(property.Name, filter?.Valor?.ToUpper(CultureInfo.InvariantCulture) ?? "", property.PropertyType);
-                        expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
+                        expression = DnExpressoesExtensao.IniciaCom<T>(property.Name, filter?.Valor?.ToUpper(CultureInfo.InvariantCulture) ?? "", property.PropertyType);
+                        expression = DnExpressoesExtensao.NaoEhNulo<T>(property.Name).And(expression);
                         break;
                     case EnumTipoDeFiltro.TerminaCom:
-                        expression = ExpressionUtil.EndsWith<T>(property.Name, filter?.Valor?.ToUpper(CultureInfo.InvariantCulture) ?? "", property.PropertyType);
-                        expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
+                        expression = DnExpressoesExtensao.TerminaCom<T>(property.Name, filter?.Valor?.ToUpper(CultureInfo.InvariantCulture) ?? "", property.PropertyType);
+                        expression = DnExpressoesExtensao.NaoEhNulo<T>(property.Name).And(expression);
                         break;
                     case EnumTipoDeFiltro.Igual:
-                        expression = ExpressionUtil.Equals<T>(property.Name, filter?.Valor?.ToUpper(CultureInfo.InvariantCulture) ?? "", property.PropertyType);
-                        // expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
+                        expression = DnExpressoesExtensao.Igual<T>(property.Name, filter?.Valor?.ToUpper(CultureInfo.InvariantCulture) ?? "", property.PropertyType);
+                        // expression = DnExpressoesExtensao.NaoEhNulo<T>(property.Name).And(expression);
                         break;
                     case EnumTipoDeFiltro.Verdadeiro:
-                        expression = ExpressionUtil.IsTrue<T>(property.Name, property.PropertyType);
-                        expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
+                        expression = DnExpressoesExtensao.EhVerdadeiro<T>(property.Name, property.PropertyType);
+                        expression = DnExpressoesExtensao.NaoEhNulo<T>(property.Name).And(expression);
                         break;
                     case EnumTipoDeFiltro.Falso:
-                        expression = ExpressionUtil.IsFalse<T>(property.Name, property.PropertyType);
-                        expression = ExpressionUtil.IsNotNull<T>(property.Name).And(expression);
+                        expression = DnExpressoesExtensao.EhValso<T>(property.Name, property.PropertyType);
+                        expression = DnExpressoesExtensao.NaoEhNulo<T>(property.Name).And(expression);
                         break;
                     case EnumTipoDeFiltro.Nulo:
-                        expression = ExpressionUtil.IsNull<T>(property.Name);
+                        expression = DnExpressoesExtensao.EhNulo<T>(property.Name);
                         break;
                 }
 

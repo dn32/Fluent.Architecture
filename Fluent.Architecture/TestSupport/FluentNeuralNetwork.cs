@@ -1,4 +1,4 @@
-﻿using dn32.infra.Extensoes;
+﻿using dn32.infra.extensoes;
 using dn32.infra.nucleo.atributos;
 using System;
 using System.Collections.Generic;

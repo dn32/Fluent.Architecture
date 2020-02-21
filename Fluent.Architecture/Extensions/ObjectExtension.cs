@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace dn32.infra.Extensoes
+namespace dn32.infra.extensoes
 {
     /// <summary>
     /// Extensão de objetos.

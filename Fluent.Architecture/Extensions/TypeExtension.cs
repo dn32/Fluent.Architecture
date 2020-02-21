@@ -20,7 +20,7 @@ using dn32.infra.dados;
 using dn32.infra.enumeradores;
 using dn32.infra.extensoes;
 
-namespace dn32.infra.Extensoes
+namespace dn32.infra.extensoes
 {
     /// <summary>
     /// Extensão de Tipo.

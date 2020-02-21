@@ -5,7 +5,7 @@ using dn32.infra.Services;
 using System;
 using dn32.infra.dados;
 
-namespace dn32.infra.Extensoes
+namespace dn32.infra.extensoes
 {
     public static class ServiceExtension
     {

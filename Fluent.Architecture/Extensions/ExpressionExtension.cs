@@ -2,111 +2,17 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Expressions;
+using dn32.infra.nucleo.excecoes;
 
-namespace dn32.infra.Extensoes
+namespace dn32.infra.extensoes
 {
-    public static class ExpressionUtil
+    internal class DnExpressionVisitor : ExpressionVisitor
     {
-        //public static PropertyInfo GetPropertyInfo<TSource, TProperty>(Expression<Func<TSource, TProperty>> propertyLambda)
-        //{
-        //    Tipo type = typeof(TSource);
+        public Dictionary<Expression, Expression> Dicionario = new Dictionary<Expression, Expression>();
+    }
 
-        //    if (!(propertyLambda.Body is MemberExpression member))
-        //    {
-        //        throw new ArgumentException($"Expression '{propertyLambda}' refers to a method, not a property.");
-        //    }
-
-        //    var propInfo = member.Member as PropertyInfo;
-        //    if (propInfo == null)
-        //    {
-        //        throw new ArgumentException($"Expression '{propertyLambda}' refers to a field, not a property.");
-        //    }
-
-        //    if (type != propInfo.ReflectedType && !type.IsSubclassOf(propInfo.ReflectedType))
-        //    {
-        //        throw new ArgumentException($"Expresion '{propertyLambda}' refers to a property that is not from type {type}.");
-        //    }
-
-        //    return propInfo;
-        //}
-
-        //public static Listar<Tuple<string, Tipo>> ValideExpression<T>(Expression<Func<T, object>> par, bool valide = true) where T : BaseEntity, new()
-        //{
-        //    var listaDepropriedades = new Listar<Tuple<string, Tipo>>();
-        //    var membros = ((NewExpression)par.Body).Members as IReadOnlyCollection<MemberInfo>;
-        //    var typeOriginal = typeof(T);
-
-        //    foreach (PropertyInfo membro in membros)
-        //    {
-        //        var typeInformado = membro.PropertyType;
-        //        var nomeDoParametro = membro.Name;
-        //        var propriedades = nomeDoParametro.Split('_');
-
-        //        var nomeConcatenadoDasPropriedades = string.Empty;
-
-        //        for (int i = 0; i < propriedades.Quantidade(); i++)
-        //        {
-        //            var nome = propriedades[i];
-        //            nomeConcatenadoDasPropriedades += string.IsNullOrEmpty(nomeConcatenadoDasPropriedades) ? nome : "." + nome;
-        //            var propriedade = typeOriginal.GetProperty(nome);
-        //            if (propriedade == null)
-        //            {
-        //                if (!valide)
-        //                {
-        //                    continue;
-        //                }
-
-        //                throw new Exception($"Não foi encontrado uma property com caminho {nomeConcatenadoDasPropriedades} no type {typeOriginal.Name}. Confira o elemento {nomeDoParametro}, pois é provável que esteja escrito incorretamente.");
-        //            }
-        //            if (propriedades.Quantidade() == i + 1)
-        //            {
-        //                if (propriedade.PropertyType != typeInformado)
-        //                {
-        //                    throw new Exception($"O type encontrado na propriedade {typeOriginal.Name} não foi encontrado no caminho {nomeConcatenadoDasPropriedades}. o type informado é {typeInformado} e o type encontrado foi {propriedade.PropertyType}");
-        //                }
-        //            }
-
-        //            typeOriginal = propriedade.PropertyType;
-        //        }
-
-        //        listaDepropriedades.Adicionar(new Tuple<string, Tipo>(nomeConcatenadoDasPropriedades, typeInformado));
-        //    }
-
-        //    return listaDepropriedades;
-        //}
-
-        //public static object ObtenhavaluePorPropriedade(string propriedadeInformada, object p, out Tipo typeDaPropriedade)
-        //{
-        //    typeDaPropriedade = null;
-        //    if (propriedadeInformada == null)
-        //    {
-        //        return null;
-        //    }
-
-        //    var propriedades = propriedadeInformada.Split('.');
-        //    var typeOriginal = p.GetType();
-        //    var valueOriginal = p;
-        //    var nomeConcatenadoDaspropriedades = string.Empty;
-
-        //    for (int i = 0; i < propriedades.Quantidade(); i++)
-        //    {
-        //        var nome = propriedades[i];
-        //        nomeConcatenadoDaspropriedades += string.IsNullOrEmpty(nomeConcatenadoDaspropriedades) ? nome : "." + nome;
-        //        var propriedade = typeOriginal.GetProperty(nome);
-        //        valueOriginal = propriedade.GetValue(valueOriginal);
-
-        //        if (propriedades.Quantidade() == i + 1)
-        //        {
-        //            typeDaPropriedade = propriedade.PropertyType;
-        //            return valueOriginal;
-        //        }
-
-        //        typeOriginal = propriedade.PropertyType;
-        //    }
-
-        //    return null;
-        //}
-
+    public static class DnExpressoesExtensao
+    {
         public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> a, Expression<Func<T, bool>> b)
         {
             if (a == null)
@@ -120,9 +26,9 @@ namespace dn32.infra.Extensoes
             }
 
             var p = a.Parameters[0];
-            var visitor = new SubstExpressionVisitor { Subst = { [b.Parameters[0]] = p } };
-            var body = Expression.AndAlso(a.Body, visitor.Visit(b.Body));
-            return Expression.Lambda<Func<T, bool>>(body, p);
+            var visitante = new DnExpressionVisitor { Dicionario = { [b.Parameters[0]] = p } };
+            var corpo = Expression.AndAlso(a.Body, visitante.Visit(b.Body));
+            return Expression.Lambda<Func<T, bool>>(corpo, p);
         }
 
         public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> a, Expression<Func<T, bool>> b)
@@ -138,9 +44,9 @@ namespace dn32.infra.Extensoes
             }
 
             var p = a.Parameters[0];
-            var visitor = new SubstExpressionVisitor { Subst = { [b.Parameters[0]] = p } };
-            var body = Expression.OrElse(a.Body, visitor.Visit(b.Body));
-            return Expression.Lambda<Func<T, bool>>(body, p);
+            var visitante = new DnExpressionVisitor { Dicionario = { [b.Parameters[0]] = p } };
+            var corpo = Expression.OrElse(a.Body, visitante.Visit(b.Body));
+            return Expression.Lambda<Func<T, bool>>(corpo, p);
         }
 
         public static Expression<Func<T, bool>> Not<T>(this Expression<Func<T, bool>> a)
@@ -149,318 +55,246 @@ namespace dn32.infra.Extensoes
             {
                 return a;
             }
+
             var p = a.Parameters[0];
-            var visitor = new SubstExpressionVisitor { Subst = { [a.Parameters[0]] = p } };
-            var body = Expression.Not(a.Body);
-            return Expression.Lambda<Func<T, bool>>(body, p);
+            var corpo = Expression.Not(a.Body);
+            return Expression.Lambda<Func<T, bool>>(corpo, p);
         }
 
-        internal class SubstExpressionVisitor : ExpressionVisitor
+        public static Expression<Func<T, bool>> IniciaCom<T>(string nomeDaPropriedade, string valor, Type tipo)
         {
-            public Dictionary<Expression, Expression> Subst = new Dictionary<Expression, Expression>();
-
-            protected override Expression VisitParameter(ParameterExpression node)
+            if (tipo != typeof(string))
             {
-                return Subst.TryGetValue(node, out Expression newValue) ? newValue : node;
-            }
-        }
-
-        public static Expression<Func<T, bool>> StartWith<T>(string propertyName, string value, Type type)
-        {
-            if (type != typeof(string))
-            {
-                throw new InvalidOperationException($"Filter type StartWith can only be used for string and field {propertyName} is not string");
+                throw new DesenvolvimentoIncorretoException($"O filtro {nameof(IniciaCom)} deve ser usado somente " +
+                                                            $"com propriedades do tipo string e '{nomeDaPropriedade}' não é do tipo string.");
             }
 
-            var parameter = Expression.Parameter(typeof(T), "x");
-            var property = Expression.Property(parameter, propertyName);
-            var containsCall = Expression.Call(property, "StartsWith", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
-            return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
+            var parametro = Expression.Parameter(typeof(T), "x");
+            var propriedade = Expression.Property(parametro, nomeDaPropriedade);
+            var chamadaContem = Expression.Call(
+                propriedade,
+                "StartsWith",
+                null,
+                Expression.Constant(valor, typeof(string)),
+                Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
+
+            return Expression.Lambda<Func<T, bool>>(chamadaContem, parametro);
         }
 
 
-        public static Expression<Func<T, bool>> EndsWith<T>(string propertyName, string value, Type type)
+        public static Expression<Func<T, bool>> TerminaCom<T>(string nomeDaPropriedade, string valor, Type tipo)
         {
-            if (type != typeof(string))
+            if (tipo != typeof(string))
             {
-                throw new InvalidOperationException($"Filter type EndsWith can only be used for string and field {propertyName} is not string");
+                throw new DesenvolvimentoIncorretoException($"O filtro {nameof(TerminaCom)} deve ser usado somente com " +
+                                                            $"propriedades do tipo string e '{nomeDaPropriedade}' não é do tipo string.");
             }
 
-            var parameter = Expression.Parameter(typeof(T), "x");
-            var property = Expression.Property(parameter, propertyName);
-            var containsCall = Expression.Call(property, "EndsWith", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
-            return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
+            var parametro = Expression.Parameter(typeof(T), "x");
+            var propriedade = Expression.Property(parametro, nomeDaPropriedade);
+            var chamadaContem = Expression.Call(
+                propriedade,
+                "EndsWith",
+                null,
+                Expression.Constant(valor, typeof(string)),
+                Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
+
+            return Expression.Lambda<Func<T, bool>>(chamadaContem, parametro);
         }
 
-        public static Expression<Func<T, bool>> Contains<T>(string propertyName, string value, Type type)
+        public static Expression<Func<T, bool>> Contem<T>(string nomeDaPropriedade, string valor, Type tipo)
         {
-            var parameter = Expression.Parameter(typeof(T), "x");
-            var property = Expression.Property(parameter, propertyName);
-            MethodCallExpression containsCall;
+            var parametro = Expression.Parameter(typeof(T), "x");
+            var propriedade = Expression.Property(parametro, nomeDaPropriedade);
+            MethodCallExpression chamadaContem;
 
-            if (type == typeof(string))
+            if (tipo == typeof(string))
             {
-                containsCall = Expression.Call(property, "Contains", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
-            }
-            else
-            {
-                var toStringCall = Expression.Call(property, "ToString", null, Expression.Constant("D"));
-                containsCall = Expression.Call(toStringCall, "Contains", null, Expression.Constant(value, typeof(string)), Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
-            }
-
-            return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
-        }
-
-        public static Expression<Func<T, bool>> Equals<T>(string propertyName, string value, Type type)
-        {
-            if (value is null) { throw new ArgumentNullException(nameof(value)); }
-            type = type.GetNonNullableType();
-
-            var parameter = Expression.Parameter(typeof(T), "x");
-            Expression equalsExpression;
-
-            if (type == typeof(bool) || type == typeof(bool?))
-            {
-                if (bool.TryParse(value, out bool boolValue))
-                {
-                    return IsTrueOrFalse<T>(propertyName, boolValue, type);
-                }
-                else
-                {
-                    throw new InvalidOperationException($"The valor '{value}' for the filter is not boolean as the type is. Preferably when using EnumFilterType.FALSE or EnumFilterType.FALSE for boolean operations.");
-                }
-            }
-            if (type == typeof(string))
-            {
-                var property = Expression.Property(parameter, propertyName);
-                var constant = Expression.Constant(value, type);
-                var methodInfo = typeof(string).GetMethod("ToUpper", new Type[] { });
-                var expression = Expression.Call(property, methodInfo);
-                equalsExpression = Expression.Equal(constant, expression);
-            }
-            else if (type.IsNumeric())
-            {
-                var property = Expression.Property(parameter, propertyName);
-                var numberValue = Convert.ChangeType(value, type);
-                var constant = Expression.Constant(numberValue, type);
-                equalsExpression = Expression.Equal(property, constant);
-            }
-            else if (type.IsNullableEnum())
-            {
-                var localType = type.GetTypeByNullType();
-                if (Enum.TryParse(localType, value, out object enumObject))
-                {
-                    var property = Expression.Property(parameter, propertyName);
-                    var constant = Expression.Constant(enumObject, type);
-                    equalsExpression = Expression.Equal(constant, property);
-                }
-                else
-                {
-                    throw new InvalidOperationException($"The valor '{value}' for the filter is not valid enum for type {type.Name}");
-                }
+                chamadaContem = Expression.Call(
+                    propriedade,
+                    "Contains",
+                    null,
+                    Expression.Constant(valor, typeof(string)),
+                    Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
             }
             else
             {
-                var property = Expression.Property(parameter, propertyName);
-                var toStringCall = Expression.Call(property, "ToString", null, Expression.Constant("D"));
-                var constant = Expression.Constant(value, typeof(string));
-                equalsExpression = Expression.Equal(toStringCall, constant);
+                var chamadaToString = Expression.Call(propriedade, "ToString", null, Expression.Constant("D"));
+                chamadaContem = Expression.Call(
+                    chamadaToString,
+                    "Contains",
+                    null,
+                    Expression.Constant(valor, typeof(string)),
+                    Expression.Constant(StringComparison.InvariantCultureIgnoreCase));
             }
 
-            return Expression.Lambda<Func<T, bool>>(equalsExpression, parameter);
+            return Expression.Lambda<Func<T, bool>>(chamadaContem, parametro);
         }
 
-        public static Expression<Func<T, bool>> IsTrue<T>(string propertyName, Type type)
+        public static Expression<Func<T, bool>> Igual<T>(string nomeDaPropriedade, string valor, Type tipo)
         {
-            return IsTrueOrFalse<T>(propertyName, true, type);
-        }
-
-        public static Expression<Func<T, bool>> IsFalse<T>(string propertyName, Type type)
-        {
-            return IsTrueOrFalse<T>(propertyName, false, type);
-        }
-
-        private static Expression<Func<T, bool>> IsTrueOrFalse<T>(string propertyName, bool expectedvalue, Type type)
-        {
-            var parameter = Expression.Parameter(typeof(T), "x");
-            var property = Expression.Property(parameter, propertyName);
-            if (type != typeof(bool) && type != typeof(bool?)) { throw new InvalidOperationException($"The property {propertyName} is not boolean"); }
-            var containsCall = Expression.Equal(property, Expression.Constant(expectedvalue, type));
-            return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
-        }
-
-        public static Expression<Func<T, bool>> Smaller<T>(string propertyName, string value, bool including, Type type)
-        {
-            return SmallerOrGreater<T>(propertyName, value, including, type ?? null, false);
-        }
-
-        public static Expression<Func<T, bool>> Greate<T>(string propertyName, string value, bool including, Type type)
-        {
-            return SmallerOrGreater<T>(propertyName, value, including, type ?? null, true);
-        }
-
-        private static Expression<Func<T, bool>> SmallerOrGreater<T>(
-            string propertyName,
-            string value,
-            bool including,
-            Type type,
-            bool greater
-            )
-        {
-            var parameter = Expression.Parameter(typeof(T), "x");
-            var property = Expression.Property(parameter, propertyName);
-            object valueObj = null;
-            BinaryExpression containsCall = null;
-
-            if (type == typeof(DateTime) || type == typeof(DateTime?))
+            if (valor is null)
             {
-                if (DateTime.TryParseExact(value, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime outValue))
+                throw new ArgumentNullException(nameof(valor));
+            }
+
+            tipo = tipo.GetNonNullableType();
+
+            var parametro = Expression.Parameter(typeof(T), "x");
+            Expression expressaoIgual;
+
+            if (tipo == typeof(bool) || tipo == typeof(bool?))
+            {
+                if (bool.TryParse(valor, out var valorBooleano))
                 {
-                    valueObj = outValue;
+                    return EhVerdadeiroOuFalso<T>(nomeDaPropriedade, valorBooleano, tipo);
+                }
+
+                throw new DesenvolvimentoIncorretoException($"O valor '{valor}' para o filtro '{nameof(Igual)}' não é um booleano" +
+                                                            " e o tipo de propriedade é booleano. É preferível fazer uso do filtro" +
+                                                            " do tipo 'Verdadeiro' ou 'Falso' para operações com booleano.");
+            }
+            if (tipo == typeof(string))
+            {
+                var propriedade = Expression.Property(parametro, nomeDaPropriedade);
+                var constante = Expression.Constant(valor, tipo);
+                var metodo = typeof(string).GetMethod("ToUpper", new Type[] { });
+                var expressao = Expression.Call(propriedade, metodo);
+                expressaoIgual = Expression.Equal(constante, expressao);
+            }
+            else if (tipo.IsNumeric())
+            {
+                var propriedade = Expression.Property(parametro, nomeDaPropriedade);
+                var valorNumerico = Convert.ChangeType(valor, tipo);
+                var constant = Expression.Constant(valorNumerico, tipo);
+                expressaoIgual = Expression.Equal(propriedade, constant);
+            }
+            else if (tipo.IsNullableEnum())
+            {
+                var tipoLocal = tipo.GetTypeByNullType();
+                if (Enum.TryParse(tipoLocal, valor, out var valorEnum))
+                {
+                    var propriedade = Expression.Property(parametro, nomeDaPropriedade);
+                    var constant = Expression.Constant(valorEnum, tipo);
+                    expressaoIgual = Expression.Equal(constant, propriedade);
                 }
                 else
                 {
-                    throw new InvalidOperationException($"The valor '{value}' for the filter is not valid DateTime as the type is");
+                    throw new DesenvolvimentoIncorretoException($"O valor '{valor}' para o filtro '{nameof(Igual)}' não é um enumerador válido.");
                 }
             }
-            else if (type.IsNumeric())
+            else
+            {
+                var propriedade = Expression.Property(parametro, nomeDaPropriedade);
+                var chamadaToString = Expression.Call(propriedade, "ToString", null, Expression.Constant("D"));
+                var constant = Expression.Constant(valor, typeof(string));
+                expressaoIgual = Expression.Equal(chamadaToString, constant);
+            }
+
+            return Expression.Lambda<Func<T, bool>>(expressaoIgual, parametro);
+        }
+
+        public static Expression<Func<T, bool>> EhVerdadeiro<T>(string nomeDaPropriedade, Type tipo) =>
+             EhVerdadeiroOuFalso<T>(nomeDaPropriedade, true, tipo);
+
+        public static Expression<Func<T, bool>> EhValso<T>(string nomeDaPropriedade, Type tipo) =>
+             EhVerdadeiroOuFalso<T>(nomeDaPropriedade, false, tipo);
+
+        private static Expression<Func<T, bool>> EhVerdadeiroOuFalso<T>(string nomeDaPropriedade, bool valorEsperado, Type tipo)
+        {
+            var parametro = Expression.Parameter(typeof(T), "x");
+            var propriedade = Expression.Property(parametro, nomeDaPropriedade);
+            if (tipo != typeof(bool) && tipo != typeof(bool?))
+            {
+                throw new InvalidOperationException($"A propriedade '{nomeDaPropriedade}' não é do tipo booleano.");
+            }
+
+            var chamadaContem = Expression.Equal(propriedade, Expression.Constant(valorEsperado, tipo));
+            return Expression.Lambda<Func<T, bool>>(chamadaContem, parametro);
+        }
+
+        public static Expression<Func<T, bool>> EhMenorQue<T>(string nomeDaPropriedade, string valor, bool inclusive, Type tipo) =>
+             EhMaiorOuMenorQue<T>(nomeDaPropriedade, valor, inclusive, tipo, false);
+
+        public static Expression<Func<T, bool>> EhMaiorQue<T>(string nomeDaPropriedade, string valor, bool inclusive, Type tipo) =>
+            EhMaiorOuMenorQue<T>(nomeDaPropriedade, valor, inclusive, tipo, true);
+
+        private static Expression<Func<T, bool>> EhMaiorOuMenorQue<T>(
+            string nomeDaPropriedade,
+            string valor,
+            bool inclusive,
+            Type tipo,
+            bool valorEsperadoEhMaior)
+        {
+            var parametro = Expression.Parameter(typeof(T), "x");
+            var propriedade = Expression.Property(parametro, nomeDaPropriedade);
+            object valorObjeto;
+            BinaryExpression chamadaContem;
+
+            if (tipo == typeof(DateTime) || tipo == typeof(DateTime?))
+            {
+                if (DateTime.TryParseExact(valor, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var valorEmData))
+                {
+                    valorObjeto = valorEmData;
+                }
+                else
+                {
+                    throw new DesenvolvimentoIncorretoException($"O valor '{valor}' para o filtro '{nameof(EhMaiorOuMenorQue)}' não é uma data válida.");
+                }
+            }
+            else if (tipo.IsNumeric())
             {
                 try
                 {
-                    valueObj = Convert.ChangeType(value, type, CultureInfo.InvariantCulture);
+                    valorObjeto = Convert.ChangeType(valor, tipo, CultureInfo.InvariantCulture);
                 }
                 catch (Exception)
                 {
-                    throw new InvalidOperationException($"The valor '{value}' for the filter is not valid number as the type is");
+                    throw new DesenvolvimentoIncorretoException($"O valor '{valor}' para o filtro '{nameof(EhMaiorOuMenorQue)}' não é um número válido.");
                 }
             }
             else
             {
-                throw new InvalidOperationException($"Tipo {type.Name} in property {propertyName} does not support filter type GREATER/SMALLER");
+                throw new DesenvolvimentoIncorretoException($"O tipo '{tipo.Name}' da propriedade" +
+                                                            $" '{nomeDaPropriedade}' não é suportado pelos filtros '{nameof(EhMaiorOuMenorQue)}'.");
             }
 
-            if (greater)
+            if (valorEsperadoEhMaior)
             {
-                if (including)
-                {
-                    containsCall = Expression.GreaterThanOrEqual(property, Expression.Constant(valueObj, type));
-                }
-                else
-                {
-                    containsCall = Expression.GreaterThan(property, Expression.Constant(valueObj, type));
-                }
+                chamadaContem = inclusive ?
+                    Expression.GreaterThanOrEqual(propriedade, Expression.Constant(valorObjeto, tipo)) :
+                    Expression.GreaterThan(propriedade, Expression.Constant(valorObjeto, tipo));
             }
             else
             {
-                if (including)
-                {
-                    containsCall = Expression.LessThanOrEqual(property, Expression.Constant(valueObj, type));
-                }
-                else
-                {
-                    containsCall = Expression.LessThan(property, Expression.Constant(valueObj, type));
-                }
+                chamadaContem = inclusive ?
+                    Expression.LessThanOrEqual(propriedade, Expression.Constant(valorObjeto, tipo)) :
+                    Expression.LessThan(propriedade, Expression.Constant(valorObjeto, tipo));
             }
 
-            return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
+            return Expression.Lambda<Func<T, bool>>(chamadaContem, parametro);
         }
 
-        public static Expression<Func<T, bool>> IsNull<T>(string propertyName)
+        public static Expression<Func<T, bool>> EhNulo<T>(string nomeDaPropriedade)
         {
-            var parameter = Expression.Parameter(typeof(T), "x");
-            var property = Expression.Property(parameter, propertyName);
-            var nullCheck = Expression.Equal(property, Expression.Constant(null, typeof(object)));
-            return Expression.Lambda<Func<T, bool>>(nullCheck, parameter);
+            var parametro = Expression.Parameter(typeof(T), "x");
+            var propriedade = Expression.Property(parametro, nomeDaPropriedade);
+            var checagemDeNulo = Expression.Equal(
+                propriedade, 
+                Expression.Constant(null, typeof(object)));
+
+            return Expression.Lambda<Func<T, bool>>(checagemDeNulo, parametro);
         }
 
-        public static Expression<Func<T, bool>> IsNotNull<T>(string propertyName)
+        public static Expression<Func<T, bool>> NaoEhNulo<T>(string nomeDaPropriedade)
         {
-            var parameter = Expression.Parameter(typeof(T), "x");
-            var property = Expression.Property(parameter, propertyName);
-            var nullCheck = Expression.NotEqual(property, Expression.Constant(null, typeof(object)));
-            return Expression.Lambda<Func<T, bool>>(nullCheck, parameter);
+            var parametro = Expression.Parameter(typeof(T), "x");
+            var propriedade = Expression.Property(parametro, nomeDaPropriedade);
+            var checagemDeNulo = Expression.NotEqual(
+                propriedade, 
+                Expression.Constant(null, typeof(object)));
+
+            return Expression.Lambda<Func<T, bool>>(checagemDeNulo, parametro);
         }
-
-        //public static Expression<Func<T, bool>> ToExpression<T>(string andOrOperator, string NomeDaPropriedade, string opr, object valor, Expression<Func<T, bool>> expr = null)
-        //{
-        //    Expression<Func<T, bool>> func = null;
-
-        //    ParameterExpression paramExpr = Expression.Parameter(typeof(T));
-        //    var arrProp = NomeDaPropriedade.Split('.').ToList();
-        //    Expression binExpr = null;
-        //    string partName = null;
-        //    arrProp.ForEach(x =>
-        //    {
-        //        Expression tempExpr = null;
-        //        partName = string.IsNullOrWhiteSpace(partName) ? x : partName + "." + x;
-        //        if (partName == NomeDaPropriedade)
-        //        {
-        //            var member = NestedExprProp(paramExpr, partName);
-        //            var type = member.Tipo.Name == "Nullable`1" ? Nullable.GetUnderlyingType(member.Tipo) : member.Tipo;
-        //            tempExpr = ApplyFilter(opr, member, Expression.Convert(Expression.Constant(valor), member.Tipo));
-        //        }
-        //        else
-        //            tempExpr = ApplyFilter("!=", NestedExprProp(paramExpr, partName), Expression.Constant(null));
-        //        if (binExpr != null)
-        //            binExpr = Expression.AndAlso(binExpr, tempExpr);
-        //        else
-        //            binExpr = tempExpr;
-        //    });
-
-        //    Expression<Func<T, bool>> innerExpr = Expression.Lambda<Func<T, bool>>(binExpr, paramExpr);
-        //    if (expr != null)
-        //        innerExpr = (andOrOperator == null || andOrOperator == "And" || andOrOperator == "AND" || andOrOperator == "&&") ? innerExpr.And(expr) : innerExpr.Or(expr);
-        //    func = innerExpr;
-
-        //    return func;
-        //}
-
-        //private static MemberExpression NestedExprProp(Expression expr, string NomeDaPropriedade)
-        //{
-        //    string[] arrProp = NomeDaPropriedade.Split('.');
-        //    int arrPropCount = arrProp.Length;
-        //    return (arrPropCount > 1) ? Expression.Propriedade(NestedExprProp(expr, arrProp.Take(arrPropCount - 1).Aggregate((a, i) => a + "." + i)), arrProp[arrPropCount - 1]) : Expression.Propriedade(expr, NomeDaPropriedade);
-        //}
-
-        //private static Expression ApplyFilter(string opr, Expression left, Expression right)
-        //{
-        //    Expression InnerLambda = null;
-        //    switch (opr)
-        //    {
-        //        case "==":
-        //        case "=":
-        //            InnerLambda = Expression.Equal(left, right);
-        //            break;
-        //        case "<":
-        //            InnerLambda = Expression.LessThan(left, right);
-        //            break;
-        //        case ">":
-        //            InnerLambda = Expression.GreaterThan(left, right);
-        //            break;
-        //        case ">=":
-        //            InnerLambda = Expression.GreaterThanOrEqual(left, right);
-        //            break;
-        //        case "<=":
-        //            InnerLambda = Expression.LessThanOrEqual(left, right);
-        //            break;
-        //        case "!=":
-        //            InnerLambda = Expression.NotEqual(left, right);
-        //            break;
-        //        case "&&":
-        //            InnerLambda = Expression.And(left, right);
-        //            break;
-        //        case "||":
-        //            InnerLambda = Expression.Or(left, right);
-        //            break;
-        //        case "LIKE":
-        //            InnerLambda = Expression.Call(left, typeof(string).GetMethod("Contains", new Tipo[] { typeof(string) }), right);
-        //            break;
-        //        case "NOTLIKE":
-        //            InnerLambda = Expression.Not(Expression.Call(left, typeof(string).GetMethod("Contains", new Tipo[] { typeof(string) }), right));
-        //            break;
-        //    }
-
-        //    return InnerLambda;
-        //}
     }
 }

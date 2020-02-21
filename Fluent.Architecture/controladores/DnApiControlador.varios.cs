@@ -1,6 +1,5 @@
 ﻿using dn32.infra.dados;
 using dn32.infra.extensoes;
-using dn32.infra.Extensoes;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

@@ -5,7 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using dn32.infra.Extensoes;
+using dn32.infra.extensoes;
 using System.ComponentModel.DataAnnotations;
 
 namespace dn32.infra.Test

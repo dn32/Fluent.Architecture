@@ -1,5 +1,4 @@
 ﻿using dn32.infra.extensoes;
-using dn32.infra.Extensoes;
 using Newtonsoft.Json;
 
 namespace dn32.infra.Nucleo.Extensoes

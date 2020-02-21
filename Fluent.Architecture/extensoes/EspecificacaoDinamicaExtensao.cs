@@ -12,8 +12,9 @@ using System.Reflection.Emit;
 using dn32.infra.dados;
 using Microsoft.AspNetCore.Http;
 
-namespace dn32.infra.Extensoes
+namespace dn32.infra.extensoes
 {
+    //Todo - refatorar
     public static class EspecificacaoDinamicaExtensao
     {
         private static string ObterParametro(this HttpRequest requisicao, string nomeDaPropriedade)

@@ -1,7 +1,6 @@
 ﻿using dn32.infra.dados;
 using dn32.infra.enumeradores;
 using dn32.infra.extensoes;
-using dn32.infra.Extensoes;
 using dn32.infra.Interfaces;
 using dn32.infra.Interfaces;
 using dn32.infra.Interfaces;

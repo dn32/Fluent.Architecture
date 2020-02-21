@@ -1,5 +1,4 @@
 ﻿using dn32.infra.nucleo.erros_de_validacao;
-using dn32.infra.Extensoes;
 using dn32.infra.nucleo.atributos;
 using System;
 using System.ComponentModel.DataAnnotations;

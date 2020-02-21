@@ -1,5 +1,4 @@
-﻿using dn32.infra.Extensoes;
-using dn32.infra.nucleo.atributos;
+﻿using dn32.infra.nucleo.atributos;
 using dn32.infra.Nucleo.Util;
 using System;
 using System.ComponentModel.DataAnnotations;

@@ -3,7 +3,7 @@ using dn32.infra.Interfaces;
 using System.Collections.Generic;
 using dn32.infra.dados;
 
-namespace dn32.infra.Extensoes
+namespace dn32.infra.extensoes
 {
     public static class SpecExtension
     {

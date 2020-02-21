@@ -1,4 +1,4 @@
-﻿using dn32.infra.Extensoes;
+﻿using dn32.infra.extensoes;
 using Newtonsoft.Json;
 using System.Reflection;
 

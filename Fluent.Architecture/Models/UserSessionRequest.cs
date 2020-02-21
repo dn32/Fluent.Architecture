@@ -1,4 +1,4 @@
-﻿using dn32.infra.Extensoes;
+﻿using dn32.infra.extensoes;
 using dn32.infra.Nucleo.Interfaces;
 using dn32.infra.Services;
 using dn32.infra.Validation;

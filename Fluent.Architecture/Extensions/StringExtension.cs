@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Linq;
 
-namespace dn32.infra.Extensoes
+namespace dn32.infra.extensoes
 {
     public static class StringExtension
     {

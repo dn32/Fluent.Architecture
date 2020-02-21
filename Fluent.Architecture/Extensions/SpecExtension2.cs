@@ -1,5 +1,4 @@
-﻿using dn32.infra.Extensoes;
-using dn32.infra.Interfaces;
+﻿using dn32.infra.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
