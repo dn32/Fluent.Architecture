@@ -51,7 +51,7 @@ namespace dn32.infra.EntityFramework.Oracle.Specifications
                 query = query.WhereProximityText(Term, TableName, Columns, Tolerance);
             }
 
-            return query.DnDynamicProjectTo(Service);
+            return query.ProjetarDeFormaDinamica(Service);
         }
 
         public override IOrderedQueryable<T> Order(IQueryable<T> query) => throw new NotImplementedException();

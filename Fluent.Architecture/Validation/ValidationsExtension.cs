@@ -91,7 +91,7 @@ namespace dn32.infra.Validation
                     var valuedoble = double.Parse(stringValue, CultureInfo.InvariantCulture);
                     if (valuedoble < mindouble || valuedoble > maxdouble)
                     {
-                        validation.AddInconsistency(new CampoDeTelaLenghtDnErroDeValidacao(property, compositionProperty, compositionFieldName));
+                        validation.AddInconsistency(new DnCampoDeTelaComTamanhoIncorretoErroDeValidacao(property, compositionProperty, compositionFieldName));
                     }
                 }
 
@@ -109,7 +109,7 @@ namespace dn32.infra.Validation
 
                     if (!new MinLengthAttribute(min.Value).IsValid(value))
                     {
-                        validation.AddInconsistency(new CampoDeTelaLenghtDnErroDeValidacao(property, compositionProperty, compositionFieldName));
+                        validation.AddInconsistency(new DnCampoDeTelaComTamanhoIncorretoErroDeValidacao(property, compositionProperty, compositionFieldName));
                     }
 
                     var maxint = Convert.ChangeType(max, typeof(int), CultureInfo.InvariantCulture) as int?;
@@ -117,7 +117,7 @@ namespace dn32.infra.Validation
                     maxint = maxint == 0 ? int.MaxValue : maxint;
                     if (!new MaxLengthAttribute(maxint.Value).IsValid(value))
                     {
-                        validation.AddInconsistency(new CampoDeTelaLenghtDnErroDeValidacao(property, compositionProperty, compositionFieldName));
+                        validation.AddInconsistency(new DnCampoDeTelaComTamanhoIncorretoErroDeValidacao(property, compositionProperty, compositionFieldName));
                     }
                 }
             }
@@ -154,7 +154,7 @@ namespace dn32.infra.Validation
 
                 if (property.GetValue(entity).IsDnNull())
                 {
-                    validation.AddInconsistency(new CampoDeTelaRequiredDnErroDeValidacao(property, compositionProperty, compositionFieldName));
+                    validation.AddInconsistency(new DnCampoDeTelaRequeridoErroDeValidacao(property, compositionProperty, compositionFieldName));
                 }
             }
         }
@@ -177,7 +177,7 @@ namespace dn32.infra.Validation
 
                 if (property.GetValue(entity).IsDnNull())
                 {
-                    validation.AddInconsistency(new CampoDeTelaRequiredDnErroDeValidacao(property, compositionProperty, compositionFieldName));
+                    validation.AddInconsistency(new DnCampoDeTelaRequeridoErroDeValidacao(property, compositionProperty, compositionFieldName));
                     validation.KeyValuesOk = false;
                 }
             }
@@ -215,7 +215,7 @@ namespace dn32.infra.Validation
                         }
                     }
 
-                    validation.AddInconsistency(new CampoDeTelaRequiredDnErroDeValidacao(property, compositionProperty, compositionFieldName));
+                    validation.AddInconsistency(new DnCampoDeTelaRequeridoErroDeValidacao(property, compositionProperty, compositionFieldName));
                     validation.KeyValuesOk = false;
                 }
                 else

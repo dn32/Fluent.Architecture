@@ -7,7 +7,7 @@ namespace dn32.infra.nucleo.erros_de_validacao
         [JsonProperty("chave_de_globalizacao")]
         public override string ChaveDeGlobalizacao => nameof(DnValorNuloErroDeValidacao);
 
-        public DnValorNuloErroDeValidacao(string mensagem) : base(mensagem, false)
+        public DnValorNuloErroDeValidacao(string mensagem, string parametro = null) : base(mensagem, false, parametro)
         {
         }
     }

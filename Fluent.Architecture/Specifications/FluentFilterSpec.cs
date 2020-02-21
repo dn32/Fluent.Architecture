@@ -26,12 +26,12 @@ namespace dn32.infra.Nucleo.Specifications
             return query
                  .Where(expression)
                  .GetInclusions(IsList)
-                 .DnDynamicProjectTo(Service);
+                 .ProjetarDeFormaDinamica(Service);
         }
 
         public override IOrderedQueryable<T> Order(IQueryable<T> query)
         {
-            return query.DnDynamicProjectToOrder(Service);
+            return query.ProjetarDeFormaDinamicaOrdenada(Service);
         }
     }
 }

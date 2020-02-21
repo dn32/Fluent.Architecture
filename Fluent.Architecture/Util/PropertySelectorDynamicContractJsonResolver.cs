@@ -11,10 +11,10 @@ namespace dn32.infra.Nucleo.Util
         private readonly string[] PropertyToIgnore;
         private readonly string[] PropertyToShow;
 
-        public PropertySelectorDynamicContractJsonResolver(string[] propertyToIgnore, string[] propertyToShow)
+        public PropertySelectorDynamicContractJsonResolver(string[] propertyToIgnore, string[] propriedadeAConsiderar)
         {
             PropertyToIgnore = propertyToIgnore;
-            PropertyToShow = propertyToShow;
+            PropertyToShow = propriedadeAConsiderar;
         }
 
         protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)

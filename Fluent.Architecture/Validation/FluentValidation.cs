@@ -195,7 +195,7 @@ namespace dn32.infra.Validation
         {
             if (APAGAR_TUDO?.Equals("Yes", StringComparison.InvariantCultureIgnoreCase) != true)
             {
-                AddInconsistency(new AlterLossOfDadaErroDeValidacao());
+                AddInconsistency(new DnFalhaNaRemocaoDeDadosErroDeValidacao());
             }
 
             RunTheContextValidation();
