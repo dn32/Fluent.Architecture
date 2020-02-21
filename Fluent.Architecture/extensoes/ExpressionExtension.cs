@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Expressions;
+using dn32.infra.extensoes;
 using dn32.infra.nucleo.excecoes;
 
-namespace dn32.infra.extensoes
+namespace dn32.infra.nucleo.extensoes
 {
-    internal class DnExpressionVisitor : ExpressionVisitor
-    {
-        public Dictionary<Expression, Expression> Dicionario = new Dictionary<Expression, Expression>();
-    }
-
     public static class DnExpressoesExtensao
     {
         public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> a, Expression<Func<T, bool>> b)

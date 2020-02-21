@@ -1,18 +1,18 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using dn32.infra.Factory.Proxy;
-using dn32.infra.Nucleo.Models;
-using dn32.infra.Nucleo.Util;
-using dn32.infra.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Reflection.Emit;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using dn32.infra.dados;
+using dn32.infra.Factory.Proxy;
+using dn32.infra.Nucleo.Models;
+using dn32.infra.Nucleo.Util;
+using dn32.infra.Services;
 using Microsoft.AspNetCore.Http;
 
-namespace dn32.infra.extensoes
+namespace dn32.infra.nucleo.extensoes
 {
     //Todo - refatorar
     public static class EspecificacaoDinamicaExtensao

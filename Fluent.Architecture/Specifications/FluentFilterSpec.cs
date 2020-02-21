@@ -3,6 +3,7 @@ using dn32.infra.Nucleo.Extensoes;
 using dn32.infra.Specifications;
 using System.Linq;
 using dn32.infra.dados;
+using dn32.infra.nucleo.extensoes;
 
 namespace dn32.infra.Nucleo.Specifications
 {
@@ -21,7 +22,7 @@ namespace dn32.infra.Nucleo.Specifications
 
         public override IQueryable<T> Where(IQueryable<T> query)
         {
-            var expression = Filters.FiltersToExtression<T>();
+            var expression = Filters.ConverterFiltrosParaExpressao<T>();
 
             return query
                  .Where(expression)

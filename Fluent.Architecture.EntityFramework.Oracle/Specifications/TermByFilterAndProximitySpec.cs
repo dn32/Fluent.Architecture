@@ -4,6 +4,7 @@ using dn32.infra.Specifications;
 using System;
 using System.Linq;
 using dn32.infra.dados;
+using dn32.infra.nucleo.extensoes;
 
 namespace dn32.infra.EntityFramework.Oracle.Specifications
 {
@@ -40,7 +41,7 @@ namespace dn32.infra.EntityFramework.Oracle.Specifications
         public override IQueryable<T> Where(IQueryable<T> query)
         {
             IgnoreOrder = true;
-            var expression = Filters.FiltersToExtression<T>();
+            var expression = Filters.ConverterFiltrosParaExpressao<T>();
 
             query = query
                      .Where(expression)

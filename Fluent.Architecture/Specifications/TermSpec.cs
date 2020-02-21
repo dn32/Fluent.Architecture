@@ -7,6 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using dn32.infra.dados;
+using dn32.infra.nucleo.extensoes;
 
 namespace dn32.infra.Nucleo.Specifications
 {
