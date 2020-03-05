@@ -29,7 +29,6 @@
   
   <ItemGroup>
     <ProjectReference Include="..\Fluent.Architecture.EntityFramework\dn32.infra.EntityFramework.csproj" />
-    <ProjectReference Include="..\Fluent.Architecture\dn32.infra.nucleo.csproj" />
   </ItemGroup>
 
 </Project>

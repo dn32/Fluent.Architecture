@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dn32.infra.nucleo", "Fluent.Architecture\dn32.infra.nucleo.csproj", "{BFABD6C5-8AFD-4D50-9127-6CAA35CF23A4}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dn32.infra.Teste", "Fluent.Architecture.Test\dn32.infra.Teste.csproj", "{AB51F7C9-E955-404F-B808-9D6C211950A6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{3CDE6F00-CAA7-48F5-9E60-1D1A6A81667C}"
@@ -27,9 +25,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dn32.infra.Doc", "Fluent.Ar
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Automatic", "Automatic", "{A8119674-A9A5-4E65-83B0-4A925629878C}"
 	ProjectSection(SolutionItems) = preProject
-		Build.ps1 = Build.ps1
-		deploy-delete-package.cmd = deploy-delete-package.cmd
-		deploy-package.cmd = deploy-package.cmd
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
@@ -54,16 +49,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dn32.infra.teste", "..\dn32
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dn32.infra.nucleo.teste", "..\dn32.infra\Testes\dn32.infra.nucleo.teste\dn32.infra.nucleo.teste.csproj", "{B31781E0-D465-4162-AAF4-9DE56069C6BE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dn32.infra.nucleo", "..\dn32.infra\dn32.infra.nucleo\dn32.infra.nucleo.csproj", "{50B0491E-19D8-476C-9631-9FE9A8670E82}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BFABD6C5-8AFD-4D50-9127-6CAA35CF23A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BFABD6C5-8AFD-4D50-9127-6CAA35CF23A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BFABD6C5-8AFD-4D50-9127-6CAA35CF23A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BFABD6C5-8AFD-4D50-9127-6CAA35CF23A4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AB51F7C9-E955-404F-B808-9D6C211950A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AB51F7C9-E955-404F-B808-9D6C211950A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB51F7C9-E955-404F-B808-9D6C211950A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -120,12 +113,15 @@ Global
 		{B31781E0-D465-4162-AAF4-9DE56069C6BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B31781E0-D465-4162-AAF4-9DE56069C6BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B31781E0-D465-4162-AAF4-9DE56069C6BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50B0491E-19D8-476C-9631-9FE9A8670E82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50B0491E-19D8-476C-9631-9FE9A8670E82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50B0491E-19D8-476C-9631-9FE9A8670E82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50B0491E-19D8-476C-9631-9FE9A8670E82}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{BFABD6C5-8AFD-4D50-9127-6CAA35CF23A4} = {0EBABE71-7A0B-4253-BC8A-51E338F9EAA6}
 		{AB51F7C9-E955-404F-B808-9D6C211950A6} = {F1AE78C0-4894-4D1C-9A02-AB71E94306F7}
 		{5354F543-E7F6-46E3-99DC-7F56D4573ACF} = {F1AE78C0-4894-4D1C-9A02-AB71E94306F7}
 		{7908F454-A8C8-42A8-8949-C1B33E2B56EF} = {F1AE78C0-4894-4D1C-9A02-AB71E94306F7}
@@ -140,6 +136,7 @@ Global
 		{D5C1BF43-FCB2-44FB-A84D-E80697471011} = {4158C429-5F1F-4FC6-B3E0-23FB8679F639}
 		{2D5A2BBE-D03B-4670-B270-41E53A9A4C72} = {4158C429-5F1F-4FC6-B3E0-23FB8679F639}
 		{B31781E0-D465-4162-AAF4-9DE56069C6BE} = {4158C429-5F1F-4FC6-B3E0-23FB8679F639}
+		{50B0491E-19D8-476C-9631-9FE9A8670E82} = {0EBABE71-7A0B-4253-BC8A-51E338F9EAA6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {123E34D5-DA60-4929-9110-E760ECAC5050}

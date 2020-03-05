@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="D:\Projetos\dn32\dn32.infra\dn32.infra\dn32.infra.csproj" />
+    <ProjectReference Include="..\..\dn32.infra\dn32.infra.nucleo\dn32.infra.nucleo.csproj" />
     <ProjectReference Include="..\Fluent.Architecture.EntityFramework\dn32.infra.EntityFramework.csproj" />
   </ItemGroup>
 

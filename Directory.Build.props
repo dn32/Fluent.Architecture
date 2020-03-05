@@ -1,11 +1,11 @@
 <Project>
 
   <PropertyGroup>
-    <PackageProjectUrl>https://github.com/dn32/Dn.Infrastructure.Doc</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/dn32/Dn.Infrastructure.Doc</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/dn32/dn32.infra</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dn32/dn32.infra</RepositoryUrl>
     <SignAssembly>true</SignAssembly>
     <CopyOutputSymbolsToPublishDirectory>false</CopyOutputSymbolsToPublishDirectory>
-    <!--<GeneratePackageOnBuild>true</GeneratePackageOnBuild>-->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Nullable>warnings</Nullable>
   </PropertyGroup>
 
@@ -19,15 +19,15 @@
   </PropertyGroup>-->
 
   <Target Name="CopyPackage" AfterTargets="Pack">
-     <!--<Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="C:\Users\Marcelo\Google Drive\FOut" />-->
+     <Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="D:\Drive\Pacotes" />
   </Target>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <Version>2.0.1.4-beta$([System.DateTime]::UtcNow.ToString(MMdd))2</Version>
+    <Version>0.0.0.1-beta$([System.DateTime]::UtcNow.ToString(MMdd))</Version>
   </PropertyGroup>
   
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <Version>2.0.3.2-beta07</Version>
+    <Version>0.0.0.1-beta01</Version>
   </PropertyGroup>
 
 </Project>
