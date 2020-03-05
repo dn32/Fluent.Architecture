@@ -12,14 +12,14 @@ namespace dn32.infra.nucleo.controladores
         [Route("/api/[controller]/BuscarPorEntidade")]
         public virtual async Task<ResultadoPadrao<T>> BuscarPorEntidadeGet([FromQuery] T entidade)
         {
-            return await this.CrieResultadoAsync(await this.Servico.BuscaAsync(entidade, false));
+            return await this.CrieResultadoAsync(await this.Servico.BuscarAsync(entidade, false));
         }
 
         [HttpPost]
         [Route("/api/[controller]/BuscarPorEntidade")]
         public virtual async Task<ResultadoPadrao<T>> BuscarPorEntidadePost([FromBody] T entidade)
         {
-            return await this.CrieResultadoAsync(await this.Servico.BuscaAsync(entidade, false));
+            return await this.CrieResultadoAsync(await this.Servico.BuscarAsync(entidade, false));
         }
 
         [HttpGet]
@@ -28,7 +28,7 @@ namespace dn32.infra.nucleo.controladores
         public virtual async Task<ResultadoPadrao<T>> BuscarPorFiltroGet([FromQuery] Filtro[] filtros)
         {
             var especificacao = this.CriarEspecificacaoDeFiltros(filtros, false);
-            var item = await this.Servico.ObterOUnicoOuPadraoAsync(especificacao);
+            var item = await this.Servico.UnicoOuPadraoAsync(especificacao);
             return await this.CrieResultadoAsync(item);
         }
 
@@ -38,7 +38,7 @@ namespace dn32.infra.nucleo.controladores
         public virtual async Task<ResultadoPadrao<T>> BuscarPorFiltroPost([FromBody] Filtro[] filtros)
         {
             var especificacao = this.CriarEspecificacaoDeFiltros(filtros, false);
-            var item = await this.Servico.ObterOUnicoOuPadraoAsync(especificacao);
+            var item = await this.Servico.UnicoOuPadraoAsync(especificacao);
             return await this.CrieResultadoAsync(item);
         }
 
@@ -47,7 +47,7 @@ namespace dn32.infra.nucleo.controladores
         public virtual async Task<ResultadoPadrao<T>> BuscarPorTermo(string termo)
         {
             var especificacao = this.CriarEspecificacaoPorTermo(termo, ehLista: false);
-            var item = await this.Servico.ObterOUnicoOuPadraoAsync(especificacao);
+            var item = await this.Servico.UnicoOuPadraoAsync(especificacao);
             return await this.CrieResultadoAsync(item);
         }
 

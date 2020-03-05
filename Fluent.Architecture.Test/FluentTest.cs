@@ -73,7 +73,7 @@ namespace dn32.infra.Test
         public virtual int Count()
         {
             var newController = GetNewController();
-            return TestUtil.Execute<nucleo.controladores.DnApiControlador<TModel>, int>(newController, (nucleo.controladores.DnApiControlador<TModel> controller) => controller.Quantidade().Result);
+            return TestUtil.Execute<nucleo.controladores.DnApiControlador<TModel>, int>(newController, (nucleo.controladores.DnApiControlador<TModel> controller) => controller.QuantidadeTotal().Result);
         }
 
         public virtual int Count(Filtro[] filters)
@@ -93,7 +93,7 @@ namespace dn32.infra.Test
             return Execute((nucleo.controladores.DnApiControlador<TModel> controller) => controller.BuscarPorEntidadePost(model).Result);
         }
 
-        public virtual bool RemoveRange(TModel[] models)
+        public virtual bool RemoverLista(TModel[] models)
         {
             var newController = GetNewController();
             return TestUtil.Execute<nucleo.controladores.DnApiControlador<TModel>, bool>(newController, (nucleo.controladores.DnApiControlador<TModel> controller) => controller.RemoverLista(models).Result);

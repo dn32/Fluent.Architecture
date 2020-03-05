@@ -1,6 +1,4 @@
 ﻿using dn32.infra.nucleo.erros_de_validacao;
-using dn32.infra.Nucleo.Inconsistences;
-using dn32.infra.Nucleo.Models;
 using dn32.infra.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +8,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using dn32.infra.extensoes;
+using dn32.infra.nucleo.insonsistencias;
+using dn32.infra.nucleo.modelos;
 
 namespace dn32.infra.Filters
 {
@@ -43,32 +43,32 @@ namespace dn32.infra.Filters
                 {
                     if (inconsistence is DnCampoDeTelaErroDeValidacao field)
                     {
-                        return new DnUiFieldInconsistence
+                        return new DnInconsistenciaDeCampoDeTela
                         {
-                            Field = field.Campo,
-                            Message = field.Mensagem,
+                            Campo = field.Campo,
+                            Mensagem = field.Mensagem,
                             ChaveDeGlobalizacao = field.ChaveDeGlobalizacao,
-                            PropertyName = field.NomeDaPropriedade,
-                            DnException = inconsistence
+                            NomeDaPropriedade = field.NomeDaPropriedade,
+                            DnErroDeValidacao = inconsistence
                         };
                     }
                     else if (inconsistence is DnPropriedadeErroDeValidacao prop)
                     {
-                        return new DnPropertyInconsistence
+                        return new DnInconsistenciaDePropriedade
                         {
-                            Message = prop.Mensagem,
+                            Mensagem = prop.Mensagem,
                             ChaveDeGlobalizacao = prop.ChaveDeGlobalizacao,
-                            PropertyName = prop.NomeDaPropriedade,
-                            DnException = inconsistence
+                            NomeDaPropriedade = prop.NomeDaPropriedade,
+                            DnErroDeValidacao = inconsistence
                         };
                     }
                     else
                     {
-                        return new DnInconsistence
+                        return new DnInconsistencia
                         {
-                            Message = inconsistence.Mensagem,
+                            Mensagem = inconsistence.Mensagem,
                             ChaveDeGlobalizacao = inconsistence.ChaveDeGlobalizacao,
-                            DnException = inconsistence
+                            DnErroDeValidacao = inconsistence
                         };
                     }
                 })
@@ -77,11 +77,11 @@ namespace dn32.infra.Filters
                 inconsistencies.ForEach(GetGlobalization);
 
                 // filterContext.Result =
-                var result = new ValidationReturn
+                var result = new DnRetornoDeValidacao
                 {
-                    Inconsistencies = inconsistencies,
-                    Message = exception.Message,
-                    ValidationError = true
+                    Inconsistencias = inconsistencies,
+                    Mensagem = exception.Message,
+                    EhErroDeValidacao = true
                 };
 
                 ContentResult content = new ContentResult
@@ -119,7 +119,7 @@ namespace dn32.infra.Filters
             }
         }
 
-        public virtual void GetGlobalization(DnInconsistence inconsistence)
+        public virtual void GetGlobalization(DnInconsistencia inconsistence)
         {
         }
     }

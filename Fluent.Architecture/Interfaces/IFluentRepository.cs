@@ -1,5 +1,5 @@
 ﻿using dn32.infra.Interfaces;
-using dn32.infra.Services;
+using dn32.infra.servicos;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,36 +11,36 @@ namespace dn32.infra.Nucleo.Interfaces
     {
         #region PROPERTIES
 
-        DnService<TE> Service { get; set; }
+        DnServico<TE> Service { get; set; }
         ITransactionObjects TransactionObjects { get; set; }
         Type TransactionObjectsType { get; }
 
         #endregion
 
-        void RemoveRange(IDnSpecification spec);
+        void RemoverLista(IDnSpecification spec);
 
-        TX Detach<TX>(TX entity);
-        Task RemoveRangeAsync(params TE[] entities);
-        Task<TE> UpdateAsync(TE entity);
-        Task UpdateRangeAsync(IEnumerable<TE> entities);
-        Task TruncateAsync();
-        Task<TE> RemoveAsync(TE entity);
-        Task<bool> ExistsSelectAsync<TO>(ISpec spec);
-        Task<bool> ExistsAsync(ISpec spec);
+        TX Desanexar<TX>(TX entity);
+        Task RemoverListaAsync(params TE[] entities);
+        Task<TE> AtualizarAsync(TE entity);
+        Task AtualizarListaAsync(IEnumerable<TE> entities);
+        Task EliminarTudoAsync();
+        Task<TE> RemoverAsync(TE entity);
+        Task<bool> ExisteAlternativoAsync<TO>(ISpec spec);
+        Task<bool> ExisteAsync(ISpec spec);
         Task<List<TE>> ListAsync(IDnSpecification spec, DnPaginacao pagination = null);
-        Task<List<TO>> ListSelectAsync<TO>(IDnSpecification<TO> spec, DnPaginacao pagination = null);
-        Task<TO> FirstOrDefaultSelectAsync<TO>(IDnSpecification<TO> spec);
-        Task<TE> FirstOrDefaultAsync(IDnSpecification spec);
+        Task<List<TO>> ListarAlternativoAsync<TO>(IDnSpecification<TO> spec, DnPaginacao pagination = null);
+        Task<TO> PrimeiroOuPadraoAlternativoAsync<TO>(IDnSpecification<TO> spec);
+        Task<TE> PrimeiroOuPadraoAsync(IDnSpecification spec);
         Task<TE> SingleOrDefaultAsync(IDnSpecification spec);
-        Task<TO> SingleOrDefaultSelectAsync<TO>(IDnSpecification<TO> spec);
-        Task<bool> ExistsAsync(TE entity, bool includeExcludedLogically = false);
+        Task<TO> UnicoOuPadraoAlternativoAsync<TO>(IDnSpecification<TO> spec);
+        Task<bool> ExisteAsync(TE entity, bool includeExcludedLogically = false);
         Task<TE> FindAsync(TE entity);
-        Task<TE> AddAsync(TE entity);
-        Task AddRangeAsync(TE[] entities);
-        Task<bool> ExistsOnlyOneAsync(TE entity, bool includeExcludedLogically);
-        Task<int> CountSelectAsync<TO>(IDnSpecification<TO> spec);
-        Task<int> CountAsync(TE entity, bool includeExcludedLogically);
-        Task<int> CountAsync(IDnSpecification spec);
-        Task<int> CountAsync();
+        Task<TE> AdicionarAsync(TE entity);
+        Task AdicionarListaAsync(TE[] entities);
+        Task<bool> HaSomenteUmAsync(TE entity, bool includeExcludedLogically);
+        Task<int> QuantidadeAlternativoAsync<TO>(IDnSpecification<TO> spec);
+        Task<int> QuantidadeAsync(TE entity, bool includeExcludedLogically);
+        Task<int> QuantidadeAsync(IDnSpecification spec);
+        Task<int> QuantidadeTotalAsync();
     }
 }

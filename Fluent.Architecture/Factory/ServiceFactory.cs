@@ -2,11 +2,12 @@
 using dn32.infra.nucleo.excecoes;
 using dn32.infra.Nucleo.Interfaces;
 using dn32.infra.Nucleo.Models;
-using dn32.infra.Services;
+using dn32.infra.servicos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using dn32.infra.extensoes;
+using dn32.infra.nucleo.servicos;
 
 namespace dn32.infra.Factory
 {
@@ -29,23 +30,23 @@ namespace dn32.infra.Factory
         /// <returns>
         /// O serviço criado.
         /// </returns>
-        internal static TS Create<TS>(object httpContext) where TS : TransactionalService, new()
+        internal static TS Create<TS>(object httpContext) where TS : DnServicoTransacionalBase, new()
         {
             return Create(typeof(TS), httpContext) as TS;
         }
 
-        internal static TransactionalService Create(Type serviceType, UserSessionRequest sessionRequest)
+        internal static DnServicoTransacionalBase Create(Type serviceType, SessaoDeRequisicaoDoUsuario sessionRequest)
         {
             return Create(serviceType, sessionRequest.HttpContext, sessionRequest);
         }
 
-        internal static TransactionalService Create(Type serviceType, object httpContext, UserSessionRequest sessionRequest = null)
+        internal static DnServicoTransacionalBase Create(Type serviceType, object httpContext, SessaoDeRequisicaoDoUsuario sessionRequest = null)
         {
             var sessionId = Guid.NewGuid();
             serviceType = GetSpecializedService(serviceType);
             var service = InternalCreate(serviceType, sessionId);
             var userSession = sessionRequest ?? CreateUserSession(httpContext, sessionId, service);
-            service.SetUserSession(userSession);
+            service.DefinirSessaoDoUsuario(userSession);
             return service;
         }
 
@@ -62,7 +63,7 @@ namespace dn32.infra.Factory
         /// Explique por que você está fazendo uso desse método.
         /// </param>
         /// <returns></returns>
-        public static TS Create<TS>(object httpContext, string justification) where TS : TransactionalService, new()
+        public static TS Create<TS>(object httpContext, string justification) where TS : DnServicoTransacionalBase, new()
         {
             if (string.IsNullOrWhiteSpace(justification))
             {
@@ -72,7 +73,7 @@ namespace dn32.infra.Factory
             return Create(typeof(TS), httpContext).DnCast<TS>();
         }
 
-        public static TransactionalService Create(Type serviceType, object httpContext, string justification)
+        public static DnServicoTransacionalBase Create(Type serviceType, object httpContext, string justification)
         {
             if (string.IsNullOrWhiteSpace(justification))
             {
@@ -81,10 +82,10 @@ namespace dn32.infra.Factory
 
             if (serviceType.IsDnEntity())
             {
-                serviceType = typeof(Services.DnService<>).MakeGenericType(serviceType);
+                serviceType = typeof(servicos.DnServico<>).MakeGenericType(serviceType);
             }
 
-            return Create(serviceType, httpContext).DnCast<TransactionalService>();
+            return Create(serviceType, httpContext).DnCast<DnServicoTransacionalBase>();
         }
 
         //private static void InternalCreateValidation(TransactionalService service)
@@ -110,13 +111,13 @@ namespace dn32.infra.Factory
         internal static object CreateInternalServiceRuntime(Type serviceType, Guid sessionId)
         {
             var service = InternalCreate(serviceType, sessionId);
-            service.SetUserSession(Setup.GetUserRequestSession(sessionId));
+            service.DefinirSessaoDoUsuario(Setup.ObterSessaoDeUmaRequisicao(sessionId));
             return service;
         }
 
         #region PRIVATE
 
-        private static TransactionalService InternalCreate(Type serviceType, Guid sessionId)
+        private static DnServicoTransacionalBase InternalCreate(Type serviceType, Guid sessionId)
         {
             return ServiceFactoryLazy.Create(serviceType, sessionId);
         }
@@ -128,9 +129,9 @@ namespace dn32.infra.Factory
             if (args.Any())
             {
                 var entityType = args.First();
-                if (!Setup.Services.TryGetValue(entityType, out serviceType))
+                if (!Setup.Servicos.TryGetValue(entityType, out serviceType))
                 {
-                    var type = (Setup.Config.Config.GenericServiceType) ?? typeof(Services.DnService<>);
+                    var type = (Setup.ConfiguracoesGlobais.GenericServiceType) ?? typeof(servicos.DnServico<>);
                     serviceType = type.MakeGenericType(entityType);
                 }
             }
@@ -138,18 +139,18 @@ namespace dn32.infra.Factory
             return serviceType;
         }
 
-        private static UserSessionRequest CreateUserSession(object httpContext, Guid sessionId, BaseService service)
+        private static SessaoDeRequisicaoDoUsuario CreateUserSession(object httpContext, Guid sessionId, DnServicoBase service)
         {
             //Todo arrumar
             ITransactionObjects transactionObjects = null;// ITransactionObjects.Create();
 
             var serviceType = GetSpecializedService(service.GetType());
 
-            var type = Setup.Config.Config.UserSessionRequestType ?? typeof(UserSessionRequest);
-            var userSession = Activator.CreateInstance(type).DnCast<UserSessionRequest>();
-            userSession.TransactionObjects = transactionObjects;
-            userSession.SessionRequestId = sessionId;
-            userSession.Services = new Dictionary<Type, BaseService>();
+            var type = Setup.ConfiguracoesGlobais.UserSessionRequestType ?? typeof(SessaoDeRequisicaoDoUsuario);
+            var userSession = Activator.CreateInstance(type).DnCast<SessaoDeRequisicaoDoUsuario>();
+            userSession.ObjetosDaTransacao = transactionObjects;
+            userSession.IdentificadorDaSessao = sessionId;
+            userSession.Services = new Dictionary<Type, DnServicoBase>();
             userSession.HttpContext = httpContext;
 
             userSession.Services.Add(serviceType, service);

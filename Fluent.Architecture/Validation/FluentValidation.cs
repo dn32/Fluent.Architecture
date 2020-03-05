@@ -1,7 +1,7 @@
 ﻿using dn32.infra.nucleo.erros_de_validacao;
 using dn32.infra.nucleo.atributos;
 using dn32.infra.Nucleo.Models;
-using dn32.infra.Services;
+using dn32.infra.servicos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,13 +22,13 @@ namespace dn32.infra.Validation
         /// <summary>
         /// A validação do serviço.
         /// </summary>
-        protected internal new DnService<T> Service
+        protected internal new DnServico<T> Service
         {
-            get => base.Service as DnService<T>;
+            get => base.Service as DnServico<T>;
             set => base.Service = value;
         }
 
-        public UserSessionRequest SessionRequest => Service.SessionRequest;
+        public SessaoDeRequisicaoDoUsuario SessionRequest => Service.SessaoDaRequisicao;
 
         // Todo2 documentar
         public bool NullParameterOk { get; set; } = true;
@@ -41,7 +41,7 @@ namespace dn32.infra.Validation
         #region VALIDATE COMPOSITIONS
 
         // Composition
-        public virtual async Task AddAsync(T entity)
+        public virtual async Task AdicionarAsync(T entity)
         {
             var method = typeof(DnValidation<T>).GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
 
@@ -50,16 +50,16 @@ namespace dn32.infra.Validation
         }
 
         // Composition
-        public virtual async Task<List<TransactionalService>> AddOrUpdateAsync(T entity)
+        public virtual async Task<List<DnServicoTransacionalBase>> AdidionarOuAtualizarAsync(T entity)
         {
             var method = typeof(DnValidation<T>).GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
             return await (this).ExecuteEntityAndCompositions(entity, method);
         }
 
         // Composition
-        public virtual async Task UpdateAsync(T entity)
+        public virtual async Task AtualizarAsync(T entity)
         {
-            var method = typeof(DnValidation<T>).GetMethod(nameof(UpdateRangeAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
+            var method = typeof(DnValidation<T>).GetMethod(nameof(AtualizarListaAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
             var anotherServices = await (this).ExecuteEntityAndCompositions(entity, method);
 
             if (KeyValuesOk)
@@ -72,11 +72,11 @@ namespace dn32.infra.Validation
         }
 
         // Composition
-        public virtual async Task UpdateRangeAsync(IEnumerable<T> entities)
+        public virtual async Task AtualizarListaAsync(IEnumerable<T> entities)
         {
             this.ParameterMustBeInformed(entities, nameof(entities));
-            var anotherServices = new List<TransactionalService>();
-            var method = typeof(DnValidation<T>).GetMethod(nameof(UpdateRangeAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
+            var anotherServices = new List<DnServicoTransacionalBase>();
+            var method = typeof(DnValidation<T>).GetMethod(nameof(AtualizarListaAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
 
             if (entities != null)
             {
@@ -98,10 +98,10 @@ namespace dn32.infra.Validation
         }
 
         // Composition
-        public virtual async Task AddRangeAsync(IEnumerable<T> entities)
+        public virtual async Task AdicionarListaAsync(IEnumerable<T> entities)
         {
             this.ParameterMustBeInformed(entities, nameof(entities));
-            var anotherServices = new List<TransactionalService>();
+            var anotherServices = new List<DnServicoTransacionalBase>();
             if (entities != null)
             {
                 var method = typeof(DnValidation<T>).GetMethod(nameof(AdddAsyncInternal), BindingFlags.NonPublic | BindingFlags.Static);
@@ -118,7 +118,7 @@ namespace dn32.infra.Validation
 
         #endregion
 
-        public virtual async Task RemoveAsync(T entity)
+        public virtual async Task RemoverAsync(T entity)
         {
             this.ParameterMustBeInformed(entity, null);
             if (entity != null)
@@ -130,7 +130,7 @@ namespace dn32.infra.Validation
             RunTheContextValidation();
         }
 
-        public virtual async Task RemoveRangeAsync(T[] entities)
+        public virtual async Task RemoverListaAsync(T[] entities)
         {
             this.ParameterMustBeInformed(entities, null);
 
@@ -203,7 +203,7 @@ namespace dn32.infra.Validation
 
         #region INTERNAL
 
-        internal static void UpdateAsyncInternal<T2>(IDnValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : EntidadeBase
+        internal static void AtualizarAsyncInternal<T2>(IDnValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : EntidadeBase
         {
             validation.ParameterMustBeInformed(entity, compositionProperty);
             validation.DnValidateAttribute(entity, compositionProperty, compositionFieldName);
@@ -226,7 +226,7 @@ namespace dn32.infra.Validation
             }
         }
 
-        internal static void UpdateRangeAsyncInternal<T2>(IDnValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : EntidadeBase
+        internal static void AtualizarListaAsyncInternal<T2>(IDnValidation validation, T2 entity, string compositionProperty, string compositionFieldName) where T2 : EntidadeBase
         {
             validation.ParameterMustBeInformed(entity, compositionProperty);
             validation.DnValidateAttribute(entity, compositionProperty, compositionFieldName);

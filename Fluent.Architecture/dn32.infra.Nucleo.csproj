@@ -6,7 +6,7 @@
     <TargetFrameworks>netcoreapp2.2;netcoreapp3.1</TargetFrameworks>
     <LangVersion>8</LangVersion>
     <Nullable>warnings</Nullable>
-    <AssemblyOriginatorKeyFile>dn32.infra.Nucleo.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>dn32.infra.nucleo.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>

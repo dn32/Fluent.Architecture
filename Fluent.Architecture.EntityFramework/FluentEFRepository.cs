@@ -8,7 +8,7 @@ using dn32.infra.nucleo.atributos;
 using dn32.infra.Nucleo.Interfaces;
 using dn32.infra.Nucleo.Models;
 using dn32.infra.Nucleo.Util;
-using dn32.infra.Services;
+using dn32.infra.servicos;
 using dn32.infra.Specifications;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
@@ -48,7 +48,7 @@ namespace dn32.infra.EntityFramework
 
         public virtual Type TransactionObjectsType => typeof(TransactionObjects);
 
-        public UserSessionRequest SessionRequest => Service.SessionRequest;
+        public SessaoDeRequisicaoDoUsuario SessionRequest => Service.SessaoDaRequisicao;
 
         /// <summary>
         /// A referência da sessão do EF.
@@ -68,16 +68,16 @@ namespace dn32.infra.EntityFramework
         /// <summary>
         /// O serviço qual esse repositório representa.
         /// </summary>
-        public DnService<TE> Service { get; set; }
+        public DnServico<TE> Service { get; set; }
 
         // DnControladorDeServico<TE> IDnRepository<TE>.Servico { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
-        internal protected void RunTheContextValidation() => Service.SessionRequest.ContextDnValidationException.Validate();
+        internal protected void RunTheContextValidation() => Service.SessaoDaRequisicao.ContextDnValidationException.Validate();
 
         #endregion
 
 
-        public TX Detach<TX>(TX entity)
+        public TX Desanexar<TX>(TX entity)
         {
             if (entity != null)
             {
@@ -405,7 +405,7 @@ namespace dn32.infra.EntityFramework
         /// </param>
 
 
-        public virtual async Task<TE> UpdateAsync(TE entity)
+        public virtual async Task<TE> AtualizarAsync(TE entity)
         {
             RunTheContextValidation();
 
@@ -416,7 +416,7 @@ namespace dn32.infra.EntityFramework
                 Session.EnableLogicalDeletion = false;
             }
 
-            var currentEntity = await Service.BuscaAsync(entity, true, false);
+            var currentEntity = await Service.BuscarAsync(entity, true, false);
 
             TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
 
@@ -431,27 +431,27 @@ namespace dn32.infra.EntityFramework
         }
 
         //Todo - tratar recuperação de exclusão lógica, como foi feito no Atualizar
-        public virtual async Task UpdateRangeAsync(IEnumerable<TE> entities)
+        public virtual async Task AtualizarListaAsync(IEnumerable<TE> entities)
         {
             RunTheContextValidation();
             foreach (var entity in entities)
             {
                 DefineForeignKeyOfCompositionsOrAggregations(entity);
-                var currentEntity = await Service.BuscaAsync(entity);
+                var currentEntity = await Service.BuscarAsync(entity);
                 TransactionObjects.Session.Entry(currentEntity).CurrentValues.SetValues(entity);
                 await UpdateCompositionListAsync(entity, true);
             }
         }
 
-        public virtual void RemoveRange(IDnSpecification spec)
+        public virtual void RemoverLista(IDnSpecification spec)
         {
             var list = GetSpec(spec).ToIQueryable(Query).ToList();
             this.Input.RemoveRange(list);
         }
 
-        public virtual async Task RemoveRangeAsync(params TE[] entities)
+        public virtual async Task RemoverListaAsync(params TE[] entities)
         {
-            var tasks = entities.Select(RemoveAsync).ToArray();
+            var tasks = entities.Select(RemoverAsync).ToArray();
             await Task.WhenAll(tasks);
         }
 
@@ -511,18 +511,18 @@ namespace dn32.infra.EntityFramework
 
         private string GetParameter(string key)
         {
-            Service.SessionRequest.LocalHttpContext.Request.Headers.TryGetValue(key, out StringValues value);
+            Service.SessaoDaRequisicao.LocalHttpContext.Request.Headers.TryGetValue(key, out StringValues value);
             if (!string.IsNullOrEmpty(value))
             {
                 return value;
             }
 
-            if (Service.SessionRequest.LocalHttpContext.Request.Method == "GET" || Service.SessionRequest.LocalHttpContext.Request.HasFormContentType == false)
+            if (Service.SessaoDaRequisicao.LocalHttpContext.Request.Method == "GET" || Service.SessaoDaRequisicao.LocalHttpContext.Request.HasFormContentType == false)
             {
                 return "";
             }
 
-            return Service.SessionRequest.LocalHttpContext.Request?.Form[key];
+            return Service.SessaoDaRequisicao.LocalHttpContext.Request?.Form[key];
         }
 
 

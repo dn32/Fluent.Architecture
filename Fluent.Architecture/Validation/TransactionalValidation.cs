@@ -6,7 +6,7 @@
 // -----------------------------------------------------------------------
 
 using dn32.infra.nucleo.erros_de_validacao;
-using dn32.infra.Services;
+using dn32.infra.servicos;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,9 +17,9 @@ namespace dn32.infra.Validation
         /// <summary>
         /// A validação do serviço.
         /// </summary>
-        protected internal new TransactionalService Service
+        protected internal new DnServicoTransacionalBase Service
         {
-            get => base.Service as TransactionalService;
+            get => base.Service as DnServicoTransacionalBase;
             set => base.Service = value;
         }
 
@@ -32,7 +32,7 @@ namespace dn32.infra.Validation
         /// <param Nome="repository">
         /// O repositório que a validação representa.
         /// </param>
-        protected internal virtual void Init(TransactionalService service)
+        protected internal virtual void Init(DnServicoTransacionalBase service)
         {
             Service = service;
         }
@@ -45,32 +45,32 @@ namespace dn32.infra.Validation
         /// </param>
         public void AddInconsistency(DnErroDeValidacao ex)
         {
-            this.Service.SessionRequest.ContextDnValidationException.AddInconsistency(ex);
+            this.Service.SessaoDaRequisicao.ContextDnValidationException.AddInconsistency(ex);
         }
 
         public void ClearInconsistencies()
         {
-            this.Service.SessionRequest.ContextDnValidationException.Inconsistencies.Clear();
+            this.Service.SessaoDaRequisicao.ContextDnValidationException.Inconsistencies.Clear();
         }
 
         public void RunTheContextValidation()
         {
             if (PauseRunTheContextValidation) return;
-            this.Service.SessionRequest.ContextDnValidationException.Validate();
+            this.Service.SessaoDaRequisicao.ContextDnValidationException.Validate();
         }
 
         public bool PauseRunTheContextValidation { get; set; }
 
-        public void RunTheContextValidation(List<TransactionalService> anotherServices)
+        public void RunTheContextValidation(List<DnServicoTransacionalBase> anotherServices)
         {
             if (PauseRunTheContextValidation) return;
 
-            anotherServices.SelectMany(x => x.SessionRequest.ContextDnValidationException.Inconsistencies).ToList().ForEach(ex =>
+            anotherServices.SelectMany(x => x.SessaoDaRequisicao.ContextDnValidationException.Inconsistencies).ToList().ForEach(ex =>
             {
-                Service.SessionRequest.ContextDnValidationException.AddInconsistency(ex);
+                Service.SessaoDaRequisicao.ContextDnValidationException.AddInconsistency(ex);
             });
 
-            this.Service.SessionRequest.ContextDnValidationException.Validate();
+            this.Service.SessaoDaRequisicao.ContextDnValidationException.Validate();
         }
 
         public void ValueMustBeInformed(object value, string message = "")

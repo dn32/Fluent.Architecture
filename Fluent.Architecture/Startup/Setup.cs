@@ -3,7 +3,7 @@ using dn32.infra.Filters;
 using dn32.infra.Nucleo.Interfaces;
 using dn32.infra.Nucleo.Models;
 using dn32.infra.Nucleo.Services;
-using dn32.infra.Services;
+using dn32.infra.servicos;
 using dn32.infra.Specifications;
 using dn32.infra.Util;
 using dn32.infra.Validation;
@@ -15,6 +15,11 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using dn32.infra.dados;
 using dn32.infra.nucleo.controladores;
+using dn32.infra.nucleo.servicos;
+using Newtonsoft.Json;
+using dn32.infra.extensoes;
+using dn32.infra.Nucleo.Factory;
+using System.Collections.Concurrent;
 
 [assembly: InternalsVisibleTo(@"dn32.infra.EntityFramework, PublicKey=00240000048000009400000006020000002400005253413100040000010001000da51e0f449f6ee7879b256b497e9f64eda760b5fac3d47a4ba8a54664303024f451098b69154691fad078fe77ee79ac2b6a9770fd7a6555a4c49a2a58e82f411939e1eb44ac4a1327acdd13f2c8ec7698644d019f04197838434be8cb53877f1d22acab90ae7735acc363fdb393a11fa34afe780d1c5fb26f37a8fd6e4d9b9f")]
 [assembly: InternalsVisibleTo(@"dn32.infra.Doc, PublicKey=00240000048000009400000006020000002400005253413100040000010001008963bf4072062c4090dd8b8b1b3335b78ac84c4e55c7903a918af1d62ecf0e2ab5504ca1fa722b67f5968cdbbf2f1436cc9303018d57511caefbae6cf903f681d721a1122bcdc4f35fa4aafade1e9900468a69aba391d3e9c2eb3087bd37727bbcc30f704666c62beccdca492d8e5467088b696c39306fa582637041a8c40dc4")]
@@ -22,238 +27,216 @@ namespace dn32.infra
 {
     public static class Setup
     {
-        #region PROPERTIES
+        #region PROPRIEDADES
 
+        public static Dictionary<Type, Type> Modelos { get; private set; }
 
-        internal static IServiceCollection ClientServices { get; set; }
+        public static Dictionary<Type, Type> Controladores { get; private set; }
 
-        public static IServiceProvider ServiceProvider { get; set; }
+        public static bool Inicializado { get; set; }
 
-        private static readonly object LockInitialization = new object();
+        public static DnConfiguracoesGlobais ConfiguracoesGlobais { get; set; }
 
-        internal static Dictionary<Type, Type> Services { get; set; }
+        internal static Dictionary<Type, Type> Servicos { get; set; }
 
-        internal static Dictionary<Type, Type> Repositories { get; set; }
+        internal static Dictionary<Type, Type> Repositorios { get; set; }
 
-        internal static Dictionary<Type, Type> Validations { get; set; }
+        internal static Dictionary<Type, Type> Validacoes { get; set; }
 
-        public static Dictionary<Type, Type> Model { get; private set; }
+        internal static ConcurrentDictionary<Guid, SessaoDeRequisicaoDoUsuario> SessoesDeRequisicoesDeUsuarios { get; set; }
 
-        public static Dictionary<Type, Type> Controllers { get; private set; }
+        internal static List<Type> TodosOsTipos { get; set; }
 
-        public static bool Initialized { get; set; }
+        private static object TravaDeInicializacao { get; set; } = new object();
 
-        internal static Dictionary<Guid, UserSessionRequest> UserSessionList { get; set; }
-
-        public static IConfigValidate Config { get; set; }
+        private static IServiceCollection ServiceCollection { get; set; }
 
         #endregion
 
-        #region PUBLIC METHODS
+        #region MÉTODOS PÚBLICOS
 
-        public static List<Type> GetDnApiEntity()
+        #region DEFINIÇÕES
+
+        public static DnConfiguracoesGlobais DefinirTipoGenericoDeServico<S>(this DnConfiguracoesGlobais configuracoes) where S : DnServicoBase
         {
-            return Setup.Model.Values.ToList().Where(x => !x.IsAbstract && x.IsPublic).ToList();
+            if (configuracoes != null)
+                configuracoes.GenericServiceType = typeof(S);
+
+            return configuracoes;
         }
 
-        public static Config SetGenericServiceType(this Config configClass, Type serviceType)
+        public static DnConfiguracoesGlobais DefinirTipoGenericoDeRepositorio<R>(this DnConfiguracoesGlobais configuracoes) where R : ITransactionlRepository
         {
-            if (configClass != null)
+            if (configuracoes != null)
+                configuracoes.GenericRepositoryType = typeof(R);
+
+            return configuracoes;
+        }
+
+        public static DnConfiguracoesGlobais DefinirTipoGenericoDeValidacao<V>(this DnConfiguracoesGlobais configuracoes) where V : TransactionalValidation
+        {
+            if (configuracoes != null)
+                configuracoes.GenericValidationType = typeof(V);
+
+            return configuracoes;
+        }
+
+        public static DnConfiguracoesGlobais DefinirTipoGenericoDeControlador<C>(this DnConfiguracoesGlobais configuracoes) where C : DnControladorBase
+        {
+            if (configuracoes != null)
+                configuracoes.GenericControllerType = typeof(C);
+
+            return configuracoes;
+        }
+
+        public static DnConfiguracoesGlobais DefinirTipoGenericoDeSessaoDeRequisicao<T>(this DnConfiguracoesGlobais configuracoes) where T : SessaoDeRequisicaoDoUsuario
+        {
+            if (configuracoes != null)
+                configuracoes.UserSessionRequestType = typeof(T);
+
+            return configuracoes;
+        }
+
+        internal static DnConfiguracoesGlobais DefinirFabricaDeRepositorio(this DnConfiguracoesGlobais configuracoes, IRepositoryFactory fabricaDeRepositorio)
+        {
+            if (configuracoes != null)
+                configuracoes.FabricaDeRepositorio = fabricaDeRepositorio;
+
+            return configuracoes;
+        }
+
+        #endregion
+
+        public static List<Type> ObterEntidades()
+            => Modelos.Values.Where(x => !x.IsAbstract && x.IsPublic).ToList();
+
+        public static DnConfiguracoesGlobais UsarJWT<S>(this DnConfiguracoesGlobais configuracoes, InformacoesDoJWT informacoesDoJWT) where S : DnAuthenticationService
+        {
+            configuracoes.InformacoesDoJWT = informacoesDoJWT;
+            configuracoes.InformacoesDoJWT.DnAuthenticationServiceType = typeof(S);
+            return configuracoes;
+        }
+
+        public static DnConfiguracoesGlobais AdicionarStringDeConexao<T>(
+            this DnConfiguracoesGlobais configuracoes,
+            string stringDeConexao,
+            bool criarOBancoDeDadosCasoNaoExista,
+            Type tipoDoContexto,
+            string identificadorDaConexao = "") =>
+             configuracoes.AdicionarStringDeConexao(_ => stringDeConexao, criarOBancoDeDadosCasoNaoExista, tipoDoContexto, identificadorDaConexao);
+
+        public static DnConfiguracoesGlobais AdicionarStringDeConexao(
+                this DnConfiguracoesGlobais configuracoes,
+                Func<SessaoDeRequisicaoDoUsuario, string> obterStringDeConexao,
+                bool criarOBancoDeDadosCasoNaoExista,
+                Type tipoDoContexto,
+                string identificadorDaConexao = "")
+        {
+            if (configuracoes == null)
             {
-                configClass.GenericServiceType = serviceType;
+                return configuracoes;
             }
 
-            return configClass;
-        }
-
-        public static Config SetGenericRepositoryType(this Config configClass, Type repositoryType)
-        {
-            if (configClass != null)
-            {
-                configClass.GenericRepositoryType = repositoryType;
-            }
-
-            return configClass;
-        }
-
-        public static Config SetGenericValidationType(this Config configClass, Type ValidationType)
-        {
-            if (configClass != null)
-            {
-                configClass.GenericValidationType = ValidationType;
-            }
-
-            return configClass;
-        }
-
-        public static Config SetGenericControllerType(this Config configClass, Type controllerType)
-        {
-            if (configClass != null)
-            {
-                configClass.GenericControllerType = controllerType;
-            }
-
-            return configClass;
-        }
-
-        public static Config UseJwt<Service>(this Config configClass, DnJwtInfo jwtInfo) where Service : DnAuthenticationService
-        {
-            configClass.JwtInfo = jwtInfo;
-            configClass.JwtInfo.DnAuthenticationServiceType = typeof(Service);
-            return configClass;
-        }
-
-        internal static Config SetRepositoryFactory(this Config configClass, IRepositoryFactory repositoryFactory)
-        {
-            configClass.RepositoryFactory = repositoryFactory;
-            return configClass;
-        }
-
-        public static Config Init()
-        {
-            ConfigInstance ??= new Config();
-            return ConfigInstance;
-        }
-
-        internal static Config ConfigInstance { get; set; }
-
-        public static Config SetUserSessionRequestType(this Config configClass, Type userSessionRequestType)
-        {
-            //Todo - checar se o tipo informado é um UserSessionRequest
-            if (configClass != null)
-            {
-                configClass.UserSessionRequestType = userSessionRequestType;
-            }
-
-            return configClass;
-        }
-
-        public static Config AddConnectionString(
-                this Config configClass,
-                string connectionString,
-                bool createDatabaseIfNotExists,
-                Type dbContextType,
-                string identifier = "")
-        {
-            return configClass.AddConnectionString(_ => connectionString, createDatabaseIfNotExists, dbContextType, identifier);
-        }
-
-        public static Config AddConnectionString(
-                this Config configClass,
-                Func<UserSessionRequest, string> getConnectionString,
-                bool createDatabaseIfNotExists,
-                Type dbContextType,
-                string identifier = "")
-        {
-            if (configClass == null)
-            {
-                return configClass;
-            }
-
-            if (configClass.Connections == null)
-            {
-                configClass.Connections = new List<Connection>();
-            }
-
-            configClass.Connections.Add(
+            configuracoes.Conexoes.Add(
                 new Connection
                 {
-                    GetConnectionString = getConnectionString,
-                    DbContextType = dbContextType,
-                    Identifier = identifier,
-                    CreateDatabaseIfNotExists = createDatabaseIfNotExists
+                    ObterStringDeConexao = obterStringDeConexao,
+                    TipoDoContexto = tipoDoContexto,
+                    IdentificadorDaConexao = identificadorDaConexao,
+                    CriarOBancoDeDadosCasoNaoExista = criarOBancoDeDadosCasoNaoExista
                 });
 
-            return configClass;
+            return configuracoes;
         }
 
-        //Todo no boot da aplicação, checar se os tipos de contexto possuem o atrubuto do tipo de BD
+        //Todo no boot da aplicação, checar se os tipos de contexto possuem o atributo do tipo de BD
         //Todo - checar ainda se não tem identificador igual
-
-        public static IServiceCollection Build(this Config configClass)
+        public static IServiceCollection Build(this DnConfiguracoesGlobais configuracoes)
         {
-            var configClassValidado = new ConfigClassValidado
-            {
-                Config = configClass
-            };
-
-            Config = configClassValidado;
-
-            return ClientServices;
+            ConfiguracoesGlobais = configuracoes;
+            return ServiceCollection;
         }
 
-        internal static void InternalInitialize()
+        public static DnConfiguracoesGlobais AddDnArquitetura(this IMvcBuilder builder, JsonSerializerSettings jsonSerializerSettings)
         {
-            lock (LockInitialization)
+            if (jsonSerializerSettings is null)
+                throw new ArgumentNullException(nameof(jsonSerializerSettings));
+
+            ExtensoesJson.ConfiguracoesDeSerializacao = jsonSerializerSettings;
+            ServiceCollection = builder.Services;
+            InicializacaoInterna();
+            builder.ConfigureApplicationPartManager(apm => apm.FeatureProviders.Add(new ControllerFactory()));
+
+            ConfiguracoesGlobais ??= new DnConfiguracoesGlobais();
+            return ConfiguracoesGlobais;
+        }
+
+        internal static void InicializacaoInterna()
+        {
+            lock (TravaDeInicializacao)
             {
-                if (Initialized)
-                {
-                    return;
-                }
-
-                ObjectInit();
-                LoadAssemblies();
-
-                InitValidations();
+                if (Inicializado) { return; }
+                InicializarObjetos();
+                CarregarAssemblies();
+                ExecutarValidacoes();
             }
         }
 
-        internal static List<Type> AllTypes { get; set; }
 
-        private static void ObjectInit()
+        private static void InicializarObjetos()
         {
-            Initialized = true;
-            Services = new Dictionary<Type, Type>();
-            Repositories = new Dictionary<Type, Type>();
-            Validations = new Dictionary<Type, Type>();
-            Model = new Dictionary<Type, Type>();
-            Controllers = new Dictionary<Type, Type>();
-            UserSessionList = new Dictionary<Guid, UserSessionRequest>();
-            Services.Add(typeof(DnEntidade), typeof(Services.DnService<DnEntidade>));
-            Repositories.Add(typeof(DnEntidade), typeof(IDnRepository<DnEntidade>));
-            Validations.Add(typeof(DnEntidade), typeof(DnValidation<DnEntidade>));
-            Controllers.Add(typeof(DnEntidade), typeof(DnControlador<DnEntidade>));
+            Inicializado = true;
+            Servicos = new Dictionary<Type, Type>();
+            Repositorios = new Dictionary<Type, Type>();
+            Validacoes = new Dictionary<Type, Type>();
+            Modelos = new Dictionary<Type, Type>();
+            Controladores = new Dictionary<Type, Type>();
+            SessoesDeRequisicoesDeUsuarios = new ConcurrentDictionary<Guid, SessaoDeRequisicaoDoUsuario>();
+            Servicos.Add(typeof(DnEntidade), typeof(servicos.DnServico<DnEntidade>));
+            Repositorios.Add(typeof(DnEntidade), typeof(IDnRepository<DnEntidade>));
+            Validacoes.Add(typeof(DnEntidade), typeof(DnValidation<DnEntidade>));
+            Controladores.Add(typeof(DnEntidade), typeof(DnControlador<DnEntidade>));
         }
 
-        private static void LoadAssemblies()
+        private static void CarregarAssemblies()
         {
-            AllTypes = AppDomain.CurrentDomain.GetAssemblies()
+            TodosOsTipos = AppDomain.CurrentDomain.GetAssemblies()
                                     .Where(x => !x.IsDynamic)
                                     .OrderBy(x => x.FullName)
                                     .SelectMany(x => x.ExportedTypes)
                                     .ToList();
         }
 
-        private static void InitValidations()
+        private static void ExecutarValidacoes()
         {
-            var types = AllTypes;
-            var transactionalServices = types.Where(x => x.IsSubclassOf(typeof(TransactionalService))).ToList();
+            var tipos = TodosOsTipos;
+            var servicos = tipos.Where(x => x.IsSubclassOf(typeof(DnServicoTransacionalBase))).ToList();
 
-            ValidateIfAllServicePropertiesNotHaveTheSetMethod(transactionalServices);
-            ValidateIfAllServicePropertiesAreVirtual(transactionalServices);
-            ValidateIfAllServicePropertiesNotHavePublic(transactionalServices);
-            ValidateIfAllServicePropertiesHaveDefaultConstructor(transactionalServices);
+            ValidateIfAllServicePropertiesNotHaveTheSetMethod(servicos);
+            ValidateIfAllServicePropertiesAreVirtual(servicos);
+            ValidateIfAllServicePropertiesNotHavePublic(servicos);
+            ValidateIfAllServicePropertiesHaveDefaultConstructor(servicos);
 
-            ValidateSpecifications(types.Where(x => x.IsSubclassOf(typeof(BaseSpecification))).ToList());
-            ValidateController(types.Where(x => x.IsSubclassOf(typeof(DnControladorBase))).ToList());
+            ValidarEspecificacoes(tipos.Where(x => x.IsSubclassOf(typeof(BaseSpecification))).ToList());
+            ValidarControladores(tipos.Where(x => x.IsSubclassOf(typeof(DnControladorBase))).ToList());
 
-            types.Select(x => GlobalUtil.GetDnEntityType(x, typeof(Services.DnService<EntidadeBase>)))
+            tipos.Select(x => GlobalUtil.GetDnEntityType(x, typeof(servicos.DnServico<EntidadeBase>)))
                 .Where(x => x.Item1 != null).ToList()
                 .ForEach(AddService);
 
-            types.Select(x => GlobalUtil.GetDnEntityTypeByInterface(x, typeof(IDnRepository<EntidadeBase>)))
+            tipos.Select(x => GlobalUtil.GetDnEntityTypeByInterface(x, typeof(IDnRepository<EntidadeBase>)))
                .Where(x => x?.Item1 != null).ToList()
                .ForEach(AddRepository);
 
-            types.Select(x => GlobalUtil.GetDnEntityType(x, typeof(DnValidation<EntidadeBase>)))
+            tipos.Select(x => GlobalUtil.GetDnEntityType(x, typeof(DnValidation<EntidadeBase>)))
                .Where(x => x.Item1 != null).ToList()
                .ForEach(AddValidation);
 
-            types.Select(x => GlobalUtil.GetDnEntityType(x, typeof(EntidadeBase)))
+            tipos.Select(x => GlobalUtil.GetDnEntityType(x, typeof(EntidadeBase)))
                 .Where(x => x.Item1 != null && x.Item2 != typeof(EntidadeBase)).ToList()
                 .ForEach(AddModel);
 
-            types.Select(x => GlobalUtil.GetDnEntityType(x, typeof(DnControlador<EntidadeBase>)))
+            tipos.Select(x => GlobalUtil.GetDnEntityType(x, typeof(DnControlador<EntidadeBase>)))
                .Where(x => x.Item1 != null).ToList()
                .ForEach(AddController);
 
@@ -261,72 +244,53 @@ namespace dn32.infra
             // ValidateIfAllMethodsAreVirtual(Services.Valores.ToList()); // To intercept
             // ValidateIfAllMethodsAreVirtual(Repositories.Valores.ToList()); // To intercept
             // ValidateIfAllMethodsAreVirtual(Validations.Valores.ToList()); //It is not necessary
-            CheckErrorInTheRepository(Repositories.Values.ToList());
+            CheckErrorInTheRepository(Repositorios.Values.ToList());
 
             // DbSetup(createDatabaseIfNotExists);
         }
 
-        //Todo testar
-        private static void ValidateSpecifications(List<Type> specs)
+        private static void ValidarEspecificacoes(List<Type> especificacoes)
         {
-            specs.ForEach(type =>
+            especificacoes.ForEach(type =>
             {
                 if (type.GetConstructors().Any(x => x.GetParameters().Any()))
-                {
-                    throw new DesenvolvimentoIncorretoException($"A specification can not have a parameterized constructor {type}");
-                }
+                    throw new DesenvolvimentoIncorretoException($"A especificação '{type}' possui parâmetros no construtor e isso não é permitido. Crie um método para passar os parâmetros.");
             });
         }
 
-        //Todo testar
-        private static void ValidateController(List<Type> controllers)
+        private static void ValidarControladores(List<Type> controladores)
         {
-            controllers.ForEach(type =>
+            controladores.ForEach(type =>
             {
                 if (type.GetMethods().Any(x => x.IsPublic && x.GetParameters().Any(y => y.ParameterType.IsSubclassOf(typeof(BaseSpecification)))))
-                {
-                    throw new DesenvolvimentoIncorretoException($"A controller can not have public methods that receive specifications as a parameter {type}");
-                }
+                    throw new DesenvolvimentoIncorretoException($"O controlador '{type}' possui um ou mais métosos público(s) que recebe(m) uma especificacao como parâmetro. Isso não é permitido.");
             });
         }
 
         #endregion
 
-        #region INTERNAL METHODS
+        #region MÉTODOS INTERNOS
 
-        internal static UserSessionRequest GetUserRequestSession(Guid sessionIdGuid)
+        internal static SessaoDeRequisicaoDoUsuario ObterSessaoDeUmaRequisicao(Guid identificadorDaSessao)
         {
-            if (!UserSessionList.TryGetValue(sessionIdGuid, out var userSession))
-            {
-                throw new Exception("UserSessionRequest not found!");
-            }
+            if (!SessoesDeRequisicoesDeUsuarios.TryGetValue(identificadorDaSessao, out var sessao))
+                throw new Exception($"Não foi encontrada uma sessão de requisição com o identificadorDaSessao: '{identificadorDaSessao}'");
 
-            return userSession;
+            return sessao;
         }
 
-        internal static void AddSession(UserSessionRequest userSessionRequest)
-        {
-            lock (UserSessionList)
-            {
-                UserSessionList.Add(userSessionRequest.SessionRequestId, userSessionRequest);
-            }
-        }
-
-        internal static void RemoveSession(Guid sessionId)
-        {
-            lock (UserSessionList)
-            {
-                UserSessionList.Remove(sessionId);
-            }
-        }
+        internal static void AddSession(SessaoDeRequisicaoDoUsuario sessaoDeRequisicaoDoUsuario) =>
+            SessoesDeRequisicoesDeUsuarios.TryAdd(sessaoDeRequisicaoDoUsuario.IdentificadorDaSessao, sessaoDeRequisicaoDoUsuario);
+        
+        internal static void RemoverSessaoDeRequisicao(Guid sessionId) => SessoesDeRequisicoesDeUsuarios.TryRemove(sessionId, out _);
 
         #endregion
 
         #region PRIVATE
-
-        private static void ValidateIfAllServicePropertiesHaveDefaultConstructor(IEnumerable<Type> types)
+        //Todo - Traduzir
+        private static void ValidateIfAllServicePropertiesHaveDefaultConstructor(IEnumerable<Type> tipos)
         {
-            foreach (var type in types)
+            foreach (var type in tipos)
             {
                 if (type.IsAbstract)
                 {
@@ -353,7 +317,7 @@ namespace dn32.infra
             {
                 if (type == null) { continue; }
                 var serviceProperties = type.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
-                    .Where(x => x.GetMethod?.IsPrivate == false && x.GetMethod?.IsVirtual == true && x.PropertyType.IsSubclassOf(typeof(BaseService))).ToList();
+                    .Where(x => x.GetMethod?.IsPrivate == false && x.GetMethod?.IsVirtual == true && x.PropertyType.IsSubclassOf(typeof(DnServicoBase))).ToList();
 
                 if (serviceProperties == null)
                 {
@@ -375,7 +339,7 @@ namespace dn32.infra
             foreach (var type in types)
             {
                 var serviceProperties = type?.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
-                    .Where(x => x.GetMethod?.IsVirtual == false && x.PropertyType.IsSubclassOf(typeof(BaseService))).ToList();
+                    .Where(x => x.GetMethod?.IsVirtual == false && x.PropertyType.IsSubclassOf(typeof(DnServicoBase))).ToList();
 
                 if (serviceProperties != null && serviceProperties.Any())
                 {
@@ -389,7 +353,7 @@ namespace dn32.infra
             foreach (var type in types)
             {
                 var serviceProperties = type?.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
-                    .Where(x => x.GetMethod?.IsPublic == true && x.PropertyType.IsSubclassOf(typeof(BaseService))).ToList();
+                    .Where(x => x.GetMethod?.IsPublic == true && x.PropertyType.IsSubclassOf(typeof(DnServicoBase))).ToList();
 
                 if (serviceProperties != null && serviceProperties.Any())
                 {
@@ -400,52 +364,52 @@ namespace dn32.infra
 
         private static void AddModel(Tuple<Type, Type> service)
         {
-            if (Model.ContainsKey(service.Item2))
+            if (Modelos.ContainsKey(service.Item2))
             {
                 throw new DesenvolvimentoIncorretoException($"There are two entity classes with the same Nome {service.Item2.Name}. This is not allowed.");
             }
 
-            Model.Add(service.Item2, service.Item2);
+            Modelos.Add(service.Item2, service.Item2);
         }
 
         private static void AddService(Tuple<Type, Type> service)
         {
-            if (Services.ContainsKey(service.Item1))
+            if (Servicos.ContainsKey(service.Item1))
             {
                 throw new DesenvolvimentoIncorretoException($"There are two service classes with the same Nome {service.Item1} -  {service.Item2}. This is not allowed.");
             }
 
-            Services.Add(service.Item1, service.Item2);
+            Servicos.Add(service.Item1, service.Item2);
         }
 
         private static void AddValidation(Tuple<Type, Type> validation)
         {
-            if (Validations.ContainsKey(validation.Item1))
+            if (Validacoes.ContainsKey(validation.Item1))
             {
                 throw new DesenvolvimentoIncorretoException($"There are two validation classes with the same Nome {validation.Item1} - {validation.Item2}. This is not allowed.");
             }
 
-            Validations.Add(validation.Item1, validation.Item2);
+            Validacoes.Add(validation.Item1, validation.Item2);
         }
 
         private static void AddController(Tuple<Type, Type> controller)
         {
-            if (Controllers.ContainsKey(controller.Item1))
+            if (Controladores.ContainsKey(controller.Item1))
             {
                 throw new DesenvolvimentoIncorretoException($"There are two controller classes with the same Nome {controller.Item1} - {controller.Item2}. This is not allowed.");
             }
 
-            Controllers.Add(controller.Item1, controller.Item2);
+            Controladores.Add(controller.Item1, controller.Item2);
         }
 
         private static void AddRepository(Tuple<Type, Type> repository)
         {
-            if (Repositories.ContainsKey(repository.Item1))
+            if (Repositorios.ContainsKey(repository.Item1))
             {
                 throw new DesenvolvimentoIncorretoException($"There are two entity repository with the same Nome {repository.Item1} - {repository.Item2}. This is not allowed.");
             }
 
-            Repositories.Add(repository.Item1, repository.Item2);
+            Repositorios.Add(repository.Item1, repository.Item2);
         }
 
         private static void CheckErrorInTheRepository(IEnumerable<Type> types)

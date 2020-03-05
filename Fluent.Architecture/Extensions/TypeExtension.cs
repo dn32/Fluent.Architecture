@@ -3,7 +3,7 @@ using dn32.infra.nucleo.atributos;
 using dn32.infra.Nucleo.Extensoes;
 using dn32.infra.Nucleo.Models;
 using dn32.infra.Nucleo.Util;
-using dn32.infra.Services;
+using dn32.infra.servicos;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -687,9 +687,9 @@ namespace dn32.infra.extensoes
             if (args.Any())
             {
                 var entityType = args.First();
-                if (!Setup.Services.TryGetValue(entityType, out serviceType))
+                if (!Setup.Servicos.TryGetValue(entityType, out serviceType))
                 {
-                    var type = (Setup.Config.Config.GenericServiceType) ?? typeof(DnService<>);
+                    var type = (Setup.ConfiguracoesGlobais.GenericServiceType) ?? typeof(DnServico<>);
                     serviceType = type.MakeGenericType(entityType);
                 }
             }

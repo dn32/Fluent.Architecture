@@ -15,9 +15,9 @@ namespace dn32.infra
 {
     public class Connection
     {
-        public string Identifier { get; internal set; }
-        public Func<UserSessionRequest, string> GetConnectionString { get; internal set; }
-        public bool CreateDatabaseIfNotExists { get; set; }
-        public Type DbContextType { get; set; }
+        public string IdentificadorDaConexao { get; internal set; }
+        public Func<SessaoDeRequisicaoDoUsuario, string> ObterStringDeConexao { get; internal set; }
+        public bool CriarOBancoDeDadosCasoNaoExista { get; set; }
+        public Type TipoDoContexto { get; set; }
     }
 }

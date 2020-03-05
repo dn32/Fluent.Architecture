@@ -40,7 +40,7 @@ namespace dn32.infra.extensoes
 
             if (spec is IDnSpecificationOut spec2)
             {
-                var service = spec2.DnEntityType.GetServiceInstanceByEntity(spec2.Service.SessionRequest);
+                var service = spec2.DnEntityType.GetServiceInstanceByEntity(spec2.Service.SessaoDaRequisicao);
                 var method = service.GetType().GetMethod($"{methodName}Select");
                 if (method == null)
                 {
@@ -52,7 +52,7 @@ namespace dn32.infra.extensoes
 
             if (spec is IDnSpecification spec3)
             {
-                var service = spec3.DnEntityType.GetServiceInstanceByEntity(spec3.Service.SessionRequest);
+                var service = spec3.DnEntityType.GetServiceInstanceByEntity(spec3.Service.SessaoDaRequisicao);
                 var method = service.GetType().GetMethodWithoutAmbiguity(methodName, parameters);
                 if (method == null)
                 {

@@ -18,9 +18,9 @@ namespace dn32.infra.EntityFramework
 {
     public static class ConfigExtension
     {
-        public static Config UseEntityFramework(this Config configClass)
+        public static DnConfiguracoesGlobais UseEntityFramework(this DnConfiguracoesGlobais configClass)
         {
-            return configClass.SetRepositoryFactory(new RepositoryFactory());
+            return configClass.DefinirFabricaDeRepositorio(new RepositoryFactory());
         }
 
         internal static void AddQueryFilter(this EntityTypeBuilder entityTypeBuilder, LambdaExpression expression)

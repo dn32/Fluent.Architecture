@@ -24,13 +24,13 @@ namespace dn32.infra.EntityFramework
         /// <returns>
         /// O contexto criado.
         /// </returns>
-        internal static EfContext Create(Connection connection, UserSessionRequest userSessionRequest)
+        internal static EfContext Create(Connection connection, SessaoDeRequisicaoDoUsuario userSessionRequest)
         {
-            var connectionString = connection.GetConnectionString(userSessionRequest);
-            var createDatabaseIfNotExists = connection.CreateDatabaseIfNotExists;
+            var connectionString = connection.ObterStringDeConexao(userSessionRequest);
+            var createDatabaseIfNotExists = connection.CriarOBancoDeDadosCasoNaoExista;
 
 
-            var dbContextType = connection.DbContextType;
+            var dbContextType = connection.TipoDoContexto;
             var efContext = Activator.CreateInstance(dbContextType, new object[] { connectionString }).DnCast<EfContext>();
             efContext.UserSessionRequest = userSessionRequest;
 

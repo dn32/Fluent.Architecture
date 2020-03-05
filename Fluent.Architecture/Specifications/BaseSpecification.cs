@@ -1,30 +1,18 @@
 ﻿using dn32.infra.nucleo.excecoes;
-using dn32.infra.Services;
+using dn32.infra.servicos;
 using System.Linq;
 using dn32.infra.dados;
 
 namespace dn32.infra.Specifications
 {
-    /// <summary>
-    /// Especificação base para todas as especificações do sistema.
-    /// </summary>
     public abstract class BaseSpecification
     {
         internal BaseSpecification() { }
 
         protected bool IgnoreOrder { get; set; } = false;
 
-        public TransactionalService Service { get; set; }
+        public DnServicoTransacionalBase Service { get; set; }
 
-        /// <summary>
-        /// Obtem o referência de uma tabela do banco de dados.
-        /// </summary>
-        /// <typeparam Nome="TX">
-        /// Tipo de entidade desejada.
-        /// </typeparam>
-        /// <returns>
-        /// A referência da tabela do banco de dados.
-        /// </returns>
         protected IQueryable<TX> Get<TX>() where TX : EntidadeBase
         {
             if (Service == null)
@@ -32,13 +20,13 @@ namespace dn32.infra.Specifications
                 throw new DesenvolvimentoIncorretoException($"Failed to initialize specification [{GetType().Name}].\nYou must use [CriarEspecificacao] present in the service or controller.");
             }
 
-            var transactionObjects = Service.TransactionObjects;
+            var transactionObjects = Service.ObjetosDaTransacao;
             return transactionObjects.GetObjectQueryInternal<TX>();
         }
 
-        internal void SetService(TransactionalService service)
+        internal void SetService(DnServicoTransacionalBase service)
         {
-            this.Service = service;
+            Service = service;
         }
     }
 }

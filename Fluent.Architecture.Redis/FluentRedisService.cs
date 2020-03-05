@@ -1,4 +1,4 @@
-﻿using dn32.infra.Services;
+﻿using dn32.infra.servicos;
 using StackExchange.Redis;
 using System;
 using System.Threading.Tasks;
@@ -6,13 +6,13 @@ using dn32.infra.dados;
 
 namespace dn32.infra.Redis
 {
-    public class DnRedisService : TransactionalService
+    public class DnRedisService : DnServicoTransacionalBase
     {
         private DnRedisRepository RedisRepository { get; set; }
 
         public DnRedisService()
         {
-            RedisRepository = new DnRedisRepository(Setup.Config.Config.RedisConnectionString);
+            RedisRepository = new DnRedisRepository(Setup.ConfiguracoesGlobais.RedisConnectionString);
         }
 
         public async Task<T> GetValueAsync<T>(string key) => await RedisRepository.GetValueAsync<T>(key);

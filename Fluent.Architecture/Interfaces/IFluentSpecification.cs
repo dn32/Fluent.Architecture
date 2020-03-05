@@ -6,7 +6,7 @@
 // -----------------------------------------------------------------------
 
 
-using dn32.infra.Services;
+using dn32.infra.servicos;
 using System;
 
 namespace dn32.infra.Interfaces
@@ -18,6 +18,6 @@ namespace dn32.infra.Interfaces
 
     public interface ISpec
     {
-        TransactionalService Service { get; set; }
+        DnServicoTransacionalBase Service { get; set; }
     }
 }

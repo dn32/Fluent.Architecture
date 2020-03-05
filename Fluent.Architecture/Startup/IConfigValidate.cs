@@ -14,6 +14,6 @@ namespace dn32.infra
 {
     public interface IConfigValidate
     {
-        Config Config { get; set; }
+        DnConfiguracoesGlobais Config { get; set; }
     }
 }

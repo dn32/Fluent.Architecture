@@ -1,12 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright company="DnControlador System">
-//     Copyright © DnControlador System. All rights reserved.
-//     TODOS OS DIREITOS RESERVADOS.
-// </copyright>
-// -----------------------------------------------------------------------
-
-// ReSharper disable CommentTypo
-using dn32.infra.Filters;
+﻿using dn32.infra.Filters;
 using dn32.infra.Nucleo.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -16,17 +8,16 @@ using System.Runtime.CompilerServices;
 
 namespace dn32.infra
 {
-    public class Config
+    public class DnConfiguracoesGlobais
     {
-        public List<Connection> Connections { get; internal set; }
-        //public IServiceProvider ServiceProvider { get; internal set; }
+        public List<Connection> Conexoes { get; internal set; } = new List<Connection>();
         public Type UserSessionRequestType { get; internal set; }
         public Type GenericServiceType { get; internal set; }
         public Type GenericRepositoryType { get; internal set; }
         public Type GenericValidationType { get; internal set; }
         public Type GenericControllerType { get; internal set; }
-        internal IRepositoryFactory RepositoryFactory { get; set; }
-        public DnJwtInfo JwtInfo { get; set; }
+        internal IRepositoryFactory FabricaDeRepositorio { get; set; }
+        public InformacoesDoJWT InformacoesDoJWT { get; set; }
         public string RedisConnectionString { get; set; }
         public Type RedisService { get; set; }
     }

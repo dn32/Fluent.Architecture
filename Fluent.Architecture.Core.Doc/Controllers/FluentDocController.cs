@@ -51,7 +51,7 @@ namespace dn32.infra.Nucleo.Doc.Controllers
         {
             if (Models.TryGetValue<string, Type>(service, StringComparison.InvariantCultureIgnoreCase, out Type type))
             {
-                if (Setup.Controllers.TryGetValue(type, out Type controllerType))
+                if (Setup.Controladores.TryGetValue(type, out Type controllerType))
                 {
                     if (controllerType.GetCustomAttribute<DnDocAtributo>()?.Apresentacao == EnumApresentar.Ocultar)
                     {
@@ -141,7 +141,7 @@ namespace dn32.infra.Nucleo.Doc.Controllers
         {
             if (Models.TryGetValue<string, Type>(name, StringComparison.InvariantCultureIgnoreCase, out Type type))
             {
-                if (Setup.Controllers.TryGetValue(type, out Type controllerType))
+                if (Setup.Controladores.TryGetValue(type, out Type controllerType))
                 {
                     if (controllerType.GetCustomAttribute<DnDocAtributo>()?.Apresentacao == EnumApresentar.Ocultar)
                     {
@@ -271,7 +271,7 @@ namespace dn32.infra.Nucleo.Doc.Controllers
                 }
 
 
-                if (Setup.Config.Config.JwtInfo != null)
+                if (Setup.ConfiguracoesGlobais.InformacoesDoJWT != null)
                 {
                     parameters.Add(new DocParameter("Authorization", typeof(string), EnumParameterSouce.Header, "The authentication Token", "Bearer xxxxx"));
                 }
@@ -357,11 +357,11 @@ xhr.addEventListener(""readystatechange"", function() {{
                 if (Models == null)
                 {
                     Models = new Dictionary<string, Type>();
-                    var entities = Setup.GetDnApiEntity();
+                    var entities = Setup.ObterEntidades();
                     entities.ForEach(type =>
                     {
 
-                        if (Setup.Controllers.TryGetValue(type, out Type controllerType))
+                        if (Setup.Controladores.TryGetValue(type, out Type controllerType))
                         {
                             if (controllerType.GetCustomAttribute<DnDocAtributo>()?.Apresentacao == EnumApresentar.Ocultar)
                             {
@@ -375,7 +375,7 @@ xhr.addEventListener(""readystatechange"", function() {{
 
                 if (AllTypes == null)
                 {
-                    AllTypes = Setup.AllTypes
+                    AllTypes = Setup.TodosOsTipos
                                   .GroupBy(x => x.FullName)
                                   .Select(x => x.First())
                                   .Where(x => x.GetCustomAttribute<DnDocAtributo>()?.Apresentacao != EnumApresentar.Ocultar)
@@ -399,11 +399,11 @@ xhr.addEventListener(""readystatechange"", function() {{
 
                 AllModel = AllTypes.Values
                     .Where(x => x != null)
-                    .Where(x => !Setup.Model.ContainsKey(x))
-                    .Where(x => !Setup.Services.ContainsKey(x))
-                    .Where(x => !Setup.Repositories.ContainsKey(x))
-                    .Where(x => !Setup.Controllers.ContainsKey(x))
-                    .Where(x => !Setup.Validations.ContainsKey(x))
+                    .Where(x => !Setup.Modelos.ContainsKey(x))
+                    .Where(x => !Setup.Servicos.ContainsKey(x))
+                    .Where(x => !Setup.Repositorios.ContainsKey(x))
+                    .Where(x => !Setup.Controladores.ContainsKey(x))
+                    .Where(x => !Setup.Validacoes.ContainsKey(x))
                     .Where(x => !x.Is(typeof(Controller)))
                     .Where(x => !x.Is(typeof(ControllerBase)))
                     .Where(x => x.FullName?.Contains("+") == false)

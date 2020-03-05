@@ -7,7 +7,7 @@
 
 // ReSharper disable CommentTypo
 using dn32.infra.Factory.Proxy;
-using dn32.infra.Services;
+using dn32.infra.servicos;
 using System;
 
 namespace dn32.infra.Factory
@@ -30,9 +30,9 @@ namespace dn32.infra.Factory
         /// <returns>
         /// O serviço criado.
         /// </returns>
-        internal static TransactionalService Create(Type serviceType, Guid sessionId)
+        internal static DnServicoTransacionalBase Create(Type serviceType, Guid sessionId)
         {
-            return ServiceLazyClassBuilder.CreateObject(serviceType, sessionId) as TransactionalService;
+            return ServiceLazyClassBuilder.CreateObject(serviceType, sessionId) as DnServicoTransacionalBase;
         }
     }
 }

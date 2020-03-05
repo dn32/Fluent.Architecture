@@ -11,33 +11,33 @@ namespace dn32.infra.nucleo.controladores
         [HttpPost]
         public virtual async Task<ResultadoPadrao<T>> Adicionar([FromBody] T entidade)
         {
-            return await this.CrieResultadoAsync(await this.Servico.AddAsync(entidade));
+            return await this.CrieResultadoAsync(await this.Servico.AdicionarAsync(entidade));
         }
 
         [HttpPost]
         public virtual async Task<ResultadoPadrao<T>> AdicionarOuAtualizar([FromBody] T entidade)
         {
-            return await this.CrieResultadoAsync(await this.Servico.AddOrUpdateAsync(entidade));
+            return await this.CrieResultadoAsync(await this.Servico.AdidionarOuAtualizarAsync(entidade));
         }
 
         [HttpPost]
         public virtual async Task<ResultadoPadrao<T[]>> AdicionarLista([FromBody] T[] entidades)
         {
-            await this.Servico.AddRangeAsync(entidades);
+            await this.Servico.AdicionarListaAsync(entidades);
             return await this.CrieResultadoAsync(entidades);
         }
 
         [HttpPut]
         public virtual async Task<ResultadoPadrao<bool>> Atualizar([FromBody] T entidade)
         {
-            await this.Servico.UpdateAsync(entidade);
+            await this.Servico.AtualizarAsync(entidade);
             return await this.CrieResultadoAsync<bool>(true);
         }
 
         [HttpPut]
         public virtual async Task<ResultadoPadrao<bool>> AtualizarLista([FromBody] T[] entidades)
         {
-            await this.Servico.UpdateRangeAsync(entidades);
+            await this.Servico.AtualizarListaAsync(entidades);
             return await this.CrieResultadoAsync(true);
         }
 
@@ -45,7 +45,7 @@ namespace dn32.infra.nucleo.controladores
         [HttpDelete]
         public virtual async Task<ResultadoPadrao<bool>> Remover([FromBody] T entidade)
         {
-            await this.Servico.RemoveAsync(entidade);
+            await this.Servico.RemoverAsync(entidade);
             return await this.CrieResultadoAsync(true);
         }
 
@@ -53,14 +53,14 @@ namespace dn32.infra.nucleo.controladores
         [HttpDelete]
         public virtual async Task<ResultadoPadrao<bool>> RemoverLista([FromBody] T[] entidades)
         {
-            await this.Servico.RemoveRangeAsync(entidades);
+            await this.Servico.RemoverListaAsync(entidades);
             return await this.CrieResultadoAsync<bool>(true);
         }
 
         [HttpDelete]
         public virtual async Task<ResultadoPadrao<bool>> EliminarTudo([FromHeader] string APAGAR_TUDO = "false")
         {
-            await this.Servico.TruncateAsync(APAGAR_TUDO);
+            await this.Servico.EliminarTudoAsync(APAGAR_TUDO);
             return await this.CrieResultadoAsync(true);
         }
     }

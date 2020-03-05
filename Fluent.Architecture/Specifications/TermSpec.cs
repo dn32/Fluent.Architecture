@@ -1,5 +1,4 @@
-﻿using dn32.infra.extensoes;
-using dn32.infra.nucleo.atributos;
+﻿using dn32.infra.nucleo.atributos;
 using dn32.infra.Nucleo.Extensoes;
 using dn32.infra.Specifications;
 using System;

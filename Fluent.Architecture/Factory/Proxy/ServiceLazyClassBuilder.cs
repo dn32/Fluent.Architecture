@@ -6,7 +6,8 @@
 // -----------------------------------------------------------------------
 
 // ReSharper disable CommentTypo
-using dn32.infra.Services;
+using dn32.infra.nucleo.servicos;
+using dn32.infra.servicos;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -35,7 +36,7 @@ namespace dn32.infra.Factory.Proxy
 
         private static void OverwriteProperties(TypeBuilder typeBuilder, Guid sessionId)
         {
-            var serviceProperties = typeBuilder.BaseType?.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).Where(x => x.PropertyType.IsSubclassOf(typeof(BaseService))).ToList();
+            var serviceProperties = typeBuilder.BaseType?.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).Where(x => x.PropertyType.IsSubclassOf(typeof(DnServicoBase))).ToList();
 
             if (serviceProperties == null)
             {
@@ -66,10 +67,10 @@ namespace dn32.infra.Factory.Proxy
 
             var getIl = getProp.GetILGenerator();
             getIl.Emit(OpCodes.Ldarg_0);
-            var methodInfo = baseType.GetMethod(nameof(BaseService.GetServiceDependency));
+            var methodInfo = baseType.GetMethod(nameof(DnServicoBase.ObterDependenciaDeServico));
             if (methodInfo == null)
             {
-                throw new InvalidOperationException($"Method not found '{nameof(BaseService.GetServiceDependency)}'");
+                throw new InvalidOperationException($"Method not found '{nameof(DnServicoBase.ObterDependenciaDeServico)}'");
             }
 
             methodInfo = methodInfo.MakeGenericMethod(property.PropertyType);

@@ -15,13 +15,13 @@ namespace dn32.infra.Nucleo.Factory
     {
         public void PopulateFeature(IEnumerable<ApplicationPart> parts, ControllerFeature feature)
         {
-            var baseController = (Setup.Config.Config.GenericControllerType) ?? typeof(nucleo.controladores.DnApiControlador<>);
-            var entities = Setup.GetDnApiEntity();
+            var baseController = (Setup.ConfiguracoesGlobais.GenericControllerType) ?? typeof(nucleo.controladores.DnApiControlador<>);
+            var entities = Setup.ObterEntidades();
 
             foreach (var entity in entities)
             {
                 if (entity.GetCustomAttribute<DnControladorApiAtributo>(true)?.GerarAutomaticamente == false) { continue; }
-                if (Setup.Controllers.ContainsKey(entity)) { continue; }
+                if (Setup.Controladores.ContainsKey(entity)) { continue; }
 
                 if (entity.GetCustomAttribute<DnFormularioJsonAtributo>(true)?.EhSomenteLeitura == true)
                 {
@@ -43,7 +43,7 @@ namespace dn32.infra.Nucleo.Factory
 
                 var controllerType = type.GetTypeInfo();
                 feature.Controllers.Add(controllerType);
-                Setup.Controllers.Add(entity, controllerType);
+                Setup.Controladores.Add(entity, controllerType);
             }
         }
     }

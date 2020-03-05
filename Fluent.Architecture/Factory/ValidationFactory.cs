@@ -22,7 +22,7 @@ namespace dn32.infra.Factory
         /// </returns>
         internal static DnValidation<T> Create<T>() where T : EntidadeBase
         {
-            var localType = Setup.Config?.Config?.GenericValidationType?.MakeGenericType(typeof(T)) ?? typeof(DnValidation<T>);
+            var localType = Setup.ConfiguracoesGlobais.GenericValidationType?.MakeGenericType(typeof(T)) ?? typeof(DnValidation<T>);
             return Create(localType) as DnValidation<T>;
         }
 
@@ -33,7 +33,7 @@ namespace dn32.infra.Factory
 
             if (entityType != null)
             {
-                if (Setup.Validations.TryGetValue(entityType, out var validationTypeOut))
+                if (Setup.Validacoes.TryGetValue(entityType, out var validationTypeOut))
                 {
                     localType = validationTypeOut;
                 }

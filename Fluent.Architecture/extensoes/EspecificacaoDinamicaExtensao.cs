@@ -9,7 +9,7 @@ using dn32.infra.dados;
 using dn32.infra.Factory.Proxy;
 using dn32.infra.Nucleo.Models;
 using dn32.infra.Nucleo.Util;
-using dn32.infra.Services;
+using dn32.infra.servicos;
 using Microsoft.AspNetCore.Http;
 
 namespace dn32.infra.nucleo.extensoes
@@ -43,10 +43,10 @@ namespace dn32.infra.nucleo.extensoes
 
         public static IQueryable<T> ProjetarDeFormaDinamica<T>(
             this IQueryable<T> consulta,
-            TransactionalService servico,
+            DnServicoTransacionalBase servico,
             string[] campos = null) where T : EntidadeBase
         {
-            var requisicao = servico.LocalHttpContext.Request;
+            var requisicao = servico.HttpContextLocal.Request;
             if (campos == null || campos.Length == 0)
             {
                 campos = requisicao.ObterPropriedadesAConsiderar();
@@ -66,9 +66,9 @@ namespace dn32.infra.nucleo.extensoes
             return ret.ProjectTo<T>(configuracoesDeMapeamento);
         }
 
-        public static IOrderedQueryable<T> ProjetarDeFormaDinamicaOrdenada<T>(this IQueryable<T> consulta, TransactionalService servico, string[] campos = null) where T : EntidadeBase
+        public static IOrderedQueryable<T> ProjetarDeFormaDinamicaOrdenada<T>(this IQueryable<T> consulta, DnServicoTransacionalBase servico, string[] campos = null) where T : EntidadeBase
         {
-            var requisicao = servico.LocalHttpContext.Request;
+            var requisicao = servico.HttpContextLocal.Request;
             if (campos == null || campos.Length == 0)
             {
                 campos = requisicao.ObterPropriedadesAConsiderar();
@@ -152,9 +152,9 @@ namespace dn32.infra.nucleo.extensoes
         }
 
         //Todo - Não remove. Dei muito trabalho pra desenvolver
-        public static IOrderedQueryable<object> ProjetarDeFormaDinamicaSelecionadaEOrdenada(this IQueryable<object> consulta, TransactionalService servico)
+        public static IOrderedQueryable<object> ProjetarDeFormaDinamicaSelecionadaEOrdenada(this IQueryable<object> consulta, DnServicoTransacionalBase servico)
         {
-            var requisicao = servico.LocalHttpContext.Request;
+            var requisicao = servico.HttpContextLocal.Request;
             var considerar = requisicao.ObterPropriedadesAConsiderar();
             var ordenar = requisicao.ObterPropriedadesAOrdenar();
             var ordenarTexto = ordenar?.Length > 0 ? string.Join(",", ordenar) : considerar.FirstOrDefault();
@@ -168,9 +168,9 @@ namespace dn32.infra.nucleo.extensoes
         }
 
         //Todo - Não remove. Dei muito trabalho pra desenvolver
-        public static IQueryable<object> ProjetarDeFormaDinamicaSelecionada<T>(this IQueryable<T> consulta, TransactionalService servico) where T : EntidadeBase
+        public static IQueryable<object> ProjetarDeFormaDinamicaSelecionada<T>(this IQueryable<T> consulta, DnServicoTransacionalBase servico) where T : EntidadeBase
         {
-            var requisicao = servico.LocalHttpContext.Request;
+            var requisicao = servico.HttpContextLocal.Request;
             var campos = requisicao.ObterPropriedadesAConsiderar();
             if (campos == null || campos.Length == 0)
             {

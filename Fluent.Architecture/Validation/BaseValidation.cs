@@ -5,7 +5,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using dn32.infra.Services;
+using dn32.infra.nucleo.servicos;
+using dn32.infra.servicos;
 
 namespace dn32.infra.Validation
 {
@@ -14,6 +15,6 @@ namespace dn32.infra.Validation
         /// <summary>
         /// A validação do serviço.
         /// </summary>
-        protected virtual BaseService Service { get; set; }
+        protected virtual DnServicoBase Service { get; set; }
     }
 }

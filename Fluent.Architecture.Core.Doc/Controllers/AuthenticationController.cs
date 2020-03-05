@@ -17,7 +17,7 @@ namespace dn32.infra.Nucleo.Doc.Controllers
         [Route("DnDoc/Authentication")]
         public IActionResult Index()
         {
-            if (Setup.Config.Config.JwtInfo == null)
+            if (Setup.ConfiguracoesGlobais.InformacoesDoJWT == null)
             {
                 throw new InvalidOperationException("Use UseJwt at Arquitetura startup to set authentication parameters");
             }
@@ -48,7 +48,7 @@ namespace dn32.infra.Nucleo.Doc.Controllers
         [Route("DnDoc/Authentication")]
         public async Task<IActionResult> LoginAsync(string email, string psw)
         {
-            if (Setup.Config.Config.JwtInfo == null)
+            if (Setup.ConfiguracoesGlobais.InformacoesDoJWT == null)
             {
                 throw new InvalidOperationException("Use UseJwt at Arquitetura startup to set authentication parameters");
             }
@@ -59,7 +59,7 @@ namespace dn32.infra.Nucleo.Doc.Controllers
                 Password = psw
             };
 
-            var service = ServiceFactory.Create(Setup.Config.Config.JwtInfo.DnAuthenticationServiceType, HttpContext, "DocAuthenticationServiceType for DnDoc").DnCast<DnAuthenticationService>();
+            var service = ServiceFactory.Create(Setup.ConfiguracoesGlobais.InformacoesDoJWT.DnAuthenticationServiceType, HttpContext, "DocAuthenticationServiceType for DnDoc").DnCast<DnAuthenticationService>();
             var token = await service.LoginAsync(authenticationUser);
             if (string.IsNullOrWhiteSpace(token))
             {

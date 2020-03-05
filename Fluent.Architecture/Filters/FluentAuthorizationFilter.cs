@@ -27,7 +27,7 @@ namespace dn32.infra.Filters
                 return;
             }
 
-            if (Setup.Config.Config.JwtInfo != null)
+            if (Setup.ConfiguracoesGlobais.InformacoesDoJWT != null)
             {
                 JWTOnDnAuthorizationFilter(context);
             }

@@ -14,6 +14,6 @@ namespace dn32.infra
 {
     internal class ConfigClassValidado : IConfigValidate
     {
-        public Config Config { get; set; }
+        public DnConfiguracoesGlobais Config { get; set; }
     }
 }

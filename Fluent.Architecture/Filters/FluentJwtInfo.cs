@@ -4,7 +4,7 @@ using System.Text;
 
 namespace dn32.infra.Filters
 {
-    public class DnJwtInfo
+    public class InformacoesDoJWT
     {
         public string Issuer { get; set; }
 

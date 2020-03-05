@@ -54,7 +54,7 @@ namespace dn32.infra.EntityFramework
         /// </param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var exportedTypes = Setup.Model.Values.ToList();
+            var exportedTypes = Setup.Modelos.Values.ToList();
             foreach (var type in exportedTypes)
             {
                 if (type.IsDefined(typeof(NotMappedAttribute), false) || type.IsAbstract)
@@ -189,7 +189,7 @@ namespace dn32.infra.EntityFramework
 
         public virtual bool EnableLogicalDeletion { get; set; }
 
-        internal protected UserSessionRequest UserSessionRequest { get; internal set; }
+        internal protected SessaoDeRequisicaoDoUsuario UserSessionRequest { get; internal set; }
 
         private void AfterSave(List<DnEventEntity> eventChangeList)
         {

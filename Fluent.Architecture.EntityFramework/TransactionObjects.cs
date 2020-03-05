@@ -23,7 +23,7 @@ namespace dn32.infra.EntityFramework
         /// </summary>
         public DbContext Session { get; set; }
 
-        public UserSessionRequest UserSessionRequest { get; set; }
+        public SessaoDeRequisicaoDoUsuario UserSessionRequest { get; set; }
 
         public void Dispose()
         {
@@ -37,7 +37,7 @@ namespace dn32.infra.EntityFramework
         /// <param Nome="dataBaseConnectionString">
         /// String de conexão com o banco de dados.
         /// </param>
-        public TransactionObjects(Connection connection, UserSessionRequest userSessionRequest)
+        public TransactionObjects(Connection connection, SessaoDeRequisicaoDoUsuario userSessionRequest)
         {
             this.UserSessionRequest = userSessionRequest;
             this.Session = ContextFactory.Create(connection, UserSessionRequest);

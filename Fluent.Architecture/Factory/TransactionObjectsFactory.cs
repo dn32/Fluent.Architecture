@@ -12,7 +12,7 @@ namespace dn32.infra.Nucleo.Factory
         /// <returns>
         /// A insância da classe.
         /// </returns>
-        public static ITransactionObjects Create(Type transactionObjectsType, Connection connection, UserSessionRequest userSessionRequest)
+        public static ITransactionObjects Create(Type transactionObjectsType, Connection connection, SessaoDeRequisicaoDoUsuario userSessionRequest)
         {
             return Activator.CreateInstance(transactionObjectsType, connection, userSessionRequest) as ITransactionObjects;
         }

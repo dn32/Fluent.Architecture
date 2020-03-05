@@ -1,5 +1,5 @@
 ﻿using dn32.infra.Nucleo.Models;
-using dn32.infra.Services;
+using dn32.infra.servicos;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace dn32.infra.Nucleo.Services
 {
-    public abstract class DnAuthenticationService : TransactionalService
+    public abstract class DnAuthenticationService : DnServicoTransacionalBase
     {
         public abstract Task<(bool sucess, List<Claim> claims)> AuthenticateAsync(DnAuthenticationUser user);
 
@@ -28,7 +28,7 @@ namespace dn32.infra.Nucleo.Services
                 if (claims == null) { claims = new List<Claim>(); }
                 claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")));
                 var identity = new ClaimsIdentity(new GenericIdentity(user.Email), claims);
-                return GenerateToken(identity, Setup.Config.Config.JwtInfo.Expires ?? TimeSpan.FromDays(1));
+                return GenerateToken(identity, Setup.ConfiguracoesGlobais.InformacoesDoJWT.Expires ?? TimeSpan.FromDays(1));
             }
             else
             {
@@ -42,9 +42,9 @@ namespace dn32.infra.Nucleo.Services
             var handler = new JwtSecurityTokenHandler();
             var securityToken = handler.CreateToken(new SecurityTokenDescriptor
             {
-                Issuer = Setup.Config.Config.JwtInfo.Issuer,
-                Audience = Setup.Config.Config.JwtInfo.Audience,
-                SigningCredentials = Setup.Config.Config.JwtInfo.SigningCredentials,
+                Issuer = Setup.ConfiguracoesGlobais.InformacoesDoJWT.Issuer,
+                Audience = Setup.ConfiguracoesGlobais.InformacoesDoJWT.Audience,
+                SigningCredentials = Setup.ConfiguracoesGlobais.InformacoesDoJWT.SigningCredentials,
                 Subject = identity,
                 NotBefore = now,
                 Expires = now.Add(expires)

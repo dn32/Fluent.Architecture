@@ -1,6 +1,6 @@
 ﻿using dn32.infra.nucleo.controladores;
 using dn32.infra.Nucleo.Interfaces;
-using dn32.infra.Services;
+using dn32.infra.servicos;
 using dn32.infra.Specifications;
 using dn32.infra.Validation;
 using System;
@@ -15,13 +15,13 @@ namespace dn32.infra.Util
     public static class GlobalUtil
     {
         /// <summary>
-        /// Obtem o tipo da entidade de um objeto baseado em um tipo esperado. Ex <see cref="Services.DnControladorDeServico{T}"/>, <see cref="DnRepository{TE}"/>, etc. O retorno será o tipo de T.
+        /// Obtem o tipo da entidade de um objeto baseado em um tipo esperado. Ex <see cref="servicos.DnControladorDeServico{T}"/>, <see cref="DnRepository{TE}"/>, etc. O retorno será o tipo de T.
         /// </summary>
         /// <param Nome="objectTypeToCheck">
         /// Objeto a ser avaliado.
         /// </param>
         /// <param Nome="expectedType">
-        /// Tipo esperado. Exemplo:  <see cref="Services.DnControladorDeServico{T}"/>, <see cref="DnRepository{TE}"/>
+        /// Tipo esperado. Exemplo:  <see cref="servicos.DnControladorDeServico{T}"/>, <see cref="DnRepository{TE}"/>
         /// </param>
         /// <returns>
         /// O tipo.
@@ -68,14 +68,14 @@ namespace dn32.infra.Util
         private static string[] DnEntityNames => new[]
         {
             typeof(DnControlador<DnEntidade>).Name,
-            typeof(Services.DnService<DnEntidade>).Name,
+            typeof(servicos.DnServico<DnEntidade>).Name,
             typeof(IDnRepository<DnEntidade>).Name,
             typeof(DnValidation<DnEntidade>).Name,
             typeof(DnSpecification<DnEntidade>).Name
         };
 
         /// <summary>
-        /// Obtem o tipo da entidade de um tipo. Ex <see cref="Services.DnControladorDeServico{T}"/>. O tipo a ser encontrado é o tipo de T.
+        /// Obtem o tipo da entidade de um tipo. Ex <see cref="servicos.DnControladorDeServico{T}"/>. O tipo a ser encontrado é o tipo de T.
         /// </summary>
         /// <param Nome="currentType">
         /// Objeto a ser avaliado.

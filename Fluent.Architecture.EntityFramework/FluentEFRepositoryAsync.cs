@@ -52,12 +52,12 @@ namespace dn32.infra.EntityFramework
             }
         }
 
-        public virtual async Task<bool> ExistsAsync(ISpec spec)
+        public virtual async Task<bool> ExisteAsync(ISpec spec)
         {
             return await GetSpec(spec).ToIQueryable(Query).AnyAsync();
         }
 
-        public virtual async Task<bool> ExistsSelectAsync<TO>(ISpec spec)
+        public virtual async Task<bool> ExisteAlternativoAsync<TO>(ISpec spec)
         {
             return await GetSpecSelect<TO>(spec).ToIQueryable(Query).AnyAsync();
         }
@@ -70,13 +70,13 @@ namespace dn32.infra.EntityFramework
             return await taskList.ToListAsync();
         }
 
-        public virtual async Task<int> CountAsync(TE entity, bool includeExcludedLogically = false)
+        public virtual async Task<int> QuantidadeAsync(TE entity, bool includeExcludedLogically = false)
         {
             var sql = RepositoryUtil.GetKeyAndDnUniqueKeyFilterSql(entity);
             return await CountSqlAsync(sql, includeExcludedLogically);
         }
 
-        public virtual async Task<int> CountSelectAsync<TO>(IDnSpecification<TO> spec)
+        public virtual async Task<int> QuantidadeAlternativoAsync<TO>(IDnSpecification<TO> spec)
         {
             if (spec.DnEntityType != typeof(TE))
             {
@@ -87,17 +87,17 @@ namespace dn32.infra.EntityFramework
             return await GetSpecSelect<TO>(spec).ToIQueryable(Query).CountAsync();
         }
 
-        public virtual async Task<int> CountAsync(IDnSpecification spec)
+        public virtual async Task<int> QuantidadeAsync(IDnSpecification spec)
         {
             return await GetSpec(spec).ToIQueryable(Query).CountAsync();
         }
 
-        public virtual async Task<int> CountAsync()
+        public virtual async Task<int> QuantidadeTotalAsync()
         {
             return await Query.CountAsync();
         }
 
-        public virtual async Task<bool> ExistsOnlyOneAsync(TE entity, bool includeExcludedLogically = false)
+        public virtual async Task<bool> HaSomenteUmAsync(TE entity, bool includeExcludedLogically = false)
         {
             var sql = RepositoryUtil.GetKeyAndDnUniqueKeyFilterSql(entity);
             return await CountSqlAsync(sql, includeExcludedLogically) == 1;
@@ -106,13 +106,13 @@ namespace dn32.infra.EntityFramework
 
         #region SPEC TE
 
-        public virtual async Task<TE> FirstOrDefaultAsync(IDnSpecification spec)
+        public virtual async Task<TE> PrimeiroOuPadraoAsync(IDnSpecification spec)
         {
             var val = GetSpec(spec).ToIQueryable(Query);
             return await val.FirstOrDefaultAsync();
         }
 
-        public virtual async Task<TO> SingleOrDefaultSelectAsync<TO>(IDnSpecification<TO> spec)
+        public virtual async Task<TO> UnicoOuPadraoAlternativoAsync<TO>(IDnSpecification<TO> spec)
         {
             var query = GetSpecSelect<TO>(spec).ToIQueryable(Query);
             return await query.FirstOrDefaultAsync();
@@ -134,7 +134,7 @@ namespace dn32.infra.EntityFramework
 
         #endregion
 
-        public virtual async Task<List<TO>> ListSelectAsync<TO>(IDnSpecification<TO> ispec, DnPaginacao pagination = null)
+        public virtual async Task<List<TO>> ListarAlternativoAsync<TO>(IDnSpecification<TO> ispec, DnPaginacao pagination = null)
         {
             var spec = GetSpecSelect<TO>(ispec);
             var query = spec.ToIQueryable(Query);
@@ -142,7 +142,7 @@ namespace dn32.infra.EntityFramework
             return await fluentPagination.ToListAsync();
         }
 
-        public virtual async Task<TO> FirstOrDefaultSelectAsync<TO>(IDnSpecification<TO> ispec)
+        public virtual async Task<TO> PrimeiroOuPadraoAlternativoAsync<TO>(IDnSpecification<TO> ispec)
         {
             var spec = GetSpecSelect<TO>(ispec);
             var query = spec.ToIQueryable(Query);
@@ -214,13 +214,13 @@ namespace dn32.infra.EntityFramework
             return null;
         }
 
-        public virtual async Task<bool> ExistsAsync(TE entity, bool includeExcludedLogically = false)
+        public virtual async Task<bool> ExisteAsync(TE entity, bool includeExcludedLogically = false)
         {
             var sql = RepositoryUtil.GetKeyAndDnUniqueKeyFilterSql(entity);
             return await ExistsSqlAsync(sql, includeExcludedLogically);
         }
 
-        public virtual async Task AddRangeAsync(params TE[] entities)
+        public virtual async Task AdicionarListaAsync(params TE[] entities)
         {
             RunTheContextValidation();
             foreach (var entity in entities)
@@ -245,7 +245,7 @@ namespace dn32.infra.EntityFramework
             return query.Skip(pagination.Salto).Take(pagination.ItensPorPagina);
         }
 
-        public virtual async Task<TE> AddAsync(TE entity)
+        public virtual async Task<TE> AdicionarAsync(TE entity)
         {
             RunTheContextValidation();
             DefineForeignKeyOfCompositionsOrAggregations(entity);
@@ -266,10 +266,10 @@ namespace dn32.infra.EntityFramework
             return await command.ExecuteNonQueryAsync();
         }
 
-        public virtual async Task<TE> RemoveAsync(TE entity)
+        public virtual async Task<TE> RemoverAsync(TE entity)
         {
             RunTheContextValidation();
-            var teEntity = await Service.BuscaAsync(entity, false);
+            var teEntity = await Service.BuscarAsync(entity, false);
             var ret = Input.Remove(teEntity).Entity;
 
             RemoveDnCompositionsAndDnAggregations(entity);
@@ -295,7 +295,7 @@ namespace dn32.infra.EntityFramework
             }
         }
 
-        public virtual async Task TruncateAsync()
+        public virtual async Task EliminarTudoAsync()
         {
             var tableName = typeof(TE).GetTableName();
             var sql = $"TRUNCATE TABLE {tableName}";

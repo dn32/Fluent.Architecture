@@ -3,7 +3,7 @@ using dn32.infra.Interfaces;
 using dn32.infra.Nucleo.Factory;
 using dn32.infra.Nucleo.Interfaces;
 using dn32.infra.Nucleo.Models;
-using dn32.infra.Services;
+using dn32.infra.servicos;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -32,16 +32,16 @@ namespace dn32.infra.EntityFramework
         /// <returns>
         /// O repositório criado.
         /// </returns>
-        public IDnRepository<T> Create<T>(ITransactionObjects transactionObjects, DnService<T> service) where T : EntidadeBase
+        public IDnRepository<T> Create<T>(ITransactionObjects transactionObjects, DnServico<T> service) where T : EntidadeBase
         {
-            if (Setup.Config?.Config?.Connections == null) { throw new DesenvolvimentoIncorretoException($"Arquitetura was not initialized properly"); }
+            if (Setup.ConfiguracoesGlobais.Conexoes == null) { throw new DesenvolvimentoIncorretoException($"Arquitetura was not initialized properly"); }
 
             var dbType = GetTheEntityDBType(typeof(T));
             if (dbType == null)
             {
-                if (Setup.Config.Config.Connections.Count == 1)
+                if (Setup.ConfiguracoesGlobais.Conexoes.Count == 1)
                 {
-                    dbType = Setup.Config.Config.Connections.Single().DbContextType.GetCustomAttribute<DbTypeAttribute>() ?? throw new DesenvolvimentoIncorretoException($"The entity {typeof(T).Name} needs a database type specification. Example: [DbType (DnDbType.ORACLE)]"); ;
+                    dbType = Setup.ConfiguracoesGlobais.Conexoes.Single().TipoDoContexto.GetCustomAttribute<DbTypeAttribute>() ?? throw new DesenvolvimentoIncorretoException($"The entity {typeof(T).Name} needs a database type specification. Example: [DbType (DnDbType.ORACLE)]"); ;
                 }
             }
 
@@ -50,9 +50,9 @@ namespace dn32.infra.EntityFramework
                 throw new DesenvolvimentoIncorretoException($"The entity {typeof(T).Name} needs a database type specification. Example: [DbType (DnDbType.ORACLE)]"); ;
             }
 
-            var localType = Setup.Config?.Config?.GenericRepositoryType?.MakeGenericType(typeof(T)) ?? typeof(DnEFRepository<T>);
+            var localType = Setup.ConfiguracoesGlobais.GenericRepositoryType?.MakeGenericType(typeof(T)) ?? typeof(DnEFRepository<T>);
 
-            if (Setup.Repositories.TryGetValue(typeof(T), out var repositoryType))
+            if (Setup.Repositorios.TryGetValue(typeof(T), out var repositoryType))
             {
                 localType = repositoryType;
             }
@@ -65,7 +65,7 @@ namespace dn32.infra.EntityFramework
 
                 if (string.IsNullOrWhiteSpace(dbType.Identifier))
                 {
-                    var conn = Setup.Config?.Config?.Connections.Where(x => x.DbContextType.GetCustomAttribute<DbTypeAttribute>()?.DbType == dbType.DbType);
+                    var conn = Setup.ConfiguracoesGlobais.Conexoes.Where(x => x.TipoDoContexto.GetCustomAttribute<DbTypeAttribute>()?.DbType == dbType.DbType);
                     if (conn.Count() > 1)
                     {
                         throw new DesenvolvimentoIncorretoException($"More than one connection of the same type was found with the same type \"{dbType.DbType}\". Adicionar identifiers for them.");
@@ -79,10 +79,10 @@ namespace dn32.infra.EntityFramework
                 }
                 else
                 {
-                    if (Setup.Config?.Config?.Connections == null) { throw new DesenvolvimentoIncorretoException($"Arquitetura was not initialized properly"); }
-                    var conn = Setup.Config.Config.Connections.Where(x =>
-                                    x.DbContextType.GetCustomAttribute<DbTypeAttribute>()?.DbType == dbType.DbType &&
-                                    x.Identifier.Equals(dbType.Identifier, StringComparison.InvariantCultureIgnoreCase));
+                    if (Setup.ConfiguracoesGlobais.Conexoes == null) { throw new DesenvolvimentoIncorretoException($"Arquitetura was not initialized properly"); }
+                    var conn = Setup.ConfiguracoesGlobais.Conexoes.Where(x =>
+                                    x.TipoDoContexto.GetCustomAttribute<DbTypeAttribute>()?.DbType == dbType.DbType &&
+                                    x.IdentificadorDaConexao.Equals(dbType.Identifier, StringComparison.InvariantCultureIgnoreCase));
                     if (conn.Count() > 1)
                     {
                         throw new DesenvolvimentoIncorretoException($"More than one connection of the same type was found with the same identifier \"{dbType.Identifier}\"");
@@ -96,8 +96,8 @@ namespace dn32.infra.EntityFramework
                 }
 
                 var transactionObjectsType = repository.TransactionObjectsType;
-                transactionObjects = TransactionObjectsFactory.Create(transactionObjectsType, connetion, service.SessionRequest);
-                service.SessionRequest.TransactionObjects = transactionObjects;
+                transactionObjects = TransactionObjectsFactory.Create(transactionObjectsType, connetion, service.SessaoDaRequisicao);
+                service.SessaoDaRequisicao.ObjetosDaTransacao = transactionObjects;
             }
 
             repository.TransactionObjects = transactionObjects;

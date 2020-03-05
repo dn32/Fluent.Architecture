@@ -3,14 +3,14 @@ using dn32.infra.Specifications;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using dn32.infra.dados;
-using dn32.infra.Services;
+using dn32.infra.servicos;
 
 namespace dn32.infra.nucleo.controladores
 {
-    public abstract class DnControlador<T> : DnControladorDeServico<DnService<T>> where T : EntidadeBase
+    public abstract class DnControlador<T> : DnControladorDeServico<DnServico<T>> where T : EntidadeBase
     {
         protected T2 CriarEspecificacao<T2>() where T2 : BaseSpecification 
-            => SpecFactory.Create<T2>(this.Servico);
+            => SpecFactory.Criar<T2>(this.Servico);
 
         [NonAction]
         protected override void Dispose(bool finalizando) => base.Dispose(finalizando);
